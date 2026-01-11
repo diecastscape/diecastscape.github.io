@@ -1,15 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>diecast.scape</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #ffffff;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: #111;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    .instagram-btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 18px;
+      background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 25px;
+      font-size: 14px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+
+    .item {
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .item img {
+      width: 100%;
+      display: block;
+    }
+
+    .item-info {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .item-info h3 {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .price {
+      color: #00e676;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      color: #777;
+      font-size: 12px;
+    }
+  </style>
 </head>
-<body style="font-family:Arial; text-align:center;">
+
+<body>
+
+<header>
   <h1>diecast.scape</h1>
   <p>Built in scale. Crafted with soul.</p>
+  <a class="instagram-btn" href="https://instagram.com/diecast.scape" target="_blank">
+    Visit Instagram
+  </a>
+</header>
 
-  <h3>Handcrafted 1:64 Scale Dioramas</h3>
-  <p>Price starts from ₹849</p>
+<section class="gallery">
 
-  <p>📩 DM on Instagram to order</p>
+  <!-- ITEM 1 -->
+  <div class="item">
+    <img src="porsche.jpg" alt="Porsche Diorama">
+    <div class="item-info">
+      <h3>Porsche Diorama</h3>
+      <div class="price">₹849</div>
+    </div>
+  </div>
+
+  <!-- ITEM 2 -->
+  <div class="item">
+    <img src="nissan.jpg" alt="Nissan Diorama">
+    <div class="item-info">
+      <h3>Nissan Diorama</h3>
+      <div class="price">₹999</div>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  © diecast.scape | Handcrafted 1:64 Dioramas
+</footer>
+
 </body>
 </html>
