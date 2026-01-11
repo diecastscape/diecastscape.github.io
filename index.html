@@ -94,12 +94,12 @@ body {
 
 /* BUTTON */
 .buy-btn {
-  margin-top: 12px;
+  margin-top: 18px;
   display: inline-block;
   background: #5BC0BE;
   color: #fff;
-  padding: 10px 18px;
-  border-radius: 6px;
+  padding: 12px 20px;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
 }
@@ -113,18 +113,27 @@ footer {
   border-top: 1px solid #1e1e1e;
 }
 
-/* FLOATING IG */
-.ig-float {
+/* FLOATING WA */
+.wa-float {
   position: fixed;
   bottom: 55px;
   right: 22px;
-  background: #FF2E6F;
-  color: #fff;
-  padding: 12px 14px;
+  width: 56px;
+  height: 56px;
+  background: #25D366;
   border-radius: 50%;
-  text-decoration: none;
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  z-index: 999;
 }
+
+.wa-float img {
+  width: 28px;
+  height: 28px;
+}
+
   /* FULL IMAGE OVERLAY */
 #lightbox {
   position: fixed;
@@ -188,9 +197,12 @@ window.addEventListener("popstate", function () {
 <div class="subtitle">Built in Scale. Crafted with Soul.</div>
 <div class="description">
 Handcrafted dioramas designed to elevate your diecast collection.
-Each piece is carefully built with premium materials, realistic details, and precise scale accuracy — perfect for collectors, photographers, and automotive enthusiasts who value craftsmanship over mass production.
-  
-Every diorama is made in limited quantities to maintain uniqueness and quality.
+Built with premium materials, realistic details, and precise scale accuracy.
+
+<br><br>
+
+Perfect for collectors, photographers, and automotive enthusiasts who value craftsmanship.
+Each diorama is made in limited quantities to maintain uniqueness and quality.
 </div>
 
 <!-- DIORAMA -->
@@ -227,8 +239,11 @@ All brand names belong to their respective owners.<br><br>
 Thank you for visiting 🤍
 </footer>
 
-
-<a class="ig-float" href="https://instagram.com/diecast.scape" target="_blank">IG</a>
+<a class="wa-float"
+href="https://wa.me/917348913798?text=Hi%20I%20need%20help%20regarding%20Diecast.scape%20dioramas."
+target="_blank">
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
+</a>
 
 </body>
 </html>
