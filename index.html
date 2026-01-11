@@ -8,8 +8,8 @@
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #111;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg,#0b0b0b,#141414);
   color: #fff;
 }
 
@@ -17,25 +17,36 @@ body {
 header {
   position: sticky;
   top: 0;
-  background: #000;
-  padding: 15px;
+  background: rgba(0,0,0,0.85);
+  padding: 18px;
   text-align: center;
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 600;
+  backdrop-filter: blur(6px);
   z-index: 10;
-}
-
-/* SECTION */
-section {
-  padding: 20px;
 }
 
 /* HERO */
 .hero {
+  padding: 50px 20px;
   text-align: center;
+}
+.hero h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
 }
 .hero p {
   color: #ccc;
+  font-size: 16px;
+}
+
+/* SECTION CARD */
+.card {
+  background: #1c1c1c;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
 /* GALLERY */
@@ -46,8 +57,8 @@ section {
   scroll-snap-type: x mandatory;
 }
 .gallery img {
-  width: 260px;
-  border-radius: 12px;
+  width: 280px;
+  border-radius: 14px;
   scroll-snap-align: start;
 }
 
@@ -55,25 +66,30 @@ section {
 .button {
   display: inline-block;
   margin-top: 15px;
-  padding: 10px 18px;
-  background: #e1306c;
-  color: white;
-  text-decoration: none;
-  border-radius: 25px;
-}
-
-/* FLOATING INSTAGRAM BUTTON */
-.ig-float {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+  padding: 12px 22px;
   background: #e1306c;
   color: #fff;
-  padding: 14px 16px;
-  border-radius: 50%;
-  font-size: 20px;
   text-decoration: none;
-  box-shadow: 0 0 10px #000;
+  border-radius: 30px;
+  font-weight: 500;
+}
+
+/* FLOAT BUTTON */
+.ig-float {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: #e1306c;
+  color: white;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.8);
   z-index: 20;
 }
 </style>
@@ -84,37 +100,34 @@ section {
 <header>diecast.scape</header>
 
 <section class="hero">
-  <h2>Built in scale. Crafted with soul.</h2>
+  <h1>Built in scale.<br>Crafted with soul.</h1>
   <p>Handcrafted 1:64 scale dioramas for collectors & photographers</p>
 </section>
 
-<section>
+<div class="card">
   <h3>Gallery</h3>
   <div class="gallery">
     <img src="image1.jpg">
     <img src="image2.jpg">
     <img src="image3.jpg">
   </div>
-</section>
+</div>
 
-<section>
+<div class="card">
   <h3>Pricing</h3>
-  <p>Starts from ₹849/-</p>
-  <p>Shipping charges extra</p>
-</section>
+  <p>Starts from <b>₹849/-</b></p>
+  <p style="color:#aaa;">Shipping charges extra</p>
+</div>
 
-<section>
+<div class="card">
   <h3>Order</h3>
   <p>DM on Instagram to place your order</p>
   <a class="button" href="https://instagram.com/diecast.scape" target="_blank">
     Visit Instagram
   </a>
-</section>
+</div>
 
-<!-- FLOATING IG BUTTON -->
-<a class="ig-float" href="https://instagram.com/diecast.scape" target="_blank">
-  IG
-</a>
+<a class="ig-float" href="https://instagram.com/diecast.scape" target="_blank">IG</a>
 
 </body>
 </html>
