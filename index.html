@@ -3,94 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>diecast.scape</title>
+<title>Diecast.scape</title>
 
 <style>
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(180deg,#0b0b0b,#141414);
+  font-family: Arial, sans-serif;
+  background: #0b0b0b;
   color: #fff;
 }
 
-/* HEADER */
 header {
-  position: sticky;
-  top: 0;
-  background: rgba(0,0,0,0.85);
-  padding: 18px;
+  padding: 16px;
   text-align: center;
-  font-size: 24px;
-  font-weight: 600;
-  backdrop-filter: blur(6px);
-  z-index: 10;
+  font-size: 26px;
+  font-weight: bold;
+  border-bottom: 1px solid #222;
 }
 
-/* HERO */
-.hero {
-  padding: 50px 20px;
+.subtitle {
   text-align: center;
-}
-.hero h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-.hero p {
   color: #ccc;
-  font-size: 16px;
+  margin-top: 6px;
+  font-size: 14px;
 }
 
-/* SECTION CARD */
-.card {
-  background: #1c1c1c;
-  margin: 20px;
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+.section {
+  padding: 24px 16px;
+  border-bottom: 1px solid #1c1c1c;
 }
 
-/* GALLERY */
-.gallery {
+.diorama-title {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.diorama-sub {
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 12px;
+}
+
+.slider {
   display: flex;
-  gap: 15px;
   overflow-x: auto;
+  gap: 10px;
   scroll-snap-type: x mandatory;
 }
-.gallery img {
-  width: 280px;
-  border-radius: 14px;
+
+.slider img {
+  width: 85%;
+  max-width: 320px;
+  border-radius: 10px;
   scroll-snap-align: start;
 }
 
-/* BUTTON */
-.button {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 12px 22px;
-  background: #e1306c;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 30px;
-  font-weight: 500;
+.price {
+  margin-top: 14px;
+  font-size: 16px;
 }
 
-/* FLOAT BUTTON */
+.old {
+  text-decoration: line-through;
+  color: #777;
+}
+
+.new {
+  color: #e10600;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.discount {
+  font-size: 14px;
+  color: #00ff9c;
+}
+
+.ship {
+  font-size: 12px;
+  color: #bbb;
+}
+
+.buy-btn {
+  margin-top: 12px;
+  display: inline-block;
+  padding: 10px 16px;
+  background: #e10600;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+footer {
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+}
+
 .ig-float {
   position: fixed;
-  bottom: 22px;
-  right: 22px;
-  background: #e1306c;
-  color: white;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  bottom: 20px;
+  right: 20px;
+  background: #e10600;
+  padding: 12px 14px;
   border-radius: 50%;
-  font-weight: bold;
+  font-size: 20px;
   text-decoration: none;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.8);
-  z-index: 20;
+  color: #fff;
 }
 </style>
 </head>
@@ -98,34 +119,41 @@ header {
 <body>
 
 <header>diecast.scape</header>
+<div class="subtitle">Built in Scale. Crafted with Soul.</div>
 
-<section class="hero">
-  <h1>Built in scale.<br>Crafted with soul.</h1>
-  <p>Handcrafted 1:64 scale dioramas for collectors & photographers</p>
-</section>
+<!-- BMW DIORAMA -->
+<div class="section">
+  <div class="diorama-title">BMW Handcrafted Diorama</div>
+  <div class="diorama-sub">Built in Scale. Crafted with Soul.</div>
 
-<div class="card">
-  <h3>Gallery</h3>
-  <div class="gallery">
+  <div class="slider">
     <img src="image1.jpg">
     <img src="image2.jpg">
     <img src="image3.jpg">
   </div>
-</div>
 
-<div class="card">
-  <h3>Pricing</h3>
-  <p>Starts from <b>₹849/-</b></p>
-  <p style="color:#aaa;">Shipping charges extra</p>
-</div>
+  <div class="price">
+    <span class="old">₹1199</span>  
+    <span class="new">₹849</span>
+  </div>
+  <div class="discount">29% OFF (Save ₹350)</div>
+  <div class="ship">+ Shipping charges applicable</div>
 
-<div class="card">
-  <h3>Order</h3>
-  <p>DM on Instagram to place your order</p>
-  <a class="button" href="https://instagram.com/diecast.scape" target="_blank">
-    Visit Instagram
+  <a class="buy-btn"
+     href="https://instagram.com/diecast.scape"
+     target="_blank">
+     🛒 Order This Diorama
   </a>
 </div>
+
+<!-- ADD MORE DIORAMAS BY COPYING ABOVE BLOCK -->
+
+<footer>
+  Connect with us on Instagram: <b>@diecast.scape</b><br><br>
+  © 2026 Diecast.scape. All dioramas are handcrafted.<br>
+  Brand names belong to their respective owners.<br>
+  Thank you for visiting 🤍
+</footer>
 
 <a class="ig-float" href="https://instagram.com/diecast.scape" target="_blank">IG</a>
 
