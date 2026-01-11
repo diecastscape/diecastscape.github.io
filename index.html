@@ -9,7 +9,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0c0c0c;
+  background: #192866;
   color: #fff;
 }
 
@@ -26,7 +26,7 @@ header {
   text-align: center;
   font-size: 13px;
   color: #ccc;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 .description {
@@ -152,13 +152,28 @@ footer {
 </head>
 <script>
 function openLightbox(src) {
-  document.getElementById("lightbox-img").src = src;
-  document.getElementById("lightbox").style.display = "flex";
+  const lightbox = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+
+  img.src = src;
+  lightbox.style.display = "flex";
+
+  // Push history state so back button closes lightbox
+  history.pushState({ lightbox: true }, "");
 }
 
 function closeLightbox() {
-  document.getElementById("lightbox").style.display = "none";
+  const lightbox = document.getElementById("lightbox");
+  lightbox.style.display = "none";
 }
+
+// Handle Android back button
+window.addEventListener("popstate", function (event) {
+  const lightbox = document.getElementById("lightbox");
+  if (lightbox.style.display === "flex") {
+    lightbox.style.display = "none";
+  }
+});
 </script>
 
 <div id="lightbox" onclick="closeLightbox()">
