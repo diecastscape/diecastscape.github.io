@@ -3,51 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diecast.scape</title>
+<title>diecast.scape</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0b0b0b;
+  background: #0c0c0c;
   color: #fff;
 }
 
+/* HEADER */
 header {
-  padding: 16px;
+  padding: 12px;
   text-align: center;
-  font-size: 26px;
-  font-weight: bold;
-  border-bottom: 1px solid #222;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .subtitle {
   text-align: center;
-  color: #ccc;
-  margin-top: 6px;
-  font-size: 14px;
-}
-
-.section {
-  padding: 24px 16px;
-  border-bottom: 1px solid #1c1c1c;
-}
-
-.diorama-title {
-  font-size: 20px;
-  margin-bottom: 4px;
-}
-
-.diorama-sub {
   font-size: 13px;
-  color: #aaa;
-  margin-bottom: 12px;
+  color: #ccc;
+  margin-top: 2px;
 }
 
+.description {
+  text-align: center;
+  font-size: 14px;
+  color: #aaa;
+  padding: 10px 18px 20px;
+  line-height: 1.5;
+}
+
+/* SECTION */
+.section {
+  padding: 22px 16px;
+  border-top: 1px solid #1e1e1e;
+}
+
+/* DIORAMA TITLE */
+.diorama-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* IMAGE SWIPE */
 .slider {
   display: flex;
-  overflow-x: auto;
   gap: 10px;
+  overflow-x: auto;
   scroll-snap-type: x mandatory;
 }
 
@@ -58,60 +64,66 @@ header {
   scroll-snap-align: start;
 }
 
+/* PRICE */
 .price {
   margin-top: 14px;
-  font-size: 16px;
 }
 
 .old {
-  text-decoration: line-through;
   color: #777;
+  text-decoration: line-through;
+  margin-right: 6px;
 }
 
 .new {
-  color: #e10600;
+  color: #DBDBDB;
   font-size: 20px;
   font-weight: bold;
 }
 
 .discount {
-  font-size: 14px;
-  color: #00ff9c;
+  font-size: 13px;
+  color: #FF1846;
+  margin-top: 4px;
 }
 
 .ship {
   font-size: 12px;
-  color: #bbb;
+  color: #aaa;
 }
 
+/* BUTTON */
 .buy-btn {
   margin-top: 12px;
   display: inline-block;
-  padding: 10px 16px;
   background: #e10600;
   color: #fff;
-  text-decoration: none;
+  padding: 10px 18px;
   border-radius: 6px;
-  font-weight: bold;
+  text-decoration: none;
+  font-weight: 600;
 }
 
+/* FOOTER */
 footer {
-  padding: 20px;
   text-align: center;
   font-size: 12px;
   color: #888;
+  padding: 22px 16px;
+  border-top: 1px solid #1e1e1e;
 }
 
+/* FLOATING IG */
 .ig-float {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #e10600;
+  bottom: 18px;
+  right: 18px;
+  background: #FF2E6F;
+  color: #fff;
   padding: 12px 14px;
   border-radius: 50%;
-  font-size: 20px;
   text-decoration: none;
-  color: #fff;
+  font-size: 18px;
 }
 </style>
 </head>
@@ -120,42 +132,45 @@ footer {
 
 <header>diecast.scape</header>
 <div class="subtitle">Built in Scale. Crafted with Soul.</div>
+<div class="description">
+Handcrafted 1:64 scale dioramas designed for collectors, photographers,
+and diecast enthusiasts who value realism and detail.
+</div>
 
-<!-- BMW DIORAMA -->
+<!-- DIORAMA -->
 <div class="section">
   <div class="diorama-title">BMW Handcrafted Diorama</div>
-  <div class="diorama-sub">Built in Scale. Crafted with Soul.</div>
 
   <div class="slider">
     <img src="image1.jpg">
     <img src="image2.jpg">
     <img src="image3.jpg">
+    <img src="image34jpg">
   </div>
 
   <div class="price">
-    <span class="old">₹1199</span>  
+    <span class="old">₹1199</span>
     <span class="new">₹849</span>
   </div>
-  <div class="discount">29% OFF (Save ₹350)</div>
+  <div class="discount">29% OFF · Save ₹350</div>
   <div class="ship">+ Shipping charges applicable</div>
 
   <a class="buy-btn"
-     href="https://instagram.com/diecast.scape"
+     href="https://ig.me/m/diecast.scape?text=Hi%20I%20want%20to%20order%20the%20BMW%20Handcrafted%20Diorama%20priced%20at%20₹849%20(29%25%20OFF)."
      target="_blank">
      🛒 Order This Diorama
   </a>
 </div>
 
-<!-- ADD MORE DIORAMAS BY COPYING ABOVE BLOCK -->
-
 <footer>
-  Connect with us on Instagram: <b>@diecast.scape</b><br><br>
-  © 2026 Diecast.scape. All dioramas are handcrafted.<br>
-  Brand names belong to their respective owners.<br>
-  Thank you for visiting 🤍
+Connect with us on Instagram <b>@diecast.scape</b><br><br>
+© 2026 Diecast.scape. All dioramas are handcrafted.<br>
+Brand names belong to their respective owners.<br>
+Thank you for visiting 🤍
 </footer>
 
 <a class="ig-float" href="https://instagram.com/diecast.scape" target="_blank">IG</a>
 
 </body>
 </html>
+
