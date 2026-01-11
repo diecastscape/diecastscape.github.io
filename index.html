@@ -153,11 +153,24 @@ footer {
   max-height: 95%;
   border-radius: 12px;
 }
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
 .logo {
-  width: 120px;
-  height: 90px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
-  margin-bottom: 1px;
+}
+
+.brand-name {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
 </style>
@@ -189,9 +202,9 @@ window.addEventListener("popstate", function () {
 
 <body>
 
-<header>
-  <img src="Logo.png" class="logo"><br>
-  DIECAST.SCAPE
+<header class="top-header">
+  <img src="logo.png" class="logo">
+  <div class="brand-name">DIECAST.SCAPE</div>
 </header>
 
 <div class="subtitle">Built in Scale. Crafted with Soul.</div>
