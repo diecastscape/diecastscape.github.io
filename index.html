@@ -58,14 +58,13 @@ header {
 }
 
 .slider img {
-  width: 280px;
-  height: 280px;
+  width: 260px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 12px;
   scroll-snap-align: start;
   background: #000;
 }
-
 
 /* PRICE */
 .price {
@@ -147,6 +146,12 @@ footer {
   max-height: 95%;
   border-radius: 12px;
 }
+.logo {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  margin-bottom: 6px;
+}
 
 </style>
 </head>
@@ -154,27 +159,22 @@ footer {
 function openLightbox(src) {
   const lightbox = document.getElementById("lightbox");
   const img = document.getElementById("lightbox-img");
-
   img.src = src;
   lightbox.style.display = "flex";
-
-  // Push history state so back button closes lightbox
-  history.pushState({ lightbox: true }, "");
+  history.pushState(null, "", "#image");
 }
 
 function closeLightbox() {
   const lightbox = document.getElementById("lightbox");
   lightbox.style.display = "none";
+  history.back();
 }
 
-// Handle Android back button
-window.addEventListener("popstate", function (event) {
-  const lightbox = document.getElementById("lightbox");
-  if (lightbox.style.display === "flex") {
-    lightbox.style.display = "none";
-  }
+window.addEventListener("popstate", function () {
+  document.getElementById("lightbox").style.display = "none";
 });
 </script>
+
 
 <div id="lightbox" onclick="closeLightbox()">
   <img id="lightbox-img">
@@ -182,7 +182,11 @@ window.addEventListener("popstate", function (event) {
 
 <body>
 
-<header>DIECAST.SCAPE</header>
+<header>
+  <img src="logo.png" class="logo"><br>
+  DIECAST.SCAPE
+</header>
+
 <div class="subtitle">Built in Scale. Crafted with Soul.</div>
 <div class="description">
 Handcrafted dioramas designed to elevate your diecast collection.
@@ -211,19 +215,21 @@ Every diorama is made in limited quantities to maintain uniqueness and quality.
   <div class="ship">+ Shipping charges applicable</div>
 
   <a class="buy-btn"
-href="https://wa.me/917348913798?text=Hi%20I%20want%20to%20order%20BMW%20Handcrafted%20Diorama.%20Price%20849.%20Please%20share%20delivery%20details."
+href="https://wa.me/917348913798?text=Hi%20Diecast.scape%2C%0AI%20want%20to%20order%3A%20BMW%20Handcrafted%20Diorama%0APrice%3A%20%E2%82%B9849%20(29%25%20OFF)%0APlease%20share%20delivery%20details."
 target="_blank">
 Order on WhatsApp
 </a>
+
 
 </div>
 
 <footer>
 Connect with us on Instagram <b>@diecast.scape</b><br><br>
-© 2026 Diecast.scape. All dioramas are handcrafted.<br>
-Brand names belong to their respective owners.<br>
+© 2026 Diecast.scape — Handcrafted Scale Dioramas<br>
+All brand names belong to their respective owners.<br><br>
 Thank you for visiting 🤍
 </footer>
+
 
 <a class="ig-float" href="https://instagram.com/diecast.scape" target="_blank">IG</a>
 
