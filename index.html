@@ -13,33 +13,6 @@ body {
   color: #fff;
 }
 
-/* HEADER */
-.top-header {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  position: relative;
-}
-
-.logo {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
-}
-
-.brand-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.brand-name {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-/* TAGLINE + DESCRIPTION */
 .subtitle {
   text-align: center;
   font-size: 13px;
@@ -51,47 +24,27 @@ body {
   text-align: center;
   font-size: 14px;
   color: #CBCCCD;
-  padding: 10px 18px 18px;
+  padding: 10px 18px 20px;
   line-height: 1.5;
-  max-width: 900px;
-  margin: auto;
 }
 
-/* SEARCH */
-.search-wrap {
-  padding: 0 16px 20px;
-  max-width: 1100px;
-  margin: auto;
-}
-
-.search-wrap input {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: none;
-  font-size: 15px;
-  outline: none;
-}
-
-/* PRODUCT SECTION */
+/* SECTION */
 .section {
   padding: 22px 16px;
   border-top: 1px solid #1e1e1e;
-  max-width: 1100px;
-  margin: auto;
 }
 
+/* DIORAMA TITLE */
 .diorama-title {
   font-size: 18px;
   margin-bottom: 10px;
 }
 
-/* SLIDER */
 .slider {
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding-bottom: 10px;
+  padding: 4px 2px 10px;
   scroll-snap-type: x mandatory;
 }
 
@@ -100,7 +53,7 @@ body {
 }
 
 .slider img {
-  width: 240px;
+  width: 260px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 12px;
@@ -138,37 +91,26 @@ body {
 
 /* BUTTON */
 .buy-btn {
-  margin-top: 16px;
+  margin-top: 18px;
   display: inline-block;
   background: #5BC0BE;
   color: #fff;
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 8px 18px;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
 }
 
-/* LIGHTBOX */
-#lightbox {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
+/* FOOTER */
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: #A6ABB0;
+  padding: 22px 16px;
+  border-top: 1px solid #1e1e1e;
 }
 
-#lightbox img {
-  max-width: 95%;
-  max-height: 95%;
-  border-radius: 12px;
-}
-
-/* FLOATING WHATSAPP */
+/* FLOATING WA */
 .wa-float {
   position: fixed;
   bottom: 55px;
@@ -189,8 +131,54 @@ body {
   height: 28px;
 }
 
-/* FOOTER */
-.site-footer {
+  /* FULL IMAGE OVERLAY */
+#lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+#lightbox img {
+  max-width: 95%;
+  max-height: 95%;
+  border-radius: 12px;
+}
+.top-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  position: relative;
+}
+
+.logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+/* CENTER BRAND NAME */
+.brand-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.brand-name {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+  .site-footer {
+  background: #0B132B;
   border-top: 1px solid #1e1e1e;
   padding: 30px 16px;
   color: #A6ABB0;
@@ -213,8 +201,6 @@ body {
   justify-content: space-between;
   gap: 20px;
   flex-wrap: wrap;
-  max-width: 900px;
-  margin: auto;
 }
 
 .footer-grid h4 {
@@ -235,19 +221,49 @@ body {
   color: #777;
 }
 
-/* DESKTOP */
-@media (min-width: 768px) {
-  .slider img {
-    width: 300px;
-  }
-}
 </style>
 </head>
+<script>
+
+function searchProducts() {
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  let sections = document.querySelectorAll(".section");
+
+  sections.forEach(section => {
+    let title = section.querySelector(".diorama-title").innerText.toLowerCase();
+    section.style.display = title.includes(input) ? "block" : "none";
+  });
+}
+
+function openLightbox(src) {
+  const lightbox = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+  img.src = src;
+  lightbox.style.display = "flex";
+  history.pushState(null, "", "#image");
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById("lightbox");
+  lightbox.style.display = "none";
+  history.back();
+}
+
+window.addEventListener("popstate", function () {
+  document.getElementById("lightbox").style.display = "none";
+});
+</script>
+
+
+<div id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img">
+</div>
 
 <body>
-
+  
 <header class="top-header">
-  <img src="logo.png" class="logo">
+  <img src="logo.png" class="logo" alt="Diecast Scape Logo">
+
   <div class="brand-center">
     <div class="brand-name">DIECAST.SCAPE</div>
   </div>
@@ -255,36 +271,97 @@ body {
 
 <div class="subtitle">Built in Scale. Crafted with Soul.</div>
 <div class="description">
-Handcrafted dioramas that elevate your diecast collection with premium materials,
-realistic detailing, and precise scale accuracy — made in limited quantities.
-</div>
+Handcrafted dioramas designed to elevate your diecast collection.
+Built with premium materials, realistic details, and precise scale accuracy.
 
-<div class="search-wrap">
-  <input type="text" id="searchInput" placeholder="Search dioramas..." onkeyup="searchProducts()">
 </div>
+  
+<input
+  type="text"
+  id="searchInput"
+  placeholder="Search dioramas..."
+  onkeyup="searchProducts()"
+  style="
+    width: calc(100% - 32px);
+    margin: 10px 16px 20px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+  ">
 
-<!-- PRODUCT -->
+  <!-- PRODUCT 1 -->
 <div class="section">
   <div class="diorama-title">NISSAN Handcrafted Diorama</div>
+
   <div class="slider">
     <img src="image1.jpg" onclick="openLightbox(this.src)">
     <img src="image2.jpg" onclick="openLightbox(this.src)">
     <img src="image3.jpg" onclick="openLightbox(this.src)">
+    <img src="image4.jpg" onclick="openLightbox(this.src)">
   </div>
+
   <div class="price">
     <span class="old">₹1199</span>
     <span class="new">₹849</span>
   </div>
+
   <div class="discount">29% OFF · Save ₹350</div>
   <div class="ship">+ Shipping charges applicable</div>
-  <a class="buy-btn" href="https://wa.me/917348913798" target="_blank">Order on WhatsApp</a>
+
+  <a class="buy-btn"
+     href="https://wa.me/917348913798?text=Hi%20Diecast.scape%2C%0AI%20want%20to%20order%3A%20NISSAN%20Handcrafted%20Diorama"
+     target="_blank">
+     Order on WhatsApp
+  </a>
 </div>
 
-<!-- FOOTER -->
-<footer class="site-footer">
+<!-- PRODUCT 2 -->
+<div class="section">
+  <div class="diorama-title">BMW Handcrafted Diorama</div>
+
+  <div class="slider">
+    <img src="image1.jpg" onclick="openLightbox(this.src)">
+    <img src="image2.jpg" onclick="openLightbox(this.src)">
+    <img src="image3.jpg" onclick="openLightbox(this.src)">
+    <img src="image4.jpg" onclick="openLightbox(this.src)">
+  </div>
+
+  <div class="price">
+    <span class="old">₹1199</span>
+    <span class="new">₹849</span>
+  </div>
+
+  <div class="discount">29% OFF · Save ₹350</div>
+  <div class="ship">+ Shipping charges applicable</div>
+
+  <a class="buy-btn"
+     href="https://wa.me/917348913798?text=Hi%20Diecast.scape%2C%0AI%20want%20to%20order%3A%20BMW%20Handcrafted%20Diorama"
+     target="_blank">
+     Order on WhatsApp
+  </a>
+</div>
+
+
+<footer>
+Connect with us on Instagram <b>@diecast.scape</b><br><br>
+© 2026 Diecast.scape — Handcrafted Scale Dioramas<br>
+All brand names belong to their respective owners.<br><br>
+Thank you for visiting 
+</footer>
+
+<a class="wa-float"
+href="https://wa.me/917348913798?text=Hi%20I%20need%20help%20regarding%20Diecast.scape%20dioramas."
+target="_blank">
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
+</a>
+
+</body>
+  <footer class="site-footer">
   <div class="footer-social">
-    <a href="#">Instagram</a>
-    <a href="#">WhatsApp</a>
+    <a href="https://instagram.com/diecast.scape" target="_blank">Instagram</a>
+    <a href="https://wa.me/917348913798" target="_blank">WhatsApp</a>
   </div>
 
   <div class="footer-grid">
@@ -293,12 +370,15 @@ realistic detailing, and precise scale accuracy — made in limited quantities.
       <p>Privacy Policy</p>
       <p>Shipping Policy</p>
       <p>Return & Cancellation</p>
+      <p>Terms of Service</p>
     </div>
+
     <div>
-      <h4>INFO</h4>
+      <h4>INFORMATION</h4>
       <p>About Us</p>
-      <p>Contact</p>
+      <p>Contact Us</p>
       <p>FAQ</p>
+      <p>Order via WhatsApp</p>
     </div>
   </div>
 
@@ -307,29 +387,4 @@ realistic detailing, and precise scale accuracy — made in limited quantities.
   </div>
 </footer>
 
-<a class="wa-float" href="https://wa.me/917348913798" target="_blank">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
-</a>
-
-<div id="lightbox" onclick="this.style.display='none'">
-  <img id="lightbox-img">
-</div>
-
-<script>
-function searchProducts() {
-  let input = document.getElementById("searchInput").value.toLowerCase();
-  document.querySelectorAll(".section").forEach(sec => {
-    let title = sec.querySelector(".diorama-title").innerText.toLowerCase();
-    sec.style.display = title.includes(input) ? "block" : "none";
-  });
-}
-
-function openLightbox(src) {
-  document.getElementById("lightbox-img").src = src;
-  document.getElementById("lightbox").style.display = "flex";
-}
-</script>
-
-</body>
 </html>
-
