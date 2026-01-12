@@ -41,23 +41,28 @@ body {
 }
 
 .slider {
+  scrollbar-width: none;       /* Firefox */
+}
+.slider::-webkit-scrollbar {
+  display: none;               /* Chrome */
+}
+
+}
+.slider {
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding: 6px 6px 6px 6px;
   scroll-snap-type: x mandatory;
-}
-
-.slider::-webkit-scrollbar {
-  display: none;
+  padding: 0 16px;       
 }
 
 .slider img {
-  width: 240px;
+  width: 85%;
+  max-width: 260px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 12px;
-  scroll-snap-align: start;
+  scroll-snap-align: center;  /* ✅ better centering */
   background: #000;
 }
 
