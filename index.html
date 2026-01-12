@@ -173,9 +173,21 @@ footer {
   letter-spacing: 1px;
 }
 
+
 </style>
 </head>
 <script>
+
+function searchProducts() {
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  let sections = document.querySelectorAll(".section");
+
+  sections.forEach(section => {
+    let title = section.querySelector(".diorama-title").innerText.toLowerCase();
+    section.style.display = title.includes(input) ? "block" : "none";
+  });
+}
+
 function openLightbox(src) {
   const lightbox = document.getElementById("lightbox");
   const img = document.getElementById("lightbox-img");
@@ -220,6 +232,21 @@ Built with premium materials, realistic details, and precise scale accuracy.
 Perfect for collectors, photographers, and automotive enthusiasts who value craftsmanship.
 Each diorama is made in limited quantities to maintain uniqueness and quality.
 </div>
+  
+<input
+  type="text"
+  id="searchInput"
+  placeholder="Search dioramas..."
+  onkeyup="searchProducts()"
+  style="
+    width: calc(100% - 32px);
+    margin: 10px 16px 20px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+  ">
 
   <!-- PRODUCT 1 -->
 <div class="section">
