@@ -81,6 +81,31 @@ body {
   box-sizing: border-box;
 }
 
+/* ===== POLICY / INFO PAGES ===== */
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px 18px;
+}
+
+.page h1 {
+  font-size: 22px;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.page p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #CBCCCD;
+  margin-bottom: 14px;
+}
+
+.page a {
+  color: #5BC0BE;
+  text-decoration: none;
+}
+
 /* ===== PRODUCT SECTION ===== */
 .section {
   text-align: left;
