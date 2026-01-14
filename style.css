@@ -34,7 +34,7 @@ body {
 }
 
 /* Mobile fix */
-@media (max-width: 480px) {
+@media (max-width: 320px) {
   .top-header {
     flex-direction: column;
     gap: 6px;
@@ -48,7 +48,7 @@ body {
     height: 70px;
   }
   .brand-name {
-    font-size: 20px;
+    font-size: 24px;
   }
 }
 
