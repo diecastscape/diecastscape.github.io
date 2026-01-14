@@ -86,7 +86,7 @@ body {
 
 .footer-copy {
   text-align: center;
-  font-size: 11px;
+  font-size: 7px;
   margin-top: 25px;
   color: #777;
 }
@@ -94,6 +94,42 @@ body {
 .site-footer a {
   color: #CBCCCD;
   text-decoration: none;
+}
+  .price {
+  margin-top: 8px;
+}
+
+.old {
+  color: #A73F35;
+  text-decoration: line-through;
+}
+
+.new {
+  color: #E8ECEE;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.discount {
+  font-size: 13px;
+  color: #B7FFAD;
+}
+
+.ship {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* ===== BUTTON ===== */
+.buy-btn {
+  margin-top: 12px;
+  display: inline-block;
+  background: #5BC0BE;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
 }
 }
 
@@ -185,7 +221,7 @@ body {
 
 /* ===== PRICE ===== */
 .price {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .old {
@@ -211,7 +247,7 @@ body {
 
 /* ===== BUTTON ===== */
 .buy-btn {
-  margin-top: 18px;
+  margin-top: 16px;
   display: inline-block;
   background: #5BC0BE;
   color: #fff;
