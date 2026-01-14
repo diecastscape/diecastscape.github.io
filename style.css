@@ -35,6 +35,36 @@ body {
 }
 /* Mobile fix – horizontal with gap */
 
+@media (max-width: 400px) {
+  
+  .top-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;       /* space from screen edges */
+  position: relative;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-right: 15px;       /* MORE GAP to the right */
+}
+  
+.brand-name {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.brand-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+}
+  
 
 /* ===== TEXT ===== */
 .subtitle {
