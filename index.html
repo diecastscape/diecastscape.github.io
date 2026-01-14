@@ -8,8 +8,13 @@
 <link rel="stylesheet" href="style.css">
   
 </head>
-<script>
 
+<div id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img">
+</div>
+
+<body>
+  <script>
 function searchProducts() {
   let input = document.getElementById("searchInput").value.toLowerCase();
   let sections = document.querySelectorAll(".section");
@@ -38,13 +43,6 @@ window.addEventListener("popstate", function () {
   document.getElementById("lightbox").style.display = "none";
 });
 </script>
-
-
-<div id="lightbox" onclick="closeLightbox()">
-  <img id="lightbox-img">
-</div>
-
-<body>
   
 <header class="site-header">
   <div class="header-inner">
@@ -147,8 +145,7 @@ href="https://wa.me/918792744018?text=Hi%20I%20need%20help%20regarding%20Diecast
 target="_blank">
 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
 </a>
-
-</body>
+  
   <footer class="site-footer">
   <div class="footer-social">
     <a href="https://instagram.com/diecast.scape" target="_blank">Instagram</a>
@@ -174,4 +171,5 @@ Thank you for visiting.
   </div>
 </footer>
 
+</body>
 </html>
