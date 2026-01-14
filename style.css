@@ -20,12 +20,6 @@ body {
   object-fit: contain;
   margin-right: 18px;       /* MORE GAP to the right */
 }
-
-.brand-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
   
 .brand-name {
   font-size: 26px;
