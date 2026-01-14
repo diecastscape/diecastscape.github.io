@@ -10,14 +10,15 @@ body {
 .top-header {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: 12px 20px;       /* space from screen edges */
   position: relative;
 }
 
 .logo {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
+  margin-right: 18px;       /* MORE GAP to the right */
 }
 
 .brand-center {
@@ -25,39 +26,31 @@ body {
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
-}
-
+  
 .brand-name {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 800;
   letter-spacing: 1px;
+
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-2px); /* centered + slightly lifted */
 }
 
 /* Mobile fix – horizontal with gap */
-@media (max-width: 400px) {
-  .top-header {
-    flex-direction: row;          /* keep side by side */
-    justify-content: center;      /* center whole group */
-    align-items: center;
-    gap: 12px;                    /* FIXED space between logo & text */
-  }
-
-  .brand-center {
-    position: static;             /* remove absolute positioning */
-    transform: none;
-  }
-
+@media (max-width: 410px) {
   .logo {
-    width: 70px;
-    height: 70px;
-    flex-shrink: 0;               /* prevents logo from shrinking */
+    width: 68px;
+    height: 68px;
+    margin-right: 16px;
   }
 
   .brand-name {
     font-size: 22px;
-    white-space: nowrap;          /* prevents text wrapping */
+    transform: translateX(-50%) translateY(-1px);
   }
 }
+
 
 /* ===== TEXT ===== */
 .subtitle {
