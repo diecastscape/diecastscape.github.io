@@ -25,12 +25,14 @@ body {
   font-size: 26px;
   font-weight: 800;
   letter-spacing: 1px;
-
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) translateY(-2px); /* centered + slightly lifted */
 }
 
+.brand-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
 /* Mobile fix – horizontal with gap */
 
 
