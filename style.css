@@ -33,22 +33,29 @@ body {
   letter-spacing: 1px;
 }
 
-/* Mobile fix */
-@media (max-width: 450px) {
+/* Mobile fix – horizontal with gap */
+@media (max-width: 400px) {
   .top-header {
-    flex-direction: column;
-    gap: 6px;
+    flex-direction: row;          /* keep side by side */
+    justify-content: center;      /* center whole group */
+    align-items: center;
+    gap: 12px;                    /* FIXED space between logo & text */
   }
+
   .brand-center {
-    position: static;
+    position: static;             /* remove absolute positioning */
     transform: none;
   }
+
   .logo {
     width: 70px;
     height: 70px;
+    flex-shrink: 0;               /* prevents logo from shrinking */
   }
+
   .brand-name {
-    font-size: 24px;
+    font-size: 22px;
+    white-space: nowrap;          /* prevents text wrapping */
   }
 }
 
