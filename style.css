@@ -86,17 +86,13 @@ body {
 
 .footer-copy {
   text-align: center;
-  font-size: 7px;
+  font-size: 3px;
   margin-top: 25px;
   color: #777;
 }
 
-.site-footer a {
-  color: #CBCCCD;
-  text-decoration: none;
-}
   .price {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .old {
