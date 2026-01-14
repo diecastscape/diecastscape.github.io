@@ -34,7 +34,7 @@ body {
 }
 
 /* Mobile fix */
-@media (max-width: 320px) {
+@media (max-width: 380px) {
   .top-header {
     flex-direction: column;
     gap: 6px;
