@@ -32,18 +32,6 @@ body {
 }
 
 /* Mobile fix – horizontal with gap */
-@media (max-width: 410px) {
-  .logo {
-    width: 68px;
-    height: 68px;
-    margin-right: 16px;
-  }
-
-  .brand-name {
-    font-size: 22px;
-    transform: translateX(-50%) translateY(-1px);
-  }
-}
 
 
 /* ===== TEXT ===== */
