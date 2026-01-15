@@ -159,6 +159,22 @@ body {
   box-sizing: border-box;
 }
 
+/* ===== COMING SOON BANNER ===== */
+.coming-soon {
+  margin: 28px auto 18px;
+  text-align: center;
+  font-size: 15px;
+  letter-spacing: 0.6px;
+  color: #bfcad9;
+  opacity: 0.9;
+}
+
+.coming-soon span {
+  color: #5BC0BE; /* same accent as your buttons */
+  font-weight: 600;
+}
+
+
 /* ===== POLICY / INFO PAGES ===== */
 .page {
   max-width: 800px;
