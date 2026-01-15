@@ -300,6 +300,8 @@ body {
 
   background: #0B132B;
   border-top: 1px solid #5BC0BE;
+  padding-top: 25px;  
+  padding-bottom: 30px;
 }
 
 .footer-social {
@@ -307,7 +309,7 @@ body {
   margin-bottom: 20px;
 }
 
-.footer-social a {
+.footer-social a1 {
   margin: 0 10px;
   color: #5BC0BE;
   text-decoration: none;
@@ -335,7 +337,7 @@ body {
   text-align: center;
   font-size: 8px;   /* base size for all */
   margin-top: 25px;
-  color: #777;
+  color: 777;
   line-height: 1.6;
 }
 
