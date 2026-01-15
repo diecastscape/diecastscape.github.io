@@ -292,10 +292,15 @@ body {
 
 /* ===== FOOTER ===== */
 .site-footer {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
   background: #0B132B;
   border-top: 1px solid #5BC0BE;
-  padding: 30px 16px;
-  color: #A6ABB0;
 }
 
 .footer-social {
