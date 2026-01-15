@@ -325,7 +325,7 @@ body {
   margin-bottom: 20px;
 }
 
-.footer-social a1 {
+.footer-social a {
   margin: 0 10px;
   color: #5BC0BE;
   text-decoration: none;
@@ -358,7 +358,6 @@ body {
 }
 
 .site-footer a {
-  color: #CBCCCD;
   text-decoration: none;
 }
 
