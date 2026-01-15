@@ -45,6 +45,7 @@ body {
 }
 
 /* MOBILE */
+
 @media (max-width: 425px) {
   .header-inner {
   height: 50px;
@@ -75,20 +76,13 @@ body {
 
 .footer-grid h4 {
   color: #fff;
-  font-size: 14px;
+  font-size: 8px;
   margin-bottom: 8px;
 }
 
 .footer-grid p {
   font-size: 12px;
   margin: 6px 0;
-}
-
-.footer-copy {
-  text-align: center;
-  font-size: 6px;
-  margin-top: 25px;
-  color: #999;
 }
 
   .price {
@@ -127,6 +121,11 @@ body {
   text-decoration: none;
   font-weight: 600;
 }
+}
+@media (min-width: 600px) {
+  .footer-copy {
+    font-size: 12px;
+  }
 }
 
 
@@ -332,12 +331,12 @@ body {
   font-size: 15px;
   margin: 6px 0;
 }
-
 .footer-copy {
   text-align: center;
-  font-size: 14px;
+  font-size: 8px;   /* base size for all */
   margin-top: 25px;
   color: #777;
+  line-height: 1.6;
 }
 
 .site-footer a {
