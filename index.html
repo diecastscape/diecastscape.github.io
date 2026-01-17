@@ -208,25 +208,30 @@ function closeMenu() {
   document.body.classList.remove("menu-open");
 }
 
-const toggleSwitch = document.querySelector(".toggle-switch");
+document.addEventListener("DOMContentLoaded", function () {
+  const toggleSwitch = document.querySelector(".toggle-switch");
 
-// Load saved theme
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
-  toggleSwitch.classList.add("active");
-}
-
-function toggleThemeButton() {
-  document.body.classList.toggle("light-theme");
-  toggleSwitch.classList.toggle("active");
-
-  // Save preference
-  if (document.body.classList.contains("light-theme")) {
-    localStorage.setItem("theme", "light");
-  } else {
-    localStorage.setItem("theme", "dark");
+  // Apply saved theme
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-theme");
+    if (toggleSwitch) toggleSwitch.classList.add("active");
   }
-}
+
+  // Toggle theme (global)
+  window.toggleThemeButton = function () {
+    document.body.classList.toggle("light-theme");
+
+    if (toggleSwitch) {
+      toggleSwitch.classList.toggle("active");
+    }
+
+    localStorage.setItem(
+      "theme",
+      document.body.classList.contains("light-theme") ? "light" : "dark"
+    );
+  };
+});
+
 </script>
 
 </body>
