@@ -9,6 +9,39 @@
   gtag('js', new Date());
 
   gtag('config', 'G-3X5F6D7CST');
+
+  function openMenu() {
+  document.body.classList.add("menu-open");
+}
+
+function closeMenu() {
+  document.body.classList.remove("menu-open");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const toggleSwitch = document.querySelector(".toggle-switch");
+
+  // Apply saved theme
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-theme");
+    if (toggleSwitch) toggleSwitch.classList.add("active");
+  }
+
+  // Toggle theme (global)
+  window.toggleThemeButton = function () {
+    document.body.classList.toggle("light-theme");
+
+    if (toggleSwitch) {
+      toggleSwitch.classList.toggle("active");
+    }
+
+    localStorage.setItem(
+      "theme",
+      document.body.classList.contains("light-theme") ? "light" : "dark"
+    );
+  };
+});
+
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +55,11 @@
 <header class="site-header">
   <div class="header-inner">
     <img src="logo.png" class="header-logo" alt="Diecast Scape Logo">
+
     <div class="header-title">DIECAST.SCAPE</div>
+
+    <!-- Hamburger -->
+    <div class="hamburger" onclick="openMenu()">☰</div>
   </div>
 </header>
 
