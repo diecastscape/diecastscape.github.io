@@ -128,17 +128,17 @@ body.light-theme {
 }
 @media (min-width: 600px) {
   .footer-copy {
-    font-size: 15px;
+    font-size: 20px;
   }
   .side-menu {
     width: 300px;
   }
   .page h1 {
-  font-size: 26px;
+  font-size: 32px;
 }
 
 .page p {
-  font-size: 18px;
+  font-size: 25px;
 }
   .close-btn {
   font-size: 22px;
@@ -150,31 +150,43 @@ body.light-theme {
 .subtitle {
   text-align: center;
   font-size: 13px;
-  color: var(--sb-titel)
-  margin-top: 14px;
+  color:var(--sb-titel);
+  margin-top 14px;
 }
 
 .description {
   text-align: center;
   font-size: 14px;
-  color: var(--sb-discr)
+  color: var(--sb-discr);
   padding: 10px 18px 20px;
   line-height: 1.5;
 }
-
-/* ===== SEARCH ===== */
 .search-bar {
   width: 100%;
   max-width: 1000px;
-  color: #5BC0BE;
   display: block;
   margin: 10px auto 20px;
   padding: 12px 14px;
+
+  background: var(--bg-header);     /* background color */
+  color: var(--text-main);          /* text color */
+
   border-radius: 10px;
-  border: none;
+  border: 1px solid var(--border-color);
+
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
+
+  transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.search-bar::placeholder {
+  color: var(--text-muted);
+}
+
+.search-bar:focus {
+  border-color: var(--accent);
 }
 
 /* ===== COMING SOON BANNER ===== */
@@ -182,6 +194,7 @@ body.light-theme {
   margin: 28px auto 18px;
   text-align: center;
   font-size: 15px;
+  font-weight: 450;
   letter-spacing: 0.6px;
   color: var(--com-soon);
   opacity: 0.9;
@@ -227,6 +240,7 @@ body.light-theme {
 
 .diorama-title {
   font-size: 18px;
+  font-weight: 620;
   color: var(--dio-tital);
   margin-bottom: 10px;
 }
@@ -259,7 +273,7 @@ body.light-theme {
 }
 
 .new {
-  color:var(--pri-tag)
+  color:var(--pri-tag);
   font-size: 20px;
   font-weight: bold;
 }
