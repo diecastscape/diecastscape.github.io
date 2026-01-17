@@ -105,7 +105,7 @@ body.light-theme {
   }
 
   .footer-copy {
-    font-size: 11px;
+    font-size: 7px;
   }
 
   .price {
@@ -134,17 +134,17 @@ body.light-theme {
   padding: 8px 16px;
 }
     .toggle-switch {
-    width: 34px;
-    height: 18px;
-  }
-
-  .toggle-circle {
-    width: 14px;
+    width: 30px;
     height: 14px;
   }
 
+  .toggle-circle {
+    width: 10px;
+    height: 10px;
+  }
+
   .toggle-switch.active .toggle-circle {
-    transform: translateX(16px);
+    transform: translateX(14px);
   }
 }
 @media (min-width: 600px) {
@@ -498,7 +498,7 @@ body.menu-open .menu-overlay {
   padding-bottom: 14px;
   border-bottom: 1px solid rgba(255,255,255,0.15);
   color: #fff;
-  font-size: 15px;
+  font-size: 10px;
 }
 
 /* Switch background */
