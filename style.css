@@ -96,13 +96,17 @@ body.light-theme {
     font-size: 18px;
   }
 
-.footer-grid h4 {
-  font-size: 8px;
-}
+  .footer-grid h4 {
+    font-size: 13px;
+  }
 
-.footer-grid p {
-  font-size: 12px;
-}
+  .footer-grid p {
+    font-size: 14px;
+  }
+
+  .footer-copy {
+    font-size: 11px;
+  }
 
   .price {
   margin-top: 10px;
@@ -129,6 +133,19 @@ body.light-theme {
   margin-top: 10px;
   padding: 8px 16px;
 }
+    .toggle-switch {
+    width: 34px;
+    height: 18px;
+  }
+
+  .toggle-circle {
+    width: 14px;
+    height: 14px;
+  }
+
+  .toggle-switch.active .toggle-circle {
+    transform: translateX(16px);
+  }
 }
 @media (min-width: 600px) {
   .footer-copy {
@@ -373,29 +390,33 @@ body.light-theme {
   gap: 25px;
 }
 
+/* ===== FOOTER TEXT (BASE = DESKTOP) ===== */
 .footer-grid h4 {
-  color:var(--pag-h);
   font-size: 17px;
+  color: var(--pag-h);
   margin-bottom: 8px;
 }
 
 .footer-grid p {
-  color:var(--pag-p);
   font-size: 15px;
+  color: var(--pag-p);
   margin: 6px 0;
 }
+
 .footer-copy {
   text-align: center;
-  font-size: 8px;   /* base size for all */
+  font-size: 13px;
   margin-top: 25px;
-  color: #cbcccd;
+  color: var(--text-muted);
   line-height: 1.6;
 }
 
+/* Footer links */
 .site-footer a {
-  color: #cbcccd;
+  color: var(--text-muted);
   text-decoration: none;
 }
+
 
 /* ===== HAMBURGER ICON ===== */
 .hamburger {
