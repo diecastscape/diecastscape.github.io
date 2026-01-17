@@ -134,13 +134,13 @@ body.light-theme {
   padding: 8px 16px;
 }
     .toggle-switch {
-    width: 30px;
-    height: 14px;
+    width: 38px;
+    height: 20px;
   }
 
   .toggle-circle {
-    width: 10px;
-    height: 10px;
+    width: 16px;
+    height: 16px;
   }
 
   .toggle-switch.active .toggle-circle {
@@ -463,6 +463,7 @@ body.light-theme {
   font-size: 18px;
   margin-bottom: 20px;
   color: #fff;
+  font-weight: 450;
 }
 
 .close-btn {
@@ -499,6 +500,7 @@ body.menu-open .menu-overlay {
   border-bottom: 1px solid rgba(255,255,255,0.15);
   color: #fff;
   font-size: 10px;
+  font-weight: 450;
 }
 
 /* Switch background */
@@ -535,6 +537,15 @@ body.menu-open .menu-overlay {
 body.light-theme .toggle-switch {
   background: var(--accent);
 }
+.menu-sale {
+  color: var(--accent);
+  font-weight: 600;
+}
+.dev-note span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 
 
 
