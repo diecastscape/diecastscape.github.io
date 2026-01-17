@@ -26,35 +26,6 @@
 
   
 <body>
-  <script>
-function searchProducts() {
-  let input = document.getElementById("searchInput").value.toLowerCase();
-  let sections = document.querySelectorAll(".section");
-
-  sections.forEach(section => {
-    let title = section.querySelector(".diorama-title").innerText.toLowerCase();
-    section.style.display = title.includes(input) ? "block" : "none";
-  });
-}
-
-function openLightbox(src) {
-  const lightbox = document.getElementById("lightbox");
-  const img = document.getElementById("lightbox-img");
-  img.src = src;
-  lightbox.style.display = "flex";
-  history.pushState(null, "", "#image");
-}
-
-function closeLightbox() {
-  const lightbox = document.getElementById("lightbox");
-  lightbox.style.display = "none";
-  history.back();
-}
-
-window.addEventListener("popstate", function () {
-  document.getElementById("lightbox").style.display = "none";
-});
-</script>
   
 <header class="site-header">
   <div class="header-inner">
@@ -185,6 +156,14 @@ Thank you for visiting.
     <span class="close-btn" onclick="closeMenu()">✕</span>
   </div>
 
+  <!-- Theme Toggle (UI only) -->
+<div class="theme-toggle">
+  <span>Theme</span>
+  <div class="toggle-switch" onclick="toggleThemeButton()">
+    <div class="toggle-circle"></div>
+  </div>
+</div>
+
   <a href="about.html">About Us</a>
   <a href="privacy.html">Privacy Policy</a>
   <a href="shipping.html">Shipping Policy</a>
@@ -193,12 +172,60 @@ Thank you for visiting.
 </nav>
 
   <script>
+    function searchProducts() {
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  let sections = document.querySelectorAll(".section");
+
+  sections.forEach(section => {
+    let title = section.querySelector(".diorama-title").innerText.toLowerCase();
+    section.style.display = title.includes(input) ? "block" : "none";
+  });
+}
+
+function openLightbox(src) {
+  const lightbox = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+  img.src = src;
+  lightbox.style.display = "flex";
+  history.pushState(null, "", "#image");
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById("lightbox");
+  lightbox.style.display = "none";
+  history.back();
+}
+
+window.addEventListener("popstate", function () {
+  document.getElementById("lightbox").style.display = "none";
+});
+    
 function openMenu() {
   document.body.classList.add("menu-open");
 }
 
 function closeMenu() {
   document.body.classList.remove("menu-open");
+}
+
+const toggleSwitch = document.querySelector(".toggle-switch");
+
+// Load saved theme
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+  toggleSwitch.classList.add("active");
+}
+
+function toggleThemeButton() {
+  document.body.classList.toggle("light-theme");
+  toggleSwitch.classList.toggle("active");
+
+  // Save preference
+  if (document.body.classList.contains("light-theme")) {
+    localStorage.setItem("theme", "light");
+  } else {
+    localStorage.setItem("theme", "dark");
+  }
 }
 </script>
 
