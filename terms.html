@@ -9,6 +9,39 @@
   gtag('js', new Date());
 
   gtag('config', 'G-3X5F6D7CST');
+  
+  function openMenu() {
+  document.body.classList.add("menu-open");
+}
+
+function closeMenu() {
+  document.body.classList.remove("menu-open");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const toggleSwitch = document.querySelector(".toggle-switch");
+
+  // Apply saved theme
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-theme");
+    if (toggleSwitch) toggleSwitch.classList.add("active");
+  }
+
+  // Toggle theme (global)
+  window.toggleThemeButton = function () {
+    document.body.classList.toggle("light-theme");
+
+    if (toggleSwitch) {
+      toggleSwitch.classList.toggle("active");
+    }
+
+    localStorage.setItem(
+      "theme",
+      document.body.classList.contains("light-theme") ? "light" : "dark"
+    );
+  };
+});
+
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,11 +51,14 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
     <img src="logo.png" class="header-logo" alt="Diecast Scape Logo">
+
     <div class="header-title">DIECAST.SCAPE</div>
+
+    <!-- Hamburger -->
+    <div class="hamburger" onclick="openMenu()">☰</div>
   </div>
 </header>
 
@@ -51,6 +87,30 @@ All brand names belong to their respective owners.<br><br>
 Thank you for visiting. 
   </div>
 </footer>
+    <!-- Overlay -->
+<div class="menu-overlay" onclick="closeMenu()"></div>
+
+<!-- Slide Menu -->
+<nav class="side-menu">
+  <div class="menu-header">
+    <span>Menu</span>
+    <span class="close-btn" onclick="closeMenu()">✕</span>
+  </div>
+
+  <!-- Theme Toggle (UI only) -->
+<div class="theme-toggle">
+  <span>Theme</span>
+  <div class="toggle-switch" onclick="toggleThemeButton()">
+    <div class="toggle-circle"></div>
+  </div>
+</div>
+
+  <a href="about.html">About Us</a>
+  <a href="privacy.html">Privacy Policy</a>
+  <a href="shipping.html">Shipping Policy</a>
+  <a href="return.html">Return & Cancellation</a>
+  <a href="terms.html">Terms of Service</a>
+</nav>
 
 </body>
 </html>
