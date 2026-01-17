@@ -21,7 +21,10 @@
 <div id="lightbox" onclick="closeLightbox()">
   <img id="lightbox-img">
 </div>
+<!-- Overlay -->
+<div class="menu-overlay" onclick="closeMenu()"></div>
 
+  
 <body>
   <script>
 function searchProducts() {
@@ -56,7 +59,11 @@ window.addEventListener("popstate", function () {
 <header class="site-header">
   <div class="header-inner">
     <img src="logo.png" class="header-logo" alt="Diecast Scape Logo">
+
     <div class="header-title">DIECAST.SCAPE</div>
+
+    <!-- Hamburger -->
+    <div class="hamburger" onclick="openMenu()">☰</div>
   </div>
 </header>
 
@@ -167,6 +174,100 @@ All brand names belong to their respective owners.<br><br>
 Thank you for visiting. 
   </div>
 </footer>
+/* ===== HAMBURGER ICON ===== */
+.hamburger {
+  position: absolute;
+  right: 16px;
+  font-size: 26px;
+  cursor: pointer;
+  color: #fff;
+  user-select: none;
+}
+
+/* ===== OVERLAY ===== */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 998;
+}
+
+/* ===== SIDE MENU ===== */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 50vw;               /* Mobile = 50% */
+  max-width: 320px;          /* Desktop limit */
+  background: #061D3C;
+  transform: translateX(100%);
+  transition: transform 0.35s ease;
+  z-index: 999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Menu header */
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.close-btn {
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Menu links */
+.side-menu a {
+  display: block;
+  padding: 12px 0;
+  color: #5BC0BE;
+  text-decoration: none;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ACTIVE STATE */
+body.menu-open .side-menu {
+  transform: translateX(0);
+}
+
+body.menu-open .menu-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Desktop width adjustment */
+@media (min-width: 768px) {
+  .side-menu {
+    width: 300px;
+  }
+}
+<!-- Overlay -->
+<div class="menu-overlay" onclick="closeMenu()"></div>
+
+<!-- Slide Menu -->
+<nav class="side-menu">
+  <div class="menu-header">
+    <span>Menu</span>
+    <span class="close-btn" onclick="closeMenu()">✕</span>
+  </div>
+
+  <a href="about.html">About Us</a>
+  <a href="privacy.html">Privacy Policy</a>
+  <a href="shipping.html">Shipping Policy</a>
+  <a href="return.html">Return & Cancellation</a>
+  <a href="terms.html">Terms of Service</a>
+</nav>
 
 </body>
 </html>
