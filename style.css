@@ -18,6 +18,8 @@ body {
   --dio-tital:#fff;
   --pri-tag:#E3E3E3;
   --dic-ount:#B7FFAD;
+  --pag-h:#fff;
+  --pag-p:#CBCCCD;
   --text-main: #ffffff;
   --text-muted: #C7C7C7;
   --accent: #5BC0BE;
@@ -33,6 +35,8 @@ body.light-theme {
   --dio-tital:#0D0D0D;
   --pri-tag:#454545;
   --dic-ount:#38C624;
+  --pag-h:#2B2B2B;
+  --pag-p:#5C5C5C;
   --text-main: #0B132B;
   --text-muted: #333333;
   --accent: #0AA1A7;
@@ -151,7 +155,7 @@ body.light-theme {
   text-align: center;
   font-size: 13px;
   color:var(--sb-titel);
-  margin-top 14px;
+  margin-top: 14px;
 }
 
 .description {
@@ -216,18 +220,19 @@ body.light-theme {
 .page h1 {
   font-size: 20px;
   margin-bottom: 16px;
-  color: #fff;
+  color: var(--pag-h);
 }
 
 .page p {
   font-size: 12px;
   line-height: 1.6;
-  color: #CBCCCD;
+  color: var(--pag-p);
   margin-bottom: 14px;
 }
 
 .page a {
   color: #5BC0BE;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -345,8 +350,6 @@ body.light-theme {
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-
-  background: #0B132B;
   border-top: 1px solid #5BC0BE;
   padding-top: 25px;  
   padding-bottom: 30px;
@@ -371,12 +374,13 @@ body.light-theme {
 }
 
 .footer-grid h4 {
-  color: #fff;
+  color:var(--pag-h);
   font-size: 17px;
   margin-bottom: 8px;
 }
 
 .footer-grid p {
+  color:var(--pag-p);
   font-size: 15px;
   margin: 6px 0;
 }
