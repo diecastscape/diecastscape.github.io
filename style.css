@@ -516,6 +516,10 @@ body.menu-open .menu-overlay {
 .toggle-switch.active .toggle-circle {
   transform: translateX(22px);
 }
+body.light-theme .toggle-switch {
+  background: var(--accent);
+}
+
 
 
 
