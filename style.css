@@ -545,20 +545,27 @@ body.light-theme .toggle-switch {
   color: var(--accent);
   font-weight: 600;
 }
+/* ===== PRODUCT DETAILS TOGGLE ===== */
+.details-btn {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #5BC0BE;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
 .product-details {
-  margin-top: 12px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
   font-size: 13px;
   color: var(--pag-p);
-  line-height: 1.6;
+  margin-top: 6px;
 }
 
-.product-details h4 {
-  margin-bottom: 8px;
-  font-size: 15px;
-  color: var(--pag-h);
-}
-
-.product-details .note {
-  font-size: 12px;
-  color: var(--text-muted);
+.product-details.open {
+  max-height: 300px;
 }
