@@ -131,7 +131,7 @@ body.light-theme {
 }
 
 }
-@media (min-width: 600px) {
+@media (min-width: 650px) {
   
   .side-menu {
     width: 300px;
@@ -144,16 +144,16 @@ body.light-theme {
  }
 
   .footer-copy {
-    font-size: 13px;
+    font-size: 15px;
   }
   .close-btn {
   font-size: 22px;
   }
   .side-menu a {
-  font-size: 15px;
+  font-size: 17px;
   }
   .theme-toggle {
-  font-size: 16px;
+  font-size: 18px;
   }
 }
 
