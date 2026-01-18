@@ -556,16 +556,24 @@ body.light-theme .toggle-switch {
   cursor: pointer;
   padding: 0;
 }
-
 .product-details {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.35s ease;
+
+  opacity: 0;
+  transform: translateY(-6px);
+
+  transition:
+    max-height 0.45s ease,
+    opacity 0.3s ease,
+    transform 0.3s ease;
+
   font-size: 13px;
   color: var(--pag-p);
   margin-top: 6px;
 }
-
 .product-details.open {
-  max-height: 300px;
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
 }
