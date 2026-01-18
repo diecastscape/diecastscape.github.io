@@ -104,10 +104,6 @@ body.light-theme {
     font-size: 14px;
   }
 
-  .footer-copy {
-    font-size: 7px;
-  }
-
   .price {
   margin-top: 10px;
 }
@@ -156,13 +152,22 @@ body.light-theme {
   }
   .page h1 {
   font-size: 32px;
-}
-
+ }
 .page p {
   font-size: 25px;
-}
+ }
+
+  .footer-copy {
+    font-size: 13px;
+  }
   .close-btn {
   font-size: 22px;
+  }
+  .side-menu a {
+  font-size: 14px;
+  }
+  .theme-toggle {
+  font-size: 15px;
   }
 }
 
@@ -405,7 +410,7 @@ body.light-theme {
 
 .footer-copy {
   text-align: center;
-  font-size: 13px;
+  font-size: 9px;
   margin-top: 25px;
   color: var(--text-muted);
   line-height: 1.6;
@@ -499,14 +504,14 @@ body.menu-open .menu-overlay {
   padding-bottom: 14px;
   border-bottom: 1px solid rgba(255,255,255,0.15);
   color: #fff;
-  font-size: 10px;
-  font-weight: 450;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 /* Switch background */
 .toggle-switch {
-  width: 48px;
-  height: 26px;
+  width: 36px;      /* was 48px */
+  height: 20px;     /* was 26px */
   background: #888;
   border-radius: 50px;
   position: relative;
@@ -514,10 +519,9 @@ body.menu-open .menu-overlay {
   transition: background 0.3s ease;
 }
 
-/* Circle */
 .toggle-circle {
-  width: 22px;
-  height: 22px;
+  width: 16px;      /* was 22px */
+  height: 16px;     /* was 22px */
   background: #fff;
   border-radius: 50%;
   position: absolute;
@@ -532,8 +536,9 @@ body.menu-open .menu-overlay {
 }
 
 .toggle-switch.active .toggle-circle {
-  transform: translateX(22px);
+  transform: translateX(16px);
 }
+
 body.light-theme .toggle-switch {
   background: var(--accent);
 }
