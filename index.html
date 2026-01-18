@@ -77,6 +77,14 @@ Built with premium materials, realistic details, and precise scale accuracy.
 
   <div class="discount">30.45% OFF · Save ₹350</div>
   <div class="ship">+ Shipping charges applicable</div>
+ <button class="details-btn" onclick="toggleDetails(this)">Details ▾</button>
+
+<div class="product-details">
+  <p>Scale: 1:64</p>
+  <p>size: 270×125×120</p>
+  <p>Handcrafted & hand-painted</p>
+  <p>Suitable for Hot Wheels & Mini GT</p>
+</div>
 
   <a class="buy-btn"
      href="https://wa.me/918792744018?text=Hi%20Diecast.scape%2C%0AI%20would%20like%20to%20place%20an%20order%20for%20the%20Porsche%20Handcrafted%20Diorama%2C%20priced%20at%20%E2%82%B9799%20(30.45%25%20discount).%0AKindly%20let%20me%20know%20the%20delivery%20options%20and%20payment%20details."
@@ -267,6 +275,42 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 });
 
+let activeDetails = null;
+let activeButton = null;
+
+function toggleDetails(btn) {
+  const details = btn.nextElementSibling;
+  const isOpen = details.classList.contains("open");
+
+  if (activeDetails && activeDetails !== details) {
+    activeDetails.classList.remove("open");
+    activeButton.innerHTML = "Details ▾";
+  }
+
+  if (!isOpen) {
+    details.classList.add("open");
+    btn.innerHTML = "Details ▴";
+    activeDetails = details;
+    activeButton = btn;
+  } else {
+    details.classList.remove("open");
+    btn.innerHTML = "Details ▾";
+    activeDetails = null;
+    activeButton = null;
+  }
+}
+
+window.addEventListener("scroll", () => {
+  if (!activeDetails) return;
+
+  const rect = activeDetails.getBoundingClientRect();
+  if (rect.bottom < 0 || rect.top > window.innerHeight) {
+    activeDetails.classList.remove("open");
+    activeButton.innerHTML = "Details ▾";
+    activeDetails = null;
+    activeButton = null;
+  }
+});
 </script>
 
 </body>
