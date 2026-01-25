@@ -107,11 +107,7 @@ body.light-theme {
   .price {
   margin-top: 10px;
 }
-
-.old {
-  text-decoration: line-through;
-}
-
+  
 .new {
   font-size: 20px;
 }
@@ -178,7 +174,7 @@ body.light-theme {
   max-width: 1000px;
   display: block;
   margin: 10px auto 20px;
-  padding: 16px 18px;
+  padding: 14px 18px;
 
   background: var(--bg-header);     /* background color */
   color: var(--text-main);          /* text color */
@@ -247,7 +243,7 @@ body.light-theme {
 /* ===== PRODUCT SECTION ===== */
 .section {
   text-align: left;
-  padding: 20px 18px;
+  padding: 20px 23px;
   border-top: 1px solid #5BC0BE;
 }
 
