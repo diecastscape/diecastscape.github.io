@@ -67,17 +67,17 @@ function toggleDetails(btn) {
 
   if (activeDetails && activeDetails !== details) {
     activeDetails.classList.remove("open");
-    activeButton.innerHTML = "Details ▾";
+    activeButton.innerHTML = activeButton.dataset.label + " ▾";
   }
 
   if (!isOpen) {
     details.classList.add("open");
-    btn.innerHTML = "Details ▴";
+    btn.innerHTML = btn.dataset.label + " ▴";
     activeDetails = details;
     activeButton = btn;
   } else {
     details.classList.remove("open");
-    btn.innerHTML = "Details ▾";
+    btn.innerHTML = btn.dataset.label + " ▾";
     activeDetails = null;
     activeButton = null;
   }
@@ -89,7 +89,7 @@ window.addEventListener("scroll", () => {
   const rect = activeDetails.getBoundingClientRect();
   if (rect.bottom < 0 || rect.top > window.innerHeight) {
     activeDetails.classList.remove("open");
-    activeButton.innerHTML = "Details ▾";
+    activeButton.innerHTML = activeButton.dataset.label + " ▾";
     activeDetails = null;
     activeButton = null;
   }
