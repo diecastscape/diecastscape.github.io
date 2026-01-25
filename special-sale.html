@@ -10,39 +10,6 @@
   gtag('js', new Date());
 
   gtag('config', 'G-3X5F6D7CST');
-  
-  function openMenu() {
-  document.body.classList.add("menu-open");
-}
-
-function closeMenu() {
-  document.body.classList.remove("menu-open");
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const toggleSwitch = document.querySelector(".toggle-switch");
-
-  // Apply saved theme
-  if (localStorage.getItem("theme") === "light") {
-    document.body.classList.add("light-theme");
-    if (toggleSwitch) toggleSwitch.classList.add("active");
-  }
-
-  // Toggle theme (global)
-  window.toggleThemeButton = function () {
-    document.body.classList.toggle("light-theme");
-
-    if (toggleSwitch) {
-      toggleSwitch.classList.toggle("active");
-    }
-
-    localStorage.setItem(
-      "theme",
-      document.body.classList.contains("light-theme") ? "light" : "dark"
-    );
-  };
-});
-
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,19 +32,64 @@ document.addEventListener("DOMContentLoaded", function () {
 </header>
 
 
-<!-- PAGE CONTENT -->
+<!-- PAGE INTRO -->
 <div class="page">
   <h1>🔥 Special Sale</h1>
-  <p>
-    Limited-time offers and exclusive deals will be available here soon.
-  </p>
-
-  <div class="coming-soon">
-    <span>Coming Soon</span>
-  </div>
-<p><a href="index.html">← Back to Home</a></p>
-
+  <p>Limited stock · Special pricing</p>
 </div>
+
+<!-- SEARCH -->
+<input
+  type="text"
+  id="searchInput"
+  placeholder="Search special sale..."
+  onkeyup="searchProducts()"
+  class="search-bar">
+
+<!-- PRODUCT 1 -->
+<div class="section">
+  <div class="diorama-title">Porsche Special Sale Diorama</div>
+
+  <div class="slider">
+    <img src="images/products/Image16.jpg" onclick="openLightbox(this.src)">
+    <img src="images/products/Image17.jpg" onclick="openLightbox(this.src)">
+  </div>
+
+  <div class="price">
+    <span class="new">₹699</span>
+  </div>
+
+  <div class="ship">+ Shipping charges applicable</div>
+
+  <a class="buy-btn"
+     href="https://wa.me/918792744018?text=Hi%20Diecast.scape%2C%20I%20want%20to%20book%20the%20Porsche%20Special%20Sale%20Diorama%20for%20₹699."
+     target="_blank">
+     Book Now
+  </a>
+</div>
+
+<!-- PRODUCT 2 -->
+<div class="section">
+  <div class="diorama-title">Nissan Special Sale Diorama</div>
+
+  <div class="slider">
+    <img src="images/products/Image8.jpg" onclick="openLightbox(this.src)">
+    <img src="images/products/Image9.jpg" onclick="openLightbox(this.src)">
+  </div>
+
+  <div class="price">
+    <span class="new">₹699</span>
+  </div>
+
+  <div class="ship">+ Shipping charges applicable</div>
+
+  <a class="buy-btn"
+     href="https://wa.me/918792744018?text=Hi%20Diecast.scape%2C%20I%20want%20to%20book%20the%20Nissan%20Special%20Sale%20Diorama%20for%20₹699."
+     target="_blank">
+     Book Now
+  </a>
+</div>
+
 
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -113,6 +125,6 @@ Thank you for visiting.
   <a href="return.html">Return & Cancellation</a>
   <a href="terms.html">Terms of Service</a>
 </nav>
-
+<script src="script.js"></script>
 </body>
 </html>
