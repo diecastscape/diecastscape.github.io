@@ -566,3 +566,7 @@ body.light-theme .toggle-switch {
   opacity: 1;
   transform: translateY(0);
 }
+/* Special Sale Booking Guide button (same base style) */
+.booking-btn {
+  color: var(--accent);
+}
