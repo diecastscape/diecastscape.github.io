@@ -33,6 +33,7 @@
 
   <!-- PAGE INTRO -->
 <div class="page">
+  <h1><a href="index.html">《 Back </a></h1>
   <h1>🔥 Special Sale</h1>
   <p>Limited stock · Special pricing</p>
   <button class="details-btn booking-btn" data-label="Booking Guide" onclick="toggleDetails(this)">
@@ -44,6 +45,8 @@
   </p>
  </div>
 </div>
+<footer class="site-footer">
+<main id="sale-main">
 <!-- SEARCH -->
 <input
   type="text"
@@ -96,6 +99,7 @@
      Book Now
   </a>
 </div>
+</main>
 
   <a class="wa-float"
 href="https://wa.me/918792744018?text=Hi%20I%20need%20help%20regarding%20Diecast.scape%20dioramas."
@@ -153,6 +157,47 @@ Thank you for visiting.
   <a href="return.html">Return & Cancellation</a>
   <a href="terms.html">Terms of Service</a>
 </nav>
+  <script>
+    const saleEnabled = true; // false = force OFF
+  const saleStart = new Date("2026-02-15T14:30:00");
+  const now = new Date();
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const saleMain = document.getElementById("sale-main");
+
+    if (!saleEnabled || now < saleStart) {
+      const liveDate = saleStart.toLocaleString("en-IN", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+  timeZone: "Asia/Kolkata" // 🇮🇳 FORCE IST
+});
+
+      saleMain.innerHTML = `
+        <div style="
+          min-height:30vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+          padding:20px;
+        ">
+  
+      <div>
+            <h2>sale on </h2>
+            <p style="margin:12px ;">
+              Sale will be live on<br>
+              <strong>${liveDate}</strong>
+            </p>
+          </div>
+        </div>
+      `;
+    }
+  });
+  </script>
 <script src="script.js"></script>
 </body>
 </html>
