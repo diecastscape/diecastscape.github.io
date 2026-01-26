@@ -9,41 +9,11 @@
   gtag('js', new Date());
 
   gtag('config', 'G-3X5F6D7CST');
-  function openMenu() {
-  document.body.classList.add("menu-open");
-}
-
-function closeMenu() {
-  document.body.classList.remove("menu-open");
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const toggleSwitch = document.querySelector(".toggle-switch");
-
-  // Apply saved theme
-  if (localStorage.getItem("theme") === "light") {
-    document.body.classList.add("light-theme");
-    if (toggleSwitch) toggleSwitch.classList.add("active");
-  }
-
-  // Toggle theme (global)
-  window.toggleThemeButton = function () {
-    document.body.classList.toggle("light-theme");
-
-    if (toggleSwitch) {
-      toggleSwitch.classList.toggle("active");
-    }
-
-    localStorage.setItem(
-      "theme",
-      document.body.classList.contains("light-theme") ? "light" : "dark"
-    );
-  };
-});
+  
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shipping Policy | Diecast.scape</title>
+<title>Return & Cancellation Policy | Diecast.scape</title>
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -116,6 +86,6 @@ Thank you for visiting.
   <a href="return.html">Return & Cancellation</a>
   <a href="terms.html">Terms of Service</a>
 </nav>
-
+<link rel="stylesheet" href="style.css">
 </body>
 </html>
