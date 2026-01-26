@@ -135,6 +135,9 @@ body.light-theme {
   .page h1 {
   font-size: 32px;
  }
+  .page1 h1 {
+  font-size: 28px;
+  }
 .page p {
   font-size: 25px;
  }
@@ -235,6 +238,23 @@ body.light-theme {
 }
 
 .page a {
+  color: #5BC0BE;
+  font-weight: 600;
+  text-decoration: none;
+}
+.page1 {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 8px 18px;
+}
+
+.page1 h1 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--pag-h);
+}
+
+.page1 a {
   color: #5BC0BE;
   font-weight: 600;
   text-decoration: none;
@@ -570,3 +590,9 @@ body.light-theme .toggle-switch {
 .booking-btn {
   color: var(--accent);
 }
+.sale-off {
+  border-top: 1px solid #5BC0BE;
+  margin-top: 10px;
+  padding-top: 5px;
+}
+
