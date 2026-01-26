@@ -245,7 +245,7 @@ body.light-theme {
 .page1 {
   max-width: 800px;
   margin: 0 auto;
-  padding: 8px 18px;
+  padding: 8px -18px;
 }
 
 .page1 h1 {
