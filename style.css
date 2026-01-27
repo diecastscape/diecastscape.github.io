@@ -598,7 +598,7 @@ body.light-theme .toggle-switch {
 .sale-square {
   position: relative;
   width: 90%;
-  max-width: 180px;
+  max-width: 500px;
   aspect-ratio: 4 / 1;
 
   margin: 14px auto 10px;
