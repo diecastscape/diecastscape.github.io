@@ -155,44 +155,34 @@ Thank you for visiting.
   <a href="return.html">Return & Cancellation</a>
   <a href="terms.html">Terms of Service</a>
 </nav>
-  <script>
-    const saleEnabled = true; // false = force OFF
-  const saleStart = new Date("2026-01-15T14:30:00");
+  <script src="script.js"></script>
+  <script src="sale-config.js"></script>
+<script>
+  const saleEnabled = SALE_CONFIG.enabled;
+  const saleStart = new Date(SALE_CONFIG.start);
   const now = new Date();
 
   document.addEventListener("DOMContentLoaded", () => {
     const saleMain = document.getElementById("sale-main");
 
-    if (!saleEnabled || now < saleStart) {
+    if (!saleEnabled && now < saleStart) {
       const liveDate = saleStart.toLocaleString("en-IN", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-  hour12: true,
-  timeZone: "Asia/Kolkata" // 🇮🇳 FORCE IST
-});
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/Kolkata"
+      });
+
       saleMain.innerHTML = `
-  <div class="sale-off"
-       style="
-         min-height:20vh;
-         display:flex;
-         align-items:center;
-         justify-content:center;
-         text-align:center;
-       ">
-    <div>
-      <p>
-        Sale will be live on<br>
-        <strong>${liveDate}</strong>
-      </p>
-    </div>
-  </div>
-`;
+        <div style="text-align:center;padding:20px">
+          <p>Sale will be live on<br><strong>${liveDate}</strong></p>
+        </div>
+      `;
     }
   });
-  </script>
-<script src="script.js"></script>
+</script>
 </body>
 </html>
