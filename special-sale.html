@@ -53,7 +53,9 @@
   onkeyup="searchProducts()"
   class="search-bar">
 <main id="sale-main">
-<!-- PRODUCT 1 -->
+</main>
+  <template id="sale-products">
+    <!-- PRODUCT 1 -->
   
 <div class="section">
   <div class="diorama-title">Porsche</div>
@@ -97,7 +99,7 @@
      Book Now
   </a>
 </div>
-</main>
+  </template>
 
   <a class="wa-float"
 href="https://wa.me/918792744018?text=Hi%20I%20need%20help%20regarding%20Diecast.scape%20dioramas."
@@ -161,29 +163,35 @@ Thank you for visiting.
   const saleEnabled = SALE_CONFIG.enabled;
   const saleStart = new Date(SALE_CONFIG.start);
   const now = new Date();
+  
+document.addEventListener("DOMContentLoaded", () => {
+  const saleMain = document.getElementById("sale-main");
+  const template = document.getElementById("sale-products");
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const saleMain = document.getElementById("sale-main");
+  if (saleEnabled || now >= saleStart) {
+    // SALE ON → inject products
+    saleMain.appendChild(template.content.cloneNode(true));
+  } else {
+    // SALE OFF → message only
+    const liveDate = saleStart.toLocaleString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "Asia/Kolkata"
+    });
 
-    if (!saleEnabled && now < saleStart) {
-      const liveDate = saleStart.toLocaleString("en-IN", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: "Asia/Kolkata"
-      });
-
-      saleMain.innerHTML = `
-      <div class="sale-off"
+    saleMain.innerHTML = `
+    <div class="sale-off"
          style="text-align:center;padding:20px">
           <p>Sale will be live on<br><strong>${liveDate}</strong></p>
-        </div>
-      `;
-    }
-  });
+        </div>  
+    `;
+  }
+});
+  
 </script>
 </body>
 </html>
