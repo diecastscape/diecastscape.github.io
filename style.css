@@ -616,7 +616,7 @@ body.light-theme .toggle-switch {
 .sale-bg {
   position: absolute;
   inset: 0;
-  background: url("images/sale-bg.jpg") center/cover no-repeat;
+  background: url("images/sale-bg.png") center/cover no-repeat;
   opacity: 0.25;
 }
 
