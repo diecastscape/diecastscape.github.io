@@ -43,6 +43,15 @@
 Handcrafted dioramas designed to elevate your diecast collection.
 Built with premium materials, realistic details, and precise scale accuracy.</div>
   
+  <a href="special-sale.html" class="sale-square">
+  <div class="sale-bg"></div>
+
+  <div class="sale-text">
+    <span class="sale-title">Special Sale</span>
+    <span class="sale-time" id="saleTimeText">Loading…</span>
+  </div>
+</a>
+
 <input
   type="text"
   id="searchInput"
@@ -279,7 +288,7 @@ Thank you for visiting.
   </div>
 </div>
   
-  <a href="coming-soon.html" class="menu-sale">🔥 Special Sale</a>
+  <a href="special-sale.html" class="menu-sale">🔥 Special Sale</a>
   <a href="about.html">About Us</a>
   <a href="privacy.html">Privacy Policy</a>
   <a href="shipping.html">Shipping Policy</a>
@@ -288,6 +297,28 @@ Thank you for visiting.
 </nav>
 
   <script src="script.js"></script>
+  <script src="sale-config.js"></script>
+<script>
+  const saleDate = new Date(SALE_CONFIG.start);
+  const now = new Date();
+
+  const timeText = document.getElementById("saleTimeText");
+
+  const formatted = saleDate.toLocaleString("en-IN", {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Asia/Kolkata"
+  });
+
+  if (SALE_CONFIG.enabled || now >= saleDate) {
+    timeText.innerHTML = "🔥 LIVE NOW";
+  } else {
+    timeText.innerHTML = `Live on<br>${formatted}`;
+  }
+</script>
 
 </body>
 </html>
