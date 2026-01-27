@@ -595,4 +595,64 @@ body.light-theme .toggle-switch {
   margin-top: 10px;
   padding-top: 5px;
 }
+.sale-square {
+  position: relative;
+  width: 90%;
+  max-width: 180px;
+  aspect-ratio: 4 / 1;
+
+  margin: 14px auto 10px;
+  border-radius: 12px;
+  overflow: hidden;
+
+  background: #111;
+  border: 1px solid #5BC0BE;
+
+  text-decoration: none;
+  display: block;
+}
+
+/* background image */
+.sale-bg {
+  position: absolute;
+  inset: 0;
+  background: url("images/sale-bg.jpg") center/cover no-repeat;
+  opacity: 0.25;
+}
+
+/* text overlay */
+.sale-text {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  color: #fff;
+  padding: 10px;
+}
+
+.sale-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.sale-time {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.85;
+  line-height: 1.4;
+}
+
+/* hover */
+.sale-square:hover {
+  box-shadow: 0 0 12px rgba(91,192,190,0.4);
+  transform: scale(1.03);
+  transition: 0.2s ease;
+}
 
