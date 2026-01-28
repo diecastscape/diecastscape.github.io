@@ -582,7 +582,7 @@ body.light-theme .toggle-switch {
   margin-top: 6px;
 }
 .product-details.open {
-  max-height: 500px;
+  max-height: 600px;
   opacity: 1;
   transform: translateY(0);
 }
