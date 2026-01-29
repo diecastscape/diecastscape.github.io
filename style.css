@@ -414,7 +414,8 @@ body.light-theme {
 
 .footer-copy {
   text-align: center;
-  font-size: 9px;
+  font-size: 10px;
+  padding: 1px 18px;
   margin-top: 25px;
   color: var(--text-muted);
   line-height: 1.6;
