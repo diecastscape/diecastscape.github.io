@@ -607,7 +607,7 @@ body.light-theme .toggle-switch {
   overflow: hidden;
 
   background: #111;
-  border: 1px solid #5BC0BE;
+  border: 1px solid #383838;
 
   text-decoration: none;
   display: block;
@@ -618,7 +618,7 @@ body.light-theme .toggle-switch {
   position: absolute;
   inset: 0;
   background: url("images/sale-bg.png") center/cover no-repeat;
-  opacity: 0.25;
+  opacity: 0.35;
 }
 
 /* text overlay */
