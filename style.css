@@ -184,7 +184,7 @@ body.light-theme {
   display: inline-block;
   padding: 12px 18px; 
   border-radius: 999px; 
-  background: linear-gradient(90deg, #6ee7f9, #60a5fa); 
+  background: linear-gradient(135deg, #6ee7f9, #60a5fa); 
   color: #001018; 
   text-decoration: none; 
   font-weight: 700; 
@@ -622,9 +622,10 @@ body.light-theme .toggle-switch {
   margin-top: 10px;
   padding-top: 5px;
 }
+
 .sale-cta {
-  display: block;
-  margin: 16px;
+  display: inline-block;
+  margin: 12p auto;
   text-decoration: none;
 }
 .sale-cta-inner {
@@ -633,7 +634,7 @@ body.light-theme .toggle-switch {
   padding: 12px 18px;
   background: linear-gradient(135deg, #ff7a18, #ffd166);
   color: #1b1300;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
