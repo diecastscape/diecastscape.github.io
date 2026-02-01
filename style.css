@@ -653,8 +653,6 @@ body.light-theme .toggle-switch {
   transition: 0.2s ease;
 }
 .middle {
-  display: flex;
-  flex-direction: column; 
   text-align: center;
 }
 .slider-wrap {
