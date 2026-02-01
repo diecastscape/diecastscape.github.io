@@ -180,8 +180,7 @@ body.light-theme {
 .hero h1 { font-size: clamp(28px, 5vw, 42px); margin-bottom: 10px; }
 .hero p { opacity: .8; margin-bottom: 18px; }
 .cta { 
-  max-width: 180px;      /* control how wide it can go on desktop */
-  text-align: center;
+  max-width: 250px;      /* control how wide it can go on desktop */
   display: inline-block;
   padding: 12px 18px; 
   border-radius: 999px; 
@@ -629,8 +628,7 @@ body.light-theme .toggle-switch {
   text-decoration: none;
 }
 .sale-cta-inner {
-  max-width: 180px;      /* control how wide it can go on desktop */
-  text-align: center;
+  max-width: 250px;      /* control how wide it can go on desktop */
   border-radius: 999px;
   padding: 12px 18px;
   background: linear-gradient(135deg, #ff7a18, #ffd166);
@@ -638,7 +636,7 @@ body.light-theme .toggle-switch {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   box-shadow: 0 10px 25px rgba(0,0,0,.25);
 }
 .sale-title {
@@ -652,6 +650,9 @@ body.light-theme .toggle-switch {
   box-shadow: 0 0 12px rgba(91,192,190,0.4);
   transform: scale(1.03);
   transition: 0.2s ease;
+}
+.middle {
+  text-align: center;
 }
 .slider-wrap {
   position: relative;
