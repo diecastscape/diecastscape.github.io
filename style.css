@@ -596,6 +596,26 @@ body.light-theme .toggle-switch {
   margin-top: 10px;
   padding-top: 5px;
 }
+.sale-cta {
+  display: block;
+  margin: 16px;
+  text-decoration: none;
+}
+.sale-cta-inner {
+  border-radius: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #ff7a18, #ffd166);
+  color: #1b1300;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+}
+.sale-title {
+  font-weight: 900;
+  letter-spacing: .3px;
+}
 .sale-square {
   position: relative;
   width: 90%;
@@ -637,7 +657,7 @@ body.light-theme .toggle-switch {
   padding: 10px;
 }
 
-.sale-title {
+.sale-tite {
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.6px;
