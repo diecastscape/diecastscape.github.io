@@ -8,8 +8,8 @@ html, body {
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: radial-gradient(1200px 600px at 10% -10%, #13224a, transparent),
-              radial-gradient(1200px 600px at 110% 10%, #0a7cff33, transparent),
+  background: radial-gradient(1200px 600px at 10% -10%, var(--bg-des), transparent),
+              radial-gradient(1200px 600px at 110% 10%, var(--bg-des2), transparent),
               var(--bg-main);
   color: var(--text-main);
   transition: background 0.3s ease, color 0.3s ease;
@@ -19,7 +19,7 @@ body {
 /* ===== THEME VARIABLES ===== */
 :root {
   --bg-main: #0a0f1f;
-  --bg-header: #061D3C;
+  --bg-header:#4973AB;
   --sb-titel:#E8ECEE;
   --sb-discr:#C7C7C7;
   --com-soon:#bfcad9;
@@ -28,9 +28,11 @@ body {
   --dic-ount:#B7FFAD;
   --pag-h:#fff;
   --pag-p:#CBCCCD;
-  --text-main: #ffffff;
-  --text-muted: #C7C7C7;
+  --text-main:#ffffff;
+  --text-muted:#C7C7C7;
   --accent: #5BC0BE;
+  --bg-des:#13224a;
+  --bg-des2:#0a7cff33;
   
 }
 
@@ -49,6 +51,8 @@ body.light-theme {
   --text-main: #0B132B;
   --text-muted: #333333;
   --accent: #0AA1A7;
+  --bg-des:#F5F7FA;
+  --bg-des2:#F5F7FA;
 }
 
 /* ===== FULL WIDTH HEADER BAR ===== */
