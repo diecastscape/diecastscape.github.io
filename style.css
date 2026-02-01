@@ -183,6 +183,8 @@ body.light-theme {
   color: #001018;
   text-decoration: none;
   font-weight: 700;
+  max-width: 180px;      /* control how wide it can go on desktop */
+  text-align: center;
 }
 .cta.outline {
   background: transparent;
@@ -622,8 +624,8 @@ body.light-theme .toggle-switch {
   text-decoration: none;
 }
 .sale-cta-inner {
-  border-radius: 16px;
-  padding: 16px 18px;
+  border-radius: 999px;
+  padding: 12px 18px;
   background: linear-gradient(135deg, #ff7a18, #ffd166);
   color: #1b1300;
   display: flex;
