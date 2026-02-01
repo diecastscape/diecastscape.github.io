@@ -12,6 +12,7 @@ body1 {
               radial-gradient(1200px 600px at 110% 10%, #0a7cff33, transparent),
               var(--bg-main);
   color: var(--text-main);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 
