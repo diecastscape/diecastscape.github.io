@@ -654,6 +654,7 @@ body.light-theme .toggle-switch {
 }
 .middle {
   text-align: center;
+  padding: 10px 0px;
 }
 .slider-wrap {
   position: relative;
