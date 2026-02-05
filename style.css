@@ -6,6 +6,7 @@ html, body {
   min-height: 100%;
 }
 body {
+  padding-top: 60px; 
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: radial-gradient(1200px 600px at 10% -10%, var(--bg-des), transparent),
@@ -55,60 +56,51 @@ body.light-theme {
   --bg-des2:#F5F7FA;
 }
 
-/* ===== FULL WIDTH HEADER BAR ===== */
-
+/* ===== GLASS / BLUR FIXED HEADER (AI STYLE) ===== */
 .site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
   width: 100%;
-  background: #0B132B;   /* same as body */
-  padding: 0;            /* IMPORTANT */
+  padding: 0;
+  z-index: 900; /* below menu + overlay */
+  background: rgba(10, 15, 31, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(91, 192, 190, 0.35);
 }
 
-/* ===== INNER CONTENT (NOT A CARD) ===== */
 .header-inner {
   width: 100%;
   height: 60px;
-  background: #061D3C;
-  border-bottom: 1px solid #5BC0BE;
   display: flex;
   align-items: center;
-  padding: 0 16px;       /* left-right spacing only */
+  padding: 0 16px;
   position: relative;
   box-sizing: border-box;
 }
 
-/* LOGO LEFT */
 .header-logo {
-  width: 85px;
-  height: 85px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
 }
 
-/* TITLE CENTER */
 .header-title {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #fff;
+  color: #e5f9ff;
+  text-shadow: 0 0 10px rgba(91,192,190,.35);
 }
+
+
 
 /* MOBILE */
 
 @media (max-width: 425px) {
-  .header-inner {
-  height: 50px;
-  }
-
-  .header-logo {
-    width: 80px;
-    height: 80px;
-  }
-
-  .header-title {
-    font-size: 18px;
-  }
 
   .footer-grid h4 {
     font-size: 13px;
