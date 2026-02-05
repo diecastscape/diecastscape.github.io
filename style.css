@@ -80,8 +80,8 @@ body.light-theme {
 }
 
 .header-logo {
-  width: 44px;
-  height: 44px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
 }
 
@@ -101,7 +101,9 @@ body.light-theme {
 /* MOBILE */
 
 @media (max-width: 425px) {
-
+.header-inner {
+  height: 40px;
+}
   .footer-grid h4 {
     font-size: 13px;
   }
@@ -667,4 +669,8 @@ body.light-theme .toggle-switch {
   text-transform: uppercase;
 }
 
+/* Offset anchor scroll for fixed header */
+#products {
+  scroll-margin-top: 60px; /* header height + little gap */
+}
 
