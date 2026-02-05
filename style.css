@@ -67,7 +67,7 @@ body.light-theme {
 }
 .header-inner {
   width: 100%;
-  height: 60px;
+  height: 55px;
   display: flex;
   align-items: center;
   padding: 0 16px;
@@ -91,7 +91,7 @@ body.light-theme {
 }
 @media (max-width: 425px) {
 .header-inner {
-  height: 50px;
+  height: 45px;
 }
   .footer-grid h4 {
     font-size: 13px;
@@ -117,8 +117,8 @@ body.light-theme {
 }
 }
 @media (min-width: 650px) {
-  .side-menu {
-    width: 300px;
+  .header-inner {
+  height: 65px;
   }
   .page h1 {
   font-size: 32px;
@@ -409,7 +409,7 @@ body.light-theme {
   right: 0;
   height: 100%;
   width: 50vw;               /* Mobile = 50% */
-  max-width: 320px;          /* Desktop limit */
+  max-width: 300px;          /* Desktop limit */
   background: #061D3C;
   transform: translateX(100%);
   transition: transform 0.35s ease;
