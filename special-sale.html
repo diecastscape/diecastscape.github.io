@@ -222,6 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (saleEnabled || now >= saleStart) {
     // SALE ON → inject products
     saleMain.appendChild(template.content.cloneNode(true));
+    initScrollAnimations();
   } else {
     // SALE OFF → message only
     const liveDate = saleStart.toLocaleString("en-IN", {
