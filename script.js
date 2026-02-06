@@ -87,3 +87,33 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll(".section").forEach(sec => {
   observer.observe(sec);
 });
+// ===== SCROLL ANIMATION OBSERVER =====
+let sectionObserver;
+
+function initScrollAnimations() {
+  const sections = document.querySelectorAll(".section");
+
+  if (!("IntersectionObserver" in window)) {
+    sections.forEach(el => el.classList.add("show"));
+    return;
+  }
+
+  if (sectionObserver) sectionObserver.disconnect();
+
+  sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+        sectionObserver.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.15
+  });
+
+  sections.forEach(section => sectionObserver.observe(section));
+}
+
+// run for index.html normal content
+document.addEventListener("DOMContentLoaded", initScrollAnimations);
+
