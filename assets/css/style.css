@@ -263,15 +263,21 @@ body.light-theme {
   gap: 10px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; /* smooth on mobile */
 }
+
 .slider img {
   width: 250px;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
+  aspect-ratio: 3 / 4;     /* ✅ correct ratio */
+  height: auto;
+  object-fit: cover;       /* keeps nice crop */
   border-radius: 12px;
   scroll-snap-align: start;
   background: #000;
+  flex-shrink: 0;          /* prevents squish */
+  will-change: transform; /* smoother scroll */
 }
+
 .price {
   margin-top: 12px;
 }
