@@ -32,11 +32,11 @@ window.addEventListener("popstate", function () {
   const lightbox = document.getElementById("lightbox");
   if (lightbox) lightbox.style.display = "none";
 });
-// ===== SCROLL REVEAL =====
+// ===== ONE-TIME SCROLL REVEAL (SAFE FOR INJECTED CONTENT) =====
 let sectionObserver;
 
 function initScrollAnimations() {
-  const sections = document.querySelectorAll(".section");
+  const sections = document.querySelectorAll(".section:not(.show)");
 
   if (!("IntersectionObserver" in window)) {
     sections.forEach(el => el.classList.add("show"));
@@ -48,22 +48,26 @@ function initScrollAnimations() {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add("show");
-          sectionObserver.unobserve(entry.target);
+          sectionObserver.unobserve(entry.target); // ✅ animate once only
         }
       });
-    }, { threshold: 0.15 });
+    }, {
+      threshold: 0.12,
+      rootMargin: "80px 0px"
+    });
   }
 
   sections.forEach(section => sectionObserver.observe(section));
 }
 
-// Call on normal pages
+// Normal pages
 document.addEventListener("DOMContentLoaded", initScrollAnimations);
 
-// Re-init when content is injected (Special Sale)
+// Special Sale: call after products are injected
 window.reInitProductAnimations = function () {
   initScrollAnimations();
 };
+
 function openDetailsSheet(btn) {
   const details = btn.nextElementSibling; // .product-details
   const content = details.innerHTML;
