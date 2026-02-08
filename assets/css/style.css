@@ -472,8 +472,8 @@ body.menu-open .side-menu a {
   font-weight: 500;
 }
 .toggle-switch {
-  width: 36px;      /* was 48px */
-  height: 20px;     /* was 26px */
+  width: 36px;      
+  height: 20px;     
   background: #888;
   border-radius: 50px;
   position: relative;
@@ -481,8 +481,8 @@ body.menu-open .side-menu a {
   transition: background 0.3s ease;
 }
 .toggle-circle {
-  width: 16px;      /* was 22px */
-  height: 16px;     /* was 22px */
+  width: 16px;     
+  height: 16px;     
   background: #fff;
   border-radius: 50%;
   position: absolute;
@@ -502,44 +502,6 @@ body.light-theme .toggle-switch {
 .menu-sale {
   color: var(--accent);
   font-weight: 600;
-}
-.dev-note span {
-  color: var(--accent);
-  font-weight: 600;
-}
-.details-btn {
-  margin-top: 10px;
-  background: none;
-  border: none;
-  color: #5BC0BE;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-}
-.product-details {
-  max-height: 0;
-  overflow: hidden;
-
-  opacity: 0;
-  transform: translateY(-6px);
-
-  transition:
-    max-height 0.45s ease,
-    opacity 0.3s ease,
-    transform 0.3s ease;
-
-  font-size: 13px;
-  color: var(--pag-p);
-  margin-top: 6px;
-}
-.product-details.open {
-  max-height: 600px;
-  opacity: 1;
-  transform: translateY(0);
-}
-.booking-btn {
-  color: var(--accent);
 }
 .sale-off {
   border-top: 1px solid #5BC0BE;
@@ -599,4 +561,80 @@ body.light-theme .toggle-switch {
   }
 .sale-product {
   display: none;
+}
+.details-btn {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #5BC0BE;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+/* ===== Glass Overlay ===== */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s ease;
+  z-index: 999;
+}
+
+.sheet-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===== Glass Bottom Sheet ===== */
+.bottom-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -100%;
+  background: rgba(11, 19, 43, 0.65); /* glass */
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 22px 22px 0 0;
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  transition: bottom 0.35s cubic-bezier(.2,.8,.2,1);
+  z-index: 1000;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.bottom-sheet.show {
+  bottom: 0;
+}
+
+.sheet-handle {
+  width: 42px;
+  height: 5px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 20px;
+  margin: 12px auto 6px;
+}
+
+.sheet-content {
+  padding: 16px 18px 8px;
+  overflow-y: auto;
+  color: #fff;
+}
+
+.sheet-close {
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  padding: 10px;
+  margin: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
