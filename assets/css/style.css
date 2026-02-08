@@ -249,7 +249,8 @@ body.light-theme {
   text-align: left;
   padding: 20px 23px;
   border-top: 1px solid #5BC0BE;
-
+  content-visibility: auto;
+  contain-intrinsic-size: 300px;
 }
 .diorama-title {
   font-size: 18px;
