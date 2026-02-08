@@ -10,48 +10,7 @@ function searchProducts() {
   });
 }
 
-// ===== DETAILS TOGGLE =====
-let activeDetails = null;
-let activeButton = null;
 
-function toggleDetails(btn) {
-  const details = btn.nextElementSibling;
-  if (!details) return;
-
-  const isOpen = details.classList.contains("open");
-
-  if (activeDetails && activeDetails !== details) {
-    activeDetails.classList.remove("open");
-    activeButton.innerHTML = activeButton.dataset.label + " ▾";
-  }
-
-  if (!isOpen) {
-    details.classList.add("open");
-    btn.innerHTML = btn.dataset.label + " ▴";
-    activeDetails = details;
-    activeButton = btn;
-  } else {
-    details.classList.remove("open");
-    btn.innerHTML = btn.dataset.label + " ▾";
-    activeDetails = null;
-    activeButton = null;
-  }
-}
-
-// Auto close when out of viewport (no jerk)
-window.addEventListener("scroll", () => {
-  if (!activeDetails) return;
-
-  const rect = activeDetails.getBoundingClientRect();
-  const isOut = rect.bottom < 80 || rect.top > window.innerHeight - 80;
-
-  if (isOut) {
-    activeDetails.classList.remove("open");
-    activeButton.innerHTML = activeButton.dataset.label + " ▾";
-    activeDetails = null;
-    activeButton = null;
-  }
-});
 // ===== LIGHTBOX =====
 function openLightbox(src) {
   const lightbox = document.getElementById("lightbox");
@@ -105,4 +64,20 @@ document.addEventListener("DOMContentLoaded", initScrollAnimations);
 window.reInitProductAnimations = function () {
   initScrollAnimations();
 };
+function openDetailsSheet(btn) {
+  const details = btn.nextElementSibling; // .product-details
+  const content = details.innerHTML;
+
+  document.getElementById("sheetContent").innerHTML = content;
+  document.getElementById("sheetOverlay").classList.add("show");
+  document.getElementById("bottomSheet").classList.add("show");
+
+  document.body.style.overflow = "hidden"; // lock background scroll
+}
+
+function closeSheet() {
+  document.getElementById("sheetOverlay").classList.remove("show");
+  document.getElementById("bottomSheet").classList.remove("show");
+  document.body.style.overflow = "";
+}
 
