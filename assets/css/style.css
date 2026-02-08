@@ -552,7 +552,7 @@ body.light-theme .toggle-switch {
   text-decoration: none;
 }
 .sale-cta-inner {
-  max-width: 250px;      /* control how wide it can go on desktop */
+  max-width: 350px;      /* control how wide it can go on desktop */
   border-radius: 999px;
   padding: 12px 18px;
   background: linear-gradient(135deg, #ff7a18, #ffd166);
