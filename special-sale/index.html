@@ -31,7 +31,7 @@
   </div>
 </header>
   <div class="page1">
-  <h1><a href="index.html">《 Back </a></h1>
+  <h1><a href="/index.html">《 Back </a></h1>
   </div>
   <!-- PAGE INTRO -->
 <div class="page">
@@ -99,25 +99,6 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
   placeholder="Search..."
   onkeyup="searchProducts()"
   class="search-bar">
-  <div class="section">
-  <div class="diorama-title">NISSAN 350Z CUSTOM/PERSONNALISÉ AND FURIOUS</div>
-  <div class="slider-wrap">
-  <div class="slider">
-    <img src="/images/newsale/Hot1.webp" onclick="openLightbox(this.src)">
-  </div>
-  </div>
-  <div class="price">
-    <span class="new">₹299</span>
-  </div>
-
-  <div class="ship">+ Shipping charges applicable</div>
-
-  <a class="buy-btn"
-     href="https://wa.me/918792744018?text=Hi%2C%20I%20want%20to%20book%20%23SET01.%0AIs%20it%20available%3F"
-     target="_blank">
-     Book Now
-  </a>
-  </div>
 <main id="sale-main">
 </main>
   <template id="sale-products">
@@ -278,11 +259,11 @@ target="_blank">
   <div class="footer-grid">
     <div>
       <h4>Know more</h4>
-      <p><a href="about.html">About Us</a></p>
-      <p><a href="privacy.html">Privacy Policy</a></p>
-      <p><a href="shipping.html">Shipping Policy</a></p>
-      <p><a href="return.html">Return & Cancellation</a></p>
-      <p><a href="terms.html">Terms of Service</a></p>
+      <p><a href="/about/">About Us</a></p>
+      <p><a href="/privacy/">Privacy Policy</a></p>
+      <p><a href="/shipping/">Shipping Policy</a></p>
+      <p><a href="/return/">Return & Cancellation</a></p>
+      <p><a href="/terms/">Terms of Service</a></p>
     </div>
 
   <div class="footer-copy">
@@ -314,19 +295,52 @@ Thank you for visiting.
   </div>
 </div>
  
-  <a href="index.html" class="menu-sale">HOME</a>
-  <a href="about.html">About Us</a>
-  <a href="privacy.html">Privacy Policy</a>
-  <a href="shipping.html">Shipping Policy</a>
-  <a href="return.html">Return & Cancellation</a>
-  <a href="terms.html">Terms of Service</a>
+  <a href="/index.html" class="menu-sale">HOME</a>
+  <a href="/about/">About Us</a>
+  <a href="/privacy/">Privacy Policy</a>
+  <a href="/shipping/">Shipping Policy</a>
+  <a href="/return/">Return & Cancellation</a>
+  <a href="/terms/">Terms of Service</a>
 </nav>
   
 <script src="assets/ js/config.js"></script>
 <script src="assets/ js/core.js" defer></script>
 <script src="assets/ js/products.js" defer></script>
-<script src="assets/ js/sale.js" defer></script>
+<script>
+  const saleEnabled = SALE_CONFIG.enabled;
+  const saleStart = new Date(SALE_CONFIG.start);
+  const now = new Date();
+  
+document.addEventListener("DOMContentLoaded", () => {
+  const saleMain = document.getElementById("sale-main");
+  const template = document.getElementById("sale-products");
 
+  if (saleEnabled || now >= saleStart) {
+    // SALE ON → inject products
+    saleMain.appendChild(template.content.cloneNode(true));
+    initScrollAnimations();
+  } else {
+    // SALE OFF → message only
+    const liveDate = saleStart.toLocaleString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "Asia/Kolkata"
+    });
+
+    saleMain.innerHTML = `
+    <div class="sale-off"
+         style="text-align:center;padding:20px">
+          <p>Sale will be live on<br><strong>${liveDate}</strong></p>
+        </div>  
+    `;
+  }
+});
+  
+</script>
 </body>
   </html>
 j
