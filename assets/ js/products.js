@@ -51,38 +51,3 @@ function closeSheet() {
   document.body.style.overflow = "";
 }
 
-// ===== ONE-TIME SCROLL REVEAL (SAFE FOR INJECTED CONTENT) =====
-let sectionObserver;
-
-function initScrollAnimations() {
-  const sections = document.querySelectorAll(".section:not(.show)");
-
-  if (!("IntersectionObserver" in window)) {
-    sections.forEach(el => el.classList.add("show"));
-    return;
-  }
-
-  if (!sectionObserver) {
-    sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("show");
-          sectionObserver.unobserve(entry.target); // ✅ animate once only
-        }
-      });
-    }, {
-      threshold: 0.12,
-      rootMargin: "80px 0px"
-    });
-  }
-
-  sections.forEach(section => sectionObserver.observe(section));
-}
-
-// Normal pages
-document.addEventListener("DOMContentLoaded", initScrollAnimations);
-
-// Special Sale: call after products are injected
-window.reInitProductAnimations = function () {
-  initScrollAnimations();
-};
