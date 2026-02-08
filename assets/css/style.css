@@ -33,6 +33,7 @@ body {
   --accent: #5BC0BE;
   --bg-des:#13224a;
   --bg-des2:#0a7cff33;
+  --pag-p1:#CBCCCD;
   
 }
 
@@ -53,6 +54,7 @@ body.light-theme {
   --accent: #0AA1A7;
   --bg-des:#F5F7FA;
   --bg-des2:#F5F7FA;
+  --pag-p1:#CBCCCD;
 }
 .site-header {
   position: fixed;
@@ -557,7 +559,7 @@ body.light-theme .toggle-switch {
   text-transform: uppercase;
 }
 #products {
-  scroll-margin-top: 60px; /* header height + little gap */
+  scroll-margin-top: 60px;
   }
 .sale-product {
   display: none;
@@ -589,7 +591,10 @@ body.light-theme .toggle-switch {
   opacity: 1;
   pointer-events: auto;
 }
-
+.product-details {
+  max-height: 0;
+  overflow: hidden;
+}
 /* ===== Glass Bottom Sheet ===== */
 .bottom-sheet {
   position: fixed;
@@ -624,7 +629,7 @@ body.light-theme .toggle-switch {
 .sheet-content {
   padding: 16px 18px 8px;
   overflow-y: auto;
-  color: #fff;
+  color: var(--pag-p1);
 }
 
 .sheet-close {
