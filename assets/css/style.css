@@ -597,3 +597,6 @@ body.light-theme .toggle-switch {
 #products {
   scroll-margin-top: 60px; /* header height + little gap */
   }
+.sale-product {
+  display: none;
+}
