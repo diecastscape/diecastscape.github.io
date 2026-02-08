@@ -99,10 +99,9 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
   placeholder="Search..."
   onkeyup="searchProducts()"
   class="search-bar">
+  
 <main id="sale-main">
-</main>
-  <template id="sale-products">
-    <div class="section">
+    <div class="section sale-product">
   <div class="diorama-title">NISSAN 350Z CUSTOM/PERSONNALISÉ AND FURIOUS</div>
   <div class="slider-wrap">
   <div class="slider">
@@ -121,7 +120,7 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
      Book Now
   </a>
     </div>
-    <div class="section">
+    <div class="section sale-product">
   <div class="diorama-title">NISSAN SILVIA (S15) FAST AND FURIOUS</div>
   <div class="slider-wrap">
   <div class="slider">
@@ -140,7 +139,7 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
      Book Now
   </a>
     </div>
-<div class="section">
+<div class="section sale-product">
   <div class="diorama-title">1970 MONTE CARLO FAST AND FURIOUS</div>
   <div class="slider-wrap">
   <div class="slider">
@@ -159,7 +158,7 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
      Book Now
   </a>
 </div>
-    <div class="section">
+    <div class="section sale-product">
   <div class="diorama-title">1970 ROAD RUNNER FAST AND FURIOUS</div>
   <div class="slider-wrap">
   <div class="slider">
@@ -179,7 +178,7 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
   </a>
     </div>
 
-    <div class="section">
+    <div class="section sale-product">
   <div class="diorama-title">NISSAN SILVIA (S13) FAST AND FURIOUS</div>
   <div class="slider-wrap">
   <div class="slider">
@@ -198,7 +197,7 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
      Book Now
   </a>
     </div>
-<div class="section">
+<div class="section sale-product">
   <div class="diorama-title">Porsche</div>
   <div class="slider-wrap">
   <div class="slider">
@@ -220,7 +219,7 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
   </a>
 </div>
 
-<div class="section">
+<div class="section sale-product">
   <div class="diorama-title">Nissan</div>
   <div class="slider-wrap">
   <div class="slider">
@@ -242,8 +241,7 @@ The booking amount is only to <strong>hold the product,</strong> so you can add 
      Book Now
   </a>
 </div>
-  </template>
-
+</main>
   <a class="wa-float"
 href="https://wa.me/918792744018?text=Hi%20I%20need%20help%20regarding%20Diecast.scape."
 target="_blank">
@@ -310,36 +308,36 @@ Thank you for visiting.
   const saleEnabled = SALE_CONFIG.enabled;
   const saleStart = new Date(SALE_CONFIG.start);
   const now = new Date();
-  
-document.addEventListener("DOMContentLoaded", () => {
-  const saleMain = document.getElementById("sale-main");
-  const template = document.getElementById("sale-products");
 
-  if (saleEnabled || now >= saleStart) {
-    // SALE ON → inject products
-    saleMain.appendChild(template.content.cloneNode(true));
-    initScrollAnimations();
-  } else {
-    // SALE OFF → message only
-    const liveDate = saleStart.toLocaleString("en-IN", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: "Asia/Kolkata"
-    });
+  document.addEventListener("DOMContentLoaded", () => {
+    const products = document.querySelectorAll(".sale-product");
+    const saleMain = document.getElementById("sale-main");
 
-    saleMain.innerHTML = `
-    <div class="sale-off"
-         style="text-align:center;padding:20px">
+    const isSaleLive = saleEnabled || now >= saleStart;
+
+    if (isSaleLive) {
+      // SHOW PRODUCTS
+      products.forEach(p => p.style.display = "block");
+      initScrollAnimations();
+    } else {
+      // SALE OFF MESSAGE
+      const liveDate = saleStart.toLocaleString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/Kolkata"
+      });
+
+      saleMain.innerHTML = `
+        <div class="sale-off" style="text-align:center;padding:20px">
           <p>Sale will be live on<br><strong>${liveDate}</strong></p>
-        </div>  
-    `;
-  }
-});
-  
+        </div>
+      `;
+    }
+  });
 </script>
 </body>
   </html>
