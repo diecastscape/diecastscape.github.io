@@ -269,7 +269,6 @@ body.light-theme {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; /* smooth on mobile */
 }
-
 .slider img {
   width: 240px;
   aspect-ratio: 1 / 1;     /* ✅ correct ratio */
@@ -281,7 +280,47 @@ body.light-theme {
   flex-shrink: 0;          /* prevents squish */
   will-change: transform; /* smoother scroll */
 }
+/* Image wrapper */
+.img-box {
+  position: relative;
+  width: 240px;             /* same as .slider img */
+  aspect-ratio: 1 / 1;     /* keep your ratio */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0b132b;
+  flex-shrink: 0;
+}
+/* Actual image */
+.img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: opacity .25s ease;
+}
+/* Glass blur loader */
+.img-loader {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 15, 30, 0.6);
+  backdrop-filter: blur(6px);
+}
+/* Spinner */
+.img-loader::after {
+  content: "";
+  width: 26px;
+  height: 26px;
+  border: 3px solid rgba(255,255,255,0.25);
+  border-top-color: #5BC0BE;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 .price {
   margin-top: 12px;
 }
