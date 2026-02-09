@@ -122,6 +122,10 @@ body.light-theme {
   .header-inner {
   height: 65px;
   }
+  #lightbox img {
+  max-width: 60%;
+  max-height: 60%;
+  }
   .page h1 {
   font-size: 32px;
  }
@@ -267,8 +271,8 @@ body.light-theme {
 }
 
 .slider img {
-  width: 250px;
-  aspect-ratio: 3 / 4;     /* ✅ correct ratio */
+  width: 240px;
+  aspect-ratio: 1 / 1;     /* ✅ correct ratio */
   height: auto;
   object-fit: cover;       /* keeps nice crop */
   border-radius: 12px;
