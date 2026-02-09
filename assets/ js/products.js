@@ -9,15 +9,21 @@ function searchProducts() {
     section.style.display = title.includes(input) ? "block" : "none";
   });
 }
-
-
-// ===== LIGHTBOX =====
+// ===== LIGHTBOX (Optimized HQ Loader) =====
 function openLightbox(src) {
   const lightbox = document.getElementById("lightbox");
   const img = document.getElementById("lightbox-img");
   if (!lightbox || !img) return;
-  img.src = src;
+
+  img.src = ""; // reset to avoid flash
   lightbox.style.display = "flex";
+
+  const highRes = new Image();
+  highRes.onload = () => {
+    img.src = highRes.src;
+  };
+  highRes.src = src;
+
   history.pushState(null, "", "#image");
 }
 
@@ -32,7 +38,6 @@ window.addEventListener("popstate", function () {
   const lightbox = document.getElementById("lightbox");
   if (lightbox) lightbox.style.display = "none";
 });
-
 
 function openDetailsSheet(btn) {
   const details = btn.nextElementSibling; // .product-details
