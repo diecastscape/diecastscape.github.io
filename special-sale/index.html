@@ -37,7 +37,7 @@
   <p>While you’re thinking, someone else might be booking it right now.</p>
 
   <button class="details-btn" onclick="openDetailsSheet(this)">
-  Booking Guide 
+  Booking Guide ▾
     </button>
   <div class="product-details">
   <p>•Products are live during the <strong>sale time</strong>.
@@ -72,7 +72,7 @@
   <div class="diorama-title">NISSAN 350Z CUSTOM/PERSONNALISÉ AND FURIOUS</div>
   <div class="slider-wrap">
   <div class="slider">
-    <img src="/images/newsale/Hot1.webp" loading="lazy" decoding="async" onclick="openLightbox(this.src)">
+    <img src="/images/newsale/Hot1.webp" onclick="openLightbox(this.src)">
   </div>
   </div>
   <div class="price">
@@ -89,7 +89,7 @@
   <div class="diorama-title">NISSAN SILVIA (S15) FAST AND FURIOUS</div>
   <div class="slider-wrap">
   <div class="slider">
-    <img src="/images/newsale/Hot2.webp" loading="lazy" decoding="async" onclick="openLightbox(this.src)">
+    <img src="/images/newsale/Hot2.webp" onclick="openLightbox(this.src)">
   </div>
   </div>
   <div class="price">
@@ -104,9 +104,14 @@
     </div>
 <div class="section sale-product">
   <div class="diorama-title">1970 MONTE CARLO FAST AND FURIOUS</div>
-  <div class="slider-wrap">
+
   <div class="slider">
-    <img src="/images/newsale/Hot3.webp" loading="lazy" decoding="async" onclick="openLightbox(this.src)">
+    <div class="img-box">
+    <div class="img-loader"></div>
+    <img src="/images/newsale/Hot3.webp" 
+      onload="this.previousElementSibling.remove(); this.style.opacity=1"
+      style="opacity:0"
+      onclick="openLightbox(this.src)">
   </div>
   </div>
   <div class="price">
@@ -123,7 +128,7 @@
   <div class="diorama-title">1970 ROAD RUNNER FAST AND FURIOUS</div>
   <div class="slider-wrap">
   <div class="slider">
-    <img src="/images/newsale/Hot4.webp" loading="lazy" decoding="async" onclick="openLightbox(this.src)">
+    <img src="/images/newsale/Hot4.webp" onclick="openLightbox(this.src)">
   </div>
   </div>
   <div class="price">
