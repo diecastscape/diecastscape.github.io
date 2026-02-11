@@ -259,10 +259,10 @@ body.light-theme {
   width: 100%;
   background: none;
   border: none;
-  color: #fff;
+  color: var(--pag-h);
   text-align: left;
-  font-size: 16px;
-  padding: 12px 0;
+  font-size: 14px;
+  padding: 11px 0;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -271,7 +271,7 @@ body.light-theme {
 
 .faq-question::after {
   content: "＋";
-  font-size: 20px;
+  font-size: 16px;
   transition: transform 0.3s ease;
 }
 
@@ -283,7 +283,6 @@ body.light-theme {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
-  color: #ccc;
   line-height: 1.6;
   padding-right: 10px;
 }
