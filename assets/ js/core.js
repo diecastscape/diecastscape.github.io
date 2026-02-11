@@ -30,4 +30,24 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   };
 });
+document.querySelectorAll(".faq-question").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const item = btn.parentElement;
+
+    // Close other open FAQ
+    document.querySelectorAll(".faq-item").forEach(i => {
+      if (i !== item) i.classList.remove("active");
+    });
+
+    // Toggle current
+    item.classList.toggle("active");
+
+    // Smooth scroll to opened FAQ
+    if (item.classList.contains("active")) {
+      setTimeout(() => {
+        item.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 150);
+    }
+  });
+});
 
