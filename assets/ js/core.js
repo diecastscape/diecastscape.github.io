@@ -50,4 +50,23 @@ document.querySelectorAll(".faq-question").forEach(btn => {
     }
   });
 });
+  document.addEventListener("DOMContentLoaded", () => {
+    const current = document.querySelector(".breadcrumb-current");
+    if (!current) return;
+
+    const pageMap = {
+      "/special-sale/": "Special Sale",
+      "/faq/": "FAQ",
+      "/about/": "About Us",
+      "/privacy/": "Privacy Policy",
+      "/shipping/": "Shipping Policy",
+      "/return/": "Return & Cancellation",
+      "/terms/": "Terms of Service"
+    };
+
+    const path = location.pathname;
+    if (pageMap[path]) {
+      current.textContent = pageMap[path];
+    }
+  });
 
