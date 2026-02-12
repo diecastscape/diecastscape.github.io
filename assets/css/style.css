@@ -730,3 +730,33 @@ body.light-theme .toggle-switch {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
+/* ===== BREADCRUMB (Premium Glass Style) ===== */
+.breadcrumb-wrap {
+  position: sticky;
+  top: 60px; /* height of your header */
+  z-index: 8;
+  margin: 10px 12px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breadcrumb-link {
+  color: #5BC0BE;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-sep {
+  color: rgba(255,255,255,0.6);
+}
+
+.breadcrumb-current {
+  color: var(--pag-h);
+  font-weight: 700;
+}
