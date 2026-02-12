@@ -732,8 +732,6 @@ body.light-theme .toggle-switch {
 }
 /* ===== BREADCRUMB (Premium Glass Style) ===== */
 .breadcrumb-wrap {
-  top: 60px; /* height of your header */
-  z-index: 8;
   margin: 10px 12px;
   padding: 10px 14px;
   display: inline-flex;
