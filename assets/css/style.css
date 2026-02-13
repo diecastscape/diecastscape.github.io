@@ -134,21 +134,21 @@ body.light-theme {
   max-width: 60%;
   max-height: 60%;
   }
-  
   .breadcrumb-current {
   font-size: 19px;
 }
   .breadcrumb-link {
   font-size: 20px;
   }
-
   .page h1 {
   font-size: 32px;
  }
-
 .page p {
   font-size: 25px;
  }
+  .page1 p {
+  font-size: 25px;
+  }
   .footer-copy {
     font-size: 15px;
   }
@@ -248,12 +248,22 @@ body.light-theme {
   font-weight: 600;
   text-decoration: none;
 }
-
+.page1 {
+  max-width: 800px;
+  margin: 0 auto;
+  align-items: center;
+  padding: 10px 18px;
+}
+.page1 p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--pag-h);
+  margin-bottom: 3px;
+}
 .faq-item {
   border-bottom: 1px solid #5BC0BE;
   padding: 8px 0;
 }
-
 .faq-question {
   width: 100%;
   background: none;
@@ -435,12 +445,23 @@ body.light-theme {
   padding-top: 25px;  
   padding-bottom: 30px;
 }
+.site-footer1 {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding-top: 25px;  
+  padding-bottom: 30px;
+}
 .footer-social {
   text-align: center;
   margin-bottom: 20px;
 }
 .footer-social a {
   margin: 0 10px;
+  color: #5BC0BE;
   text-decoration: none;
   font-weight: 600;
 }
