@@ -752,7 +752,6 @@ body.light-theme .toggle-switch {
   color: var(--pag-h);
   font-size: 9.5px;
   font-weight: 600;
-  margin-top:-1px; 
 }
 .faq-contact {
   text-align: center;
