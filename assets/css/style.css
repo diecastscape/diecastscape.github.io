@@ -723,8 +723,7 @@ body.light-theme .toggle-switch {
 }
 /* ===== BREADCRUMB (Premium Glass Style) ===== */
 .breadcrumb-wrap {
-  margin: 10px 12px;
-  padding: 10px 14px;
+  margin: 6px 14px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
