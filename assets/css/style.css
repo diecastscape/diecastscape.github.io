@@ -445,16 +445,6 @@ body.light-theme {
   padding-top: 25px;  
   padding-bottom: 30px;
 }
-.site-footer1 {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  padding-top: 25px;  
-  padding-bottom: 30px;
-}
 .footer-social {
   text-align: center;
   margin-bottom: 20px;
@@ -561,14 +551,14 @@ body.menu-open .side-menu a {
   opacity: 1;
   transform: translateY(0);
 }
-.side-menu a:nth-child(3) { transition-delay: 0.07s; }
-.side-menu a:nth-child(4) { transition-delay: 0.14s; }
-.side-menu a:nth-child(5) { transition-delay: 0.21s; }
-.side-menu a:nth-child(6) { transition-delay: 0.28s; }
-.side-menu a:nth-child(7) { transition-delay: 0.35s; }
-.side-menu a:nth-child(8) { transition-delay: 0.42s; }
-.side-menu a:nth-child(9) { transition-delay: 0.49s; }
-.side-menu a:nth-child(10) { transition-delay: 0.56s; }
+.side-menu a:nth-child(3) { transition-delay: 0.05s; }
+.side-menu a:nth-child(4) { transition-delay: 0.10s; }
+.side-menu a:nth-child(5) { transition-delay: 0.15s; }
+.side-menu a:nth-child(6) { transition-delay: 0.20s; }
+.side-menu a:nth-child(7) { transition-delay: 0.25s; }
+.side-menu a:nth-child(8) { transition-delay: 0.30s; }
+.side-menu a:nth-child(9) { transition-delay: 0.35s; }
+.side-menu a:nth-child(10) { transition-delay: 0.40s; }
 
 .theme-toggle {
   display: flex;
