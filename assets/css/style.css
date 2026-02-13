@@ -437,16 +437,7 @@ body.light-theme {
   padding-top: 25px;  
   padding-bottom: 30px;
 }
-.footer-social {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.footer-social a {
-  margin: 0 10px;
-  color: #5BC0BE;
-  text-decoration: none;
-  font-weight: 600;
-}
+
 .footer-grid {
   display: flex;
   flex-direction: column;
@@ -798,4 +789,44 @@ body.light-theme .toggle-switch {
 .faq-whatsapp-btn:hover {
   box-shadow: 0 0 16px rgba(37, 211, 102, 0.6);
 }
+.footer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.footer-btn {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 22px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* WhatsApp Button */
+.footer-whatsapp {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  box-shadow: 0 0 10px rgba(37, 211, 102, 0.4);
+}
+
+/* Instagram Button */
+.footer-instagram {
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+  box-shadow: 0 0 10px rgba(221, 42, 123, 0.4);
+}
+
+.footer-btn:hover {
+  transform: translateY(-2px);
+}
+
+.footer-btn:active {
+  transform: scale(0.95);
+}
+
 
