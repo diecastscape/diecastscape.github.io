@@ -146,9 +146,13 @@ body.light-theme {
 .page p {
   font-size: 25px;
  }
-  .page1 p {
+  .faq-contact h3 {
+  font-size: 32px;
+}
+
+.faq-help-text {
   font-size: 25px;
-  }
+}
   .footer-copy {
     font-size: 15px;
   }
@@ -247,18 +251,6 @@ body.light-theme {
   color: #5BC0BE;
   font-weight: 600;
   text-decoration: none;
-}
-.page1 {
-  max-width: 800px;
-  margin: 0 auto;
-  align-items: center;
-  padding: 10px 18px;
-}
-.page1 p {
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--pag-h);
-  margin-bottom: 3px;
 }
 .faq-item {
   border-bottom: 1px solid #5BC0BE;
@@ -761,7 +753,8 @@ body.light-theme .toggle-switch {
 }
 
 .breadcrumb-sep {
-  color: rgba(255,255,255,0.6);
+  color: var(--pag-h);
+  margin-top:1px; 
 }
 
 .breadcrumb-current {
@@ -769,3 +762,40 @@ body.light-theme .toggle-switch {
   font-size: 9.5px;
   font-weight: 600;
 }
+.faq-contact {
+  text-align: center;
+  padding: 30px 16px 10px;
+}
+
+.faq-contact h3 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--pag-h);
+}
+
+.faq-help-text {
+  font-size: 12px;
+  color: var(--pag-w);
+}
+
+.faq-whatsapp-btn {
+  display: inline-block;
+  margin: 0 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(37, 211, 102, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-whatsapp-btn:active {
+  transform: scale(0.95);
+}
+
+.faq-whatsapp-btn:hover {
+  box-shadow: 0 0 16px rgba(37, 211, 102, 0.6);
+}
+
