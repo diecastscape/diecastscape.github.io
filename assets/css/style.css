@@ -456,6 +456,10 @@ body.light-theme {
   color: var(--pag-p);
   margin: 6px 0;
 }
+.footer-grid a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
 .footer-copy {
   text-align: center;
   font-size: 10px;
@@ -463,10 +467,6 @@ body.light-theme {
   margin-top: 25px;
   color: var(--text-muted);
   line-height: 1.6;
-}
-.site-footer a {
-  color: var(--text-muted);
-  text-decoration: none;
 }
 .hamburger {
   position: absolute;
