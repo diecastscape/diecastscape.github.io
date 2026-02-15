@@ -12,14 +12,20 @@ window.adminLogin = function () {
       window.location.href = "/admin/dashboard.html";
     })
     .catch(() => {
-      document.getElementById("msg").innerText = "Login failed";
+      document.getElementById("msg").innerText = "Invalid email or password";
     });
 };
 
-// CHECK LOGIN
+// AUTH STATE CHECK
 onAuthStateChanged(auth, (user) => {
-  if (!user && window.location.pathname.includes("/admin/")) {
+  const path = window.location.pathname;
+
+  if (!user && path.includes("/admin/dashboard")) {
     window.location.href = "/admin/login.html";
+  }
+
+  if (user && path.includes("/admin/login")) {
+    window.location.href = "/admin/dashboard.html";
   }
 });
 
@@ -29,4 +35,3 @@ window.adminLogout = function () {
     window.location.href = "/admin/login.html";
   });
 };
-
