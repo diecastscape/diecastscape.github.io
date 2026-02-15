@@ -33,8 +33,15 @@ button-logout{
 .container{
   padding:20px;
 }
+  .center{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
 .card{
-  width:80%;
+  width:65%;
   background:#15181b;
   padding:30px;
   border-radius:14px;
