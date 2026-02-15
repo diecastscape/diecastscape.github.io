@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Diecast.scape</title>
+
+<style>
+body{
+  background:#0f1113;
+  color:#e8f6f6;
+  font-family:system-ui;
+  margin:0;
+}
+
+.header{
+  background:#15181b;
+  padding:14px 20px;
+  border-bottom:1px solid #5BC0BE33;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+button{
+  background:#5BC0BE;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  color:#fff;
+  cursor:pointer;
+}
+
+.container{
+  padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <b>Diecast.scape Admin</b>
+  <button onclick="adminLogout()">Logout</button>
+</div>
+
+<div class="container">
+  <h2>Dashboard</h2>
+  <p>Firebase connected ✅</p>
+</div>
+
+<script type="module" src="/assets/ js/firebase-init.js"></script>
+<script type="module" src="/assets/ js/admin-auth.js"></script>
+
+</body>
+</html>
+
