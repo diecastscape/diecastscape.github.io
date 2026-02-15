@@ -12,7 +12,7 @@ window.adminLogin = function () {
       window.location.href = "/admin/dashboard.html";
     })
     .catch(() => {
-      alert("Login failed");
+      document.getElementById("msg").innerText = "Login failed";
     });
 };
 
