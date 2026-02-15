@@ -2,21 +2,26 @@ import { auth } from "./firebase-init.js";
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// LOGIN
 window.adminLogin = function () {
   const email = document.getElementById("admin-email").value;
   const pass = document.getElementById("admin-password").value;
+  const loader = document.getElementById("loginLoader");
+  const btn = document.getElementById("loginBtn");
+
+  loader.style.display = "block";
+  btn.disabled = true;
 
   signInWithEmailAndPassword(auth, email, pass)
     .then(() => {
       window.location.href = "/admin/dashboard.html";
     })
     .catch(() => {
+      loader.style.display = "none";
+      btn.disabled = false;
       document.getElementById("msg").innerText = "Invalid email or password";
     });
 };
 
-// AUTH STATE CHECK
 onAuthStateChanged(auth, (user) => {
   const path = window.location.pathname;
 
@@ -29,8 +34,15 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// LOGOUT
 window.adminLogout = function () {
+  const loader = document.getElementById("logoutLoader");
+  const btn = document.getElementById("logoutBtn");
+
+  if(loader){
+    loader.style.display = "block";
+    btn.disabled = true;
+  }
+
   signOut(auth).then(() => {
     window.location.href = "/admin/login.html";
   });
