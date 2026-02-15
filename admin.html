@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Diecast.scape</title>
+
+<style>
+body{
+  background:#0f1113;
+  color:#e8f6f6;
+  font-family:system-ui;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+}
+
+.card{
+  background:#15181b;
+  padding:30px;
+  border-radius:14px;
+  width:320px;
+  text-align:center;
+  border:1px solid #5BC0BE33;
+}
+
+input{
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #2b3136;
+  background:#0f1113;
+  color:#fff;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#5BC0BE;
+  color:#fff;
+  font-weight:600;
+  margin-top:8px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Admin Login</h2>
+  <input id="adminUser" placeholder="Username">
+  <input id="adminPass" type="password" placeholder="Password">
+  <button onclick="adminLogin()">Login</button>
+  <p id="msg"></p>
+</div>
+
+<script>
+const ADMIN_USER="admin";
+const ADMIN_PASS="1234";
+
+function adminLogin(){
+  if(adminUser.value===ADMIN_USER && adminPass.value===ADMIN_PASS){
+    localStorage.setItem("diecastAdmin","true");
+    location.href="admin-panel.html";
+  }else{
+    msg.innerText="Wrong admin login";
+  }
+}
+</script>
+
+</body>
+</html>
+
