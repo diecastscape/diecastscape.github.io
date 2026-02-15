@@ -50,29 +50,15 @@ button{
 </head>
 
 <body>
-
-<div class="card">
+  <div class="card">
   <h2>Admin Login</h2>
-  <input id="adminUser" placeholder="Username">
-  <input id="adminPass" type="password" placeholder="Password">
-  <button onclick="adminLogin()">Login</button>
-  <p id="msg"></p>
-</div>
+<input id="admin-email" type="email">
+<input id="admin-password" type="password">
 
-<script>
-const ADMIN_USER="admin";
-const ADMIN_PASS="1234";
-
-function adminLogin(){
-  if(adminUser.value===ADMIN_USER && adminPass.value===ADMIN_PASS){
-    localStorage.setItem("diecastAdmin","true");
-    location.href="admin-panel.html";
-  }else{
-    msg.innerText="Wrong admin login";
-  }
-}
-</script>
-
+<button onclick="adminLogin()">Login</button>
+<p id="msg"></p>
+  </div>
+<script type="module" src="/assets/js /admin-auth.js"></script>
 </body>
 </html>
 
