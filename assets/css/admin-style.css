@@ -33,14 +33,15 @@ button-logout{
 .container{
   padding:20px;
 }
-  .center{
+
+    .center{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-}
-
-.card{
+    }
+  
+  .card{
   width:65%;
   background:#15181b;
   padding:30px;
@@ -58,6 +59,7 @@ input{
   border:1px solid #2b3136;
   background:#0f1113;
   color:#fff;
+  box-sizing:border-box;
 }
 
 button{
@@ -70,7 +72,13 @@ button{
   font-weight:600;
   margin-top:8px;
   cursor:pointer;
+  box-sizing:border-box;
 }
+
+  input, button{
+  box-sizing:border-box;
+}
+
 .loader{
   width:22px;
   height:22px;
