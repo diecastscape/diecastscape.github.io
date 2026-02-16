@@ -47,3 +47,85 @@ window.adminLogout = function () {
     window.location.href = "/admin/login.html";
   });
 };
+const defaultDetails = `
+<p>This is a <strong>fully assembled, ready-to-display diorama</strong>,
+designed for collectors who value realism and craftsmanship.</p>
+
+<p>The diorama comes enclosed in a <strong>box-style display</strong>
+with <strong>built-in LED lighting</strong> and a
+<strong>clear acrylic front panel</strong>.</p>
+
+<p><strong>Product Dimensions:</strong> 300 × 125 × 120 mm</p>
+
+<p><strong>Note:</strong> Display models (cars) are
+<strong>not included</strong>.</p>
+`;
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  const details = document.getElementById("p-details");
+  if(details && !details.value){
+    details.value = defaultDetails;
+  }
+});
+window.addImageField = function(){
+  const list = document.getElementById("imagesList");
+
+  const div = document.createElement("div");
+
+  div.innerHTML = `
+    <input class="img-thumb" placeholder="Thumb path (products-temp)">
+    <input class="img-full" placeholder="Full path (products)">
+  `;
+
+  list.appendChild(div);
+};
+import { db } from "./firebase-init.js";
+import { collection, addDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+window.saveProduct = async function(){
+
+  const name = document.getElementById("p-name").value;
+  const priceOld = Number(document.getElementById("p-old").value);
+  const priceNew = Number(document.getElementById("p-new").value);
+  const detailsHTML = document.getElementById("p-details").value;
+  const whatsappText = document.getElementById("p-whatsapp").value;
+
+  const thumbs = document.querySelectorAll(".img-thumb");
+  const fulls = document.querySelectorAll(".img-full");
+
+  const images = [];
+
+  thumbs.forEach((t,i)=>{
+    if(t.value && fulls[i].value){
+      images.push({
+        thumb: t.value,
+        full: fulls[i].value
+      });
+    }
+  });
+
+  try{
+    await addDoc(collection(db,"products"),{
+      name,
+      priceOld,
+      priceNew,
+      detailsHTML,
+      whatsappText,
+      images,
+      active:true,
+      created:Date.now()
+    });
+
+    document.getElementById("saveMsg").innerText="Saved ✅";
+
+  }catch(e){
+    document.getElementById("saveMsg").innerText="Error saving";
+  }
+};
+window.addEventListener("DOMContentLoaded", ()=>{
+  const list = document.getElementById("imagesList");
+  if(list && list.children.length===0){
+    for(let i=0;i<4;i++) addImageField();
+  }
+});
