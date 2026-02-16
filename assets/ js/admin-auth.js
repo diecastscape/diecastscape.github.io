@@ -89,8 +89,7 @@ window.saveProduct = async function(){
   const priceOld = Number(document.getElementById("p-old").value);
   const priceNew = Number(document.getElementById("p-new").value);
   const detailsHTML = document.getElementById("p-details").value.trim();
-  const whatsappText = document.getElementById("p-whatsapp").value.trim();
-
+  
   const loader = document.getElementById("saveLoader");
   const btn = document.getElementById("saveBtn");
   const msg = document.getElementById("saveMsg");
@@ -137,7 +136,6 @@ window.saveProduct = async function(){
       priceOld,
       priceNew,
       detailsHTML,
-      whatsappText,
       images,
       active:true,
       created:Date.now()
