@@ -129,4 +129,7 @@ textarea{
   border-radius:8px;
   color:#fff;
 }
+.auth-loading{
+  visibility:hidden;
+}
 
