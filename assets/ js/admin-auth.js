@@ -1,3 +1,4 @@
+
 import { auth } from "./firebase-init.js";
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -22,18 +23,29 @@ window.adminLogin = function () {
     });
 };
 
+// ✅ AUTH STATE (NO BLINK FIX)
 onAuthStateChanged(auth, (user) => {
   const path = window.location.pathname;
+  const body = document.body;
 
+  // DASHBOARD → not logged → go login
   if (!user && path.includes("/admin/dashboard")) {
-    window.location.href = "/admin/login.html";
+    window.location.replace("/admin/login.html");
+    return;
   }
 
+  // LOGIN → already logged → go dashboard
   if (user && path.includes("/admin/login")) {
-    window.location.href = "/admin/dashboard.html";
+    window.location.replace("/admin/dashboard.html");
+    return;
   }
+
+  // ✅ AUTH OK → show page
+  body.classList.remove("auth-loading");
 });
 
+
+// ✅ LOGOUT
 window.adminLogout = function () {
   const loader = document.getElementById("logoutLoader");
   const btn = document.getElementById("logoutBtn");
@@ -44,9 +56,10 @@ window.adminLogout = function () {
   }
 
   signOut(auth).then(() => {
-    window.location.href = "/admin/login.html";
+    window.location.replace("/admin/login.html");
   });
 };
+
 const defaultDetails = `
 <p>This is a <strong>fully assembled, ready-to-display diorama</strong>,
 designed for collectors who value realism and craftsmanship.</p>
