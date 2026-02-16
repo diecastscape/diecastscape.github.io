@@ -9,17 +9,17 @@ function buildProductHTML(p){
   );
 
   const save = p.priceOld - p.priceNew;
+const imgs = p.images.map(im => `
+  <div class="img-box">
+    <div class="img-loader"></div>
+    <img src="${im.thumb}"
+      data-full="${im.full}"
+      onload="this.previousElementSibling.remove(); this.style.opacity=1"
+      style="opacity:0"
+      onclick="openLightbox(this.dataset.full)">
+  </div>
+`).join("");
 
-  const imgs = p.images.map(img => `
-    <div class="img-box">
-      <div class="img-loader"></div>
-      <img src="${img}"
-        data-full="${img}"
-        onload="this.previousElementSibling.remove(); this.style.opacity=1"
-        style="opacity:0"
-        onclick="openLightbox(this.dataset.full)">
-    </div>
-  `).join("");
 
   const whatsappText =
     encodeURIComponent(
