@@ -85,11 +85,28 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 window.saveProduct = async function(){
 
-  const name = document.getElementById("p-name").value;
+  const name = document.getElementById("p-name").value.trim();
   const priceOld = Number(document.getElementById("p-old").value);
   const priceNew = Number(document.getElementById("p-new").value);
-  const detailsHTML = document.getElementById("p-details").value;
-  const whatsappText = document.getElementById("p-whatsapp").value;
+  const detailsHTML = document.getElementById("p-details").value.trim();
+  const whatsappText = document.getElementById("p-whatsapp").value.trim();
+
+  const loader = document.getElementById("saveLoader");
+  const btn = document.getElementById("saveBtn");
+  const msg = document.getElementById("saveMsg");
+
+  msg.innerText = "";
+
+  // ---- VALIDATION ----
+  if(!name){
+    msg.innerText = "Enter product title";
+    return;
+  }
+
+  if(!priceOld || !priceNew){
+    msg.innerText = "Enter prices";
+    return;
+  }
 
   const thumbs = document.querySelectorAll(".img-thumb");
   const fulls = document.querySelectorAll(".img-full");
@@ -99,11 +116,20 @@ window.saveProduct = async function(){
   thumbs.forEach((t,i)=>{
     if(t.value && fulls[i].value){
       images.push({
-        thumb: t.value,
-        full: fulls[i].value
+        thumb: t.value.trim(),
+        full: fulls[i].value.trim()
       });
     }
   });
+
+  if(images.length === 0){
+    msg.innerText = "Add at least 1 image";
+    return;
+  }
+
+  // ---- SHOW LOADER ----
+  loader.style.display = "block";
+  btn.disabled = true;
 
   try{
     await addDoc(collection(db,"products"),{
@@ -117,12 +143,17 @@ window.saveProduct = async function(){
       created:Date.now()
     });
 
-    document.getElementById("saveMsg").innerText="Saved ✅";
+    loader.style.display = "none";
+    btn.disabled = false;
+    msg.innerText = "Saved successfully";
 
   }catch(e){
-    document.getElementById("saveMsg").innerText="Error saving";
+    loader.style.display = "none";
+    btn.disabled = false;
+    msg.innerText = "Error saving";
   }
 };
+
 window.addEventListener("DOMContentLoaded", ()=>{
   const list = document.getElementById("imagesList");
   if(list && list.children.length===0){
