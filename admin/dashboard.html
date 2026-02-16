@@ -18,6 +18,29 @@
 <div class="container">
   <h2>Dashboard</h2>
   <p>Firebase connected ✅</p>
+  <h3>Add Product</h3>
+
+<input id="p-name" placeholder="Product title">
+
+<div class="price-row">
+  <input id="p-old" placeholder="Old price">
+  <input id="p-new" placeholder="New price">
+</div>
+
+<textarea id="p-details"></textarea>
+
+<h4>Images</h4>
+
+<div id="imagesList"></div>
+
+<button onclick="addImageField()">+ Add Image</button>
+
+<input id="p-whatsapp" placeholder="WhatsApp message">
+
+<button onclick="saveProduct()" class="save-btn">Save Product</button>
+
+<p id="saveMsg"></p>
+
 </div>
 
 <script type="module" src="/assets/ js/firebase-init.js"></script>
