@@ -23,7 +23,7 @@ const imgs = p.images.map(im => `
 
   const whatsappText =
     encodeURIComponent(
-      `Hi Diecast.scape,\nI would like to place an order for the ${p.name}, priced at ₹${p.priceNew} (${discount}% discount).`
+      `Hi Diecast.scape,\nI would like to place an order for the ${p.name}. priced at ₹${p.priceNew} (${discount}% discount). Kindly let me know the delivery options and payment details.`
     );
 
   return `
