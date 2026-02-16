@@ -17,7 +17,7 @@
 
 <div class="container">
   <h2>Dashboard</h2>
-  <p>Firebase connected ✅</p>
+  
   <h3>Add Product</h3>
 
 <input id="p-name" placeholder="Product title">
@@ -38,9 +38,10 @@
 <input id="p-whatsapp" placeholder="WhatsApp message">
 
 <button onclick="saveProduct()" class="save-btn">Save Product</button>
-
+<button onclick="saveProduct()" class="save-btn" id="saveBtn">
+  Save Product</button>
+<div id="saveLoader" class="loader"></div>
 <p id="saveMsg"></p>
-
 </div>
 
 <script type="module" src="/assets/ js/firebase-init.js"></script>
