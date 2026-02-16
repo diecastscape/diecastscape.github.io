@@ -8,7 +8,7 @@ window.adminLogin = function () {
   const loader = document.getElementById("loginLoader");
   const btn = document.getElementById("loginBtn");
 
-  loader.style.display = "block";
+  loader.classList.add("show");
   btn.disabled = true;
 
   signInWithEmailAndPassword(auth, email, pass)
@@ -16,7 +16,7 @@ window.adminLogin = function () {
       window.location.href = "/admin/dashboard.html";
     })
     .catch(() => {
-      loader.style.display = "none";
+      loader.classList.remove("show");
       btn.disabled = false;
       document.getElementById("msg").innerText = "Invalid email or password";
     });
@@ -39,7 +39,7 @@ window.adminLogout = function () {
   const btn = document.getElementById("logoutBtn");
 
   if(loader){
-    loader.style.display = "block";
+    loader.classList.add("show");
     btn.disabled = true;
   }
 
@@ -127,7 +127,7 @@ window.saveProduct = async function(){
   }
 
   // ---- SHOW LOADER ----
-  loader.style.display = "block";
+  loader.classList.add("show");
   btn.disabled = true;
 
   try{
@@ -141,12 +141,12 @@ window.saveProduct = async function(){
       created:Date.now()
     });
 
-    loader.style.display = "none";
+    loader.classList.remove("show");
     btn.disabled = false;
     msg.innerText = "Saved successfully";
 
   }catch(e){
-    loader.style.display = "none";
+    loader.classList.remove("show");
     btn.disabled = false;
     msg.innerText = "Error saving";
   }
