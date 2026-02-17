@@ -22,7 +22,7 @@ const imgs = p.images.map(im => `
 
 const message =
 `Hi Diecast.scape,
-I would like to place an order for the ${p.name}
+I would like to place an order for the ${p.name},
 priced at ₹${p.priceNew} (${discount}% discount).
 Kindly let me know the delivery options and payment details.`;
 
