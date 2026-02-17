@@ -11,8 +11,12 @@ body {
               radial-gradient(1200px 600px at 110% 10%, #0a7cff33, transparent),
               #0a0f1f;
   color: #ffffff;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, opacity .2s ease;;
 }
+.auth-loading {
+  opacity: 0;
+}
+
 .header{
   background:#15181b;
   padding:14px 20px;
