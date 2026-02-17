@@ -98,6 +98,12 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 window.saveProduct = async function(){
 
+  const loader = document.getElementById("saveLoader");
+const btn = document.getElementById("saveBtn");
+const msg = document.getElementById("saveMsg");
+
+if(btn.disabled) return;
+
   const name = document.getElementById("p-name").value.trim();
   const priceOld = Number(document.getElementById("p-old").value);
   const priceNew = Number(document.getElementById("p-new").value);
@@ -142,21 +148,34 @@ window.saveProduct = async function(){
   // ---- SHOW LOADER ----
   loader.classList.add("show");
   btn.disabled = true;
+try{
+  await addDoc(collection(db,"products"),{
+    name,
+    priceOld,
+    priceNew,
+    detailsHTML,
+    images,
+    active:true,
+    created:Date.now()
+  });
 
-  try{
-    await addDoc(collection(db,"products"),{
-      name,
-      priceOld,
-      priceNew,
-      detailsHTML,
-      images,
-      active:true,
-      created:Date.now()
-    });
+  // ✅ STOP LOADER
+  loader.classList.remove("show");
+  btn.disabled = false;
+  msg.innerText = "Saved successfully";
 
-    loader.classList.remove("show");
-    btn.disabled = false;
-    msg.innerText = "Saved successfully";
+  // ✅ CLEAR FORM FIELDS
+  document.getElementById("p-name").value = "";
+  document.getElementById("p-old").value = "";
+  document.getElementById("p-new").value = "";
+
+  // reset details to default template
+  document.getElementById("p-details").value = defaultDetails;
+
+  // reset images
+  const list = document.getElementById("imagesList");
+  list.innerHTML = "";
+  for(let i=0;i<4;i++) addImageField();
 
   }catch(e){
     loader.classList.remove("show");
