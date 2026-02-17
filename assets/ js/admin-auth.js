@@ -57,17 +57,24 @@ window.adminLogout = function () {
 };
 
 const defaultDetails = `
-<p>This is a <strong>fully assembled, ready-to-display diorama</strong>,
-designed for collectors who value realism and craftsmanship.</p>
-
-<p>The diorama comes enclosed in a <strong>box-style display</strong>
-with <strong>built-in LED lighting</strong> and a
-<strong>clear acrylic front panel</strong>.</p>
-
-<p><strong>Product Dimensions:</strong> 300 × 125 × 120 mm</p>
-
-<p><strong>Note:</strong> Display models (cars) are
-<strong>not included</strong>.</p>
+  <p>
+    This is a <strong>fully assembled, ready-to-display diorama</strong>,
+    designed for collectors who value realism and craftsmanship.
+  </p>
+  <p>
+    The diorama comes enclosed in a <strong>box-style display</strong> with
+    <strong>built-in LED lighting</strong> and a
+    <strong>clear acrylic front panel</strong> for enhanced presentation and protection.
+  </p>
+  <p>
+    An <strong>external power adapter is included</strong>, ensuring quick and
+    hassle-free setup.
+  </p>
+  <p><strong>Product Dimensions:</strong> 300 × 125 × 120 mm</p>
+  <p>
+    <strong>Note:</strong> Display models (cars) are
+    <strong>not included</strong> and are shown for representation purposes only.
+  </p>
 `;
 
 window.addEventListener("DOMContentLoaded", ()=>{
