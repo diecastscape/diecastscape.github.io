@@ -12,8 +12,8 @@ function buildProductHTML(p){
 const imgs = p.images.map(im => `
   <div class="img-box">
     <div class="img-loader"></div>
-    <img src="${im.thumb}"
-      data-full="${im.full}"
+    <img src="images/products-temp/${im.thumb}"
+      data-full="images/products/${im.full}"
       onload="this.previousElementSibling.remove(); this.style.opacity=1"
       style="opacity:0"
       onclick="openLightbox(this.dataset.full)">
