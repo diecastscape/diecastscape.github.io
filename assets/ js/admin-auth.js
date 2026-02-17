@@ -22,28 +22,24 @@ window.adminLogin = function () {
       document.getElementById("msg").innerText = "Invalid email or password";
     });
 };
-
-// ✅ AUTH STATE (NO BLINK FIX)
 onAuthStateChanged(auth, (user) => {
   const path = window.location.pathname;
   const body = document.body;
-
-  // DASHBOARD → not logged → go login
-  if (!user && path.includes("/admin/dashboard")) {
-    window.location.replace("/admin/login.html");
+  if (path.includes("/admin/login")) {
+    body.classList.remove("auth-loading");
+    if (user) {
+      window.location.replace("/admin/dashboard.html");
+    }
     return;
   }
-
-  // LOGIN → already logged → go dashboard
-  if (user && path.includes("/admin/login")) {
-    window.location.replace("/admin/dashboard.html");
-    return;
+  if (path.includes("/admin/dashboard")) {
+    if (!user) {
+      window.location.replace("/admin/login.html");
+      return;
+    }
+    body.classList.remove("auth-loading");
   }
-
-  // ✅ AUTH OK → show page
-  body.classList.remove("auth-loading");
 });
-
 
 // ✅ LOGOUT
 window.adminLogout = function () {
@@ -108,10 +104,6 @@ if(btn.disabled) return;
   const priceOld = Number(document.getElementById("p-old").value);
   const priceNew = Number(document.getElementById("p-new").value);
   const detailsHTML = document.getElementById("p-details").value.trim();
-  
-  const loader = document.getElementById("saveLoader");
-  const btn = document.getElementById("saveBtn");
-  const msg = document.getElementById("saveMsg");
 
   msg.innerText = "";
 
