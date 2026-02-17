@@ -1,5 +1,5 @@
 import { db } from "./firebase-init.js";
-import { collection, getDocs } 
+import { collection, query, orderBy, getDocs } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildProductHTML(p){
@@ -60,12 +60,17 @@ const whatsappText = encodeURIComponent(message);
   </div>
   `;
 }
-
 async function loadProducts(){
   const container = document.getElementById("productsContainer");
   if(!container) return;
 
-  const snap = await getDocs(collection(db,"products"));
+  // 🔥 NEWEST FIRST
+  const q = query(
+    collection(db,"products"),
+    orderBy("created","desc")
+  );
+
+  const snap = await getDocs(q);
 
   snap.forEach(doc=>{
     const p = doc.data();
