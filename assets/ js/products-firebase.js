@@ -61,12 +61,12 @@ const whatsappText = encodeURIComponent(message);
   `;
 }
 async function loadProducts(){
+
   const container = document.getElementById("productsContainer");
   const loader = document.getElementById("productsLoader");
 
   if(!container) return;
 
-  // 🔥 NEWEST FIRST
   const q = query(
     collection(db,"products"),
     orderBy("created","desc")
@@ -74,8 +74,8 @@ async function loadProducts(){
 
   const snap = await getDocs(q);
 
-  if(loader) loader.remove();
-  
+  let count = 0;
+
   snap.forEach(doc=>{
     const p = doc.data();
     if(p.active){
@@ -83,9 +83,21 @@ async function loadProducts(){
         "beforeend",
         buildProductHTML(p)
       );
+      count++;
     }
   });
+
+  // ✅ remove loader AFTER DOM updated
+  requestAnimationFrame(()=>{
+    if(loader) loader.remove();
+  });
+
+  // fallback: if no products
+  if(count === 0 && loader){
+    loader.innerText = "No products available";
+  }
 }
+
 
 window.addEventListener("DOMContentLoaded", loadProducts);
 
