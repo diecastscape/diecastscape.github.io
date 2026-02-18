@@ -72,6 +72,8 @@ async function loadProducts(){
 
   const snap = await getDocs(q);
 
+  if(loader) loader.remove();
+  
   snap.forEach(doc=>{
     const p = doc.data();
     if(p.active){
