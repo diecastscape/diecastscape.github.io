@@ -62,6 +62,8 @@ const whatsappText = encodeURIComponent(message);
 }
 async function loadProducts(){
   const container = document.getElementById("productsContainer");
+  const loader = document.getElementById("productsLoader");
+
   if(!container) return;
 
   // 🔥 NEWEST FIRST
