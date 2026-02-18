@@ -365,12 +365,15 @@ body.light-theme {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+.border-top{
+  border-top: 1px solid #5BC0BE;
+}
 .loader-grid{
   display:grid;
   grid-template-columns:repeat(3,8px);
   gap:4px;
   justify-content:center;
-  margin-top:12px;
+  margin:100px;
 }
 
 .loader-grid div{
