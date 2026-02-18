@@ -108,7 +108,6 @@ button{
   gap:4px;
   justify-content:center;
   margin-top:12px;
-  display:none;
 }
 
 .loader-grid div{
