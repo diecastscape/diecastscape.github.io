@@ -14,10 +14,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DIECAST.SCAPE</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico"> 
+  <script>
+(function(){
+  const savedTheme = localStorage.getItem("theme") || "light";
+  document.documentElement.classList.add(savedTheme);
+})();
+</script>
+
 <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
-  
+  <body>
+<div class="bg-top-design"></div>
+
 <header class="site-header">
   <div class="header-inner">
     <img src="logo.png" class="header-logo" alt="Diecast Scape Logo">
