@@ -365,6 +365,35 @@ body.light-theme {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+.loader-grid{
+  display:grid;
+  grid-template-columns:repeat(3,8px);
+  gap:4px;
+  justify-content:center;
+  margin-top:12px;
+}
+
+.loader-grid div{
+  width:8px;
+  height:8px;
+  background:#5BC0BE;
+  opacity:.2;
+  animation:gridBlink 1.2s infinite;
+}
+
+.loader-grid div:nth-child(2){ animation-delay:.1s }
+.loader-grid div:nth-child(3){ animation-delay:.2s }
+.loader-grid div:nth-child(4){ animation-delay:.3s }
+.loader-grid div:nth-child(5){ animation-delay:.4s }
+.loader-grid div:nth-child(6){ animation-delay:.5s }
+.loader-grid div:nth-child(7){ animation-delay:.6s }
+.loader-grid div:nth-child(8){ animation-delay:.7s }
+.loader-grid div:nth-child(9){ animation-delay:.8s }
+
+@keyframes gridBlink{
+  0%,100%{ opacity:.2; transform:scale(.8) }
+  50%{ opacity:1; transform:scale(1.2) }
+}
 .price {
   margin-top: 12px;
 }
