@@ -293,12 +293,28 @@ body.light-theme {
   padding-bottom: 10px;
 }
 
+@keyframes fadeProduct{
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
 .section {
   text-align: left;
   padding: 20px 23px;
   border-top: 1px solid #5BC0BE;
   content-visibility: auto;
   contain-intrinsic-size: 300px;
+  opacity:0;
+  transform:translateY(8px);
+  animation:fadeProduct .4s ease forwards;
+}
+@keyframes fadeProduct{
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 .diorama-title {
   font-size: 18px;
