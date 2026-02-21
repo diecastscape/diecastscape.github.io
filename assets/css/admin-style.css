@@ -165,3 +165,57 @@ textarea{
   visibility:hidden;
 }
 
+.dash-title{
+  margin-bottom:16px;
+}
+
+.dash-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.dash-card{
+  background:#15181b;
+  border:1px solid #5BC0BE33;
+  border-radius:12px;
+  padding:16px;
+}
+
+.dash-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+
+.view-btn{
+  background:#5BC0BE;
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  color:#fff;
+  cursor:pointer;
+}
+
+.section-panel{
+  display:none;
+  margin-top:18px;
+  background:#15181b;
+  border:1px solid #5BC0BE33;
+  border-radius:12px;
+  padding:16px;
+}
+
+.section-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+
+.add-wrap{
+  display:none;
+  margin-bottom:16px;
+}
