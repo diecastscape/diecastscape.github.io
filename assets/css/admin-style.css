@@ -68,7 +68,7 @@ button{
   background:#5BC0BE;
   color:#fff;
   font-weight:600;
-  margin-top:8px 0;
+  margin:8px 0;
   cursor:pointer;
   box-sizing:border-box;
 }
@@ -132,12 +132,13 @@ button{
 textarea{
   width:100%;
   height:140px;
-  margin:8px 10px;
+  margin:8px 0;
   padding:10px;
   border-radius:8px;
   border:1px solid #2b3136;
   background:#0f1113;
   color:#fff;
+  box-sizing:border-box;
 }
 
 #imagesList input{
