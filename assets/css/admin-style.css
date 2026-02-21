@@ -26,17 +26,8 @@ body {
   align-items:center;
 }
 
-button-logout{
-  background:#5BC0BE;
-  border:none;
-  padding:8px 14px;
-  border-radius:8px;
-  color:#fff;
-  cursor:pointer;
-}
-
 .container{
-  padding:20px;
+  padding:15px;
 }
 
     .center{
@@ -68,30 +59,21 @@ input{
 }
 .primary-btn{
   width:100%;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  background:#5BC0BE;
-  color:#fff;
-  font-weight:600;
-  margin-bottom:14px;
-  cursor:pointer;
 }
 
-button-login{
-  width:100%;
+button{
   padding:10px;
   border:none;
   border-radius:8px;
   background:#5BC0BE;
   color:#fff;
   font-weight:600;
-  margin-top:8px;
+  margin-top:8px 0;
   cursor:pointer;
   box-sizing:border-box;
 }
 
-  input, button-login{
+  input, button{
   box-sizing:border-box;
 }
   .loader{
@@ -163,15 +145,6 @@ textarea{
   margin:6px 0;
 }
 
-.save-btn{
-  margin-top:10px;
-  width:100%;
-  padding:10px;
-  background:#5BC0BE;
-  border:none;
-  border-radius:8px;
-  color:#fff;
-}
 .auth-loading{
   visibility:hidden;
 }
@@ -199,15 +172,6 @@ textarea{
   justify-content:space-between;
   align-items:center;
   margin-bottom:6px;
-}
-
-.view-btn{
-  background:#5BC0BE;
-  border:none;
-  padding:6px 12px;
-  border-radius:8px;
-  color:#fff;
-  cursor:pointer;
 }
 
 .section-panel{
