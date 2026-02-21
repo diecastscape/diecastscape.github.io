@@ -18,29 +18,24 @@
   <h2 class="dash-title">Dashboard</h2>
 
   <div class="dash-grid">
-
     <!-- MAIN SALE -->
     <div class="dash-card">
       <div class="dash-head">
         <div>Main Sale</div>
-        <button onclick="openSection('main')" class="view-btn">
+      </div>
+      <button onclick="openSection('main')" class="view-btn">
           View
         </button>
-      </div>
-      <p>Products shown on homepage</p>
     </div>
-
     <!-- SPECIAL SALE -->
     <div class="dash-card">
       <div class="dash-head">
         <div>Special Sale</div>
-        <button onclick="openSection('special')" class="view-btn">
+      </div>
+      <button onclick="openSection('special')" class="view-btn">
           View
         </button>
-      </div>
-      <p>Products in special-sale page</p>
     </div>
-
   </div>
 
   <!-- ===== MAIN SALE SECTION ===== -->
@@ -53,7 +48,8 @@
     </div>
 
     <div id="add-main" class="add-wrap">
-      <input id="p-name" placeholder="Product title">
+      <div id="mainAddForm">
+        <input id="p-name" placeholder="Product title">
 
 <div class="price-row">
   <input id="p-old" placeholder="Old price">
@@ -71,7 +67,7 @@
   <button onclick="saveProduct()" class="save-btn" id="saveBtn">Save Product</button>
 <div id="saveLoader" class="loader"></div>
 <p id="saveMsg"></p>
-      <div id="mainAddForm"></div>
+      </div>
     </div>
 
     <div id="mainProducts"></div>
@@ -87,52 +83,13 @@
     </div>
 
     <div id="add-special" class="add-wrap">
-      <div id="specialAddForm"><input id="p-name" placeholder="Product title">
-
-<div class="price-row">
-  <input id="p-old" placeholder="Old price">
-  <input id="p-new" placeholder="New price">
-</div>
-
-<textarea id="p-details"></textarea>
-
-<h4>Images</h4>
-
-<div id="imagesList"></div>
-
-<button onclick="addImageField()">+ Add Image</button>
-
-  <button onclick="saveProduct()" class="save-btn" id="saveBtn">Save Product</button>
-<div id="saveLoader" class="loader"></div>
-<p id="saveMsg"></p>
-      </div>
+      <div id="specialAddForm">
+        soon
     </div>
 
     <div id="specialProducts"></div>
   </div>
-
-  <h2>Dashboard</h2>
-  
-  <h3>Add Product</h3>
-
-<input id="p-name" placeholder="Product title">
-
-<div class="price-row">
-  <input id="p-old" placeholder="Old price">
-  <input id="p-new" placeholder="New price">
 </div>
-
-<textarea id="p-details"></textarea>
-
-<h4>Images</h4>
-
-<div id="imagesList"></div>
-
-<button onclick="addImageField()">+ Add Image</button>
-
-  <button onclick="saveProduct()" class="save-btn" id="saveBtn">Save Product</button>
-<div id="saveLoader" class="loader"></div>
-<p id="saveMsg"></p>
 </div>
 
 <script type="module" src="/assets/ js/firebase-init.js"></script>
