@@ -145,7 +145,12 @@ textarea{
   width:100%;
   margin:6px 0;
 }
-
+.center-msg{
+  text-align:center;
+  width:100%;
+  display:block;
+  margin-top:8px;
+}
 .auth-loading{
   visibility:hidden;
 }
@@ -160,13 +165,19 @@ textarea{
   gap:16px;
   margin-bottom:20px;
 }
-
 .dash-card{
   background:#15181b;
   border:1px solid #5BC0BE33;
   border-radius:12px;
-  padding:16px;
+  padding-top:8px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;      /* horizontal center */
+  justify-content:center;  /* vertical center */
+  text-align:center;       /* text center */
 }
+
 
 .dash-head{
   display:flex;
