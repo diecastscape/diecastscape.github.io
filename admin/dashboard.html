@@ -10,11 +10,11 @@
 
 <div class="header">
   <b>Diecast.scape Admin</b>
-  <button-logout onclick="adminLogout()" id="logoutBtn">Logout</button-logout>
+  <button onclick="adminLogout()" id="logoutBtn">Logout</button>
 </div>
 <div id="logoutLoader" class="loader-bar"></div>
+  
 <div class="container">
-
   <h2 class="dash-title">Dashboard</h2>
 
   <div class="dash-grid">
@@ -23,7 +23,7 @@
       <div class="dash-head">
         <div>Main Sale</div>
       </div>
-      <button onclick="openSection('main')" class="view-btn">
+      <button onclick="openSection('main')">
           View
         </button>
     </div>
@@ -32,7 +32,7 @@
       <div class="dash-head">
         <div>Special Sale</div>
       </div>
-      <button onclick="openSection('special')" class="view-btn">
+      <button onclick="openSection('special')">
           View
         </button>
     </div>
@@ -42,7 +42,7 @@
   <div id="section-main" class="section-panel">
     <div class="section-top">
       <h3>Main Sale Products</h3>
-      <button onclick="toggleAdd('main')" class="primary-btn">
+      <button onclick="toggleAdd('main')">
         + Add Product
       </button>
     </div>
@@ -62,9 +62,9 @@
 
 <div id="imagesList"></div>
 
-<button onclick="addImageField()">+ Add Image</button>
+<button onclick="addImageField()" class="primary-btn">+ Add Image</button>
 
-  <button onclick="saveProduct()" class="save-btn" id="saveBtn">Save Product</button>
+  <button onclick="saveProduct()" class="primary-btn" id="saveBtn">Save Product</button>
 <div id="saveLoader" class="loader"></div>
 <p id="saveMsg"></p>
       </div>
@@ -77,7 +77,7 @@
   <div id="section-special" class="section-panel">
     <div class="section-top">
       <h3>Special Sale Products</h3>
-      <button onclick="toggleAdd('special')" class="primary-btn">
+      <button onclick="toggleAdd('special')">
         + Add Product
       </button>
     </div>
