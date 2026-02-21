@@ -189,3 +189,13 @@ window.addEventListener("DOMContentLoaded", ()=>{
     for(let i=0;i<4;i++) addImageField();
   }
 });
+window.openSection = function(type){
+
+  document.querySelectorAll(".section-panel")
+    .forEach(s=>s.style.display="none");
+
+  const sec = document.getElementById("section-"+type);
+  if(sec) sec.style.display="block";
+
+  loadAdminProducts(type);
+};
