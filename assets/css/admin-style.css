@@ -67,7 +67,7 @@ input{
   box-sizing:border-box;
 }
 
-button{
+button-login{
   width:100%;
   padding:10px;
   border:none;
@@ -80,7 +80,7 @@ button{
   box-sizing:border-box;
 }
 
-  input, button{
+  input, button-login{
   box-sizing:border-box;
 }
   .loader{
