@@ -199,3 +199,8 @@ window.openSection = function(type){
 
   loadAdminProducts(type);
 };
+window.toggleAdd = function(type){
+  const wrap = document.getElementById("add-"+type);
+  wrap.style.display =
+    wrap.style.display==="block" ? "none" : "block";
+};
