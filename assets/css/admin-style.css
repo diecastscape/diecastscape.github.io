@@ -155,35 +155,25 @@ textarea{
   visibility:hidden;
 }
 
-.dash-title{
-  margin-bottom:16px;
-}
-
-.dash-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  margin-bottom:20px;
-}
 .dash-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
   background:#15181b;
   border:1px solid #5BC0BE33;
   border-radius:12px;
-  padding-top:8px;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;      /* horizontal center */
-  justify-content:center;  /* vertical center */
-  text-align:center;       /* text center */
+  padding:14px 16px;
+  transition:0.2s;
 }
 
+.dash-card:hover{
+  border-color:#5BC0BE;
+  background:#1b2024;
+}
 
-.dash-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:6px;
+.dash-title{
+  font-weight:600;
+  margin-bottom:16px;
 }
 
 .section-panel{
