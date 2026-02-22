@@ -166,11 +166,6 @@ textarea{
   transition:0.2s;
 }
 
-.dash-card:hover{
-  border-color:#5BC0BE;
-  background:#1b2024;
-}
-
 .dash-title{
   font-weight:600;
   margin-bottom:16px;
