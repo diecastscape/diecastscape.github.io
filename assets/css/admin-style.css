@@ -184,6 +184,9 @@ textarea{
   border-radius:12px;
   padding:16px;
 }
+.section-panel:hover{
+  border-color:#5BC0BE;
+}
 
 .section-top{
   display:flex;
