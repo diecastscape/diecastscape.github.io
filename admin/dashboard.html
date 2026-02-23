@@ -39,21 +39,16 @@
 
     <div id="add-main" class="add-wrap">
       <div id="mainAddForm">
-        <input id="p-name" placeholder="Product title">
-
+        
+<input id="p-name" placeholder="Product title">
 <div class="price-row">
-  <input id="p-old" placeholder="Old price">
-  <input id="p-new" placeholder="New price">
+  <input id="p-old" placeholder="Retail price">
+  <input id="p-new" placeholder="Discounted price">
 </div>
-
 <textarea id="p-details"></textarea>
-
 <h4>Images</h4>
-
 <div id="imagesList"></div>
-
 <button onclick="addImageField()" class="primary-btn">+ Add Image</button>
-
   <button onclick="saveProduct()" class="primary-btn" id="saveBtn">Save Product</button>
 <div id="saveLoader" class="loader"></div>
 <p class="center-msg" id="saveMsg"></p>
@@ -74,7 +69,14 @@
 
     <div id="add-special" class="add-wrap">
       <div id="specialAddForm">
-        soon
+        
+<input id="spTitle" placeholder="Product title">
+<input id="spPrice" placeholder="Price">
+<input class="spImg" placeholder="Image URL 1">
+<input class="spImg" placeholder="Image URL 2">
+
+<button onclick="addSpecialProduct()">Save Product</button>
+<p class="center-msg" id="spMsg"></p>
     </div>
 
     <div id="specialProducts"></div>
