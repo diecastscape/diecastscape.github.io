@@ -70,13 +70,22 @@
     <div id="add-special" class="add-wrap">
       <div id="specialAddForm">
         
-<input id="spTitle" placeholder="Product title">
-<input id="spPrice" placeholder="Price">
-<input class="spImg" placeholder="Image URL 1">
-<input class="spImg" placeholder="Image URL 2">
+<input id="s-name" placeholder="Product title">
 
-<button onclick="addSpecialProduct()">Save Product</button>
-<p class="center-msg" id="spMsg"></p>
+<input id="s-price" placeholder="Sale price">
+<h4>Images</h4>
+<div id="s-imagesList"></div>
+
+<button onclick="addSaleImageField()" class="primary-btn">
++ Add Image
+</button>
+
+<button onclick="saveSaleProduct()" class="primary-btn" id="s-saveBtn">
+Save Product
+</button>
+
+<div id="s-saveLoader" class="loader"></div>
+<p class="center-msg" id="s-saveMsg"></p>
     </div>
 
     <div id="specialProducts"></div>
