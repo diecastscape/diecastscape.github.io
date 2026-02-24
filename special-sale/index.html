@@ -67,8 +67,8 @@
   placeholder="Search..."
   onkeyup="searchProducts()"
   class="search-bar">
-  
-<main id="sale-main">
+  <main id="sale-main"></main>
+<main id="sale-main-in">
     <div class="section sale-product">
   <div class="diorama-title">NISSAN 350Z CUSTOM/PERSONNALISÉ AND FURIOUS</div>
   <div class="slider">
@@ -313,6 +313,8 @@ Thank you for visiting.
   
 <script src="/assets/ js/config.js"></script>
 <script src="/assets/ js/core.js"></script>
+<script type="module" src="/assets/ js/firebase-init.js"></script>
+<script type="module" src="/assets/ js/sale-products-firebase.js"></script>  
 <script src="/assets/ js/products.js"></script>
 <script>
   const saleEnabled = SALE_CONFIG.enabled;
@@ -321,7 +323,7 @@ Thank you for visiting.
 
   document.addEventListener("DOMContentLoaded", () => {
     const products = document.querySelectorAll(".sale-product");
-    const saleMain = document.getElementById("sale-main");
+    const saleMain = document.getElementById("sale-main-in");
 
     const isSaleLive = saleEnabled || now >= saleStart;
 
