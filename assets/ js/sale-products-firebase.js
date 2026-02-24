@@ -3,16 +3,19 @@ import { collection, query, orderBy, getDocs }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildSaleHTML(p){
+let imgs = "";
 
-  const imgs = p.images.map(im => `
+for (let i = 0; i < p.images.length; i++) {
+  imgs += `
     <div class="img-box">
       <div class="img-loader"></div>
-      <img src="/images/newsale/${im}.webp"
+      <img src="/images/newsale/${p.images[i]}.webp"
         onload="this.previousElementSibling.remove(); this.style.opacity=1"
         style="opacity:0"
         onclick="openLightbox(this.src)">
     </div>
-  `).join("");
+  `;
+}
   
   const message =
 `Hi Diecast.scape,
