@@ -1,5 +1,3 @@
-
-
 const defaultDetails = `
   <p>
     This is a <strong>fully assembled, ready-to-display diorama</strong>,
@@ -149,3 +147,92 @@ window.toggleAdd = function(type){
     wrap.style.display==="block" ? "none" : "block";
 };
 
+// ===== ADD SALE IMAGE FIELD =====
+window.addSaleImageField = function(){
+  const list = document.getElementById("s-imagesList");
+
+  const div = document.createElement("div");
+
+  div.innerHTML = `
+    <input class="s-img-full" placeholder="Image path (newsale)">
+  `;
+
+  list.appendChild(div);
+};
+
+// ===== SAVE SALE PRODUCT =====
+window.saveSaleProduct = async function(){
+
+  const loader = document.getElementById("s-saveLoader");
+  const btn = document.getElementById("s-saveBtn");
+  const msg = document.getElementById("s-saveMsg");
+
+  if(btn.disabled) return;
+
+  const name = document.getElementById("s-name").value.trim();
+  const price = Number(document.getElementById("s-price").value);
+
+  msg.innerText = "";
+
+  if(!name){
+    msg.innerText = "Enter product title";
+    return;
+  }
+
+  if(!price){
+    msg.innerText = "Enter price";
+    return;
+  }
+
+  const fulls = document.querySelectorAll(".s-img-full");
+  const images = [];
+
+  fulls.forEach(f=>{
+    if(f.value){
+      images.push(f.value.trim());
+    }
+  });
+
+  if(images.length === 0){
+    msg.innerText = "Add at least 1 image";
+    return;
+  }
+
+  loader.classList.add("show");
+  btn.disabled = true;
+
+  try{
+    await addDoc(collection(db,"specialSaleProducts"),{
+      name,
+      price,
+      images,
+      active:true,
+      sold:false,
+      created:Date.now()
+    });
+
+    loader.classList.remove("show");
+    btn.disabled = false;
+    msg.innerText = "Saved successfully";
+
+    document.getElementById("s-name").value = "";
+    document.getElementById("s-price").value = "";
+
+    const list = document.getElementById("s-imagesList");
+    list.innerHTML = "";
+    for(let i=0;i<3;i++) addSaleImageField();
+
+  }catch(e){
+    loader.classList.remove("show");
+    btn.disabled = false;
+    msg.innerText = "Error saving";
+  }
+};
+
+// INIT SALE IMAGE FIELDS
+window.addEventListener("DOMContentLoaded", ()=>{
+  const list = document.getElementById("s-imagesList");
+  if(list && list.children.length===0){
+    for(let i=0;i<3;i++) addSaleImageField();
+  }
+});
