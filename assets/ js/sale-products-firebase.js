@@ -7,7 +7,7 @@ function buildSaleHTML(p){
   const imgs = p.images.map(im => `
     <div class="img-box">
       <div class="img-loader"></div>
-      <img src="/images/newsale/${im.full}.webp"
+      <img src="/images/newsale/${im}.webp"
         onload="this.previousElementSibling.remove(); this.style.opacity=1"
         style="opacity:0"
         onclick="openLightbox(this.src)">
