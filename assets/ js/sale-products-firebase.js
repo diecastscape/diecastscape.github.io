@@ -80,3 +80,5 @@ async function loadSaleProducts(){
 }
 
 window.loadSaleProducts = loadSaleProducts;
+
+document.addEventListener("DOMContentLoaded", loadSaleProducts);
