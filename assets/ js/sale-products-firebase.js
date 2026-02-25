@@ -28,7 +28,7 @@ Is it available?`;
   const whatsappText = encodeURIComponent(message);
 
   return `
-  <div class="section sale-product">
+  <div class="section">
     <div class="diorama-title">${p.name}</div>
 
     <div class="slider">
