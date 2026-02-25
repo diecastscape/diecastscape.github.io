@@ -90,3 +90,42 @@ async function loadSaleProducts(){
 
 // SAME trigger style as main
 window.addEventListener("DOMContentLoaded", loadSaleProducts);
+window.testSaleJS = async function(){
+
+  const out = document.getElementById("test-output");
+  if(!out){
+    alert("test-output div not found");
+    return;
+  }
+
+  out.innerHTML = "⏳ Testing...";
+
+  try{
+    const q = query(
+      collection(db,"specialSaleProducts"),
+      orderBy("created","desc")
+    );
+
+    const snap = await getDocs(q);
+
+    let html = `<b>Docs found:</b> ${snap.size}<br><br>`;
+
+    snap.forEach(doc=>{
+      const p = doc.data();
+
+      html += `
+        ✔ ${p.name}  
+        | active: ${p.active}  
+        | price: ${p.price}  
+        | images: ${Array.isArray(p.images) ? p.images.length : 0}
+        <br>
+      `;
+    });
+
+    out.innerHTML = html || "No docs";
+
+  }catch(e){
+    out.innerHTML = "❌ ERROR: " + e.message;
+    console.error(e);
+  }
+};
