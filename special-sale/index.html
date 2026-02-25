@@ -67,7 +67,17 @@
   placeholder="Search..."
   onkeyup="searchProducts()"
   class="search-bar">
-  
+  <div id="productsContainer">
+    <div id="productsLoader">
+  <div class="border-top"></div>
+  <div class="loader-grid">
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+  </div>
+</div>
+</div>
+
   <div id="sale-main"></div>
 
   <a class="wa-float"
@@ -149,7 +159,7 @@ Thank you for visiting.
 <script src="/assets/ js/config.js"></script>
 <script src="/assets/ js/core.js"></script>
 <script type="module" src="/assets/ js/firebase-init.js"></script>
-<script type="module" src="/assets/ js/sale-products-firebase.js"></script>  
+<script type="module" src="/assets/ js/products-firebase.js"></script>  
 <script src="/assets/ js/products.js"></script>
 <script>
   const saleEnabled = SALE_CONFIG.enabled;
