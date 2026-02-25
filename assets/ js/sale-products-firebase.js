@@ -3,20 +3,23 @@ import { collection, query, orderBy, getDocs }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildSaleHTML(p){
-let imgs = "";
 
-for (let i = 0; i < p.images.length; i++) {
-  imgs += `
-    <div class="img-box">
-      <div class="img-loader"></div>
-      <img src="/images/newsale/${p.images[i]}.webp"
-        onload="this.previousElementSibling.remove(); this.style.opacity=1"
-        style="opacity:0"
-        onclick="openLightbox(this.src)">
-    </div>
-  `;
-}
-  
+  let imgs = "";
+
+  if(Array.isArray(p.images)){
+    p.images.forEach(im=>{
+      imgs += `
+        <div class="img-box">
+          <div class="img-loader"></div>
+          <img src="images/newsale/${im}.webp"
+            onload="this.previousElementSibling.remove(); this.style.opacity=1"
+            style="opacity:0"
+            onclick="openLightbox(this.src)">
+        </div>
+      `;
+    });
+  }
+
   const message =
 `Hi Diecast.scape,
 I would like to book the ${p.name}.
@@ -50,8 +53,9 @@ Is it available?`;
 
 async function loadSaleProducts(){
 
-  const saleMain = document.getElementById("sale-main");
-  if(!saleMain) return;
+  const container = document.getElementById("sale-main");
+
+  if(!container) return;
 
   const q = query(
     collection(db,"specialSaleProducts"),
@@ -64,8 +68,9 @@ async function loadSaleProducts(){
 
   snap.forEach(doc=>{
     const p = doc.data();
-    if(p.active){
-      saleMain.insertAdjacentHTML(
+
+    if(p.active === true){
+      container.insertAdjacentHTML(
         "beforeend",
         buildSaleHTML(p)
       );
@@ -73,8 +78,9 @@ async function loadSaleProducts(){
     }
   });
 
+  // fallback same style as main
   if(count === 0){
-    saleMain.innerHTML = `
+    container.innerHTML = `
       <div class="sale-off" style="text-align:center;padding:20px">
         <p>No products in this sale</p>
       </div>
@@ -82,6 +88,5 @@ async function loadSaleProducts(){
   }
 }
 
-window.loadSaleProducts = loadSaleProducts;
-
-document.addEventListener("DOMContentLoaded", loadSaleProducts);
+// SAME trigger style as main
+window.addEventListener("DOMContentLoaded", loadSaleProducts);
