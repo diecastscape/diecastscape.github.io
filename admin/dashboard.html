@@ -15,7 +15,7 @@
 <div id="logoutLoader" class="loader-bar"></div>
   
 <div class="container">
-  <h2 class="dash-title">Dashboard</h2>
+  <h1 class="dash-title">Dashboard</h1>
 
     <!-- MAIN SALE -->
     <div class="dash-card">
@@ -30,10 +30,11 @@
 
   <!-- ===== MAIN SALE SECTION ===== -->
   <div id="section-main" class="section-panel">
+   <h3>Main Page</h3>
     <div class="section-top">
-      <h3>Main Sale Products</h3>
+      <h4>Main Page Add Product</h4>
       <button onclick="toggleAdd('main')">
-        + Add Product
+        + Add Products
       </button>
     </div>
 
@@ -60,8 +61,35 @@
 
   <!-- ===== SPECIAL SALE SECTION ===== -->
   <div id="section-special" class="section-panel">
+    <h3>Special Sale Page</h3>
+    <div class="sale-control">
+  <h4>Live Sale Time Control</h4>
+
+  <div class="toggle-row">
+    <span>Enable Sale Manually</span>
+
+    <label class="toggle-switch">
+      <input type="checkbox" id="sale-enabled">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <br>
+
+  <label>
+    Sale Start Time:
+    <input type="datetime-local" id="sale-start">
+  </label>
+
+  <br><br>
+
+  <button onclick="saveSaleConfig()">
+    Save Sale Settings
+  </button>
+  <div class="center-msg" id="sale-save-msg"></div>
+    </div>
     <div class="section-top">
-      <h3>Special Sale Products</h3>
+      <h4>Special Sale Page Add Products </h4>
       <button onclick="toggleAdd('special')">
         + Add Product
       </button>
