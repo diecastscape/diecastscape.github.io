@@ -41,6 +41,43 @@ import { db } from "./firebase-init.js";
 import { collection, addDoc } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const ref = doc(db,"siteConfig","sale");
+
+async function loadSaleConfig(){
+
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return;
+
+  const cfg = snap.data();
+
+  document.getElementById("sale-enabled").checked =
+    cfg.enabled || false;
+
+  if(cfg.start){
+    document.getElementById("sale-start").value =
+      cfg.start.substring(0,16);
+  }
+}
+
+window.saveSaleConfig = async function(){
+
+  const enabled =
+    document.getElementById("sale-enabled").checked;
+
+  const start =
+    document.getElementById("sale-start").value;
+
+  await setDoc(ref,{
+    enabled,
+    start
+  });
+
+  document.getElementById("sale-save-msg").innerText =
+    "Sale settings saved ✔";
+};
+
+document.addEventListener("DOMContentLoaded", loadSaleConfig);
+
 window.saveProduct = async function(){
 
   const loader = document.getElementById("saveLoader");
