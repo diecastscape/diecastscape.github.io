@@ -38,14 +38,21 @@ window.addImageField = function(){
   list.appendChild(div);
 };
 import { db } from "./firebase-init.js";
-import { collection, addDoc } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const ref = doc(db,"siteConfig","sale");
+import { 
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ===== SALE CONFIG =====
+const saleRef = doc(db,"siteConfig","sale");
 
 async function loadSaleConfig(){
 
-  const snap = await getDoc(ref);
+  const snap = await getDoc(saleRef);
   if(!snap.exists()) return;
 
   const cfg = snap.data();
@@ -67,7 +74,7 @@ window.saveSaleConfig = async function(){
   const start =
     document.getElementById("sale-start").value;
 
-  await setDoc(ref,{
+  await setDoc(saleRef,{
     enabled,
     start
   });
