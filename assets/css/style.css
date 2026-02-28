@@ -636,9 +636,8 @@ body.light-theme .toggle-switch {
   font-weight: 600;
 }
 .sale-off {
-  border-top: 1px solid #5BC0BE;
-  margin-top: 10px;
-  padding-top: 5px;
+  text-align:center;
+  padding-top: 100px;
 }
 .sale-cta {
   display: inline-block;
