@@ -1,6 +1,12 @@
 import { db } from "./firebase-init.js";
-import { collection, query, orderBy, getDocs } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { 
+  collection,
+  query,
+  orderBy,
+  getDocs,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildSaleHTML(p){
 
@@ -54,21 +60,66 @@ Is it available?`;
 async function loadSaleProducts(){
 
   const container = document.getElementById("sale-main");
+  const loader = document.getElementById("productsLoader");
 
   if(!container) return;
 
+  // ===== SALE LIVE CHECK =====
+  const ref = doc(db,"siteConfig","sale");
+  const snap = await getDoc(ref);
+
+  let live = false;
+  let liveDate = "";
+
+  if(snap.exists()){
+    const cfg = snap.data();
+
+    if(cfg.enabled === true){
+      live = true;
+    }
+
+    if(cfg.start){
+      const start = new Date(cfg.start);
+      const now = new Date();
+
+      liveDate = start.toLocaleString("en-IN",{
+        dateStyle:"medium",
+        timeStyle:"short"
+      });
+
+      if(now >= start){
+        live = true;
+      }
+    }
+  }
+
+  // ===== NOT LIVE =====
+  if(!live){
+
+    if(loader){
+      loader.remove();
+    }
+
+    container.innerHTML = `
+      <div class="sale-off" style="text-align:center;padding:20px">
+        <p>Sale will be live on<br><strong>${liveDate}</strong></p>
+      </div>
+    `;
+    return;
+  }
+
+  // ===== LOAD PRODUCTS =====
   const q = query(
     collection(db,"specialSaleProducts"),
     orderBy("created","desc")
   );
 
-  const snap = await getDocs(q);
+  const snap2 = await getDocs(q);
 
   let count = 0;
 
-  snap.forEach(doc=>{
+  snap2.forEach(doc=>{
     const p = doc.data();
-
     if(p.active === true){
       container.insertAdjacentHTML(
         "beforeend",
@@ -78,7 +129,12 @@ async function loadSaleProducts(){
     }
   });
 
-  // fallback same style as main
+  // ===== REMOVE LOADER AFTER DOM =====
+  requestAnimationFrame(()=>{
+    if(loader) loader.remove();
+  });
+
+  // ===== FALLBACK =====
   if(count === 0){
     container.innerHTML = `
       <div class="sale-off" style="text-align:center;padding:20px">
@@ -88,5 +144,4 @@ async function loadSaleProducts(){
   }
 }
 
-// SAME trigger style as main
 window.addEventListener("DOMContentLoaded", loadSaleProducts);
