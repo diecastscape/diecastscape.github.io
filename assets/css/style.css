@@ -637,7 +637,7 @@ body.light-theme .toggle-switch {
 }
 .sale-off {
   text-align:center;
-  padding-top: 100px;
+  padding: 100px;
 }
 .sale-cta {
   display: inline-block;
