@@ -101,8 +101,10 @@ async function loadSaleProducts(){
     }
 
     container.innerHTML = `
-      <div class="sale-off" style="text-align:center;padding:20px">
+    <div class="border-top">
+      <div class="sale-off">
         <p>Sale will be live on<br><strong>${liveDate}</strong></p>
+      </div>
       </div>
     `;
     return;
@@ -137,8 +139,10 @@ async function loadSaleProducts(){
   // ===== FALLBACK =====
   if(count === 0){
     container.innerHTML = `
-      <div class="sale-off" style="text-align:center;padding:20px">
+    <div class="border-top">
+      <div class="sale-off">
         <p>No products in this sale</p>
+      </div>
       </div>
     `;
   }
