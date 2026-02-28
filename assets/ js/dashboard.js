@@ -65,8 +65,13 @@ async function loadSaleConfig(){
       cfg.start.substring(0,16);
   }
 }
-
 window.saveSaleConfig = async function(){
+
+  const btn = document.getElementById("saleSaveBtn");
+  const loader = document.getElementById("saleSaveLoader");
+  const msg = document.getElementById("sale-save-msg");
+
+  if(btn.disabled) return;
 
   const enabled =
     document.getElementById("sale-enabled").checked;
@@ -74,13 +79,30 @@ window.saveSaleConfig = async function(){
   const start =
     document.getElementById("sale-start").value;
 
-  await setDoc(saleRef,{
-    enabled,
-    start
-  });
+  msg.innerText = "";
 
-  document.getElementById("sale-save-msg").innerText =
-    "Sale settings saved ✔";
+  loader.classList.add("show");
+  btn.disabled = true;
+
+  try{
+
+    await setDoc(saleRef,{
+      enabled,
+      start
+    });
+
+    loader.classList.remove("show");
+    btn.disabled = false;
+
+    msg.innerText = "Sale settings saved";
+
+  }catch(e){
+
+    loader.classList.remove("show");
+    btn.disabled = false;
+
+    msg.innerText = "Error saving settings";
+  }
 };
 
 document.addEventListener("DOMContentLoaded", loadSaleConfig);
