@@ -194,6 +194,9 @@ textarea{
   display:none;
   margin-bottom:16px;
 }
+.border-top{
+  border-top: 1px solid #5BC0BE;
+}
 .toggle-row{
   display:flex;
   align-items:center;
