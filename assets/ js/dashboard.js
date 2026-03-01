@@ -214,6 +214,55 @@ window.openSection = function(type){
 
   loadAdminProducts(type);
 };
+async function loadAdminProducts(type){
+
+  let container;
+
+  if(type==="special"){
+    container = document.getElementById("specialProducts");
+  }else if(type==="main"){
+    container = document.getElementById("mainProducts");
+  }
+
+  if(!container) return;
+
+  container.innerHTML = "Loading...";
+
+  let col =
+    type==="special"
+      ? "specialSaleProducts"
+      : "products";
+
+  const snap = await getDocs(collection(db,col));
+
+  container.innerHTML = "";
+
+  snap.forEach(docSnap=>{
+
+    const p = docSnap.data();
+    const id = docSnap.id;
+
+    if(type==="special"){
+      container.insertAdjacentHTML("beforeend",`
+        <div class="admin-product">
+          <b>${p.name}</b>
+          <span>₹${p.price}</span>
+
+          <div class="admin-actions">
+            <button onclick="editSaleProduct('${id}')">
+              Edit
+            </button>
+            <button onclick="deleteSaleProduct('${id}')">
+              Delete
+            </button>
+          </div>
+        </div>
+      `);
+    }
+
+  });
+
+}
 window.toggleAdd = function(type){
   const wrap = document.getElementById("add-"+type);
   wrap.style.display =
