@@ -211,58 +211,112 @@ window.openSection = function(type){
 
   const sec = document.getElementById("section-"+type);
   if(sec) sec.style.display="block";
-
-  loadAdminProducts(type);
 };
+
+/* ===============================
+   TOGGLE PRODUCT LIST
+================================ */
+window.toggleList = function(type){
+
+  const box =
+    type==="main"
+      ? document.getElementById("mainProducts")
+      : document.getElementById("specialProducts");
+
+  if(!box) return;
+
+  if(box.style.display==="block"){
+    box.style.display="none";
+    return;
+  }
+
+  box.style.display="block";
+
+  if(box.innerHTML.trim()===""){
+    loadAdminProducts(type);
+  }
+};
+
+
+/* ===============================
+   LOAD PRODUCTS FOR DASHBOARD
+================================ */
 async function loadAdminProducts(type){
 
-  let container;
-
-  if(type==="special"){
-    container = document.getElementById("specialProducts");
-  }else if(type==="main"){
-    container = document.getElementById("mainProducts");
-  }
+  const container =
+    type==="main"
+      ? document.getElementById("mainProducts")
+      : document.getElementById("specialProducts");
 
   if(!container) return;
 
   container.innerHTML = "Loading...";
 
-  let col =
-    type==="special"
-      ? "specialSaleProducts"
-      : "products";
+  const colName =
+    type==="main" ? "products" : "specialSaleProducts";
 
-  const snap = await getDocs(collection(db,col));
+  const q = query(
+    collection(db, colName),
+    orderBy("created","desc")
+  );
 
-  container.innerHTML = "";
+  const snap = await getDocs(q);
 
-  snap.forEach(docSnap=>{
+  let html = "";
 
-    const p = docSnap.data();
-    const id = docSnap.id;
+  snap.forEach(d=>{
+    const p = d.data();
+    const id = d.id;
 
-    if(type==="main"){
-      container.insertAdjacentHTML("beforeend",`
-        <div class="admin-product">
-          <b>${p.name}</b>
-          <span>₹${p.price}</span>
+    html += `
+      <div class="admin-product">
 
-          <div class="admin-actions">
-            <button onclick="editSaleProduct('${id}')">
-              Edit
-            </button>
-            <button onclick="deleteSaleProduct('${id}')">
-              Delete
-            </button>
-          </div>
+        <div class="admin-title">
+          ${p.name || "No name"}
         </div>
-      `);
-    }
 
+        <div class="admin-price">
+          ${
+            type==="main"
+              ? `₹${p.priceNew}`
+              : `₹${p.price}`
+          }
+        </div>
+
+        <div class="admin-actions">
+          <button onclick="deleteProduct('${type}','${id}')">
+            Delete
+          </button>
+        </div>
+
+      </div>
+    `;
   });
 
+  if(html===""){
+    html = `<p>No products</p>`;
+  }
+
+  container.innerHTML = html;
 }
+
+
+/* ===============================
+   DELETE PRODUCT
+================================ */
+window.deleteProduct = async function(type,id){
+
+  if(!confirm("Delete this product?")) return;
+
+  const colName =
+    type==="main" ? "products" : "specialSaleProducts";
+
+  await deleteDoc(doc(db,colName,id));
+
+  // refresh list
+  loadAdminProducts(type);
+};
+
 window.toggleAdd = function(type){
   const wrap = document.getElementById("add-"+type);
   wrap.style.display =
