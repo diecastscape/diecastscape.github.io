@@ -242,7 +242,7 @@ async function loadAdminProducts(type){
     const p = docSnap.data();
     const id = docSnap.id;
 
-    if(type==="special"){
+    if(type==="main"){
       container.insertAdjacentHTML("beforeend",`
         <div class="admin-product">
           <b>${p.name}</b>
