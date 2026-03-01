@@ -1,3 +1,19 @@
+import { db } from "./firebase-init.js";
+
+import { 
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  setDoc,
+  getDocs,
+  orderBy,
+  query,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
 const defaultDetails = `
   <p>
     This is a <strong>fully assembled, ready-to-display diorama</strong>,
@@ -37,16 +53,110 @@ window.addImageField = function(){
 
   list.appendChild(div);
 };
-import { db } from "./firebase-init.js";
 
-import { 
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+/* ===============================
+   TOGGLE PRODUCT LIST
+================================ */
+window.toggleList = function(type){
 
+  const box =
+    type==="main"
+      ? document.getElementById("mainProducts")
+      : document.getElementById("specialProducts");
+
+  if(!box) return;
+
+  if(box.style.display==="block"){
+    box.style.display="none";
+    return;
+  }
+
+  box.style.display="block";
+
+  if(box.innerHTML.trim()===""){
+    loadAdminProducts(type);
+  }
+};
+
+
+/* ===============================
+   LOAD PRODUCTS FOR DASHBOARD
+================================ */
+async function loadAdminProducts(type){
+
+  const container =
+    type==="main"
+      ? document.getElementById("mainProducts")
+      : document.getElementById("specialProducts");
+
+  if(!container) return;
+
+  container.innerHTML = "Loading...";
+
+  const colName =
+    type==="main" ? "products" : "specialSaleProducts";
+
+  const q = query(
+    collection(db, colName),
+    orderBy("created","desc")
+  );
+
+  const snap = await getDocs(q);
+
+  let html = "";
+
+  snap.forEach(d=>{
+    const p = d.data();
+    const id = d.id;
+
+    html += `
+      <div class="admin-product">
+
+        <div class="admin-title">
+          ${p.name || "No name"}
+        </div>
+
+        <div class="admin-price">
+          ${
+            type==="main"
+              ? `₹${p.priceNew}`
+              : `₹${p.price}`
+          }
+        </div>
+
+        <div class="admin-actions">
+          <button onclick="deleteProduct('${type}','${id}')">
+            Delete
+          </button>
+        </div>
+
+      </div>
+    `;
+  });
+
+  if(html===""){
+    html = `<p>No products</p>`;
+  }
+
+  container.innerHTML = html;
+}
+
+
+/* ===============================
+   DELETE PRODUCT
+================================ */
+window.deleteProduct = async function(type,id){
+
+  if(!confirm("Delete this product?")) return;
+
+  const colName =
+    type==="main" ? "products" : "specialSaleProducts";
+
+  await deleteDoc(doc(db,colName,id));
+
+  // refresh list
+  loadAdminProducts(type);
+};
 // ===== SALE CONFIG =====
 const saleRef = doc(db,"siteConfig","sale");
 
