@@ -277,7 +277,7 @@ textarea{
   border-radius:4px;
 }
 .product-list-loading{
-  min-height: 300px; /* keeps page height stable */
+  min-height: 700px; /* keeps page height stable */
   display:flex;
   align-items:center;
   justify-content:center;
