@@ -233,23 +233,20 @@ window.openSection = function(type){
 };
 
 
-/* ===============================
-   LOAD PRODUCTS FOR DASHBOARD
-================================ */
 async function loadAdminProducts(type){
 
   const container =
     type==="main"
       ? document.getElementById("mainProducts")
       : document.getElementById("specialProducts");
-  
-const addWrap = document.getElementById("add-"+type);
 
-  
+  const addWrap = document.getElementById("add-"+type);
+
   if(!container) return;
-  
- if(addWrap) addWrap.style.display = "none";
-  
+
+  // always close add form when loading list
+  if(addWrap) addWrap.style.display = "none";
+
   container.style.display = "block";
   container.innerHTML = "Loading...";
 
@@ -271,17 +268,12 @@ const addWrap = document.getElementById("add-"+type);
 
     html += `
       <div class="admin-product">
-
         <div class="admin-title">
           ${p.name || "No name"}
         </div>
 
         <div class="admin-price">
-          ${
-            type==="main"
-              ? `₹${p.priceNew}`
-              : `₹${p.price}`
-          }
+          ${type==="main" ? `₹${p.priceNew}` : `₹${p.price}`}
         </div>
 
         <div class="admin-actions">
@@ -289,7 +281,6 @@ const addWrap = document.getElementById("add-"+type);
             Delete
           </button>
         </div>
-
       </div>
     `;
   });
