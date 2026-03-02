@@ -232,7 +232,16 @@ window.openSection = function(type){
   }
 };
 
+window.toggleList = function(type){
 
+  const addWrap = document.getElementById("add-"+type);
+
+  // ✅ ALWAYS close add form if open
+  if(addWrap) addWrap.style.display = "none";
+
+  // ✅ reload products every click (refresh)
+  loadAdminProducts(type);
+};
 async function loadAdminProducts(type){
 
   const container =
