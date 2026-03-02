@@ -206,37 +206,29 @@ window.addEventListener("DOMContentLoaded", ()=>{
 });
 window.openSection = function(type){
 
+  // hide all sections
   document.querySelectorAll(".section-panel")
     .forEach(s=>s.style.display="none");
 
   const sec = document.getElementById("section-"+type);
-  if(sec) sec.style.display="block";
-};
+  if(!sec) return;
 
-window.toggleList = function(type){
+  // show section
+  sec.style.display="block";
 
+  // hide add form
+  const addWrap = document.getElementById("add-"+type);
+  if(addWrap) addWrap.style.display="none";
+
+  // show products list
   const listBox =
     type==="main"
       ? document.getElementById("mainProducts")
       : document.getElementById("specialProducts");
 
-  const addWrap = document.getElementById("add-"+type);
-
-  if(!listBox) return;
-
-  // close add if open
-  if(addWrap) addWrap.style.display = "none";
-
-  // toggle list
-  if(listBox.style.display==="block"){
-    listBox.style.display="none";
-    return;
-  }
-
-  listBox.style.display="block";
-
-  if(listBox.innerHTML.trim()===""){
-    loadAdminProducts(type);
+  if(listBox){
+    listBox.style.display="block";
+    loadAdminProducts(type); // 🔥 AUTO LOAD
   }
 };
 
@@ -252,7 +244,9 @@ async function loadAdminProducts(type){
       : document.getElementById("specialProducts");
 
   if(!container) return;
-
+  
+ if(addWrap) addWrap.style.display = "none";
+  
   container.innerHTML = "Loading...";
 
   const colName =
