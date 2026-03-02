@@ -102,7 +102,7 @@ window.saveSaleConfig = async function(){
     btn.disabled = false;
 
     msg.innerText = "Sale settings saved";
-
+setTimeout(()=> msg.innerText="", 2500);
   }catch(e){
 
     loader.classList.remove("show");
@@ -190,7 +190,7 @@ try{
   const list = document.getElementById("imagesList");
   list.innerHTML = "";
   for(let i=0;i<4;i++) addImageField();
-
+setTimeout(()=> msg.innerText="", 2500);
   }catch(e){
     loader.classList.remove("show");
     btn.disabled = false;
@@ -301,20 +301,35 @@ async function loadAdminProducts(type){
 }
 
 
-/* ===============================
-   DELETE PRODUCT
-================================ */
 window.deleteProduct = async function(type,id){
 
   if(!confirm("Delete this product?")) return;
 
+  const loader = document.getElementById("deleteLoader");
+  const msg = document.getElementById("deleteMsg");
+
   const colName =
     type==="main" ? "products" : "specialSaleProducts";
 
-  await deleteDoc(doc(db,colName,id));
+  msg.innerText = "";
+  loader.classList.add("show");
 
-  // refresh list
-  loadAdminProducts(type);
+  try{
+
+    await deleteDoc(doc(db,colName,id));
+
+    loader.classList.remove("show");
+    msg.innerText = "Product deleted";
+
+    setTimeout(()=> msg.innerText="", 2500);
+    // refresh list
+    loadAdminProducts(type);
+
+  }catch(e){
+
+    loader.classList.remove("show");
+    msg.innerText = "Error deleting product";
+  }
 };
 
 window.toggleAdd = function(type){
@@ -397,7 +412,7 @@ window.saveSaleProduct = async function(){
     const list = document.getElementById("s-imagesList");
     list.innerHTML = "";
     for(let i=0;i<3;i++) addSaleImageField();
-
+setTimeout(()=> msg.innerText="", 2500);
   }catch(e){
     loader.classList.remove("show");
     btn.disabled = false;
