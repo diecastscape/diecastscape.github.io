@@ -302,31 +302,12 @@ window.deleteProduct = async function(type,id){
 
   if(!confirm("Delete this product?")) return;
 
-  const loader = document.getElementById("deleteLoader");
-  const msg = document.getElementById("deleteMsg");
-
   const colName =
     type==="main" ? "products" : "specialSaleProducts";
 
-  msg.innerText = "";
-  loader.classList.add("show");
+  await deleteDoc(doc(db,colName,id));
 
-  try{
-
-    await deleteDoc(doc(db,colName,id));
-
-    loader.classList.remove("show");
-    msg.innerText = "Product deleted";
-
-    setTimeout(()=> msg.innerText="", 3000);
-    // refresh list
-    loadAdminProducts(type);
-
-  }catch(e){
-
-    loader.classList.remove("show");
-    msg.innerText = "Error deleting product";
-  }
+  loadAdminProducts(type);
 };
 
 window.toggleAdd = function(type){
