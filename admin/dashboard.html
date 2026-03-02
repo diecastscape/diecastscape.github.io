@@ -35,13 +35,11 @@
     <div class="section-top">
       <h4>Store Product</h4>
       <div class="btn-row">
-        <button onclick="toggleList('main')">View</button>
+      <button onclick="loadAdminProducts('main')">Refresh</button>
       <button onclick="toggleAdd('main')">+ Add</button>
     </div>
     </div>
-  
-    
-  
+  <div id="mainProducts"></div>
 
     <div id="add-main" class="add-wrap">
       <div id="mainAddForm">
@@ -59,10 +57,7 @@
 <div id="saveLoader" class="loader"></div>
 <p class="center-msg" id="saveMsg"></p>
       </div>
-    </div>
-
-    <div id="mainProducts"></div>
-  </div>
+  v>
 
   <!-- ===== SPECIAL SALE SECTION ===== -->
   <div id="section-special" class="section-panel">
@@ -96,11 +91,11 @@
     <div class="section-top">
       <h4>Store Product</h4>
       <div class="btn-row">
-        <button onclick="toggleList('special')">View</button>
+      <button onclick="loadAdminProducts('special')">Refresh</button>
       <button onclick="toggleAdd('special')">+ Add</button>
     </div>
     </div>
-    
+    <div id="specialProducts"></div>
     <div id="add-special" class="add-wrap">
       <div id="specialAddForm">
         
@@ -122,9 +117,7 @@ Save Product
 <p class="center-msg" id="s-saveMsg"></p>
     </div>
     </div>
-    <div id="specialProducts"></div>
-    <div id="deleteLoader" class="loader"></div>
-<p class="center-msg" id="deleteMsg"></p>
+  
   </div>
 </div>
 
