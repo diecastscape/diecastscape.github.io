@@ -257,7 +257,11 @@ async function loadAdminProducts(type){
   if(addWrap) addWrap.style.display = "none";
 
   container.style.display = "block";
-  container.innerHTML = "Loading...";
+  container.innerHTML = `
+  <div class="product-list-loading">
+    Loading products...
+  </div>
+`;
 
   const colName =
     type==="main" ? "products" : "specialSaleProducts";
