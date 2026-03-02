@@ -339,12 +339,15 @@ window.toggleAdd = function(type){
 
   if(!addWrap) return;
 
-  // close list if open
-  if(listBox) listBox.style.display = "none";
+  const opening = addWrap.style.display !== "block";
 
   // toggle add
-  addWrap.style.display =
-    addWrap.style.display==="block" ? "none" : "block";
+  addWrap.style.display = opening ? "block" : "none";
+
+  // list opposite of add
+  if(listBox){
+    listBox.style.display = opening ? "none" : "block";
+  }
 };
 
 // ===== ADD SALE IMAGE FIELD =====
