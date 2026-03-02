@@ -242,11 +242,15 @@ async function loadAdminProducts(type){
     type==="main"
       ? document.getElementById("mainProducts")
       : document.getElementById("specialProducts");
+  
+const addWrap = document.getElementById("add-"+type);
 
+  
   if(!container) return;
   
  if(addWrap) addWrap.style.display = "none";
   
+  container.style.display = "block";
   container.innerHTML = "Loading...";
 
   const colName =
