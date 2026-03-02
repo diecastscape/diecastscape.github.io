@@ -190,7 +190,7 @@ try{
   const list = document.getElementById("imagesList");
   list.innerHTML = "";
   for(let i=0;i<4;i++) addImageField();
-setTimeout(()=> msg.innerText="", 2500);
+setTimeout(()=> msg.innerText="", 3000);
   }catch(e){
     loader.classList.remove("show");
     btn.disabled = false;
@@ -213,26 +213,29 @@ window.openSection = function(type){
   if(sec) sec.style.display="block";
 };
 
-/* ===============================
-   TOGGLE PRODUCT LIST
-================================ */
 window.toggleList = function(type){
 
-  const box =
+  const listBox =
     type==="main"
       ? document.getElementById("mainProducts")
       : document.getElementById("specialProducts");
 
-  if(!box) return;
+  const addWrap = document.getElementById("add-"+type);
 
-  if(box.style.display==="block"){
-    box.style.display="none";
+  if(!listBox) return;
+
+  // close add if open
+  if(addWrap) addWrap.style.display = "none";
+
+  // toggle list
+  if(listBox.style.display==="block"){
+    listBox.style.display="none";
     return;
   }
 
-  box.style.display="block";
+  listBox.style.display="block";
 
-  if(box.innerHTML.trim()===""){
+  if(listBox.innerHTML.trim()===""){
     loadAdminProducts(type);
   }
 };
@@ -321,7 +324,7 @@ window.deleteProduct = async function(type,id){
     loader.classList.remove("show");
     msg.innerText = "Product deleted";
 
-    setTimeout(()=> msg.innerText="", 2500);
+    setTimeout(()=> msg.innerText="", 3000);
     // refresh list
     loadAdminProducts(type);
 
@@ -333,9 +336,21 @@ window.deleteProduct = async function(type,id){
 };
 
 window.toggleAdd = function(type){
-  const wrap = document.getElementById("add-"+type);
-  wrap.style.display =
-    wrap.style.display==="block" ? "none" : "block";
+
+  const addWrap = document.getElementById("add-"+type);
+  const listBox =
+    type==="main"
+      ? document.getElementById("mainProducts")
+      : document.getElementById("specialProducts");
+
+  if(!addWrap) return;
+
+  // close list if open
+  if(listBox) listBox.style.display = "none";
+
+  // toggle add
+  addWrap.style.display =
+    addWrap.style.display==="block" ? "none" : "block";
 };
 
 // ===== ADD SALE IMAGE FIELD =====
@@ -412,7 +427,7 @@ window.saveSaleProduct = async function(){
     const list = document.getElementById("s-imagesList");
     list.innerHTML = "";
     for(let i=0;i<3;i++) addSaleImageField();
-setTimeout(()=> msg.innerText="", 2500);
+setTimeout(()=> msg.innerText="", 3000);
   }catch(e){
     loader.classList.remove("show");
     btn.disabled = false;
