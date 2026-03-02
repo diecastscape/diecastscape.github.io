@@ -252,8 +252,13 @@ textarea{
   margin:10px 0;
   border-radius:8px;
   background:#fff;
+  animation:fadeIn .25s ease;
 }
 
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(6px)}
+  to{opacity:1; transform:translateY(0)}
+}
 .admin-title{
   color:#444;
   font-weight:600;
@@ -270,4 +275,12 @@ textarea{
   border:none;
   padding:6px 10px;
   border-radius:4px;
+}
+.product-list-loading{
+  min-height: 300px; /* keeps page height stable */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#888;
+  font-size:14px;
 }
