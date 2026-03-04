@@ -314,7 +314,7 @@ async function loadAdminProducts(type){
     Delete
   </button>
 </div>
-        
+     </div>   
     `;
   });
 
@@ -392,7 +392,6 @@ window.deleteProduct = async function(type,id){
 
   loadAdminProducts(type);
 };
-
 window.toggleAdd = function(type){
 
   const addWrap = document.getElementById("add-"+type);
@@ -405,15 +404,52 @@ window.toggleAdd = function(type){
 
   const opening = addWrap.style.display !== "block";
 
-  // toggle add
+  // If opening ADD manually → reset form
+  if(opening){
+
+    if(type==="main"){
+      resetMainForm();
+    }else{
+      resetSaleForm();
+    }
+  }
+
   addWrap.style.display = opening ? "block" : "none";
 
-  // list opposite of add
   if(listBox){
     listBox.style.display = opening ? "none" : "block";
   }
 };
+function resetMainForm(){
 
+  editingId = null;
+  editingType = null;
+
+  document.getElementById("p-name").value = "";
+  document.getElementById("p-old").value = "";
+  document.getElementById("p-new").value = "";
+  document.getElementById("p-details").value = defaultDetails;
+
+  document.getElementById("saveBtn").innerText = "Save Product";
+
+  const list = document.getElementById("imagesList");
+  list.innerHTML = "";
+  for(let i=0;i<4;i++) addImageField();
+}
+function resetSaleForm(){
+
+  editingId = null;
+  editingType = null;
+
+  document.getElementById("s-name").value = "";
+  document.getElementById("s-price").value = "";
+
+  document.getElementById("s-saveBtn").innerText = "Save Product";
+
+  const list = document.getElementById("s-imagesList");
+  list.innerHTML = "";
+  for(let i=0;i<3;i++) addSaleImageField();
+}
 // ===== ADD SALE IMAGE FIELD =====
 window.addSaleImageField = function(){
   const list = document.getElementById("s-imagesList");
