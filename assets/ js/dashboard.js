@@ -163,7 +163,7 @@ if(btn.disabled) return;
   // ---- SHOW LOADER ----
   loader.classList.add("show");
   btn.disabled = true;
-  
+  try {
 if(editingId){
 
   await updateDoc(doc(db,"products",editingId),{
@@ -467,7 +467,7 @@ window.saveSaleProduct = async function(){
 
   loader.classList.add("show");
   btn.disabled = true;
-
+ try {
   if(editingId){
 
   await updateDoc(doc(db,"specialSaleProducts",editingId),{
