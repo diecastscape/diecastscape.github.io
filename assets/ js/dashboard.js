@@ -320,11 +320,11 @@ async function loadAdminProducts(type){
     ${type==="special" ? `
       <div style="margin:8px 0;">
         <label style="display:flex;align-items:center;gap:8px;">
-          <input type="checkbox"
+         <label class="toggle-switch">
+      <input type="checkbox"
             ${p.sold ? "checked" : ""}
             onchange="toggleSold('${id}', this.checked)">
-          <span>Sold</span>
-        </label>
+      <span class="toggle-slider"></span>
       </div>
     ` : ``}
 
