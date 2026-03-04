@@ -1,7 +1,7 @@
 import { db } from "./firebase-init.js";
-
 import { 
   collection,
+  updateDoc,
   addDoc,
   doc,
   getDoc,
@@ -33,7 +33,8 @@ const defaultDetails = `
     <strong>not included</strong> and are shown for representation purposes only.
   </p>
 `;
-
+let editingId = null;
+let editingType = null;
 window.addEventListener("DOMContentLoaded", ()=>{
   const details = document.getElementById("p-details");
   if(details && !details.value){
@@ -162,7 +163,19 @@ if(btn.disabled) return;
   // ---- SHOW LOADER ----
   loader.classList.add("show");
   btn.disabled = true;
-try{
+  
+if(editingId){
+
+  await updateDoc(doc(db,"products",editingId),{
+    name,
+    priceOld,
+    priceNew,
+    detailsHTML,
+    images
+  });
+
+}else{
+
   await addDoc(collection(db,"products"),{
     name,
     priceOld,
@@ -173,11 +186,15 @@ try{
     created:Date.now()
   });
 
+}
+
   // ✅ STOP LOADER
   loader.classList.remove("show");
   btn.disabled = false;
   msg.innerText = "Saved successfully";
-
+editingId = null;
+editingType = null;
+document.getElementById("saveBtn").innerText = "Save Product";
   // ✅ CLEAR FORM FIELDS
   document.getElementById("p-name").value = "";
   document.getElementById("p-old").value = "";
@@ -289,12 +306,15 @@ async function loadAdminProducts(type){
           ${type==="main" ? `₹${p.priceNew}` : `₹${p.price}`}
         </div>
 
-        <div class="admin-actions">
-          <button onclick="deleteProduct('${type}','${id}')">
-            Delete
-          </button>
-        </div>
-      </div>
+         <div class="admin-actions">
+  <button onclick="editProduct('${type}','${id}')">
+    Edit
+  </button>
+  <button onclick="deleteProduct('${type}','${id}')">
+    Delete
+  </button>
+</div>
+        
     `;
   });
 
@@ -305,7 +325,62 @@ async function loadAdminProducts(type){
   container.innerHTML = html;
 }
 
+window.editProduct = async function(type, id){
 
+  const colName =
+    type==="main" ? "products" : "specialSaleProducts";
+
+  const snap = await getDoc(doc(db,colName,id));
+  if(!snap.exists()) return;
+
+  const data = snap.data();
+
+  editingId = id;
+  editingType = type;
+
+  // open add form
+  toggleAdd(type);
+
+  if(type==="main"){
+
+    document.getElementById("p-name").value = data.name || "";
+    document.getElementById("p-old").value = data.priceOld || "";
+    document.getElementById("p-new").value = data.priceNew || "";
+    document.getElementById("p-details").value = data.detailsHTML || "";
+
+    const list = document.getElementById("imagesList");
+    list.innerHTML = "";
+
+    data.images.forEach(img=>{
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <input class="img-thumb" value="${img.thumb}">
+        <input class="img-full" value="${img.full}">
+      `;
+      list.appendChild(div);
+    });
+
+    document.getElementById("saveBtn").innerText = "Update Product";
+
+  }else{
+
+    document.getElementById("s-name").value = data.name || "";
+    document.getElementById("s-price").value = data.price || "";
+
+    const list = document.getElementById("s-imagesList");
+    list.innerHTML = "";
+
+    data.images.forEach(img=>{
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <input class="s-img-full" value="${img}">
+      `;
+      list.appendChild(div);
+    });
+
+    document.getElementById("s-saveBtn").innerText = "Update Product";
+  }
+};
 window.deleteProduct = async function(type,id){
 
   if(!confirm("Delete this product?")) return;
@@ -393,20 +468,33 @@ window.saveSaleProduct = async function(){
   loader.classList.add("show");
   btn.disabled = true;
 
-  try{
-    await addDoc(collection(db,"specialSaleProducts"),{
-      name,
-      price,
-      images,
-      active:true,
-      sold:false,
-      created:Date.now()
-    });
+  if(editingId){
+
+  await updateDoc(doc(db,"specialSaleProducts",editingId),{
+    name,
+    price,
+    images
+  });
+
+}else{
+
+  await addDoc(collection(db,"specialSaleProducts"),{
+    name,
+    price,
+    images,
+    active:true,
+    sold:false,
+    created:Date.now()
+  });
+
+}
 
     loader.classList.remove("show");
     btn.disabled = false;
     msg.innerText = "Saved successfully";
-
+editingId = null;
+editingType = null;
+document.getElementById("s-saveBtn").innerText = "Save Product";
     document.getElementById("s-name").value = "";
     document.getElementById("s-price").value = "";
 
