@@ -41,6 +41,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
     details.value = defaultDetails;
   }
 });
+
 window.addImageField = function(){
   const list = document.getElementById("imagesList");
 
@@ -114,7 +115,15 @@ setTimeout(()=> msg.innerText="", 2500);
 };
 
 document.addEventListener("DOMContentLoaded", loadSaleConfig);
+function showEditMode(){
+  const bar = document.getElementById("editModeBar");
+  if(bar) bar.style.display = "block";
+}
 
+function hideEditMode(){
+  const bar = document.getElementById("editModeBar");
+  if(bar) bar.style.display = "none";
+}
 window.saveProduct = async function(){
 
   const loader = document.getElementById("saveLoader");
@@ -164,7 +173,7 @@ if(btn.disabled) return;
   loader.classList.add("show");
   btn.disabled = true;
   try {
-if(editingId){
+if(editingId && editingType==="main"){
 
   await updateDoc(doc(db,"products",editingId),{
     name,
@@ -194,6 +203,7 @@ if(editingId){
   msg.innerText = "Saved successfully";
 editingId = null;
 editingType = null;
+hideEditMode();
 document.getElementById("saveBtn").innerText = "Save Product";
   // ✅ CLEAR FORM FIELDS
   document.getElementById("p-name").value = "";
@@ -297,25 +307,38 @@ async function loadAdminProducts(type){
     const id = d.id;
 
     html += `
-      <div class="admin-product">
-        <div class="admin-title">
-          ${p.name || "No name"}
-        </div>
+  <div class="admin-product">
 
-        <div class="admin-price">
-          ${type==="main" ? `₹${p.priceNew}` : `₹${p.price}`}
-        </div>
+    <div class="admin-title">
+      ${p.name || "No name"}
+    </div>
 
-         <div class="admin-actions">
-  <button onclick="editProduct('${type}','${id}')">
-    Edit
-  </button>
-  <button onclick="deleteProduct('${type}','${id}')">
-    Delete
-  </button>
-</div>
-     </div>   
-    `;
+    <div class="admin-price">
+      ${type==="main" ? `₹${p.priceNew}` : `₹${p.price}`}
+    </div>
+
+    ${type==="special" ? `
+      <div style="margin:8px 0;">
+        <label style="display:flex;align-items:center;gap:8px;">
+          <input type="checkbox"
+            ${p.sold ? "checked" : ""}
+            onchange="toggleSold('${id}', this.checked)">
+          <span>Sold</span>
+        </label>
+      </div>
+    ` : ``}
+
+    <div class="admin-actions">
+      <button onclick="editProduct('${type}','${id}')">
+        Edit
+      </button>
+      <button onclick="deleteProduct('${type}','${id}')">
+        Delete
+      </button>
+    </div>
+
+  </div>
+`;
   });
 
   if(html===""){
@@ -337,6 +360,7 @@ window.editProduct = async function(type, id){
 
   editingId = id;
   editingType = type;
+  showEditMode();
 
   // open add form
   toggleAdd(type);
@@ -392,6 +416,15 @@ window.deleteProduct = async function(type,id){
 
   loadAdminProducts(type);
 };
+window.toggleSold = async function(id, status){
+
+  await updateDoc(
+    doc(db,"specialSaleProducts",id),
+    { sold: status }
+  );
+
+  console.log("Sold status updated");
+};
 window.toggleAdd = function(type){
 
   const addWrap = document.getElementById("add-"+type);
@@ -421,7 +454,7 @@ window.toggleAdd = function(type){
   }
 };
 function resetMainForm(){
-
+  hideEditMode();
   editingId = null;
   editingType = null;
 
@@ -437,7 +470,7 @@ function resetMainForm(){
   for(let i=0;i<4;i++) addImageField();
 }
 function resetSaleForm(){
-
+  hideEditMode();
   editingId = null;
   editingType = null;
 
@@ -504,7 +537,7 @@ window.saveSaleProduct = async function(){
   loader.classList.add("show");
   btn.disabled = true;
  try {
-  if(editingId){
+  if(editingId && editingType==="special"){
 
   await updateDoc(doc(db,"specialSaleProducts",editingId),{
     name,
@@ -530,6 +563,7 @@ window.saveSaleProduct = async function(){
     msg.innerText = "Saved successfully";
 editingId = null;
 editingType = null;
+hideEditMode();
 document.getElementById("s-saveBtn").innerText = "Save Product";
     document.getElementById("s-name").value = "";
     document.getElementById("s-price").value = "";
