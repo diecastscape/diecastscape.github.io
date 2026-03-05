@@ -443,14 +443,15 @@ window.toggleAdd = function(type){
   const opening = addWrap.style.display !== "block";
 
   // If opening ADD manually → reset form
-  if(opening){
+  if(opening && !editingId){
 
-    if(type==="main"){
-      resetMainForm();
-    }else{
-      resetSaleForm();
-    }
+  if(type==="main"){
+    resetMainForm();
+  }else{
+    resetSaleForm();
   }
+
+}
 
   addWrap.style.display = opening ? "block" : "none";
 
