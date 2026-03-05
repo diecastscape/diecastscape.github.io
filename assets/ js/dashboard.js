@@ -173,7 +173,7 @@ if(btn.disabled) return;
   loader.classList.add("show");
   btn.disabled = true;
   try {
-if(editingId && editingType==="main"){
+if(editingId){
 
   await updateDoc(doc(db,"products",editingId),{
     name,
@@ -542,7 +542,7 @@ window.saveSaleProduct = async function(){
   loader.classList.add("show");
   btn.disabled = true;
  try {
-  if(editingId && editingType==="special"){
+if(editingId){
 
   await updateDoc(doc(db,"specialSaleProducts",editingId),{
     name,
