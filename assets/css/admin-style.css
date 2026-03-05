@@ -284,3 +284,20 @@ textarea{
   color:#888;
   font-size:14px;
 }
+.admin-price-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:6px 0;
+}
+
+.sold-toggle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.sold-text{
+  font-size:13px;
+  color:#666;
+}
