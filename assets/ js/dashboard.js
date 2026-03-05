@@ -312,21 +312,26 @@ async function loadAdminProducts(type){
     <div class="admin-title">
       ${p.name || "No name"}
     </div>
+<div class="admin-price-row">
 
-    <div class="admin-price">
-      ${type==="main" ? `₹${p.priceNew}` : `₹${p.price}`}
+  <div class="admin-price">
+    ${type==="main" ? `₹${p.priceNew}` : `₹${p.price}`}
+  </div>
+
+  ${type==="special" ? `
+    <div class="sold-toggle">
+      <label class="toggle-switch">
+        <input type="checkbox"
+          ${p.sold ? "checked" : ""}
+          onchange="toggleSold('${id}', this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+
+      <span class="sold-text">Sold</span>
     </div>
+  ` : ``}
 
-    ${type==="special" ? `
-      <div style="margin:8px 0;">
-        <label style="display:flex;align-items:center;gap:8px;">
-         <label class="toggle-switch">
-      <input type="checkbox"
-            ${p.sold ? "checked" : ""}
-            onchange="toggleSold('${id}', this.checked)">
-      <span class="toggle-slider"></span>
-      </div>
-    ` : ``}
+</div>
 
     <div class="admin-actions">
       <button onclick="editProduct('${type}','${id}')">
