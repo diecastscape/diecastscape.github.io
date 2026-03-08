@@ -42,7 +42,7 @@ const whatsappText = encodeURIComponent(message);
     </div>
 
     <div class="discount">${discount}% OFF · Save ₹${save}</div>
-    <div class="ship delivery-info">
+    <div class="ship">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
   stroke="currentColor" stroke-width="2"
   stroke-linecap="round" stroke-linejoin="round">
@@ -54,7 +54,8 @@ const whatsappText = encodeURIComponent(message);
     <circle cx="9" cy="17" r="2"/>
     <circle cx="18" cy="17" r="2"/>
   </svg>
-Shipping charges applicable</div>
+Shipping charges applicable
+</div>
 
     <button class="details-btn" onclick="openDetailsSheet(this)">
       Details ▾
