@@ -77,6 +77,9 @@ button{
   input, button{
   box-sizing:border-box;
 }
+.secondary-btn{
+  background:#FF5F4C;
+}
   .loader{
   width:22px;
   height:22px;
