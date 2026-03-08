@@ -410,6 +410,28 @@ window.editProduct = async function(type, id){
     document.getElementById("s-saveBtn").innerText = "Update Product";
   }
 };
+window.cancelEdit = function(type){
+
+  // clear edit mode
+  editingId = null;
+  editingType = null;
+
+  hideEditMode();
+
+  const addWrap = document.getElementById("add-"+type);
+
+  const listBox =
+    type==="main"
+      ? document.getElementById("mainProducts")
+      : document.getElementById("specialProducts");
+
+  // close form
+  if(addWrap) addWrap.style.display = "none";
+
+  // show product list
+  if(listBox) listBox.style.display = "block";
+
+};
 window.deleteProduct = async function(type,id){
 
   if(!confirm("Delete this product?")) return;
