@@ -57,7 +57,8 @@ document.querySelectorAll(".faq-question").forEach(btn => {
       "/privacy/": "Privacy Policy",
       "/shipping/": "Shipping Policy",
       "/return/": "Return & Cancellation",
-      "/terms/": "Terms of Service"
+      "/terms/": "Terms of Service",
+      "/login/": "Login"
     };
 
     const path = location.pathname;
