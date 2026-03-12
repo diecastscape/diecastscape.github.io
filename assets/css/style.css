@@ -891,6 +891,9 @@ font-family:Arial, sans-serif;
 
 .flip-container{
 perspective:1200px;
+display:flex;
+justify-content:center;
+align-items:center;
 }
 
 /* card */
@@ -954,17 +957,15 @@ color:white;
 input::placeholder{
 color:#999;
 }
-button{
+.log-btn{
 width:100%;
 padding:12px;
 border:none;
 border-radius:6px;
-
 background:#5BC0BE;
 color:white;
 font-weight:bold;
 cursor:pointer;
-
 transition:0.2s;
 }
 .pass-wrap{
