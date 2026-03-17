@@ -103,14 +103,11 @@ window.checkSecretCode = async function () {
       return;
     }
 
-    // Optional salt
-    const salt = "MY_SECRET_SALT_2026";
-
-    // Hash user input + salt
-    const inputHash = await sha256(input + salt);
+    // Hash user input
+    const inputHash = await sha256(input);
 
     if (inputHash !== data.codeHash) {
-      msg.innerText = "❌ Code is not right";
+      msg.innerText = "Oops! That code isn’t right. Try again 🔍”;
       return;
     }
 
@@ -121,7 +118,7 @@ window.checkSecretCode = async function () {
     await saveGeneratedCoupon(couponCode, campaignId, data.campaignName);
 
     // Show coupon
-    msg.innerText = "✅ Code verified";
+    msg.innerText = "Nice catch! You found it.";
     showCoupon(couponCode);
 
   } catch (e) {
@@ -137,20 +134,22 @@ function showCoupon(code) {
   const content = document.getElementById("offerContent");
 
   content.innerHTML = `
-    <div id="couponCard" class="coupon-card">
-      <h3>🎉 Free Delivery Unlocked</h3>
-      <p>Your Coupon Code</p>
-
-      <div class="coupon-code" id="couponText">${code}</div>
-
-      <button class="copy-btn" onclick="copyCoupon()">
-        Copy
-      </button>
-
-      <p class="coupon-note">
-        Apply this code at checkout.
-      </p>
-    </div>
+ <div id="couponCard" class="coupon-card">
+<h3>🎉 Free Delivery Unlocked</h3>
+<p>Your Coupon Code</p>
+<div class="coupon-code">
+<span id="couponText">
+${code}
+</span>
+<button class="copy-btn"
+onclick="copyCoupon()">
+Copy
+</button>
+</div>
+<p class="coupon-note">
+Apply this code at checkout.
+</p>
+</div>
   `;
 }
 
