@@ -107,7 +107,7 @@ window.checkSecretCode = async function () {
     const inputHash = await sha256(input);
 
     if (inputHash !== data.codeHash) {
-      msg.innerText = "Oops! That code isn’t right. Try again 🔍”;
+      msg.innerText = "Oops! That code isn’t right. Try again 🔍";
       return;
     }
 
