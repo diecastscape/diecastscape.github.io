@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About us | Diecast.scape</title>
+
+<link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <img src="/logo.png" class="header-logo" alt="Diecast Scape Logo">
+
+    <div class="header-title">DIECAST.SCAPE</div>
+
+    <!-- Hamburger -->
+    <div class="hamburger" onclick="openMenu()">☰</div>
+  </div>
+</header>
+
+<nav class="breadcrumb-wrap">
+  <a href="/" class="breadcrumb-link">Home</a>
+  <span class="breadcrumb-sep">›</span>
+  <span class="breadcrumb-current">About us</span>
+</nav>
+
+
+ <div class="offer-section">
+
+<button class="lux-offer-btn" onclick="toggleOfferCard()">
+✨ Unlock Free Delivery
+</button>
+
+<div id="offerCard" class="offer-card">
+<div class="offer-content">
+<p class="offer-title">
+Find the hidden code in our Instagram reel and unlock free delivery. 🚚✨</p>
+
+<button class="reel-btn"
+onclick="window.open('YOUR_REEL_LINK','_blank')">
+Watch Reel
+</button>
+<div class="code-input-row">
+<input id="secretInput"
+placeholder="Enter secret code">
+
+<button onclick="checkSecretCode()">
+Check
+</button>
+</div>
+
+<p id="offerMsg"></p>
+     
+ <div  id="offerContent">
+</div>             
+
+</div>
+
+</div>
+
+</div>   
+
+    <!-- Overlay -->
+<div class="menu-overlay" onclick="closeMenu()"></div>
+
+<!-- Slide Menu -->
+<nav class="side-menu">
+  <div class="menu-header">
+    <span>Menu</span>
+    <span class="close-btn" onclick="closeMenu()">✕</span>
+  </div>
+
+  <!-- Theme Toggle (UI only) -->
+<div class="theme-toggle">
+  <span>Theme</span>
+  <div class="toggle-switch" onclick="toggleThemeButton()">
+    <div class="toggle-circle"></div>
+  </div>
+</div>
+ <a href="/index.html" class="menu-sale">HOME</a>
+  <a href="/special-sale/" class="menu-sale">Special Sale 🔥</a>
+  <a href="/about/">About Us</a>
+  <a href="/privacy/">Privacy Policy</a>
+  <a href="/shipping/">Shipping Policy</a>
+  <a href="/return/">Return & Cancellation</a>
+  <a href="/terms/">Terms of Service</a>
+  <a href="/faq/">FAQ</a>
+</nav>
+<script src="/assets/ js/core.js" defer></script>
+  <script type="module" src="/assets/ js/firebase-init.js"></script>
+<script type="module" src="/assets/ js/sale-products-firebase.js"></script>  
+
+</body>
+</html>
