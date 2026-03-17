@@ -885,7 +885,6 @@ color:#c8a95a;
 }
 
 .flip-container{
-box-sizing:border-box;
 perspective:1200px;
 display:flex;
 justify-content:center;
@@ -895,6 +894,7 @@ align-items:center;
 /* card */
 
 .card{
+box-sizing:border-box;
 width:300px;
 height:460px;
 position:relative;
