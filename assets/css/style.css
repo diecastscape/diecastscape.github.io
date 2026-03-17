@@ -884,11 +884,6 @@ color:#c8a95a;
   transform: scale(0.95);
 }
 
-*{
-box-sizing:border-box;
-font-family:Arial, sans-serif;
-}
-
 .flip-container{
 perspective:1200px;
 display:flex;
@@ -1017,4 +1012,102 @@ font-size:13px;
 .forgot a{
 color:#5BC0BE;
 text-decoration:none;
+}
+
+.offer-section{
+text-align:center;
+margin:60px auto;
+}
+
+.lux-offer-btn{
+padding:14px 26px;
+font-weight:600;
+border:none;
+border-radius:40px;
+background:linear-gradient(135deg,#d4af37,#f5e6a8,#d4af37);
+cursor:pointer;
+box-shadow:0 6px 18px rgba(212,175,55,.4);
+}
+
+.offer-card{
+max-height:0;
+overflow:hidden;
+transition:max-height .4s ease;
+margin-top:20px;
+}
+
+.offer-card.open{
+max-height:800px;
+}
+
+.offer-content{
+background:#BDE4FF;
+border:1px solid #5BC0BE33;
+border-radius:12px;
+padding:20px;
+max-width:320px;
+margin:auto;
+}
+
+.offer-title{
+margin-bottom:10px;
+}
+
+.reel-btn{
+background:#5BC0BE;
+color:white;
+border:none;
+padding:10px 16px;
+border-radius:6px;
+margin-bottom:15px;
+cursor:pointer;
+}
+
+.code-input-row{
+display:flex;
+gap:6px;
+justify-content:center;
+}
+
+.code-input-row input{
+padding:10px;
+border-radius:6px;
+border:1px solid #2b3136;
+background:#0f1113;
+color:white;
+}
+
+.code-input-row button{
+padding:10px 14px;
+}
+
+
+.copy-btn{
+padding:6px 12px;
+border:none;
+border-radius:6px;
+background:#5BC0BE;
+color:white;
+cursor:pointer;
+}
+.coupon-card{
+display:block;
+margin:20px auto;
+max-width:320px;
+padding:25px;
+border-radius:10px;
+background:#f5f5f5;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+.coupon-code{
+font-size:22px;
+font-weight:bold;
+letter-spacing:3px;
+background:black;
+color:white;
+padding:10px;
+border-radius:6px;
+margin:15px 0;
 }
