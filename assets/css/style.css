@@ -885,6 +885,7 @@ color:#c8a95a;
 }
 
 .flip-container{
+box-sizing:border-box;
 perspective:1200px;
 display:flex;
 justify-content:center;
@@ -1042,13 +1043,18 @@ max-height:800px;
 
 .offer-content{
 background:#BDE4FF;
+box-sizing:border-box;
 border:1px solid #5BC0BE33;
 border-radius:12px;
 padding:20px;
 max-width:320px;
 margin:auto;
 }
-
+.offer-content p,
+.offer-content span,
+.offer-content h3 {
+  color: #0B132B;
+}
 .offer-title{
 margin-bottom:10px;
 }
@@ -1062,26 +1068,31 @@ border-radius:6px;
 margin-bottom:15px;
 cursor:pointer;
 }
-
 .code-input-row{
-display:flex;
-gap:6px;
-justify-content:center;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  align-items:center; /* 👈 IMPORTANT */
+  margin-top:10px;
 }
 
 .code-input-row input{
-padding:10px;
-border-radius:6px;
-border:1px solid #2b3136;
-background:#0f1113;
-color:white;
+  margin-bottom:0px;
+  border:1px solid #2b3136;
+  background:#0f1113;
+  
 }
 
 .code-input-row button{
-padding:10px 14px;
+  padding:12px 18px;
+  border-radius:8px;
+  border:none;
+  background:#5BC0BE;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap; /* keeps text in one line */
 }
-
-
 .copy-btn{
 padding:6px 12px;
 border:none;
