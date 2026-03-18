@@ -76,7 +76,7 @@ window.checkSecretCode = async function () {
   content.innerHTML = "";
 
   if (!input) {
-    msg.innerText = "Please enter the secret code";
+    msg.innerText = "Please enter the code";
     return;
   }
 
