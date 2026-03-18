@@ -6,7 +6,47 @@ import {
   serverTimestamp 
 } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+window.testReadOffers = async function () {
 
+  const el = document.getElementById("offerResult");
+
+  try {
+    const snap = await getDoc(doc(db, "offers", "reelCampaign1"));
+
+    if (snap.exists()) {
+      el.innerText = "❌ SECURITY FAIL: Offers are PUBLIC\n" + JSON.stringify(snap.data());
+    } else {
+      el.innerText = "No data found";
+    }
+
+  } catch (e) {
+    el.innerText = "✅ SECURE: Cannot read offers";
+  }
+};
+
+// --------------------
+// TEST 2: CREATE FAKE COUPON
+// --------------------
+window.testCreateCoupon = async function () {
+
+  const el = document.getElementById("couponResult");
+
+  try {
+
+    const fakeCode = "HACK-" + Math.floor(Math.random() * 9999);
+
+    await setDoc(doc(db, "generatedCoupons", fakeCode), {
+      couponCode: fakeCode,
+      campaignName: "fakeCampaign",
+      used: false
+    });
+
+    el.innerText = "❌ SECURITY FAIL: Fake coupon CREATED → " + fakeCode;
+
+  } catch (e) {
+    el.innerText = "✅ SECURE: Cannot create fake coupon";
+  }
+};
 
 // --------------------
 // UI TOGGLE
