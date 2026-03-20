@@ -49,6 +49,40 @@ Each piece is carefully built with attention to scale, detail, and finish—perf
   </div>
   </a>
   </div>
+  <div class="offer-section">
+
+<button class="lux-offer-btn" onclick="toggleOfferCard()">
+✨ Unlock Free Delivery
+</button>
+
+<div id="offerCard" class="offer-card">
+<div class="offer-content">
+<p class="offer-title">
+Find the hidden code in our Instagram reel and unlock free delivery. 🚚✨</p>
+
+<button class="reel-btn"
+onclick="window.open('YOUR_REEL_LINK','_blank')">
+Watch Reel
+</button>
+<div class="code-input-row">
+<input id="secretInput"
+placeholder="Enter secret code">
+
+<button onclick="checkSecretCode()">
+Check
+</button>
+</div>
+
+<p id="offerMsg"></p>
+     
+ <div  id="offerContent">
+</div>             
+
+</div>
+
+</div>
+
+</div>   
 </section>
 
   <div class="coming-soon">
@@ -147,6 +181,7 @@ Thank you for visiting.
 <script src="/assets/ js/core.js"></script>
 <script type="module" src="/assets/ js/firebase-init.js"></script>
 <script type="module" src="/assets/ js/products-firebase.js"></script>
+<script type="module" src="/assets/ js/offer.js"></script>  
 <script src="/assets/ js/products.js"></script>
 <script src="/assets/ js/config.js"></script>
   <script>
