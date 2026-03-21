@@ -575,18 +575,22 @@ body.menu-open .menu-overlay {
   opacity: 1;
   pointer-events: auto;
 }
-body.menu-open .side-menu a {
-  opacity: 1;
-  transform: translateY(0);
+.side-menu a{
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.40s ease, transform 0.40s ease;
 }
-.side-menu a:nth-child(3) { transition-delay: 0.05s; }
-.side-menu a:nth-child(4) { transition-delay: 0.10s; }
-.side-menu a:nth-child(5) { transition-delay: 0.15s; }
-.side-menu a:nth-child(6) { transition-delay: 0.20s; }
-.side-menu a:nth-child(7) { transition-delay: 0.25s; }
-.side-menu a:nth-child(8) { transition-delay: 0.30s; }
-.side-menu a:nth-child(9) { transition-delay: 0.35s; }
-.side-menu a:nth-child(10) { transition-delay: 0.40s; }
+
+/* stagger using nth-of-type (correct) */
+.side-menu a:nth-of-type(1) { transition-delay: 0.05s; }
+.side-menu a:nth-of-type(2) { transition-delay: 0.10s; }
+.side-menu a:nth-of-type(3) { transition-delay: 0.15s; }
+.side-menu a:nth-of-type(4) { transition-delay: 0.20s; }
+.side-menu a:nth-of-type(5) { transition-delay: 0.25s; }
+.side-menu a:nth-of-type(6) { transition-delay: 0.30s; }
+.side-menu a:nth-of-type(7) { transition-delay: 0.35s; }
+.side-menu a:nth-of-type(8) { transition-delay: 0.40s; }
+
 
 .theme-toggle {
   display: flex;
