@@ -29,7 +29,7 @@ body {
   --dic-ount:#B7FFAD;
   --pag-h:#fff;
   --pag-p:#CBCCCD;
-  --text-main:#ffffff;
+  --text-main:#0D0D0D;
   --text-muted:#C7C7C7;
   --accent: #5BC0BE;
   --bg-des:#13224a;
@@ -50,7 +50,7 @@ body.light-theme {
   --dic-ount:#38C624;
   --pag-h:#2B2B2B;
   --pag-p:#5C5C5C;
-  --text-main: #0B132B;
+  --text-main: #0D0D0D;
   --text-muted: #333333;
   --accent: #0AA1A7;
   --bg-des:#F5F7FA;
@@ -213,7 +213,7 @@ body.light-theme {
   transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 .search-bar::placeholder {
-  color: var(--text-muted);
+  color:#333333;
 }
 .search-bar:focus {
   border-color: var(--accent);
@@ -1024,42 +1024,37 @@ background:linear-gradient(135deg,#d4af37,#f5e6a8,#d4af37);
 cursor:pointer;
 box-shadow: 0 10px 25px rgba(0,0,0,.25);
 }
-
 .offer-card{
+  display:none;
   margin-top:20px;
-  display:flex;
-  justify-content:center;
 }
 
-/* hidden state */
+/* active state */
+.offer-card.show{
+  display:block;
+}
+
 .offer-content{
   background:#BDE4FF;
   border-radius:16px;
   padding:20px;
   max-width:360px;
   margin:0 5px;
-  box-sizing:border-box;
 
-  /* 🔥 premium shadow */
   box-shadow:
     0 6px 15px rgba(0,0,0,0.1),
     0 18px 40px rgba(0,0,0,0.18),
     0 30px 70px rgba(0,0,0,0.25);
-  /* 🚀 animation base */
+  /* animation */
+  opacity:0;
   transform: translateY(-20px) scale(0.96);
-  opacity: 0;
-  pointer-events: none;
-
-  transition:
-    transform 0.35s cubic-bezier(.2,.8,.2,1),
-    opacity 0.3s ease;
+  transition: all 0.35s ease;
 }
 
-/* visible state */
-.offer-card.open .offer-content{
+/* animate in */
+.offer-card.show .offer-content{
+  opacity:1;
   transform: translateY(0) scale(1);
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .offer-content p,
