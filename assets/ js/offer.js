@@ -8,13 +8,36 @@ import {
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// --------------------
-// UI TOGGLE
-// --------------------
-window.toggleOfferCard = function () {
+function toggleOfferCard(){
+
   const card = document.getElementById("offerCard");
-  card.classList.toggle("open");
-};
+
+  if(card.classList.contains("show")){
+
+    // CLOSE (animate out first)
+    const content = card.querySelector(".offer-content");
+
+    content.style.opacity = "0";
+    content.style.transform = "translateY(-20px) scale(0.96)";
+
+    setTimeout(() => {
+      card.classList.remove("show");
+    }, 300);
+
+  } else {
+
+    // OPEN
+    card.classList.add("show");
+
+    // small delay to trigger animation
+    setTimeout(() => {
+      const content = card.querySelector(".offer-content");
+      content.style.opacity = "1";
+      content.style.transform = "translateY(0) scale(1)";
+    }, 10);
+
+  }
+}
 
 // --------------------
 // HASH FUNCTION
