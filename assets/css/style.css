@@ -20,8 +20,7 @@ body {
 /* ===== THEME VARIABLES ===== */
 :root {
   --bg-main: #0a0f1f;
-  --bg-header:#3B4D7D;
-  --border-color:#9C9C9C;
+  --bg-header:#E4E4E2;
   --sb-titel:#E8ECEE;
   --sb-discr:#C7C7C7;
   --com-soon:#bfcad9;
@@ -42,8 +41,7 @@ body {
 /* LIGHT THEME */
 body.light-theme {
   --bg-main: #F5F7FA;
-  --bg-header: #ffffff;
-  --border-color:#9C9C9C;
+  --bg-header: #E4E4E2;
   --sb-titel:#171717;
   --sb-discr:#424242;
   --com-soon:#383838;
@@ -208,8 +206,6 @@ body.light-theme {
   color: var(--text-main);          /* text color */
 
   border-radius: 10px;
-  border: 1px solid var(--border-color);
-
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
@@ -651,7 +647,7 @@ color:#c8a95a;
 }
 .sale-cta {
   display: inline-block;
-  margin: 12p auto;
+  margin:12px auto;
   text-decoration: none;
 }
 .sale-cta-inner {
@@ -1030,26 +1026,42 @@ box-shadow: 0 10px 25px rgba(0,0,0,.25);
 }
 
 .offer-card{
-max-height:0;
-overflow:hidden;
-transition:max-height .4s ease;
-margin-top:20px;
+  margin:12px 0;
+  display:flex;
+  justify-content:center;
 }
 
-.offer-card.open{
-max-height:800px;
-}
-
+/* hidden state */
 .offer-content{
-background:#BDE4FF;
-box-sizing:border-box;
-box-shadow: 0 10px 25px rgba(0,0,0,.25);
-border:1px solid #5BC0BE33;
-border-radius:12px;
-padding:20px;
-max-width:360px;
-margin:0 5px;
+  background:#BDE4FF;
+  border-radius:16px;
+  padding:20px;
+  max-width:360px;
+  margin:0 5px;
+  box-sizing:border-box;
+
+  /* 🔥 premium shadow */
+  box-shadow:
+    0 6px 15px rgba(0,0,0,0.1),
+    0 18px 40px rgba(0,0,0,0.18),
+    0 30px 70px rgba(0,0,0,0.25);
+  /* 🚀 animation base */
+  transform: translateY(-20px) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    transform 0.35s cubic-bezier(.2,.8,.2,1),
+    opacity 0.3s ease;
 }
+
+/* visible state */
+.offer-card.open .offer-content{
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .offer-content p,
 .offer-content h3 {
   color: #0B132B;
