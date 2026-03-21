@@ -1,29 +1,13 @@
-
 function openMenu() {
-
-  const body = document.body;
-  const links = document.querySelectorAll(".side-menu a");
-
-  // reset animation first
-  links.forEach(link => {
-    link.style.transition = "none";
-    link.style.opacity = "0";
-    link.style.transform = "translateY(14px)";
-  });
-
-  // force reflow (important trick)
-  document.querySelector(".side-menu").offsetHeight;
-
-  // restore animation
-  links.forEach(link => {
-    link.style.transition = "";
-  });
-
-  body.classList.add("menu-open");
+  document.body.classList.add("menu-open");
+  document.body.style.overflow = "hidden"; // stop background scroll
 }
+
 function closeMenu() {
   document.body.classList.remove("menu-open");
+  document.body.style.overflow = ""; // restore scroll
 }
+
 function toggleMenu() {
   const menu = document.getElementById("sideMenu");
   if (!menu) return;
