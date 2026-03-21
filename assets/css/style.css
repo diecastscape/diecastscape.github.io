@@ -29,7 +29,7 @@ body {
   --dic-ount:#B7FFAD;
   --pag-h:#fff;
   --pag-p:#CBCCCD;
-  --text-main:#0D0D0D;
+  --text-main:#fff;
   --text-muted:#C7C7C7;
   --accent: #5BC0BE;
   --bg-des:#13224a;
@@ -50,7 +50,7 @@ body.light-theme {
   --dic-ount:#38C624;
   --pag-h:#2B2B2B;
   --pag-p:#5C5C5C;
-  --text-main: #0D0D0D;
+  --text-main: #0B132B;
   --text-muted: #333333;
   --accent: #0AA1A7;
   --bg-des:#F5F7FA;
@@ -203,7 +203,7 @@ body.light-theme {
   padding: 14px 18px;
 
   background: var(--bg-header);     /* background color */
-  color: var(--text-main);          /* text color */
+  color:#0D0D0D;          /* text color */
 
   border-radius: 10px;
   font-size: 14px;
@@ -575,10 +575,9 @@ body.menu-open .menu-overlay {
   opacity: 1;
   pointer-events: auto;
 }
-.side-menu a{
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.40s ease, transform 0.40s ease;
+body.menu-open .side-menu a {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* stagger using nth-of-type (correct) */
