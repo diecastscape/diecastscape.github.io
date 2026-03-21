@@ -1,7 +1,25 @@
 
-// ===== MENU =====
 function openMenu() {
-  document.body.classList.add("menu-open");
+
+  const body = document.body;
+  const links = document.querySelectorAll(".side-menu a");
+
+  // reset animation first
+  links.forEach(link => {
+    link.style.transition = "none";
+    link.style.opacity = "0";
+    link.style.transform = "translateY(14px)";
+  });
+
+  // force reflow (important trick)
+  document.querySelector(".side-menu").offsetHeight;
+
+  // restore animation
+  links.forEach(link => {
+    link.style.transition = "";
+  });
+
+  body.classList.add("menu-open");
 }
 function closeMenu() {
   document.body.classList.remove("menu-open");
