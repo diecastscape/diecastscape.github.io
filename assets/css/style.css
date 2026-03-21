@@ -1012,12 +1012,12 @@ text-decoration:none;
 
 .offer-section{
 text-align:center;
-margin:60px auto;
 }
 
 .lux-offer-btn{
 padding:14px 26px;
 font-weight:600;
+margin:12px 0;
 border:none;
 border-radius:40px;
 background:linear-gradient(135deg,#d4af37,#f5e6a8,#d4af37);
@@ -1026,7 +1026,7 @@ box-shadow: 0 10px 25px rgba(0,0,0,.25);
 }
 
 .offer-card{
-  margin:12px 0;
+  margin-top:20px;
   display:flex;
   justify-content:center;
 }
