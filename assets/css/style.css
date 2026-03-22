@@ -175,6 +175,13 @@ body.light-theme {
 }
 .hero h1 { font-size: clamp(28px, 5vw, 42px); margin-bottom: 10px; }
 .hero p { opacity: .8; margin-bottom: 18px; }
+.hero-buttons {
+  display: flex;
+  flex-direction: column;   /* stack vertically */
+  align-items: center;
+  gap: 14px;               /* 👈 PERFECT spacing between buttons */
+  margin-top: 14px;
+}
 .cta { 
   max-width: 250px;      /* control how wide it can go on desktop */
   display: inline-block;
@@ -688,10 +695,6 @@ color:#c8a95a;
   letter-spacing: .3px;
 }
 
-.middle {
-  text-align: center;
-  padding: 10px 0px;
-}
 .slider-wrap {
   position: relative;
 }
