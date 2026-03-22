@@ -6,7 +6,17 @@ import {
   serverTimestamp 
 } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+window.toggleTerms = function () {
+  const el = document.getElementById("termsText");
 
+  if (!el) return;
+
+  if (el.classList.contains("show")) {
+    el.classList.remove("show");
+  } else {
+    el.classList.add("show");
+  }
+};
 window.toggleOfferCard = function(){
 
   const card = document.getElementById("offerCard");
