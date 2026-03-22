@@ -1176,3 +1176,35 @@ text-align:center;
 .copy-icon:active{
   transform:scale(0.95);
 }
+.terms-toggle {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.terms-btn {
+  background: none;
+  border: none;
+  color: #0B132B;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* hidden by default */
+.terms-text {
+  display: block;
+  font-size: 11px;
+  color: #444;
+  margin-top: 6px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s ease;
+}
+
+/* show animation */
+.terms-text.show {
+  opacity: 1;
+  max-height: 60px;
+}
