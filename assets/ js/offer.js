@@ -190,6 +190,15 @@ function showCoupon(code) {
 <p class="coupon-note">
 Use this code at booking.
 </p>
+<div class="terms-toggle">
+  <button onclick="toggleTerms()" class="terms-btn">
+    View Terms
+  </button>
+
+  <span id="termsText" class="terms-text">
+    Valid only on main sale products. Not applicable on Special Sale items.
+  </span>
+</div>
 </div>
   `;
 }
