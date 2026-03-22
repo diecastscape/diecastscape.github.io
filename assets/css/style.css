@@ -90,7 +90,6 @@ body.light-theme {
   font-weight: 800;
   letter-spacing: 1px;
   color: #e5f9ff;
-  text-shadow: 0 0 10px rgba(91,192,190,.35);
 }
 @media (max-width: 425px) {
 .header-inner {
@@ -581,6 +580,11 @@ body.menu-open .side-menu a {
   transform: translateY(14px);
 }
 
+body:not(.menu-open) .side-menu a {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: none;
+}
 /* animate when open */
 body.menu-open .side-menu a {
   animation: menuFade 0.4s ease forwards;
