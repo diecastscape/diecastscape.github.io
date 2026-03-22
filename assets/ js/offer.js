@@ -7,8 +7,7 @@ import {
 } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
-function toggleOfferCard(){
+window.toggleOfferCard = function(){
 
   const card = document.getElementById("offerCard");
 
