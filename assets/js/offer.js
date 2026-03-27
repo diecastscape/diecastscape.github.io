@@ -20,17 +20,26 @@ window.toggleTerms = function () {
 window.toggleOfferCard = function(){
 
   const card = document.getElementById("offerCard");
+  const input = document.getElementById("secretInput");
+  const msg = document.getElementById("offerMsg");
+  const content = document.getElementById("offerContent");
 
   if(card.classList.contains("show")){
 
-    // CLOSE (animate out first)
-    const content = card.querySelector(".offer-content");
+    // CLOSE animation
+    const contentBox = card.querySelector(".offer-content");
 
-    content.style.opacity = "0";
-    content.style.transform = "translateY(-20px) scale(0.96)";
+    contentBox.style.opacity = "0";
+    contentBox.style.transform = "translateY(-20px) scale(0.96)";
 
     setTimeout(() => {
       card.classList.remove("show");
+
+      // ✅ RESET EVERYTHING AFTER CLOSE
+      input.value = "";
+      msg.innerText = "";
+      content.innerHTML = "";
+
     }, 300);
 
   } else {
@@ -38,11 +47,10 @@ window.toggleOfferCard = function(){
     // OPEN
     card.classList.add("show");
 
-    // small delay to trigger animation
     setTimeout(() => {
-      const content = card.querySelector(".offer-content");
-      content.style.opacity = "1";
-      content.style.transform = "translateY(0) scale(1)";
+      const contentBox = card.querySelector(".offer-content");
+      contentBox.style.opacity = "1";
+      contentBox.style.transform = "translateY(0) scale(1)";
     }, 10);
 
   }
@@ -75,9 +83,12 @@ function randomPart(length = 6) {
 // GENERATE UNIQUE COUPON
 // Example: REEL1-7K4P9M
 // --------------------
-function generateCoupon(campaignName) {
-  return `${campaignName}-${randomPart(6)}`;
-}
+function generateCoupon(campaignName, userInput) {
+
+  const cleanInput = userInput.replace(/[^A-Z0-9]/g, ""); // remove symbols
+  const last4 = cleanInput.slice(-4).padStart(4, "X"); // ensure 4 chars 
+  return `${campaignName.toUpperCase()}-${last4}${randomPart(6)}`;
+ }
 
 // --------------------
 // SAVE GENERATED COUPON
@@ -144,8 +155,9 @@ window.checkSecretCode = async function () {
     }
 
     // Correct code → generate coupon
-    const couponCode = generateCoupon(data.campaignName);
-
+	  
+    const couponCode = generateCoupon(data.campaignName, input);
+    
     // Save coupon in Firestore
     await saveGeneratedCoupon(couponCode, campaignId, data.campaignName);
 
