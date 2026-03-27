@@ -1120,14 +1120,7 @@ cursor:pointer;
   cursor:pointer;
   white-space:nowrap; /* keeps text in one line */
 }
-.copy-btn{
-padding:6px 12px;
-border:none;
-border-radius:6px;
-background:#000;
-color:white;
-cursor:pointer;
-}
+
 .coupon-card{
 display:block;
 margin:20px auto;
@@ -1149,11 +1142,11 @@ text-align:center;
 /* coupon box */
 .coupon-code{
   flex:1;
-  font-size:20px;
+  font-size:14px;
   font-weight:bold;
   background:black;
   color:white;
-  padding:12px;
+  padding:11px;
   border-radius:8px;
   text-align:center;
   white-space:nowrap;
@@ -1161,8 +1154,8 @@ text-align:center;
 
 /* SVG button */
 .copy-icon{
-  width:44px;
-  height:44px;
+  width:36px;
+  height:36px;
   display:flex;
   align-items:center;
   justify-content:center;
