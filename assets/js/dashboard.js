@@ -1,4 +1,4 @@
-import { db } from "./firebase-init.js";
+import { db, auth } from "./firebase-init.js";
 import { 
   collection,
   updateDoc,
@@ -10,9 +10,37 @@ import {
   orderBy,
   query,
   deleteDoc,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// ⏳ 15 minutes inactivity
+const INACTIVITY_LIMIT = 15 * 60 * 1000;
 
+let inactivityTimer;
+
+function resetTimer() {
+  clearTimeout(inactivityTimer);
+
+  inactivityTimer = setTimeout(() => {
+    autoLogout();
+  }, INACTIVITY_LIMIT);
+}
+
+function autoLogout() {
+  alert("Session expired due to inactivity");
+
+  signOut(auth).then(() => {
+    window.location.replace("/admin/login.html");
+  });
+}
+
+// 🎯 Track activity
+["click", "mousemove", "keydown", "scroll", "touchstart"].forEach(event => {
+  window.addEventListener(event, resetTimer);
+});
+
+// 🚀 Start timer
+window.addEventListener("load", resetTimer);
 const defaultDetails = `
   <p>
     This is a <strong>fully assembled, ready-to-display diorama</strong>,
