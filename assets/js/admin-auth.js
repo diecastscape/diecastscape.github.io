@@ -25,19 +25,28 @@ window.adminLogin = function () {
 onAuthStateChanged(auth, (user) => {
   const path = window.location.pathname;
   const body = document.body;
+
   if (path.includes("/admin/login")) {
-    body.classList.remove("auth-loading");
     if (user) {
       window.location.replace("/admin/dashboard.html");
+      return;
     }
+
+    body.classList.remove("auth-loading");
+    body.classList.add("auth-ready");
     return;
   }
+
   if (path.includes("/admin/dashboard")) {
+
     if (!user) {
       window.location.replace("/admin/login.html");
       return;
     }
+
+    // ✅ Only show UI AFTER confirmed login
     body.classList.remove("auth-loading");
+    body.classList.add("auth-ready");
   }
 });
 
