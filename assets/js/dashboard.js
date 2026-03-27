@@ -9,21 +9,34 @@ import {
   getDocs,
   orderBy,
   query,
-  deleteDoc,
-  signOut
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-// ⏳ 15 minutes inactivity
-const INACTIVITY_LIMIT = 15 * 60 * 1000;
+import { signOut, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 let inactivityTimer;
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    startTracking();
+  }
+});
+
+function startTracking() {
+  resetTimer();
+
+  ["click","mousemove","keydown","scroll","touchstart"]
+    .forEach(event => {
+      window.addEventListener(event, resetTimer);
+    });
+}
 
 function resetTimer() {
   clearTimeout(inactivityTimer);
 
   inactivityTimer = setTimeout(() => {
     autoLogout();
-  }, INACTIVITY_LIMIT);
+  }, 15 * 60 * 1000); // 15 min
 }
 
 function autoLogout() {
@@ -34,13 +47,6 @@ function autoLogout() {
   });
 }
 
-// 🎯 Track activity
-["click", "mousemove", "keydown", "scroll", "touchstart"].forEach(event => {
-  window.addEventListener(event, resetTimer);
-});
-
-// 🚀 Start timer
-window.addEventListener("load", resetTimer);
 const defaultDetails = `
   <p>
     This is a <strong>fully assembled, ready-to-display diorama</strong>,
