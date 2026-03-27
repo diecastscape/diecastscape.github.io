@@ -1,6 +1,6 @@
 
 import { auth } from "./firebase-init.js";
-import { signInWithEmailAndPassword, onAuthStateChanged, signOut } 
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 window.adminLogin = function () {
@@ -56,3 +56,5 @@ window.adminLogout = function () {
   });
 };
 
+// 🔐 SESSION ONLY (logout when tab/browser closed)
+setPersistence(auth, browserSessionPersistence);
