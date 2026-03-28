@@ -39,7 +39,7 @@ body {
 }
 
 /* LIGHT THEME */
-body.light-theme {
+html.light {
   --bg-main: #F5F7FA;
   --bg-header: #E4E4E2;
   --sb-titel:#171717;
@@ -650,7 +650,7 @@ body.menu-open .side-menu a:nth-of-type(8) { animation-delay: 0.40s; }
 .toggle-switch.active .toggle-circle {
   transform: translateX(16px);
 }
-body.light-theme .toggle-switch {
+html.light .toggle-switch {
   background: var(--accent);
 }
 .ship {
