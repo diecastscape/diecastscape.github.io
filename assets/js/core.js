@@ -16,14 +16,13 @@ function toggleMenu() {
 // ===== THEME =====
 function initTheme() {
   const toggleSwitches = document.querySelectorAll(".toggle-switch");
-  const savedTheme = localStorage.getItem("theme");
-  
-  // Apply saved theme to body
+  const savedTheme = localStorage.getItem("theme") || "dark";
+
   if (savedTheme === "light") {
-    document.body.classList.add("light-theme");
+    document.documentElement.classList.add("light");
     toggleSwitches.forEach(sw => sw.classList.add("active"));
   } else {
-    document.body.classList.remove("light-theme");
+    document.documentElement.classList.remove("light");
     toggleSwitches.forEach(sw => sw.classList.remove("active"));
   }
 }
@@ -33,16 +32,16 @@ document.addEventListener("DOMContentLoaded", initTheme);
 
 // Global toggle function
 window.toggleThemeButton = function () {
-  document.body.classList.toggle("light-theme");
-  const isLight = document.body.classList.contains("light-theme");
-  
-  // Update ALL toggle switches
+  document.documentElement.classList.toggle("light");
+
+  const isLight = document.documentElement.classList.contains("light");
+
   document.querySelectorAll(".toggle-switch").forEach(sw => {
     isLight ? sw.classList.add("active") : sw.classList.remove("active");
   });
-  
-  // Save to localStorage
+
   localStorage.setItem("theme", isLight ? "light" : "dark");
+};
 
 document.querySelectorAll(".faq-question").forEach(btn => {
   btn.addEventListener("click", () => {
