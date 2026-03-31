@@ -3,9 +3,14 @@ import {
   doc,
   getDoc,
   setDoc,
-  serverTimestamp 
+  serverTimestamp,
+  query,
+  collection,
+  where,
+  getDocs
 } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 window.toggleTerms = function () {
   const el = document.getElementById("termsText");
 
@@ -17,6 +22,7 @@ window.toggleTerms = function () {
     el.classList.add("show");
   }
 };
+
 window.toggleOfferCard = function(){
 
   const card = document.getElementById("offerCard");
@@ -81,7 +87,6 @@ function randomPart(length = 6) {
 
 // --------------------
 // GENERATE UNIQUE COUPON
-// Example: REEL1-7K4P9M
 // --------------------
 function generateCoupon(campaignName, userInput) {
 
@@ -91,15 +96,45 @@ function generateCoupon(campaignName, userInput) {
  }
 
 // --------------------
-// SAVE GENERATED COUPON
+// CHECK IF COUPON ALREADY GENERATED (NEW)
 // --------------------
-async function saveGeneratedCoupon(couponCode, campaignId, campaignName) {
+async function getUserCoupon(campaignId, userInput) {
+  try {
+    const cleanInput = userInput.replace(/[^A-Z0-9]/g, "");
+    
+    // Query generatedCoupons by userCode + campaignId
+    const q = query(
+      collection(db, "generatedCoupons"),
+      where("campaignId", "==", campaignId),
+      where("userCode", "==", cleanInput)
+    );
+    
+    const snapshot = await getDocs(q);
+    
+    if (!snapshot.empty) {
+      // Return existing coupon
+      return snapshot.docs[0].data().couponCode;
+    }
+    
+    return null; // No existing coupon
+  } catch (e) {
+    console.error("Error checking coupon:", e);
+    return null;
+  }
+}
+
+// --------------------
+// SAVE GENERATED COUPON (UPDATED)
+// --------------------
+async function saveGeneratedCoupon(couponCode, campaignId, campaignName, userInput) {
   const couponRef = doc(db, "generatedCoupons", couponCode);
+  const cleanInput = userInput.replace(/[^A-Z0-9]/g, "");
 
   await setDoc(couponRef, {
     couponCode: couponCode,
     campaignId: campaignId,
     campaignName: campaignName,
+    userCode: cleanInput, // Store original code for lookup
     used: false,
     createdAt: serverTimestamp()
   });
@@ -108,7 +143,7 @@ async function saveGeneratedCoupon(couponCode, campaignId, campaignName) {
 }
 
 // --------------------
-// MAIN CHECK FUNCTION
+// MAIN CHECK FUNCTION (UPDATED)
 // --------------------
 window.checkSecretCode = async function () {
   const input = document.getElementById("secretInput").value.trim().toUpperCase();
@@ -150,16 +185,25 @@ window.checkSecretCode = async function () {
     const inputHash = await sha256(input);
 
     if (inputHash !== data.codeHash) {
-      msg.innerText = "Oops! That code isn’t right. Try again 🔍";
+      msg.innerText = "Oops! That code isn't right. Try again 🔍";
       return;
     }
 
-    // Correct code → generate coupon
-	  
+    // ✅ NEW: Check if user already generated coupon
+    const existingCoupon = await getUserCoupon(campaignId, input);
+    
+    if (existingCoupon) {
+      // User already has coupon - show existing one
+      msg.innerText = "You already have a coupon! 🎉";
+      showCoupon(existingCoupon);
+      return;
+    }
+
+    // ✅ Generate NEW coupon only if doesn't exist
     const couponCode = generateCoupon(data.campaignName, input);
     
     // Save coupon in Firestore
-    await saveGeneratedCoupon(couponCode, campaignId, data.campaignName);
+    await saveGeneratedCoupon(couponCode, campaignId, data.campaignName, input);
 
     // Show coupon
     msg.innerText = "Nice catch! You found it.";
