@@ -54,7 +54,7 @@ const whatsappText = encodeURIComponent(message);
     <circle cx="9" cy="17" r="2"/>
     <circle cx="18" cy="17" r="2"/>
   </svg>
-Shipping charges applicable
+  ${p.shippingText || "Shipping charges applicable"}
 </div>
 
     <button class="details-btn" onclick="openDetailsSheet(this)">
