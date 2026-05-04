@@ -19,14 +19,14 @@
 
     <!-- MAIN SALE -->
     <div class="dash-card">
-    <div class="section-top">
+    <div class="dash-top">
   <h3>Main Store</h3>
   <button onclick="openSection('main')">View</button>
   </div>
     </div>
     <!-- SPECIAL SALE -->
   <div class="dash-card">
-  <div class="section-top">
+  <div class="dash-top">
   <h3>Special Store</h3>
   <button onclick="openSection('special')">View</button>
 </div>
@@ -38,7 +38,7 @@
       <h3>Main Store</h3>
       <div class="btn-row">
       <button onclick="toggleList('main')">Refresh</button>
-      <button onclick="toggleAdd('main')">+ Add</button>
+      <button onclick="toggleAdd('main')" id="mainAddBtn">+ Add</button>
     </div>
     </div>
     <div class="border-top"></div>
@@ -77,7 +77,7 @@
       <h3>Special Store</h3>
       <div class="btn-row">
       <button onclick="toggleList('special')">Refresh</button>
-      <button onclick="toggleAdd('special')">+ Add</button>
+      <button onclick="toggleAdd('special')" id="specialAddBtn">+ Add</button>
     </div>
     </div>
     <div class="border-top"></div>
