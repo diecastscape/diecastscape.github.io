@@ -297,17 +297,29 @@ window.openSection = function(type){
     loadAdminProducts(type); // 🔥 AUTO LOAD
   }
 };
-
 window.toggleList = function(type){
 
   const addWrap = document.getElementById("add-"+type);
 
-  // ✅ ALWAYS close add form if open
+  const btn =
+    type==="main"
+      ? document.getElementById("mainAddBtn")
+      : document.getElementById("specialAddBtn");
+
   if(addWrap) addWrap.style.display = "none";
 
-  // ✅ reload products every click (refresh)
+  if(type==="main"){
+    resetMainForm();
+  }else{
+    resetSaleForm();
+  }
+
+  btn.innerText = "+ Add";
+  btn.classList.remove("cancel-btn");
+
   loadAdminProducts(type);
 };
+
 async function loadAdminProducts(type){
 
   const container =
@@ -417,7 +429,13 @@ window.editProduct = async function(type, id){
 
   // open add form
   toggleAdd(type);
+const btn =
+  type==="main"
+    ? document.getElementById("mainAddBtn")
+    : document.getElementById("specialAddBtn");
 
+btn.innerText = "Cancel";
+btn.classList.add("cancel-btn");
   if(type==="main"){
 
     document.getElementById("p-name").value = data.name || "";
@@ -505,30 +523,50 @@ window.toggleSold = async function(id, status){
 window.toggleAdd = function(type){
 
   const addWrap = document.getElementById("add-"+type);
+
   const listBox =
     type==="main"
       ? document.getElementById("mainProducts")
       : document.getElementById("specialProducts");
 
+  const btn =
+    type==="main"
+      ? document.getElementById("mainAddBtn")
+      : document.getElementById("specialAddBtn");
+
   if(!addWrap) return;
 
   const opening = addWrap.style.display !== "block";
 
-  // If opening ADD manually → reset form
-  if(opening && !editingId){
+  if(opening){
 
-  if(type==="main"){
-    resetMainForm();
+    // open form fresh
+    if(type==="main"){
+      resetMainForm();
+    }else{
+      resetSaleForm();
+    }
+
+    addWrap.style.display = "block";
+    if(listBox) listBox.style.display = "none";
+
+    btn.innerText = "Cancel";
+    btn.classList.add("cancel-btn");
+
   }else{
-    resetSaleForm();
-  }
 
-}
+    // close form + reset edit mode
+    if(type==="main"){
+      resetMainForm();
+    }else{
+      resetSaleForm();
+    }
 
-  addWrap.style.display = opening ? "block" : "none";
+    addWrap.style.display = "none";
+    if(listBox) listBox.style.display = "block";
 
-  if(listBox){
-    listBox.style.display = opening ? "none" : "block";
+    btn.innerText = "+ Add";
+    btn.classList.remove("cancel-btn");
   }
 };
 function resetMainForm(){
