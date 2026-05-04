@@ -179,6 +179,12 @@ textarea{
   border-color:#5BC0BE;
 }
 
+.dash-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
 .section-top{
   display:flex;
   justify-content:space-between;
@@ -186,7 +192,7 @@ textarea{
   margin-bottom:12px;
 }
 
-h4 {
+h5 {
   margin-top: 16px;
   margin-bottom: 4px;
 }
