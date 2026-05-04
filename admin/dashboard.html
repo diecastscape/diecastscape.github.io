@@ -19,14 +19,18 @@
 
     <!-- MAIN SALE -->
     <div class="dash-card">
-  <div class="dash-title">Main Store</div>
+    <div class="section-top">
+  <h3>Main Store</h3>
   <button onclick="openSection('main')">View</button>
   </div>
+    </div>
     <!-- SPECIAL SALE -->
   <div class="dash-card">
-  <div class="dash-title">Special Store</div>
+  <div class="section-top">
+  <h3>Special Store</h3>
   <button onclick="openSection('special')">View</button>
 </div>
+  </div>
 
   <!-- ===== MAIN SALE SECTION ===== -->
   <div id="section-main" class="section-panel">
@@ -38,21 +42,24 @@
     </div>
     </div>
     <div class="border-top"></div>
-  <div id="mainProducts"><h4>Images</h4></div>
+  <div id="mainProducts"></div>
     <div id="add-main" class="add-wrap">
       <div id="mainAddForm">
         <div id="editModeBar" class="edit-mode-bar" style="display:none;">
   Edit product
         </div>
- <h4>Product details</h4>       
+ <h5>Name</h5>     
 <input id="p-name" placeholder="Product title">
-<div class="price-row">
+<h5>Price</h5>
+        <div class="price-row">
   <input id="p-old" placeholder="Retail price">
   <input id="p-new" placeholder="Discounted price">
 </div>
+ <h5>Details (description)</h5>       
 <textarea id="p-details"></textarea>
-<input id="p-shipping" placeholder="Free shipping in India">        
-<h4>Image path</h4>
+   <h5>Shipping</h5>     
+<input id="p-shipping" placeholder="shipping charges">        
+<h5>Image path</h5>
 <div id="imagesList"></div>
 <button onclick="addImageField()" class="primary-btn">+ Add Image</button>
   <button onclick="saveProduct()" class="primary-btn" id="saveBtn">Save Product</button>
@@ -105,11 +112,11 @@
         <div id="editModeBar" class="edit-mode-bar" style="display:none;">
   Edit Product
         </div>
-  <h4>Product details</h4>      
+  <h5>Name</h5>      
 <input id="s-name" placeholder="Product title">
-
+<h5>Price</h5>
 <input id="s-price" placeholder="Sale price">
-<h4>Image path</h4>
+<h5>Image path</h5>
 <div id="s-imagesList"></div>
 
 <button onclick="addSaleImageField()" class="primary-btn">
