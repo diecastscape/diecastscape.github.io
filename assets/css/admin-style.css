@@ -36,7 +36,17 @@ body {
   align-items:center;
   justify-content:center;
     }
-  
+
+.forgot{
+text-align:right;
+margin-top:6px;
+font-size:13px;
+}
+
+.forgot a{
+color:#5BC0BE;
+text-decoration:none;
+}
   .card{
   width:65%;
   background:#15181b;
