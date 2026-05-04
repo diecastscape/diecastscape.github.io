@@ -31,7 +31,6 @@ body {
 }
 
     .center{
-  min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -46,6 +45,16 @@ font-size:13px;
 .forgot a{
 color:#5BC0BE;
 text-decoration:none;
+}
+.center-head{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.center-head h1{
+  margin: 0;
 }
   .card{
   width:65%;
