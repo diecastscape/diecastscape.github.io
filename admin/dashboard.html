@@ -30,17 +30,15 @@
 
   <!-- ===== MAIN SALE SECTION ===== -->
   <div id="section-main" class="section-panel">
-   <h3>Main Store</h3>
-    <div class="border-top"></div>
     <div class="section-top">
-      <h4>Store Product</h4>
+      <h3>Main Store</h3>
+    <div class="border-top"></div>
       <div class="btn-row">
       <button onclick="toggleList('main')">Refresh</button>
       <button onclick="toggleAdd('main')">+ Add</button>
     </div>
     </div>
   <div id="mainProducts"></div>
-
     <div id="add-main" class="add-wrap">
       <div id="mainAddForm">
         <div id="editModeBar" class="edit-mode-bar" style="display:none;">
@@ -66,8 +64,14 @@
 
   <!-- ===== SPECIAL SALE SECTION ===== -->
   <div id="section-special" class="section-panel">
-    <h3>Special Store</h3>
+    <div class="section-top">
+      <h3>Special Store</h3>
     <div class="border-top"></div>
+      <div class="btn-row">
+      <button onclick="toggleList('special')">Refresh</button>
+      <button onclick="toggleAdd('special')">+ Add</button>
+    </div>
+    </div>
     <div class="sale-control">
   <h4>Sale Time Control</h4>
 
@@ -93,13 +97,6 @@
   <div class="center-msg" id="sale-save-msg"></div>
     </div>
     <div class="border-top"></div>
-    <div class="section-top">
-      <h4>Store Product</h4>
-      <div class="btn-row">
-      <button onclick="toggleList('special')">Refresh</button>
-      <button onclick="toggleAdd('special')">+ Add</button>
-    </div>
-    </div>
     <div id="specialProducts"></div>
     <div id="add-special" class="add-wrap">
       <div id="specialAddForm">
