@@ -480,7 +480,6 @@ btn.classList.add("cancel-btn");
 };
 window.cancelEdit = function(type){
 
-  // clear edit mode
   editingId = null;
   editingType = null;
 
@@ -493,13 +492,29 @@ window.cancelEdit = function(type){
       ? document.getElementById("mainProducts")
       : document.getElementById("specialProducts");
 
+  const btn =
+    type==="main"
+      ? document.getElementById("mainAddBtn")
+      : document.getElementById("specialAddBtn");
+
   // close form
   if(addWrap) addWrap.style.display = "none";
 
-  // show product list
+  // show products
   if(listBox) listBox.style.display = "block";
 
+  // reset add button
+  btn.innerText = "+ Add";
+  btn.classList.remove("cancel-btn");
+
+  // reset form also
+  if(type==="main"){
+    resetMainForm();
+  }else{
+    resetSaleForm();
+  }
 };
+
 window.deleteProduct = async function(type,id){
 
   if(!confirm("Delete this product?")) return;
