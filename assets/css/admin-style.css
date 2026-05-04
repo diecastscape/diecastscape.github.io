@@ -78,7 +78,11 @@ button{
   box-sizing:border-box;
 }
 .secondary-btn{
-  background:#FF5F4C;
+  background:#e74c3c;
+}
+.cancel-btn{
+  background:#e74c3c !important;
+  color:#fff !important;
 }
   .loader{
   width:22px;
