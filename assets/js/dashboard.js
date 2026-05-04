@@ -169,9 +169,11 @@ if(btn.disabled) return;
   const name = document.getElementById("p-name").value.trim();
   const priceOld = Number(document.getElementById("p-old").value);
   const priceNew = Number(document.getElementById("p-new").value);
-  const detailsHTML = document.getElementById("p-details").value.trim();
-
-  msg.innerText = "";
+  const shippingText =
+  document.getElementById("p-shipping").value.trim();
+  const detailsHTML =
+  document.getElementById("p-details").value.trim();
+    msg.innerText = "";
 
   // ---- VALIDATION ----
   if(!name){
@@ -214,6 +216,7 @@ if(editingId){
     priceOld,
     priceNew,
     detailsHTML,
+    shippingText,
     images
   });
 
@@ -224,6 +227,7 @@ if(editingId){
     priceOld,
     priceNew,
     detailsHTML,
+    shippingText,
     images,
     active:true,
     created:Date.now()
@@ -243,7 +247,8 @@ document.getElementById("saveBtn").innerText = "Save Product";
   document.getElementById("p-name").value = "";
   document.getElementById("p-old").value = "";
   document.getElementById("p-new").value = "";
-
+  document.getElementById("p-shipping").value = "";
+    
   // reset details to default template
   document.getElementById("p-details").value = defaultDetails;
 
@@ -419,7 +424,9 @@ window.editProduct = async function(type, id){
     document.getElementById("p-old").value = data.priceOld || "";
     document.getElementById("p-new").value = data.priceNew || "";
     document.getElementById("p-details").value = data.detailsHTML || "";
-
+    document.getElementById("p-shipping").value =
+  data.shippingText || "";
+    
     const list = document.getElementById("imagesList");
     list.innerHTML = "";
 
@@ -533,7 +540,8 @@ function resetMainForm(){
   document.getElementById("p-old").value = "";
   document.getElementById("p-new").value = "";
   document.getElementById("p-details").value = defaultDetails;
-
+  document.getElementById("p-shipping").value = "";
+  
   document.getElementById("saveBtn").innerText = "Save Product";
 
   const list = document.getElementById("imagesList");
