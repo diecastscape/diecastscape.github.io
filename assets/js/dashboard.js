@@ -555,12 +555,14 @@ window.toggleAdd = function(type){
 
   if(opening){
 
-    // open form fresh
+  // reset only when NOT editing
+  if(!editingId){
     if(type==="main"){
       resetMainForm();
     }else{
       resetSaleForm();
     }
+  }
 
     addWrap.style.display = "block";
     if(listBox) listBox.style.display = "none";
