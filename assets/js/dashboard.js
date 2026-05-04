@@ -365,9 +365,18 @@ async function loadAdminProducts(type){
     </div>
 <div class="admin-price-row">
 
-  <div class="admin-price">
-    ${type==="main" ? `₹${p.priceNew}` : `₹${p.price}`}
-  </div>
+  ${
+  type==="main"
+  ? `
+    <div class="price-stack">
+      <div class="admin-old-price">₹${p.priceOld || 0}</div>
+      <div class="admin-price">₹${p.priceNew || 0}</div>
+    </div>
+  `
+  : `
+    <div class="admin-price">₹${p.price || 0}</div>
+  `
+  }
 
   ${type==="special" ? `
     <div class="sold-toggle">
@@ -384,6 +393,9 @@ async function loadAdminProducts(type){
 
 </div>
 
+<div class="admin-shipping">
+  Shipping: ${p.shippingText || "Shipping charges applicable"}
+</div>
     <div class="admin-actions">
       <button onclick="editProduct('${type}','${id}')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
