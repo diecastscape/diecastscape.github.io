@@ -286,27 +286,40 @@ window.openSection = function(type){
 
   // hide all sections
   document.querySelectorAll(".section-panel")
-    .forEach(s=>s.style.display="none");
+    .forEach(s => s.style.display = "none");
 
-  const sec = document.getElementById("section-"+type);
+  // reset all add buttons
+  document.getElementById("mainAddBtn").innerText = "+ Add";
+  document.getElementById("mainAddBtn").classList.remove("cancel-btn");
+
+  document.getElementById("specialAddBtn").innerText = "+ Add";
+  document.getElementById("specialAddBtn").classList.remove("cancel-btn");
+
+  // reset forms + edit mode
+  resetMainForm();
+  resetSaleForm();
+  hideEditMode();
+
+  // show sale settings again
+  const saleControl = document.querySelector(".sale-control");
+  if(saleControl) saleControl.style.display = "block";
+
+  const sec = document.getElementById("section-" + type);
   if(!sec) return;
 
-  // show section
-  sec.style.display="block";
+  sec.style.display = "block";
 
-  // hide add form
-  const addWrap = document.getElementById("add-"+type);
-  if(addWrap) addWrap.style.display="none";
+  const addWrap = document.getElementById("add-" + type);
+  if(addWrap) addWrap.style.display = "none";
 
-  // show products list
   const listBox =
-    type==="main"
+    type === "main"
       ? document.getElementById("mainProducts")
       : document.getElementById("specialProducts");
 
   if(listBox){
-    listBox.style.display="block";
-    loadAdminProducts(type); // 🔥 AUTO LOAD
+    listBox.style.display = "block";
+    loadAdminProducts(type);
   }
 };
 window.toggleList = function(type){
