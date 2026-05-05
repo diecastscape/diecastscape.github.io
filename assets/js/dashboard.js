@@ -532,7 +532,9 @@ window.cancelEdit = function(type){
 
   // show products
   if(listBox) listBox.style.display = "block";
-
+if(type === "special"){
+  document.getElementById("saleControlBox").style.display = "block";
+}
   // reset add button
   btn.innerText = "+ Add";
   btn.classList.remove("cancel-btn");
@@ -578,7 +580,7 @@ window.toggleAdd = function(type){
     type==="main"
       ? document.getElementById("mainAddBtn")
       : document.getElementById("specialAddBtn");
-
+      const saleBox = document.getElementById("saleControlBox");
   if(!addWrap) return;
 
   const opening = addWrap.style.display !== "block";
@@ -595,6 +597,7 @@ if(opening){
   showEditMode(type, false);
   
     addWrap.style.display = "block";
+  if(type === "special") saleBox.style.display = "none";
     if(listBox) listBox.style.display = "none";
 
     btn.innerText = "Cancel";
@@ -610,6 +613,7 @@ if(opening){
     }
 
     addWrap.style.display = "none";
+  if(type === "special") saleBox.style.display = "block";
     if(listBox) listBox.style.display = "block";
 
     btn.innerText = "+ Add";
