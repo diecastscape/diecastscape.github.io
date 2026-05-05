@@ -319,7 +319,9 @@ window.toggleList = function(type){
       : document.getElementById("specialAddBtn");
 
   if(addWrap) addWrap.style.display = "none";
-
+if(type === "special"){
+  document.getElementById("saleControlBox").style.display = "block";
+}
   if(type==="main"){
     resetMainForm();
   }else{
