@@ -149,15 +149,22 @@ setTimeout(()=> msg.innerText="", 2500);
 };
 
 document.addEventListener("DOMContentLoaded", loadSaleConfig);
-function showEditMode(){
-  const bar = document.getElementById("editModeBar");
+
+function showEditMode(type){
+  const id =
+    type === "main"
+      ? "mainEditModeBar"
+      : "specialEditModeBar";
+
+  const bar = document.getElementById(id);
   if(bar) bar.style.display = "block";
 }
 
 function hideEditMode(){
-  const bar = document.getElementById("editModeBar");
-  if(bar) bar.style.display = "none";
+  document.getElementById("mainEditModeBar").style.display = "none";
+  document.getElementById("specialEditModeBar").style.display = "none";
 }
+
 window.saveProduct = async function(){
 
   const loader = document.getElementById("saveLoader");
@@ -442,8 +449,8 @@ window.editProduct = async function(type, id){
 
   editingId = id;
   editingType = type;
-  showEditMode();
-
+  showEditMode(type);
+  
   // open add form
   toggleAdd(type);
 const btn =
@@ -480,7 +487,9 @@ btn.classList.add("cancel-btn");
 
     document.getElementById("s-name").value = data.name || "";
     document.getElementById("s-price").value = data.price || "";
-
+    document.getElementById("s-shipping").value =
+  data.shippingText || "";
+    
     const list = document.getElementById("s-imagesList");
     list.innerHTML = "";
 
@@ -627,7 +636,7 @@ function resetSaleForm(){
 
   document.getElementById("s-name").value = "";
   document.getElementById("s-price").value = "";
-
+  document.getElementById("s-shipping").value = "";
   document.getElementById("s-saveBtn").innerText = "Save Product";
 
   const list = document.getElementById("s-imagesList");
@@ -658,7 +667,9 @@ window.saveSaleProduct = async function(){
 
   const name = document.getElementById("s-name").value.trim();
   const price = Number(document.getElementById("s-price").value);
-
+  const shippingText =
+  document.getElementById("s-shipping").value.trim();
+  
   msg.innerText = "";
 
   if(!name){
@@ -691,21 +702,23 @@ window.saveSaleProduct = async function(){
 if(editingId){
 
   await updateDoc(doc(db,"specialSaleProducts",editingId),{
-    name,
-    price,
-    images
-  });
+  name,
+  price,
+  shippingText,
+  images
+});
 
 }else{
 
   await addDoc(collection(db,"specialSaleProducts"),{
-    name,
-    price,
-    images,
-    active:true,
-    sold:false,
-    created:Date.now()
-  });
+  name,
+  price,
+  shippingText,
+  images,
+  active:true,
+  sold:false,
+  created:Date.now()
+});
 
 }
 
@@ -718,7 +731,7 @@ hideEditMode();
 document.getElementById("s-saveBtn").innerText = "Save Product";
     document.getElementById("s-name").value = "";
     document.getElementById("s-price").value = "";
-
+    document.getElementById("s-shipping").value = "";
     const list = document.getElementById("s-imagesList");
     list.innerHTML = "";
     for(let i=0;i<3;i++) addSaleImageField();
