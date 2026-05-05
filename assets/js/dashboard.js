@@ -150,16 +150,21 @@ setTimeout(()=> msg.innerText="", 2500);
 
 document.addEventListener("DOMContentLoaded", loadSaleConfig);
 
-function showEditMode(type){
+function showEditMode(type, editing = false){
   const id =
     type === "main"
       ? "mainEditModeBar"
       : "specialEditModeBar";
 
   const bar = document.getElementById(id);
-  if(bar) bar.style.display = "block";
-}
 
+  if(bar){
+    bar.style.display = "block";
+    bar.innerText = editing
+      ? "Editing Product"
+      : "Adding Product";
+  }
+}
 function hideEditMode(){
   document.getElementById("mainEditModeBar").style.display = "none";
   document.getElementById("specialEditModeBar").style.display = "none";
@@ -449,10 +454,9 @@ window.editProduct = async function(type, id){
 
   editingId = id;
   editingType = type;
-  showEditMode(type);
-  
-  // open add form
   toggleAdd(type);
+  showEditMode(type, true);
+
 const btn =
   type==="main"
     ? document.getElementById("mainAddBtn")
@@ -580,7 +584,7 @@ window.toggleAdd = function(type){
   const opening = addWrap.style.display !== "block";
 
   if(opening){
-
+showEditMode(type, false);
   // reset only when NOT editing
   if(!editingId){
     if(type==="main"){
