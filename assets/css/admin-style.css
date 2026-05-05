@@ -346,3 +346,17 @@ h5 {
 .edit-mode-bar{
   text-align: center;
 }
+@media (min-width: 768px){
+
+  #mainProducts,
+  #specialProducts{
+    display:grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap:12px;
+    align-items:start;
+  }
+
+  .admin-product{
+    margin:0;
+  }
+}
