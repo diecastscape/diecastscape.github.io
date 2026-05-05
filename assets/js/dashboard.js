@@ -582,10 +582,8 @@ window.toggleAdd = function(type){
   if(!addWrap) return;
 
   const opening = addWrap.style.display !== "block";
+if(opening){
 
-  if(opening){
-showEditMode(type, false);
-  // reset only when NOT editing
   if(!editingId){
     if(type==="main"){
       resetMainForm();
@@ -594,6 +592,8 @@ showEditMode(type, false);
     }
   }
 
+  showEditMode(type, false);
+  
     addWrap.style.display = "block";
     if(listBox) listBox.style.display = "none";
 
