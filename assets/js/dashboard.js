@@ -76,7 +76,6 @@ window.addEventListener("DOMContentLoaded", ()=>{
   }
 });
 
-};
 window.addImageField = function(){
   const list = document.getElementById("imagesList");
 
