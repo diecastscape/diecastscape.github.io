@@ -11,13 +11,14 @@ function buildProductHTML(p){
   const save = p.priceOld - p.priceNew;
 const imgs = p.images.map(im => `
   <div class="img-box">
-    <div class="img-loader"></div>
-    <img src="images/products-temp/${im.thumb}.webp"
-      data-full="images/products/${im.full}.webp"
-      onload="this.previousElementSibling.remove(); this.style.opacity=1"
-      style="opacity:0"
-      onclick="openLightbox(this.dataset.full)">
-  </div>
+  <div class="img-loader"></div>
+
+  <img 
+    src="images/products/${im.full}.webp"
+    onload="this.previousElementSibling.remove(); this.style.opacity=1"
+    style="opacity:0"
+    onclick="openLightbox(this.src)">
+</div>
 `).join("");
 
 const message =
