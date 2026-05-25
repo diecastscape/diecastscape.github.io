@@ -76,19 +76,18 @@ window.addEventListener("DOMContentLoaded", ()=>{
   }
 });
 
+};
 window.addImageField = function(){
   const list = document.getElementById("imagesList");
 
   const div = document.createElement("div");
 
   div.innerHTML = `
-    <input class="img-thumb" placeholder="Thumb path (products-temp)">
-    <input class="img-full" placeholder="Full path (products)">
+    <input class="img-full" placeholder="Image path (products)">
   `;
 
   list.appendChild(div);
 };
-
 
 // ===== SALE CONFIG =====
 const saleRef = doc(db,"siteConfig","sale");
@@ -197,20 +196,17 @@ if(btn.disabled) return;
     msg.innerText = "Enter prices";
     return;
   }
+const fulls = document.querySelectorAll(".img-full");
 
-  const thumbs = document.querySelectorAll(".img-thumb");
-  const fulls = document.querySelectorAll(".img-full");
+const images = [];
 
-  const images = [];
-
-  thumbs.forEach((t,i)=>{
-    if(t.value && fulls[i].value){
-      images.push({
-        thumb: t.value.trim(),
-        full: fulls[i].value.trim()
-      });
-    }
-  });
+fulls.forEach(f=>{
+  if(f.value){
+    images.push({
+      full: f.value.trim()
+    });
+  }
+});
 
   if(images.length === 0){
     msg.innerText = "Add at least 1 image";
@@ -494,9 +490,9 @@ btn.classList.add("cancel-btn");
     data.images.forEach(img=>{
       const div = document.createElement("div");
       div.innerHTML = `
-        <input class="img-thumb" value="${img.thumb}">
-        <input class="img-full" value="${img.full}">
-      `;
+  <input class="img-full" value="${img.full}">
+`;
+      
       list.appendChild(div);
     });
 
