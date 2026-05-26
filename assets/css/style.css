@@ -1033,3 +1033,38 @@ color:#5BC0BE;
 text-decoration:none;
 }
 
+.custom-note{
+  max-width: 520px;
+  margin: 4px auto -2px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: center;
+  opacity: .92;
+}
+
+.custom-note span{
+  color: #5BC0BE;
+  font-weight: 700;
+}
+
+.custom-cta{
+  max-width: 350px;
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+.custom-cta:hover{
+  transform: translateY(-2px);
+}
+
+.custom-cta:active{
+  transform: scale(.97);
+}
