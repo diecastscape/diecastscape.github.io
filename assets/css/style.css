@@ -439,6 +439,7 @@ html.light {
 .buy-btn{
   margin-top: 16px;
   display:inline-block;
+  
   background:#5BC0BE;
   color:#fff;
   padding:8px 18px;
@@ -446,6 +447,7 @@ html.light {
   text-decoration:none;
   font-weight:600;
   font-size:16px;
+  box-shadow:0 6px 14px rgba(37,211,102,.25);
   transition:.2s ease;
 }
 
@@ -1107,7 +1109,7 @@ text-decoration:none;
   top:10px;
   right:10px;
 
-  padding:6px 12px;
+  padding:4px 10px;
   border-radius:999px;
 
   background:rgba(255,255,255,0.12);
@@ -1117,7 +1119,7 @@ text-decoration:none;
   border:1px solid rgba(255,255,255,0.2);
 
   color:#fff;
-  font-size:11px;
+  font-size:10px;
   font-weight:700;
   letter-spacing:.3px;
 
