@@ -436,15 +436,25 @@ html.light {
   color: var(--dic-ount)
 }
 
-.buy-btn {
+.buy-btn{
   margin-top: 16px;
-  display: inline-block;
-  background: #5BC0BE;
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
+  display:inline-block;
+  background:#5BC0BE;
+  color:#fff;
+  padding:8px 18px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+  font-size:16px;
+  transition:.2s ease;
+}
+
+.buy-btn:hover{
+  transform:translateY(-1px);
+}
+
+.buy-btn:active{
+  transform:scale(.98);
 }
 #lightbox {
   position: fixed;
@@ -1061,25 +1071,25 @@ text-decoration:none;
   gap:10px; /* button closer to text */
   flex-wrap:wrap;
 }
-
-
 .customize-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  padding:10px 18px; /* wider button */
-  border-radius:999px;
-
+  display:inline-block;
   background:linear-gradient(135deg,#25d366,#128c7e);
   color:#fff;
+  padding:8px 18px;
+  border-radius:8px;
   text-decoration:none;
-
-  font-size:9px;
-  font-weight:700;
-
+  font-weight:600;
+  font-size:16px;
   box-shadow:0 6px 14px rgba(37,211,102,.25);
   transition:.2s ease;
+}
+
+.customize-btn:hover{
+  transform:translateY(-1px);
+}
+
+.customize-btn:active{
+  transform:scale(.98);
 }
 
 .customize-btn:hover{
