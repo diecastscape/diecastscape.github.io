@@ -1093,3 +1093,28 @@ text-decoration:none;
 .customize-btn:active{
   transform:scale(.97);
 }
+.slider-wrap{
+  position:relative;
+}
+.offer-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+
+  padding:6px 12px;
+  border-radius:999px;
+
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+
+  border:1px solid rgba(255,255,255,0.2);
+
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.3px;
+
+  z-index:5;
+  box-shadow:0 4px 15px rgba(0,0,0,.25);
+}
