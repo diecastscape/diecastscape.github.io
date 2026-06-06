@@ -1055,24 +1055,20 @@ text-decoration:none;
   transform: scale(.97);
 }
 .customize-row{
-  margin-top:10px;
+  margin-top:8px;
   display:flex;
   align-items:center;
   gap:10px; /* button closer to text */
   flex-wrap:wrap;
 }
 
-.customize-row span{
-  font-size:9px;
-  color:var(--text-muted);
-}
 
 .customize-btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
 
-  padding:6px 14px; /* wider button */
+  padding:10px 18px; /* wider button */
   border-radius:999px;
 
   background:linear-gradient(135deg,#25d366,#128c7e);
