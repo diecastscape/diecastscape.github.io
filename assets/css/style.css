@@ -436,28 +436,6 @@ html.light {
   color: var(--dic-ount)
 }
 
-.buy-btn{
-  margin-top: 16px;
-  display:inline-block;
-  
-  background:#5BC0BE;
-  color:#fff;
-  padding:8px 18px;
-  border-radius:8px;
-  text-decoration:none;
-  font-weight:600;
-  font-size:16px;
-  box-shadow:0 6px 14px rgba(37,211,102,.25);
-  transition:.2s ease;
-}
-
-.buy-btn:hover{
-  transform:translateY(-1px);
-}
-
-.buy-btn:active{
-  transform:scale(.98);
-}
 #lightbox {
   position: fixed;
   inset: 0;
@@ -1067,39 +1045,45 @@ text-decoration:none;
   transform: scale(.97);
 }
 .customize-row{
-  margin-top:8px;
+  margin-top:10px;
   display:flex;
   align-items:center;
   gap:10px; /* button closer to text */
   flex-wrap:wrap;
 }
+.buy-btn,
 .customize-btn{
-  display:inline-block;
-  background:linear-gradient(135deg,#25d366,#128c7e);
-  color:#fff;
-  padding:8px 18px;
-  border-radius:8px;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  height:52px;
+  padding:0 18px;
+
+  border-radius:10px;
   text-decoration:none;
-  font-weight:600;
+
+  color:#fff;
   font-size:16px;
+  font-weight:700;
+
   box-shadow:0 6px 14px rgba(37,211,102,.25);
   transition:.2s ease;
 }
 
+.buy-btn{
+  background:linear-gradient(135deg,#5BC0BE,#36B8B3);
+}
+
+.customize-btn{
+  background:linear-gradient(135deg,#25d366,#128c7e);
+}
+
+.buy-btn:hover,
 .customize-btn:hover{
   transform:translateY(-1px);
 }
-
-.customize-btn:active{
-  transform:scale(.98);
-}
-
-.customize-btn:hover{
-  transform:translateY(-1px);
-}
-
-.customize-btn:active{
-  transform:scale(.97);
 }
 .slider-wrap{
   position:relative;
