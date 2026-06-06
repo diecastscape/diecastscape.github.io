@@ -80,7 +80,7 @@ const whatsappText = encodeURIComponent(message);
     <div class="product-details">
       ${p.detailsHTML}
     </div>
-
+<div class="customize-row">
     <a class="buy-btn"
       href="https://wa.me/918792744018?text=${whatsappText}"
       target="_blank">
@@ -96,6 +96,7 @@ const whatsappText = encodeURIComponent(message);
   >
     Customize →
   </a>
+  </div>
   </div>
   `;
 }
