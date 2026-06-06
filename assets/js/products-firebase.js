@@ -87,7 +87,6 @@ const whatsappText = encodeURIComponent(message);
       Order on WhatsApp
     </a>
 	
-<div class="customize-row">
 <a 
     class="customize-btn"
     href="https://wa.me/918792744018?text=${encodeURIComponent(
@@ -97,7 +96,6 @@ const whatsappText = encodeURIComponent(message);
   >
     Customize →
   </a>
-</div>
   </div>
   `;
 }
