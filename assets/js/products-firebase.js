@@ -86,10 +86,9 @@ const whatsappText = encodeURIComponent(message);
       target="_blank">
       Order on WhatsApp
     </a>
+	
 <div class="customize-row">
-  <span>Wanna customize this display?</span>
-
-  <a 
+<a 
     class="customize-btn"
     href="https://wa.me/918792744018?text=${encodeURIComponent(
       `Hi, I want to customize the "${p.name}" display.`
