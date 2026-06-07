@@ -165,14 +165,6 @@ html.light {
   .theme-toggle {
   font-size: 18px;
   }
-  .customize-row{
-    justify-content:center;
-  }
-
-  .buy-btn,
-  .customize-btn{
-    flex:0 0 400px;
-  }
 }
 .hero {
   min-height: 70vh;
@@ -1071,7 +1063,6 @@ text-decoration:none;
   color:#fff;
   font-size:15px;
   font-weight:600;
-  box-sizing:border-box;
 }
 
 .buy-btn{
