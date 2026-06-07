@@ -67,12 +67,13 @@ Is it available?`;
   
 ${p.shippingText || "Shipping charges applicable"}
 </div>
-
+<div class="customize-row">
     <a class="buy-btn"
       href="https://wa.me/918792744018?text=${whatsappText}"
       target="_blank">
       Book Now
     </a>
+	</div>
   </div>
   `;
 }
