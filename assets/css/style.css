@@ -165,6 +165,14 @@ html.light {
   .theme-toggle {
   font-size: 18px;
   }
+  .customize-row{
+    justify-content:center;
+  }
+
+  .buy-btn,
+  .customize-btn{
+    flex:0 0 400px;
+  }
 }
 .hero {
   min-height: 70vh;
@@ -1045,26 +1053,26 @@ text-decoration:none;
   transform: scale(.97);
 }
 .customize-row{
-  margin-top:10px;
   display:flex;
-  align-items:center;
-  gap:10px; /* button closer to text */
-  flex-wrap:wrap;
+  gap:10px;
+  margin-top:16px;
 }
 
 .buy-btn,
 .customize-btn{
   flex:1;
+  max-width:200px; /* desktop limit */
+  height:30px;     /* exact same height */
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:7px 16px;
-  border-radius:12px;
+
+  border-radius:10px;
   text-decoration:none;
   color:#fff;
-  font-size:14px;
+  font-size:16px;
   font-weight:600;
-  transition:.2s ease;
+  box-sizing:border-box;
 }
 
 .buy-btn{
@@ -1081,7 +1089,7 @@ text-decoration:none;
 .customize-btn:hover{
   transform:translateY(-1px);
 }
-}
+
 .slider-wrap{
   position:relative;
 }
