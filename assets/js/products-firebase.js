@@ -93,9 +93,7 @@ const whatsappText = encodeURIComponent(message);
       `Hi, I want to customize the "${p.name}" display.`
     )}"
     target="_blank"
-  >
-    Customize →
-  </a>
+  >Customize</a>
   </div>
   </div>
   `;
