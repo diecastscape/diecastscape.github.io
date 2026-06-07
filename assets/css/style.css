@@ -1058,22 +1058,23 @@ text-decoration:none;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:8px 18px;
-  border-radius:10px;
+  padding:7px 16px;
+  border-radius:12px;
   text-decoration:none;
   color:#fff;
-  font-size:16px;
+  font-size:14px;
   font-weight:600;
-  box-shadow:0 6px 14px rgba(37,211,102,.25);
   transition:.2s ease;
 }
 
 .buy-btn{
   background:linear-gradient(135deg,#5BC0BE,#36B8B3);
+  box-shadow:0 6px 14px rgba(91,192,190,.30);
 }
 
 .customize-btn{
   background:linear-gradient(135deg,#25d366,#128c7e);
+  box-shadow:0 6px 14px rgba(37,211,102,.30);
 }
 
 .buy-btn:hover,
