@@ -1052,17 +1052,17 @@ text-decoration:none;
 
 .buy-btn,
 .customize-btn{
-  flex:1;
-  max-width:170px; /* desktop limit */
-  height:30px;     /* exact same height */
   display:flex;
   align-items:center;
   justify-content:center;
   border-radius:10px;
+  height:32px;
+  padding:0 10px; 
   text-decoration:none;
   color:#fff;
   font-size:15px;
   font-weight:600;
+  box-sizing:border-box;
 }
 
 .buy-btn{
