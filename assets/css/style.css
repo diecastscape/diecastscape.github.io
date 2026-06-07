@@ -1055,22 +1055,21 @@ text-decoration:none;
 .customize-row{
   display:flex;
   gap:10px;
-  margin-top:16px;
+  margin-top:13px;
 }
 
 .buy-btn,
 .customize-btn{
   flex:1;
-  max-width:200px; /* desktop limit */
+  max-width:170px; /* desktop limit */
   height:30px;     /* exact same height */
   display:flex;
   align-items:center;
   justify-content:center;
-
   border-radius:10px;
   text-decoration:none;
   color:#fff;
-  font-size:16px;
+  font-size:15px;
   font-weight:600;
   box-sizing:border-box;
 }
