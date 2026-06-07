@@ -117,10 +117,6 @@ html.light {
 .ship {
   font-size: 12px;
 }
-.buy-btn {
-  margin-top: 10px;
-  padding: 8px 16px;
-}
 }
 @media (min-width: 650px) {
   .header-inner {
@@ -1046,11 +1042,8 @@ text-decoration:none;
 }
 .customize-row{
   display:flex;
-  align-items:center;
-  justify-content:center;
   gap:10px;
   margin-top:13px;
-  flex-wrap:wrap;
 }
 
 .buy-btn,
