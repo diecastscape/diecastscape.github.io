@@ -44,28 +44,7 @@ Each piece is carefully built with attention to scale, detail, and finish—perf
 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
    </svg></a>
   </div>
-    <p>Bring your favorite car brand to life with a custom-made display, designed exactly the way you imagine it.</p><br>
-  <strong>AT FREE OF COST</strong>
-<div class="hero-buttons">
-<a 
-  class="custom-cta" 
-  href="https://wa.me/918792744018?text=Hi%20Diecast.scape,%20I%20want%20a%20customized%20miniature%20display."
-  target="_blank"
->
-  Customize
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
-<path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-</a>
-</div>
-  <div class="hero-buttons">
-    <a class="sale-cta" href="/special-sale/">
-  <div class="sale-cta-inner">
-    <span class="sale-title">Special Sale</span>
-    <span class="sale-timer" id="saleTimeText">Loading...</span>
-  </div>
-  </a>
-  </div>
+    
 </section>
 <section class="promo-grid">
 
@@ -78,7 +57,7 @@ Crafted For Collectors
 </p>
 
 <h2>
-  <strong>Miniature</strong> <br>
+  Miniature <br>
 Display
 </h2>
 
@@ -87,7 +66,9 @@ Save Upto 40%
 </span>
 
 <a href="#products" class="promo-btn">
-SHOP NOW →
+SHOP NOW <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+<path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
 </a>
 
 </div>
@@ -103,7 +84,7 @@ Frame Your Build
 </p>
 
 <h2>
-  <strong>Photo</strong> <br>
+  Photo <br>
 Frame
 </h2>
 
@@ -112,7 +93,9 @@ Save Upto 40%
 </span>
 
 <a href="#products" class="promo-btn">
-SHOP NOW →
+SHOP NOW <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+<path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
 </a>
 
 </div>
@@ -120,27 +103,7 @@ SHOP NOW →
 </div>
 
 </section>
-  <div class="coming-soon">
-  New product.<span>Coming up</span>
-  </div>
-  <section id="products" class="products">
-<input
-  type="text"
-  id="searchInput"
-  placeholder="Search..."
-  onkeyup="searchProducts()"
-  class="search-bar">
-    
-  <div id="productsContainer">
-    <div id="productsLoader">
-  <div class="border-top"></div>
-  <div class="loader-grid">
-    <div></div><div></div><div></div>
-    <div></div><div></div><div></div>
-    <div></div><div></div><div></div>
-  </div>
-</div>
-</div>
+  
 
 <a class="wa-float"
 href="https://wa.me/918792744018?text=Hi%20I%20need%20help%20regarding%20Diecast.scape."
@@ -214,29 +177,5 @@ Thank you for visiting.
 </nav>
 
 <script type="module" src="/assets/js/firebase-init.js"></script>
-<script type="module" src="/assets/js/products-firebase.js"></script>
-<script src="/assets/js/products.js"></script>
-<script src="/assets/js/config.js"></script>
-  <script>
-  const saleDate = new Date(SALE_CONFIG.start);
-  const now = new Date();
-
-  const timeText = document.getElementById("saleTimeText");
-
-  const formatted = saleDate.toLocaleString("en-IN", {
-    day: "numeric",
-    month: "short",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-    timeZone: "Asia/Kolkata"
-  });
-
-  if (SALE_CONFIG.enabled || now >= saleDate) {
-    timeText.innerHTML = "🔥 LIVE NOW";
-  } else {
-    timeText.innerHTML = `Live on ${formatted}`;
-  }
-</script>
 </body>
 </html>
