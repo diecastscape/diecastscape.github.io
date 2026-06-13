@@ -193,6 +193,93 @@ html.light {
   border: 1px solid #6ee7f9;
   color: #6ee7f9;
 }
+.promo-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:14px;
+padding:20px;
+align-items:start;
+}
+.promo-card{
+width:100%;
+aspect-ratio:3 / 4;
+border-radius:24px;
+overflow:hidden;
+position:relative;
+background-size:cover;
+background-position:center;
+}
+.display-card{
+background:
+linear-gradient(
+rgba(0,0,0,.15),
+rgba(0,0,0,.65)
+),
+
+url("display.jpg");
+}
+.frame-card{
+background:
+linear-gradient(
+rgba(0,0,0,.15),
+rgba(0,0,0,.65)
+),
+
+url("frame.jpg");
+}
+
+.promo-tag{
+color:#5BC0BE;  
+font-size:14px;
+opacity:.85;
+letter-spacing:2px;
+}
+
+.promo-overlay h2{
+font-size:42px;
+margin:8px 0;
+text-align:left;
+line-height:1.05;
+}
+.promo-overlay{
+left:20px;
+right:20px;
+bottom:24px;
+display:flex;
+flex-direction:column;
+align-items:flex-start; /* ← shift all content left */
+text-align:left; /* ← force text left */
+}
+.promo-tag,
+.promo-save{
+text-align:left;
+}
+
+.promo-btn{
+align-self:flex-start;
+}
+.promo-save{
+display:block;
+font-size:18px;
+margin-top:10px;
+}
+
+.promo-btn{
+display:inline-flex;
+margin-top:20px;
+padding:14px 22px;
+background:#000;
+color:#fff;
+text-decoration:none;
+border-radius:8px;
+font-size:15px;
+}
+
+@media(max-width:768px){
+.promo-grid{
+grid-template-columns:1fr;
+}
+}
 .products {
   padding: 0px;
 }
