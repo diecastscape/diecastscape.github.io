@@ -217,7 +217,7 @@ rgba(0,0,0,.15),
 rgba(0,0,0,.65)
 ),
 
-url('/assets/images/miniature-display.webp');
+url('/images/miniature-display.webp');
 }
 .frame-card{
 background:
@@ -226,7 +226,7 @@ rgba(0,0,0,.15),
 rgba(0,0,0,.65)
 ),
 
-url('/assets/images/miniature-display.webp');
+url('/images/miniature-display.webp');
 }
 
 .promo-tag{
@@ -242,10 +242,12 @@ font-size:42px;
 line-height:1;
 margin:8px 0;
 }
+
 .promo-overlay{
+position:absolute;
 left:20px;
 right:20px;
-bottom:20px;
+bottom:24px;
 
 display:flex;
 flex-direction:column;
