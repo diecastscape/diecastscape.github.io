@@ -193,13 +193,14 @@ html.light {
   border: 1px solid #6ee7f9;
   color: #6ee7f9;
 }
+
 .promo-grid{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:1fr 1fr;
 gap:14px;
 padding:20px;
-align-items:start;
 }
+
 .promo-card{
 width:100%;
 aspect-ratio:3 / 4;
@@ -228,6 +229,14 @@ rgba(0,0,0,.65)
 url("frame.jpg");
 }
 
+.promo-overlay{
+position:absolute;
+left:20px;
+right:20px;
+bottom:24px;
+color:white;
+}
+
 .promo-tag{
 color:#5BC0BE;  
 font-size:14px;
@@ -237,27 +246,10 @@ letter-spacing:2px;
 
 .promo-overlay h2{
 font-size:42px;
+line-height:1;
 margin:8px 0;
-text-align:left;
-line-height:1.05;
-}
-.promo-overlay{
-left:20px;
-right:20px;
-bottom:24px;
-display:flex;
-flex-direction:column;
-align-items:flex-start; /* ← shift all content left */
-text-align:left; /* ← force text left */
-}
-.promo-tag,
-.promo-save{
-text-align:left;
 }
 
-.promo-btn{
-align-self:flex-start;
-}
 .promo-save{
 display:block;
 font-size:18px;
