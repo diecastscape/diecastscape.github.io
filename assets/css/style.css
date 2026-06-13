@@ -245,7 +245,7 @@ margin:8px 0;
 .promo-overlay{
 left:20px;
 right:20px;
-bottom:24px;
+bottom:20px;
 
 display:flex;
 flex-direction:column;
@@ -258,12 +258,12 @@ text-align:left; /* ← force text left */
 .promo-save{
 display:block;
 font-size:18px;
-margin-top:10px;
+margin-top:8px;
 }
 
 .promo-btn{
 display:inline-flex;
-margin-top:20px;
+margin-top:18px;
 padding:14px 22px;
 background:#000;
 color:#fff;
