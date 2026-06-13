@@ -19,27 +19,6 @@ body {
 
 /* ===== THEME VARIABLES ===== */
 :root {
-  --bg-main: #0a0f1f;
-  --bg-header:#E4E4E2;
-  --sb-titel:#E8ECEE;
-  --sb-discr:#C7C7C7;
-  --com-soon:#bfcad9;
-  --dio-tital:#fff;
-  --pri-tag:#E3E3E3;
-  --dic-ount:#B7FFAD;
-  --pag-h:#fff;
-  --pag-p:#CBCCCD;
-  --text-main:#fff;
-  --text-muted:#C7C7C7;
-  --accent: #5BC0BE;
-  --bg-des:#13224a;
-  --bg-des2:#0a7cff33;
-  --pag-p1:#CBCCCD;
-  
-}
-
-/* LIGHT THEME */
-html.light {
   --bg-main: #F5F7FA;
   --bg-header: #E4E4E2;
   --sb-titel:#171717;
@@ -55,6 +34,26 @@ html.light {
   --accent: #0AA1A7;
   --bg-des:#F5F7FA;
   --bg-des2:#F5F7FA;
+  --pag-p1:#CBCCCD;
+}
+
+/* LIGHT THEME */
+html.light {
+  --bg-main: #0a0f1f;
+  --bg-header:#E4E4E2;
+  --sb-titel:#E8ECEE;
+  --sb-discr:#C7C7C7;
+  --com-soon:#bfcad9;
+  --dio-tital:#fff;
+  --pri-tag:#E3E3E3;
+  --dic-ount:#B7FFAD;
+  --pag-h:#fff;
+  --pag-p:#CBCCCD;
+  --text-main:#fff;
+  --text-muted:#C7C7C7;
+  --accent: #5BC0BE;
+  --bg-des:#13224a;
+  --bg-des2:#0a7cff33;
   --pag-p1:#CBCCCD;
 }
 .site-header {
