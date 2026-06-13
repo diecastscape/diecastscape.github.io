@@ -246,8 +246,21 @@ letter-spacing:2px;
 
 .promo-overlay h2{
 font-size:42px;
+ text-align:left; 
 line-height:1;
 margin:8px 0;
+}
+.promo-overlay{
+left:20px;
+right:20px;
+bottom:24px;
+
+display:flex;
+flex-direction:column;
+
+align-items:flex-start; /* ← shift all content left */
+
+text-align:left; /* ← force text left */
 }
 
 .promo-save{
