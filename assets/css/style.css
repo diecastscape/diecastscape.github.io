@@ -288,7 +288,6 @@ text-align:center;
 }
 
 .why-icon{
-color:var(--pag-h);
 margin-bottom:18px;
 }
 
@@ -323,11 +322,19 @@ text-align:center;
 .trust-item span{
 color: var(--pag-p);
 }
-.trust-item object{
-color:var(--pag-h);
 
+
+.svg-icon{
+background:var(--pag-h); /* icon color */
+-webkit-mask:
+var(--svg)
+center/contain
+no-repeat;
+mask:
+var(--svg)
+center/contain
+no-repeat;
 }
-
 .search-bar {
   width: 90%;
   max-width: 1000px;
