@@ -268,19 +268,14 @@ repeat(2,1fr);
 }
   }
 
-.why-section{
-margin-top:30px;
-width:100%;
-max-hight:45px;
-background:#020b28;
-color:white;
-}
 
 .why-title{
+padding:80px 20px;
 text-align:center;
 font-size:34px;
 margin-bottom:50px;
 font-weight:700;
+color: var(--pag-h);
 }
 
 .why-grid{
@@ -289,7 +284,6 @@ gap:33px;
 }
 
 .why-card{
-padding:28px;
 text-align:center;
 }
 
@@ -301,10 +295,11 @@ margin-bottom:18px;
 .why-card h3{
 font-size:22px;
 margin-bottom:10px;
+color: var(--pag-h);
 }
 
 .why-card p{
-color:#b8bfd1;
+color: var(--pag-p);
 line-height:1.7;
 font-size:15px;
 }
@@ -326,7 +321,7 @@ text-align:center;
 }
 
 .trust-item span{
-color:#d8d8d8;
+color: var(--pag-p);
 }
 
 
