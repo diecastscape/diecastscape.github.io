@@ -269,7 +269,8 @@ repeat(2,1fr);
   }
 
 .why-section{
-padding:80px 20px;
+width:100%;
+hight:45px;
 background:#020b28;
 color:white;
 }
