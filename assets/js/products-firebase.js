@@ -14,7 +14,7 @@ const imgs = p.images.map(im => `
   <div class="img-loader"></div>
 
   <img 
-    src="images/products/${im.full}.webp"
+    src="/images/products/${im.full}.webp"
     onload="this.previousElementSibling.remove(); this.style.opacity=1"
     style="opacity:0"
     onclick="openLightbox(this.src)">
