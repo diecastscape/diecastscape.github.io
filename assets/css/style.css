@@ -326,6 +326,8 @@ color: var(--pag-p);
 }
 
 .icon{
+width:50;
+hight:50;
 color:var(--pag-h);
 fill:currentColor;
 }
