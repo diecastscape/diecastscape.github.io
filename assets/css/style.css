@@ -179,6 +179,7 @@ padding:20px;
 }
 .promo-tag{
 color:#5BC0BE;
+  font-weight: 600;
 font-size:14px;
 opacity:.85;
 letter-spacing:2px;
@@ -249,16 +250,84 @@ color:#000;
 text-decoration:none;
 border-radius:8px;
 font-size:15px;
+  font-weight: 800;
 }
 
 @media(max-width:768px){
 .promo-grid{
 grid-template-columns:1fr;
 }
+
+.why-title{
+font-size:28px;
 }
-.products {
-  padding: 0px;
+
+.trust-row{
+grid-template-columns:
+repeat(2,1fr);
 }
+  }
+
+.why-section{
+padding:80px 20px;
+background:#020b28;
+color:white;
+}
+
+.why-title{
+text-align:center;
+font-size:34px;
+margin-bottom:50px;
+font-weight:700;
+}
+
+.why-grid{
+display:grid;
+gap:33px;
+}
+
+.why-card{
+padding:28px;
+text-align:center;
+}
+
+.why-icon{
+font-size:38px;
+margin-bottom:18px;
+}
+
+.why-card h3{
+font-size:22px;
+margin-bottom:10px;
+}
+
+.why-card p{
+color:#b8bfd1;
+line-height:1.7;
+font-size:15px;
+}
+
+.trust-row{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+margin-top:50px;
+}
+
+.trust-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
+font-size:14px;
+text-align:center;
+}
+
+.trust-item span{
+color:#d8d8d8;
+}
+
+
 .search-bar {
   width: 90%;
   max-width: 1000px;
