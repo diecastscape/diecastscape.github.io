@@ -201,20 +201,12 @@ gap:14px;
 padding:20px;
 }
 
-.display-card{
-background:
-linear-gradient(
-rgba(0,0,0,.15),
-rgba(0,0,0,.65)
-),
-}
-
 .promo-tag{
 color:#5BC0BE;  
 font-size:14px;
 opacity:.85;
 letter-spacing:2px;
-  margin-bottom:10px;
+  margin-bottom:1px;
 }
 .promo-card{
   position:relative;
@@ -247,7 +239,11 @@ letter-spacing:2px;
 
   padding:24px;
   color:white;
-
+background:
+  linear-gradient(
+  transparent,
+  rgba(0,0,0,.65)
+  );
 }
 .promo-overlay h2{
 font-size:42px;
@@ -260,7 +256,7 @@ margin-bottom:8px;
 .promo-save{
 display:block;
 font-size:18px;
-margin-bottom:10px;
+margin-bottom:8px;
 }
 
 .promo-btn{
