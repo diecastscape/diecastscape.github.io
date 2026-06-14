@@ -200,14 +200,16 @@ grid-template-columns:1fr 1fr;
 gap:14px;
 padding:20px;
 }
-
 .promo-tag{
-color:#5BC0BE;  
+color:#5BC0BE;
 font-size:14px;
 opacity:.85;
 letter-spacing:2px;
-  margin-bottom:1px;
+
+margin-bottom:-8px; /* bring closer */
+transform:translateY(8px);
 }
+
 .promo-card{
   position:relative;
   width:100%;
@@ -245,14 +247,15 @@ background:
   rgba(0,0,0,.65)
   );
 }
+
 .promo-overlay h2{
 font-size:42px;
- text-align:left; 
+text-align:left;
 line-height:0.9;
+
+margin-top:0;
 margin-bottom:8px;
 }
-
-
 .promo-save{
 display:block;
 font-size:18px;
