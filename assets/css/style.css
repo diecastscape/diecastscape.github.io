@@ -288,7 +288,7 @@ text-align:center;
 }
 
 .why-icon{
-font-size:38px;
+color:var(--pag-h);
 margin-bottom:18px;
 }
 
@@ -323,7 +323,10 @@ text-align:center;
 .trust-item span{
 color: var(--pag-p);
 }
+.trust-item object{
+color:var(--pag-h);
 
+}
 
 .search-bar {
   width: 90%;
