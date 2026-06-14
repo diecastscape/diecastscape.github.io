@@ -269,8 +269,9 @@ repeat(2,1fr);
   }
 
 .why-section{
+margin-top:30px;
 width:100%;
-hight:45px;
+max-hight:45px;
 background:#020b28;
 color:white;
 }
