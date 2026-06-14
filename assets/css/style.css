@@ -326,13 +326,16 @@ display:flex;
 justify-content:center;
 align-items:center;
 }
-
 .icon{
-width:50px !important;
-height:50px !important;
-display:block;
+width:50px;
+height:50px;
+background-color:currentColor;
 color:var(--pag-h);
-fill:currentColor;
+-webkit-mask:
+var(--svg) center/contain no-repeat;
+mask:
+var(--svg) center/contain no-repeat;
+flex-shrink:0;
 }
 .trust-item .icon{
 width:28px !important;
