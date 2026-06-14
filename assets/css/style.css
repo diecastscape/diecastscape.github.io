@@ -170,29 +170,6 @@ html.light {
 }
 .hero h1 { font-size: clamp(28px, 5vw, 42px); margin-bottom: 10px; }
 .hero p { opacity: .8; margin-bottom: 18px; }
-.hero-buttons {
-  display: flex;
-  flex-direction: column;   /* stack vertically */
-  align-items: center;
-  gap: 14px;               /* 👈 PERFECT spacing between buttons */
-  margin-top: 14px;
-}
-.cta { 
-  max-width: 250px;      /* control how wide it can go on desktop */
-  display: inline-block;
-  padding: 12px 18px; 
-  border-radius: 999px; 
-  background: linear-gradient(135deg, #6ee7f9, #60a5fa); 
-  color: #001018; 
-  text-decoration: none; 
-  font-weight: 700; 
-  box-shadow: 0 10px 25px rgba(0,0,0,.25);
-}
-.cta.outline {
-  background: transparent;
-  border: 1px solid #6ee7f9;
-  color: #6ee7f9;
-}
 
 .promo-grid{
 display:grid;
@@ -206,7 +183,7 @@ font-size:14px;
 opacity:.85;
 letter-spacing:2px;
 
-margin-bottom:-8px; /* bring closer */
+margin-bottom:1px; /* bring closer */
 transform:translateY(8px);
 }
 
@@ -251,7 +228,7 @@ background:
 .promo-overlay h2{
 font-size:42px;
 text-align:left;
-line-height:0.9;
+line-height:1;
 
 margin-top:0;
 margin-bottom:8px;
@@ -267,8 +244,8 @@ display:inline-flex;
 margin-top:18px;
 align-items: center;  
 padding:14px 22px;
-background:#000;
-color:#fff;
+background:#DBDBDB;
+color:#000;
 text-decoration:none;
 border-radius:8px;
 font-size:15px;
