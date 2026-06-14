@@ -382,9 +382,9 @@ transform 6s linear;
 
 .showcase-content{
 position:absolute;
-left:20;
-right:20;
-bottom:20;
+left:20px;
+right:20px;
+bottom:20px;
 
 padding:28px;
 color:white;
