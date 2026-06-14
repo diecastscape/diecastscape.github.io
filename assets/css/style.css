@@ -288,10 +288,6 @@ gap:33px;
 text-align:center;
 }
 
-.why-icon{
-margin-bottom:18px;
-}
-
 .why-card h3{
 font-size:22px;
 margin-bottom:10px;
@@ -324,14 +320,24 @@ text-align:center;
 .trust-item span{
 color: var(--pag-p);
 }
+.why-icon{
+margin-bottom:18px;
+display:flex;
+justify-content:center;
+align-items:center;
+}
 
 .icon{
-width:50;
-hight:50;
+width:50px !important;
+height:50px !important;
+display:block;
 color:var(--pag-h);
 fill:currentColor;
 }
-
+.trust-item .icon{
+width:28px !important;
+height:28px !important;
+}
 .search-bar {
   width: 90%;
   max-width: 1000px;
