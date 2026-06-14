@@ -325,56 +325,11 @@ text-align:center;
 color: var(--pag-p);
 }
 
-
-.svg-icon{
-background:var(--pag-h);
-
-/* common */
--webkit-mask-repeat:no-repeat;
-mask-repeat:no-repeat;
-
--webkit-mask-position:center;
-mask-position:center;
-
--webkit-mask-size:contain;
-mask-size:contain;
-
+.icon{
+color:var(--pag-h);
+fill:currentColor;
 }
 
-/* icon files */
-
-.heart{
--webkit-mask-image:url("/assets/svg/heart.svg");
-mask-image:url("/assets/svg/heart.svg");
-}
-
-.diamond{
--webkit-mask-image:url("/assets/svg/diamond.svg");
-mask-image:url("/assets/svg/diamond.svg");
-}
-
-.secure{
--webkit-mask-image:url("/assets/svg/secure.svg");
-mask-image:url("/assets/svg/secure.svg");
-}
-
-.custom{
--webkit-mask-image:url("/assets/svg/custom.svg");
-mask-image:url("/assets/svg/custom.svg");
-}
-
-.packed{
--webkit-mask-image:url("/assets/svg/packed.svg");
-mask-image:url("/assets/svg/packed.svg");
-}
-.support{
--webkit-mask-image:url("/assets/svg/support.svg");
-mask-image:url("/assets/svg/support.svg");
-}
-.price{
--webkit-mask-image:url("/assets/svg/price.svg");
-mask-image:url("/assets/svg/price.svg");
-}
 .search-bar {
   width: 90%;
   max-width: 1000px;
