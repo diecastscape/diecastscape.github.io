@@ -80,3 +80,72 @@ document.querySelectorAll(".faq-question").forEach(btn => {
     }
   });
 
+
+const slides=[
+
+{
+img:"/images/a624a02a-c19c-4d00-9c11-dd2e19d7a545.webp",
+title:"Miniature Display",
+desc:"Handcrafted premium display setup.",
+url:"/products/diorama/"
+},
+
+{
+img:"/images/custom-available.webp",
+title:"Custom Build",
+desc:"Build your dream display.",
+url:"/products/diorama/"
+},
+
+{
+img:"/images/frames-display.webp",
+title:"Photo Frames",
+desc:"Frame your collection.",
+url:"/products/frames/"
+}
+
+];
+
+let current=0;
+
+function rotateShowcase(){
+
+current=
+(current+1)
+%
+slides.length;
+
+document
+.getElementById(
+"showcaseImage"
+)
+.src=
+slides[current].img;
+
+document
+.getElementById(
+"showcaseTitle"
+)
+.textContent=
+slides[current].title;
+
+document
+.getElementById(
+"showcaseDesc"
+)
+.textContent=
+slides[current].desc;
+
+document
+.getElementById(
+"showcaseLink"
+)
+.href=
+slides[current].url;
+
+}
+
+setInterval(
+rotateShowcase,
+4000
+);
