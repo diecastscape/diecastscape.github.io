@@ -271,10 +271,6 @@ repeat(2,1fr);
   border-radius:18px;
 }
 
-.showcase-content{
-  padding:16px !important;
-  justify-content:end;
-}
 
 .showcase-title{
   font-size:22px !important;
@@ -407,7 +403,7 @@ left:0;
 right:0;
 bottom:0;
 
-padding:28px;
+padding:0 0 7px 9px;
 color:white;
 background:
 linear-gradient(
