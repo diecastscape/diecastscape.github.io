@@ -269,7 +269,7 @@ repeat(2,1fr);
   
 
 .showcase-card{
-height:185px;
+height:185px  !important;
 }
 
 .showcase-content{
@@ -279,21 +279,21 @@ gap:4px; /* makes text closer */
 }
 
 .showcase-title{
-font-size:20px;
+font-size:20px  !important;
 line-height:1;
 margin:0; /* remove default h2 spacing */
 }
 
 .showcase-desc{
-font-size:12px;
+font-size:12px  !important;
 line-height:1.2;
-margin:2px 0 8px 0; /* closer */
+margin:2px 0 8px 0  !important; /* closer */
 }
 
 .showcase-btn{
-margin-top:0;
-padding:8px 14px;
-font-size:12px;
+margin-top:0  !important;
+padding:8px 14px  !important;
+font-size:12px  !important;
 }
 
 
@@ -383,7 +383,7 @@ padding:20px;
 display:block;
 position:relative;
 
-height:420px;
+height:280px;
 
 overflow:hidden;
 
