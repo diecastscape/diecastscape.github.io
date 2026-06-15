@@ -83,21 +83,21 @@ document.querySelectorAll(".faq-question").forEach(btn => {
 const slides=[
 
 {
-img:"/images/Image1.webp",
+img:"/images/products/Image1.webp",
 title:"Miniature Display",
 desc:"Handcrafted premium display setup.",
 url:"/products/diorama/"
 },
 
 {
-img:"/images/products/products/33.webp",
+img:"/images/products/33.webp",
 title:"Miniature Display",
 desc:"Handcrafted premium display setup.",
 url:"/products/diorama/"
 },
 
 {
-img:"/images/products/Image15.webp",
+img:"/images/products/Image16.webp",
 title:"Miniature Display",
 desc:"Handcrafted premium display setup.",
 url:"/products/diorama/"
