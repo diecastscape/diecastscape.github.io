@@ -84,26 +84,33 @@ document.querySelectorAll(".faq-question").forEach(btn => {
 const slides=[
 
 {
-img:"/images/a624a02a-c19c-4d00-9c11-dd2e19d7a545.webp",
+img:"/images/Image1.webp",
 title:"Miniature Display",
 desc:"Handcrafted premium display setup.",
 url:"/products/diorama/"
 },
 
 {
+img:"/images/products/products/33.webp",
+title:"Miniature Display",
+desc:"Handcrafted premium display setup.",
+url:"/products/diorama/"
+},
+  
+
+{
+img:"/images/products/Image15",
+title:"Miniature Display",
+desc:"Handcrafted premium display setup.",
+url:"/products/diorama/"
+},
+{
 img:"/images/custom-available.webp",
 title:"Custom Build",
 desc:"Build your dream display.",
-url:"/products/diorama/"
-},
-
-{
-img:"/images/frames-display.webp",
-title:"Photo Frames",
-desc:"Frame your collection.",
-url:"/products/frames/"
+url:"href="https://wa.me/918792744018?text=Hi%20Diecast.scape,%20I%20want%20a%20customized%20miniature%20display."
+  target="_blank""
 }
-
 ];
 
 let current=0;
