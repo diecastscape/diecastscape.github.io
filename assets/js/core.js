@@ -80,7 +80,6 @@ document.querySelectorAll(".faq-question").forEach(btn => {
     }
   });
 
-
 const slides=[
 
 {
@@ -96,63 +95,41 @@ title:"Miniature Display",
 desc:"Handcrafted premium display setup.",
 url:"/products/diorama/"
 },
-  
 
 {
-img:"/images/products/Image15",
+img:"/images/products/Image15.webp",
 title:"Miniature Display",
 desc:"Handcrafted premium display setup.",
 url:"/products/diorama/"
 },
+
 {
 img:"/images/custom-available.webp",
 title:"Custom Build",
 desc:"Build your dream display.",
-url:"href="https://wa.me/918792744018?text=Hi%20Diecast.scape,%20I%20want%20a%20customized%20miniature%20display."
-  target="_blank""
+url:"https://wa.me/918792744018?text=Hi%20Diecast.scape,%20I%20want%20a%20customized%20miniature%20display."
 }
+
 ];
 
 let current=0;
 
 function rotateShowcase(){
 
-current=
-(current+1)
-%
-slides.length;
+current=(current+1)%slides.length;
 
-document
-.getElementById(
-"showcaseImage"
-)
-.src=
+document.getElementById("showcaseImage").src=
 slides[current].img;
 
-document
-.getElementById(
-"showcaseTitle"
-)
-.textContent=
+document.getElementById("showcaseTitle").textContent=
 slides[current].title;
 
-document
-.getElementById(
-"showcaseDesc"
-)
-.textContent=
+document.getElementById("showcaseDesc").textContent=
 slides[current].desc;
 
-document
-.getElementById(
-"showcaseLink"
-)
-.href=
+document.getElementById("showcaseLink").href=
 slides[current].url;
 
 }
 
-setInterval(
-rotateShowcase,
-4000
-);
+setInterval(rotateShowcase,4000);
