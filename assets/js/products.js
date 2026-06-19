@@ -1,14 +1,33 @@
 // ===== SEARCH =====
+// ===== SEARCH =====
 function searchProducts() {
-  let input = document.getElementById("searchInput")?.value.toLowerCase() || "";
-  let sections = document.querySelectorAll(".section");
+  const input =
+    document.getElementById("searchInput")
+    ?.value
+    .trim()
+    .toLowerCase() || "";
+
+  const sections = document.querySelectorAll(".section");
 
   sections.forEach(section => {
-    let titleEl = section.querySelector(".diorama-title");
-    let title = titleEl ? titleEl.innerText.toLowerCase() : "";
-    section.style.display = title.includes(input) ? "block" : "none";
+    const title =
+      section
+      .querySelector(".diorama-title")
+      ?.textContent
+      .trim()
+      .toLowerCase() || "";
+
+    section.style.display =
+      input === "" || title.includes(input)
+        ? ""
+        : "none";
   });
 }
+
+// Search again after firebase products finish rendering
+window.addEventListener("load", () => {
+  setTimeout(searchProducts, 300);
+});
 // ===== LIGHTBOX (Optimized HQ Loader) =====
 function openLightbox(src) {
   const lightbox = document.getElementById("lightbox");
