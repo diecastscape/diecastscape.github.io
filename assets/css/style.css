@@ -335,7 +335,7 @@ font-size:15px;
 display:grid;
 grid-template-columns:repeat(5,1fr);
 gap:12px;
-margin-top:50px;
+margin:14px 0;
 }
 
 .trust-item{
