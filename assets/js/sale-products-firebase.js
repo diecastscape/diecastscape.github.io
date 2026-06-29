@@ -80,93 +80,61 @@ ${p.shippingText || "Shipping charges applicable"}
 
 async function loadSaleProducts(){
 
-  const container = document.getElementById("sale-main");
-  const loader = document.getElementById("productsLoader");
+  const container =
+    document.getElementById("sale-main");
+
+  const loader =
+    document.getElementById("productsLoader");
 
   if(!container) return;
 
-  // ===== SALE LIVE CHECK =====
-  const ref = doc(db,"siteConfig","sale");
-  const snap = await getDoc(ref);
-
-  let live = false;
-  let liveDate = "";
-
-  if(snap.exists()){
-    const cfg = snap.data();
-
-    if(cfg.enabled === true){
-      live = true;
-    }
-
-    if(cfg.start){
-      const start = new Date(cfg.start);
-      const now = new Date();
-
-      liveDate = start.toLocaleString("en-IN",{
-        dateStyle:"medium",
-        timeStyle:"short"
-      });
-
-      if(now >= start){
-        live = true;
-      }
-    }
-  }
-
-  // ===== NOT LIVE =====
-  if(!live){
-
-    if(loader){
-      loader.remove();
-    }
-
-    container.innerHTML = `
-    <div class="border-top">
-      <div class="sale-off">
-        <p>Sale will be live on<br><strong>${liveDate}</strong></p>
-      </div>
-      </div>
-    `;
-    return;
-  }
-
-  // ===== LOAD PRODUCTS =====
+  // ===== LOAD PRODUCTS DIRECTLY =====
   const q = query(
     collection(db,"specialSaleProducts"),
     orderBy("created","desc")
   );
 
-  const snap2 = await getDocs(q);
+  const snap = await getDocs(q);
 
   let count = 0;
 
-  snap2.forEach(doc=>{
+  snap.forEach(doc=>{
+
     const p = doc.data();
+
     if(p.active === true){
+
       container.insertAdjacentHTML(
         "beforeend",
         buildSaleHTML(p)
       );
+
       count++;
     }
+
   });
 
-  // ===== REMOVE LOADER AFTER DOM =====
+  // Remove loader
   requestAnimationFrame(()=>{
     if(loader) loader.remove();
   });
 
-  // ===== FALLBACK =====
-  if(count === 0){
-    container.innerHTML = `
-    <div class="border-top">
-      <div class="sale-off">
-        <p>No products in this sale</p>
-      </div>
+  // Empty state
+  if(count===0){
+
+    container.innerHTML=`
+      <div class="border-top">
+        <div class="sale-off">
+          <p>No products available</p>
+        </div>
       </div>
     `;
+
   }
+
 }
 
-window.addEventListener("DOMContentLoaded", loadSaleProducts);
+window.addEventListener(
+  "DOMContentLoaded",
+  loadSaleProducts
+);
