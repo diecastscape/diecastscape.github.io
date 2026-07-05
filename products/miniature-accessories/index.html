@@ -68,25 +68,27 @@ class="search-bar">
   </div>
 </div>
   </div>
-    <div class="section">
+    <div id="cartBar" class="cart-bar">
 
-      <div class="diorama-title">
-      ghjkkl
-      </div>
+<div class="cart-left">
 
-      <div class="slider">
-        <div class="img-box">
-          <div class="img-loader"></div>
-          <img src="/images/products/42.webp"
-            onload="this.previousElementSibling.remove(); this.style.opacity=1"
-            style="opacity:0"
-            onclick="openLightbox(this.src)">
-        </div>
-      </div>
+<div id="cartCount">
+0 Items
+</div>
 
-      <div class="price">
-        <span class="new">₹${p.price}</span>
-      </div>
+<div id="cartTotal">
+₹0
+</div>
+
+</div>
+
+<button
+class="cart-btn"
+onclick="checkoutCart()">
+
+Checkout
+
+</button>
 
     </div>
     
