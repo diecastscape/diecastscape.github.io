@@ -105,7 +105,6 @@ snap.forEach(doc => {
     const p = doc.data();
     p.id = doc.id;
 
-    if (p.active) {
 
       container.insertAdjacentHTML(
         "beforeend",
@@ -113,7 +112,7 @@ snap.forEach(doc => {
       );
 
       count++;
-    }
+  
 
   });
 
