@@ -6,18 +6,18 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildProductHTML(p) {
-const imgs = p.images.map(im => `
-  <div class="img-box">
-  <div class="img-loader"></div>
 
-  <img 
-    src="/images/products/${img}.webp"
-    onload="this.previousElementSibling.remove(); this.style.opacity=1"
-    style="opacity:0"
-    onclick="openLightbox(this.src)">
-</div>
-`).join("");
-  
+  const imgs = (p.images || []).map(im => `
+    <div class="img-box">
+      <div class="img-loader"></div>
+
+      <img
+        src="/images/accessories/${im}.webp"
+        onload="this.previousElementSibling.remove();this.style.opacity=1"
+        style="opacity:0"
+        onclick="openLightbox(this.src)">
+    </div>
+  `).join("");
 
   return `
     <div class="section">
@@ -37,7 +37,6 @@ const imgs = p.images.map(im => `
     </div>
   `;
 }
-
 
 async function loadProducts() {
   const container = document.getElementById("productsContainer");
