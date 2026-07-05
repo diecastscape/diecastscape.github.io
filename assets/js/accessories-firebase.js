@@ -36,30 +36,42 @@ function buildProductHTML(p) {
 }
 
 async function loadProducts() {
-
-  const container = document.getElementById("productsContainer");
+const container = document.getElementById("productsContainer");
   const loader = document.getElementById("productsLoader");
 
-  const snap = await getDocs(collection(db, "accessories"));
+  if(!container) return;
 
-  if (loader) loader.remove();
+  const q = query(
+    collection(db,"accessories"),
+    orderBy("created","desc")
+  );
 
-  container.innerHTML = "";
+  const snap = await getDocs(q);
 
-  snap.forEach(doc => {
+  let count = 0;
 
+  snap.forEach(doc=>{
     const p = doc.data();
-
-    container.insertAdjacentHTML(
-      "beforeend",
-      buildProductHTML(p)
-    );
-
+    if(p.active){
+      container.insertAdjacentHTML(
+        "beforeend",
+        buildProductHTML(p)
+      );
+      count++;
+    }
   });
 
+  // ✅ remove loader AFTER DOM updated
+  requestAnimationFrame(()=>{
+    if(loader) loader.remove();
+  });
+
+  // fallback: if no products
+  if(count === 0 && loader){
+    loader.innerText = "No products available";
+  }
 }
 
-window.addEventListener(
-  "DOMContentLoaded",
-  loadProducts
-);
+
+window.addEventListener("DOMContentLoaded", loadProducts);
+  
