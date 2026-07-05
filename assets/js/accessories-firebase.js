@@ -2,68 +2,162 @@ import { db } from "./firebase-init.js";
 
 import {
   collection,
-  getDocs
+ query,
+ orderBy,
+ getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-async function loadAccessories() {
+function buildProductHTML(p) {
 
-  const container = document.getElementById("productsContainer");
-  const loader = document.getElementById("productsLoader");
+  const images = (p.images || []).map(img => `
+    <div class="img-box">
+      <div class="img-loader"></div>
+
+      <img
+        src="/images/accessories/${img}.webp"
+        style="opacity:0"
+        onload="this.previousElementSibling.remove();this.style.opacity=1"
+        onclick="openLightbox(this.src)">
+    </div>
+  `).join("");
+
+  return `
+
+<div class="section"
+data-name="${p.name}"
+data-price="${p.price}">
+
+<div class="diorama-title">
+${p.name}
+</div>
+
+<div class="slider">
+${images}
+</div>
+
+<div class="price">
+<span class="new">₹${p.price}</span>
+</div>
+
+<div class="cart-controls">
+
+<button
+class="qty-btn"
+onclick="
+addProductInfo(
+'${p.id}',
+'${p.name}',
+${p.price}
+);
+changeQty('${p.id}',-1);
+">
+
+−
+
+</button>
+
+<span
+class="qty"
+id="qty-${p.id}">
+0
+</span>
+
+<button
+class="qty-btn"
+onclick="
+addProductInfo(
+'${p.id}',
+'${p.name}',
+${p.price}
+);
+changeQty('${p.id}',1);
+">
+
++
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+async function loadProducts() {
+
+  const container =
+    document.getElementById("productsContainer");
+
+  const loader =
+    document.getElementById("productsLoader");
+
+  if (!container) return;
 
   try {
 
-    const snap = await getDocs(collection(db, "accessories"));
+    const q = query(
+      collection(db, "accessories"),
+      orderBy("created", "desc")
+    );
 
-    if (loader) loader.remove();
+    const snap = await getDocs(q);
 
-    container.innerHTML = "";
-
-    if (snap.empty) {
-      container.innerHTML = "<h2>No accessories available</h2>";
-      return;
-    }
+    let count = 0;
 
     snap.forEach(doc => {
 
       const p = doc.data();
 
-      if (p.active !== true) return;
+      p.id = doc.id;
 
-      let images = "";
+      if (p.active === true) {
 
-      (p.images || []).forEach(img => {
-        images += `
-          <img
-            src="/images/accessories/${img}.webp"
-            style="width:120px;border-radius:10px;margin:5px">
-        `;
-      });
+        container.insertAdjacentHTML(
+          "beforeend",
+          buildProductHTML(p)
+        );
 
-      container.innerHTML += `
-        <div class="section">
+        count++;
 
-          <h2>${p.name}</h2>
-
-          <div>${images}</div>
-
-          <h3>₹${p.price}</h3>
-
-        </div>
-      `;
+      }
 
     });
 
-  } catch (e) {
+    if (loader) loader.remove();
 
-    console.error(e);
+    if (count === 0) {
+
+      container.innerHTML = `
+      <div class="border-top">
+      <div class="sale-off">
+      No accessories available
+      </div>
+      </div>
+      `;
+
+    }
+
+    restoreCart();
+
+  }
+
+  catch (err) {
+
+    console.error(err);
 
     if (loader) loader.remove();
 
-    container.innerHTML =
-      "<h2>" + e.message + "</h2>";
+    container.innerHTML = `
+    <h2>${err.message}</h2>
+    `;
 
   }
 
 }
 
-loadAccessories();
+window.addEventListener(
+  "DOMContentLoaded",
+  loadProducts
+);
