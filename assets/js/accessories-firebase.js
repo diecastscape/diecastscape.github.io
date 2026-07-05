@@ -81,27 +81,23 @@ onclick="changeQty('${p.id}',1)">
 
 async function loadAccessories() {
 
-  const container = document.getElementById("productsContainer");
-  const loader = document.getElementById("productsLoader");
+  try {
 
-  if (!container) return;
+    const container = document.getElementById("productsContainer");
+    const loader = document.getElementById("productsLoader");
 
-  const snap = await getDocs(collection(db, "accessories"));
+    const snap = await getDocs(collection(db, "accessories"));
 
-  const snap = await getDocs(q);
-  alert("Documents: " + snap.size);
+    alert("Documents found: " + snap.size);
 
-snap.forEach(doc => {
-  console.log(doc.id, doc.data());
-});
+    let count = 0;
 
-  let count = 0;
+    snap.forEach(doc => {
 
-  snap.forEach(doc => {
+      alert(JSON.stringify(doc.data()));
 
-    const p = doc.data();
-    p.id = doc.id;
-
+      const p = doc.data();
+      p.id = doc.id;
 
       container.insertAdjacentHTML(
         "beforeend",
@@ -109,21 +105,19 @@ snap.forEach(doc => {
       );
 
       count++;
-  
 
-  });
+    });
 
-  requestAnimationFrame(() => {
     if (loader) loader.remove();
-  });
 
-  if (count === 0) {
-    container.innerHTML = "<h2>No accessories available</h2>";
+    if (count === 0) {
+      container.innerHTML = "<h2>No accessories available</h2>";
+    }
+
+  } catch (e) {
+
+    alert(e.message);
+
   }
 
-} 
-
-window.addEventListener(
-  "DOMContentLoaded",
-  loadAccessories
-);
+}
