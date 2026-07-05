@@ -284,3 +284,29 @@ const url =
 window.open(url,"_blank");
 
 }
+function clearCart(){
+
+  if(!confirm("Remove all items from cart?")) return;
+
+  // Reset all quantity text
+  Object.keys(cart).forEach(id=>{
+    const qty = document.getElementById("qty-"+id);
+    if(qty) qty.innerText = "0";
+  });
+
+  // Empty cart
+  cart = {};
+
+  // Save
+  localStorage.removeItem("cart");
+
+  // Update UI
+  updateCartBar();
+
+  // Hide details if open
+  const details = document.getElementById("cartDetails");
+  if(details){
+    details.classList.remove("show");
+    details.innerHTML = "";
+  }
+}
