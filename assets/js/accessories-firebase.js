@@ -10,21 +10,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildProductHTML(p) {
-let imgs = "";
-
-  if(Array.isArray(p.images)){
-    p.images.forEach(im=>{
-      imgs += `
-        <div class="img-box">
-          <div class="img-loader"></div>
-          <img src="/images/products/${im}.webp"
-            onload="this.previousElementSibling.remove(); this.style.opacity=1"
-            style="opacity:0"
-            onclick="openLightbox(this.src)">
-        </div>
-      `;
-    });
-  }
+const imgs = `
+<div class="img-box">
+  <img src="/images/products/11.webp" style="width:100%">
+</div>
+`;
 
 console.log(imgs);
   return `
