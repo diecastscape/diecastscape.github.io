@@ -1,3 +1,5 @@
+console.log("Accessories JS Loaded");
+alert("Accessories JS Loaded");
 import { db } from "./firebase-init.js";
 
 import {
@@ -6,9 +8,8 @@ import {
   orderBy,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 function buildAccessoryHTML(p){
-const imgs = p.images.map(im => `
+const imgs = (p.images || []).map(im => `
 <div class="img-box">
   <div class="img-loader"></div>
 
