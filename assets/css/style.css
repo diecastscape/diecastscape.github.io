@@ -1372,20 +1372,20 @@ text-decoration:none;
 .cart-controls{
   display:flex;
   align-items:left;
-  justify-content:center;
+  justify-content:left;
   gap:12px;
   margin-top:10px;
 }
 
 .qty-btn{
-  width:20px;
-  height:20px;
+  width:30px;
+  height:30px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   background:#111;
   color:#fff;
-  font-size:14px;
-  font-weight:600;
+  font-size:25px;
+  font-weight:700;
   cursor:pointer;
   display:flex;
   align-items:center;
@@ -1407,7 +1407,7 @@ text-decoration:none;
   min-width:25px;
   text-align:center;
   font-size:12px;
-  font-weight:600;
+  font-weight:700;
 }
   
 
