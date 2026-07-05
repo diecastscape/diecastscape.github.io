@@ -79,53 +79,55 @@ onclick="changeQty('${p.id}',1)">
 
 }
 
-async function loadAccessories(){
+async function loadAccessories() {
 
-const container =
-document.getElementById("productsContainer");
+  const container = document.getElementById("productsContainer");
+  const loader = document.getElementById("productsLoader");
 
-const loader =
-document.getElementById("productsLoader");
+  if (!container) return;
 
-if(!container) return;
+  const q = query(
+    collection(db, "accessories"),
+    orderBy("created", "desc")
+  );
 
-const q=query(
-collection(db,"accessories"),
-orderBy("created","desc")
-);
+  const snap = await getDocs(q);
+  console.log("Documents:", snap.size);
 
-const snap=await getDocs(q);
-
-let count=0;
-
-snap.forEach(doc=>{
-
-const p=doc.data();
-
-p.id=doc.id;
-
-if(p.active){
-
-container.insertAdjacentHTML(
-"beforeend",
-buildAccessoryHTML(p)
-);
-
-count++;
-
-}
-
+snap.forEach(doc => {
+  console.log(doc.id, doc.data());
 });
 
-requestAnimationFrame(()=>{
+  let count = 0;
 
-if(loader)
-loader.remove();
+  snap.forEach(doc => {
 
-});
+    const p = doc.data();
+    p.id = doc.id;
 
+    if (p.active) {
+
+      container.insertAdjacentHTML(
+        "beforeend",
+        buildAccessoryHTML(p)
+      );
+
+      count++;
+    }
+
+  });
+
+  requestAnimationFrame(() => {
+    if (loader) loader.remove();
+  });
+
+  if (count === 0) {
+    container.innerHTML = "<h2>No accessories available</h2>";
+  }
+
+} 
 
 window.addEventListener(
-"DOMContentLoaded",
-loadAccessories
+  "DOMContentLoaded",
+  loadAccessories
 );
