@@ -160,15 +160,57 @@ function updateCartBar() {
   countBox.innerText =
     count + " Items";
 
-  if (count == 0) {
+  
+}
+function toggleCartDetails(){
 
-    bar.classList.remove("show");
+const box =
+document.getElementById("cartDetails");
 
-  } else {
+box.classList.toggle("show");
 
-    bar.classList.add("show");
+renderCartDetails();
 
-  }
+}
+
+function renderCartDetails(){
+
+let html = "";
+let total = 0;
+
+Object.keys(cart).forEach(id=>{
+
+const item = cart[id];
+
+const lineTotal =
+item.price * item.qty;
+
+total += lineTotal;
+
+html += `
+<div class="cart-item">
+
+<div>
+${item.name}
+x ${item.qty}
+</div>
+
+<div>
+₹${lineTotal}
+</div>
+
+</div>
+`;
+
+});
+
+document.getElementById(
+"cartItemsList"
+).innerHTML = html;
+
+document.getElementById(
+"detailsTotal"
+).innerText = "₹"+total;
 
 }
 // ===========================
