@@ -171,3 +171,73 @@ function updateCartBar() {
   }
 
 }
+// ===========================
+// RESTORE CART
+// ===========================
+
+window.addEventListener("DOMContentLoaded", () => {
+
+  Object.keys(cart).forEach(id => {
+
+    const qtyBox = document.getElementById("qty-" + id);
+
+    if(qtyBox){
+
+      qtyBox.innerText = cart[id].qty;
+
+    }
+
+  });
+
+  updateCartBar();
+
+});
+
+
+// ===========================
+// CHECKOUT
+// ===========================
+
+function checkoutCart(){
+
+let message =
+`Hi Diecast.scape,
+
+I'd like to order these accessories.
+
+`;
+
+let total = 0;
+let totalItems = 0;
+
+Object.values(cart).forEach(item=>{
+
+message +=
+`• ${item.name}
+Qty : ${item.qty}
+₹${item.price} × ${item.qty} = ₹${item.price*item.qty}
+
+`;
+
+total += item.price*item.qty;
+
+totalItems += item.qty;
+
+});
+
+message +=
+`-------------------------
+
+Total Items : ${totalItems}
+
+Total Amount : ₹${total}
+
+`;
+
+const url =
+"https://wa.me/918792744018?text="
++ encodeURIComponent(message);
+
+window.open(url,"_blank");
+
+}
