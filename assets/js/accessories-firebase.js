@@ -1,123 +1,69 @@
-
 import { db } from "./firebase-init.js";
 
 import {
   collection,
-  query,
-  orderBy,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-function buildAccessoryHTML(p){
-const imgs = (p.images || []).map(im => `
-<div class="img-box">
-  <div class="img-loader"></div>
-
-  <img
-    src="/images/accessories/${im}.webp"
-    onload="this.previousElementSibling.remove();this.style.opacity=1"
-    style="opacity:0"
-    onclick="openLightbox(this.src)">
-</div>
-`).join("");
-
-return `
-
-<div class="section"
-data-name="${p.name}"
-data-price="${p.price}">
-
-<div class="diorama-title">
-${p.name}
-</div>
-
-<div class="slider">
-${imgs}
-</div>
-
-<div class="price">
-<span class="new">₹${p.price}</span>
-</div>
-
-<div class="cart-controls">
-
-<button
-class="qty-btn"
-onclick="
-addProductInfo(
-'${p.id}',
-'${p.name}',
-${p.price}
-);
-changeQty('${p.id}',1);
-">
-
-−
-
-</button>
-
-<span
-class="qty"
-id="qty-${p.id}">
-
-0
-
-</span>
-
-<button
-class="qty-btn"
-onclick="changeQty('${p.id}',1)">
-
-+
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}
 
 async function loadAccessories() {
 
-  try {
+  const container = document.getElementById("productsContainer");
+  const loader = document.getElementById("productsLoader");
 
-    const container = document.getElementById("productsContainer");
-    const loader = document.getElementById("productsLoader");
+  try {
 
     const snap = await getDocs(collection(db, "accessories"));
 
-    alert("Documents found: " + snap.size);
+    if (loader) loader.remove();
 
-    let count = 0;
+    container.innerHTML = "";
+
+    if (snap.empty) {
+      container.innerHTML = "<h2>No accessories available</h2>";
+      return;
+    }
 
     snap.forEach(doc => {
 
-      alert(JSON.stringify(doc.data()));
-
       const p = doc.data();
-      p.id = doc.id;
 
-      container.insertAdjacentHTML(
-        "beforeend",
-        buildAccessoryHTML(p)
-      );
+      if (p.active !== true) return;
 
-      count++;
+      let images = "";
+
+      (p.images || []).forEach(img => {
+        images += `
+          <img
+            src="/images/accessories/${img}.webp"
+            style="width:120px;border-radius:10px;margin:5px">
+        `;
+      });
+
+      container.innerHTML += `
+        <div class="section">
+
+          <h2>${p.name}</h2>
+
+          <div>${images}</div>
+
+          <h3>₹${p.price}</h3>
+
+        </div>
+      `;
 
     });
 
-    if (loader) loader.remove();
-
-    if (count === 0) {
-      container.innerHTML = "<h2>No accessories available</h2>";
-    }
-
   } catch (e) {
 
-    alert(e.message);
+    console.error(e);
+
+    if (loader) loader.remove();
+
+    container.innerHTML =
+      "<h2>" + e.message + "</h2>";
 
   }
 
 }
+
+loadAccessories();
