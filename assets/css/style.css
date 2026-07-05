@@ -1482,3 +1482,24 @@ border-radius:10px;
 font-weight:bold;
 cursor:pointer;
 }
+.cart-actions{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+.clear-cart-btn{
+  flex:1;
+  height:45px;
+  border:none;
+  border-radius:12px;
+  background:#e53935;
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.cart-btn{
+  flex:2;
+}
