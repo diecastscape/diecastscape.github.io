@@ -78,16 +78,21 @@ class="search-bar">
 <div style="display:flex;gap:10px">
 
 <button
-class="details-btn"
+class="details-bt"
 onclick="toggleCartDetails()">
 Details
 </button>
+<div class="cart-actions">
 
-<button
-class="cart-btn"
-onclick="checkoutCart()">
-Checkout
-</button>
+  <button class="clear-cart-btn" onclick="clearCart()">
+    Clear All
+  </button>
+
+  <button class="cart-btn" onclick="checkoutCart()">
+    Checkout
+  </button>
+
+</div>
 
 </div>
 
