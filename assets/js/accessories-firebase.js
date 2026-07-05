@@ -12,7 +12,7 @@ function buildProductHTML(p) {
       <div class="img-loader"></div>
 
       <img
-        src="/images/accessories/${im}.webp"
+        src="/images/products/${im}.webp"
         onload="this.previousElementSibling.remove();this.style.opacity=1"
         style="opacity:0"
         onclick="openLightbox(this.src)">
