@@ -74,4 +74,100 @@ function closeSheet() {
   document.getElementById("bottomSheet").classList.remove("show");
   document.body.style.overflow = "";
 }
+// ===========================
+// ACCESSORIES CART
+// ===========================
 
+let cart = JSON.parse(localStorage.getItem("accessoriesCart")) || {};
+
+function saveCart() {
+  localStorage.setItem(
+    "accessoriesCart",
+    JSON.stringify(cart)
+  );
+}
+
+function changeQty(id, change) {
+
+  if (!cart[id]) {
+    cart[id] = {
+      qty: 0,
+      name: "",
+      price: 0
+    };
+  }
+
+  cart[id].qty += change;
+
+  if (cart[id].qty <= 0) {
+    delete cart[id];
+  }
+
+  const qty = cart[id] ? cart[id].qty : 0;
+
+  const qtyBox = document.getElementById("qty-" + id);
+
+  if (qtyBox) qtyBox.innerText = qty;
+
+  saveCart();
+
+  updateCartBar();
+}
+
+function addProductInfo(id, name, price) {
+
+  if (!cart[id]) {
+
+    cart[id] = {
+      qty: 0,
+      name: name,
+      price: price
+    };
+
+  } else {
+
+    cart[id].name = name;
+    cart[id].price = price;
+
+  }
+
+}
+
+function updateCartBar() {
+
+  const bar = document.getElementById("cartBar");
+
+  const totalBox =
+    document.getElementById("cartTotal");
+
+  const countBox =
+    document.getElementById("cartCount");
+
+  let total = 0;
+
+  let count = 0;
+
+  Object.values(cart).forEach(item => {
+
+    total += item.price * item.qty;
+
+    count += item.qty;
+
+  });
+
+  totalBox.innerText = "₹" + total;
+
+  countBox.innerText =
+    count + " Items";
+
+  if (count == 0) {
+
+    bar.classList.remove("show");
+
+  } else {
+
+    bar.classList.add("show");
+
+  }
+
+}
