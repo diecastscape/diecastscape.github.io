@@ -5,57 +5,61 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+function buildProductHTML(p) {
+
+  const images = (p.images || []).map(img => `
+    <div class="img-box">
+      <img
+        src="/images/accessories/${img}.webp"
+        style="width:100%;"
+        onclick="openLightbox(this.src)">
+    </div>
+  `).join("");
+
+  return `
+    <div class="section">
+
+      <div class="diorama-title">
+        ${p.name}
+      </div>
+
+      <div class="slider">
+        ${images}
+      </div>
+
+      <div class="price">
+        <span class="new">₹${p.price}</span>
+      </div>
+
+    </div>
+  `;
+}
+
 async function loadProducts() {
 
   const container = document.getElementById("productsContainer");
   const loader = document.getElementById("productsLoader");
 
-  if (!container) return;
+  const snap = await getDocs(collection(db, "accessories"));
 
-  try {
+  if (loader) loader.remove();
 
-    const snap = await getDocs(collection(db, "accessories"));
+  container.innerHTML = "";
 
-    if (loader) loader.remove();
+  snap.forEach(doc => {
 
-    container.innerHTML = "";
+    const p = doc.data();
 
-    let count = 0;
+    container.insertAdjacentHTML(
+      "beforeend",
+      buildProductHTML(p)
+    );
 
-    snap.forEach(doc => {
-
-      const p = doc.data();
-
-      if (p.active === true) {
-
-        container.innerHTML += `
-          <div class="section">
-            <h2>${p.name}</h2>
-            <p>₹${p.price}</p>
-          </div>
-        `;
-
-        count++;
-      }
-
-    });
-
-    if (count === 0) {
-      container.innerHTML = "<h2>No accessories available</h2>";
-    }
-
-  } catch (err) {
-
-    console.error(err);
-
-    if (loader) loader.remove();
-
-    container.innerHTML = `
-      <h2>${err.message}</h2>
-    `;
-
-  }
+  });
 
 }
 
-window.addEventListener("DOMContentLoaded", loadProducts);
+window.addEventListener(
+  "DOMContentLoaded",
+  loadProducts
+);
