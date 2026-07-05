@@ -10,7 +10,7 @@ function buildProductHTML(p) {
   const images = (p.images || []).map(img => `
     <div class="img-box">
       <img
-        src="/images/accessories/${img}.webp"
+        src="/images/products/${img}.webp"
         style="width:100%;"
         onclick="openLightbox(this.src)">
     </div>
