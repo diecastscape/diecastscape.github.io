@@ -60,7 +60,7 @@ if(!container) return;
 
       container.insertAdjacentHTML(
         "beforeend",
-        buildSaleHTML(p)
+        buildProductHTML(p)
       );
 
       count++;
