@@ -32,7 +32,8 @@ const whatsappText = encodeURIComponent(message);
   return `
   <div class="section">
     <div class="diorama-title">${p.name}</div>
-
+	
+<div class="slider-wrap">
 
   <div class="offer-badge">
 🔥 Limited Time Offer
@@ -41,7 +42,7 @@ const whatsappText = encodeURIComponent(message);
   <div class="slider">
     ${imgs}
   </div>
-
+</div>
 
     <div class="price">
       <span class="old">₹${p.priceOld}</span>
