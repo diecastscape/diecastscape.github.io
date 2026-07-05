@@ -26,9 +26,9 @@ let imgs = "";
     });
   }
 
-
+console.log(imgs);
   return `
-  console.log(imgs);
+  
     <div class="section">
 
       <div class="diorama-title">
