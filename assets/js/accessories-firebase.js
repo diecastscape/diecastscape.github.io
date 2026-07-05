@@ -10,45 +10,51 @@ async function loadProducts() {
   const container = document.getElementById("productsContainer");
   const loader = document.getElementById("productsLoader");
 
-  const snap = await getDocs(collection(db, "accessories"));
+  if (!container) return;
 
-  if (loader) loader.remove();
+  try {
 
-  container.innerHTML = "";
+    const snap = await getDocs(collection(db, "accessories"));
 
-  snap.forEach(doc => {
+    if (loader) loader.remove();
 
-    const p = doc.data();
+    container.innerHTML = "";
 
-    container.insertAdjacentHTML("beforeend", `
+    let count = 0;
 
-      <div class="section">
+    snap.forEach(doc => {
 
-        <div class="diorama-title">
-          ${p.name}
-        </div>
+      const p = doc.data();
 
-        <div class="slider">
+      if (p.active === true) {
 
-          ${(p.images || []).map(img => `
-            <div class="img-box">
-              <img
-                src="/images/accessories/${img}.webp"
-                style="width:100%;">
-            </div>
-          `).join("")}
+        container.innerHTML += `
+          <div class="section">
+            <h2>${p.name}</h2>
+            <p>₹${p.price}</p>
+          </div>
+        `;
 
-        </div>
+        count++;
+      }
 
-        <div class="price">
-          <span class="new">₹${p.price}</span>
-        </div>
+    });
 
-      </div>
+    if (count === 0) {
+      container.innerHTML = "<h2>No accessories available</h2>";
+    }
 
-    `);
+  } catch (err) {
 
-  });
+    console.error(err);
+
+    if (loader) loader.remove();
+
+    container.innerHTML = `
+      <h2>${err.message}</h2>
+    `;
+
+  }
 
 }
 
