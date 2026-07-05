@@ -8,13 +8,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildAccessoryHTML(p){
-
 const imgs = p.images.map(im => `
 <div class="img-box">
   <div class="img-loader"></div>
 
   <img
-    src="/images/accessories/${im.full}.webp"
+    src="/images/accessories/${im}.webp"
     onload="this.previousElementSibling.remove();this.style.opacity=1"
     style="opacity:0"
     onclick="openLightbox(this.src)">
@@ -37,20 +36,6 @@ ${imgs}
 
 <div class="price">
 <span class="new">₹${p.price}</span>
-</div>
-
-<div class="ship">
-${p.shippingText || "Shipping charges applicable"}
-</div>
-
-<button
-class="details-btn"
-onclick="openDetailsSheet(this)">
-Details ▾
-</button>
-
-<div class="product-details">
-${p.detailsHTML}
 </div>
 
 <div class="cart-controls">
