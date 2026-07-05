@@ -86,13 +86,10 @@ async function loadAccessories() {
 
   if (!container) return;
 
-  const q = query(
-    collection(db, "accessories"),
-    orderBy("created", "desc")
-  );
+  const snap = await getDocs(collection(db, "accessories"));
 
   const snap = await getDocs(q);
-  console.log("Documents:", snap.size);
+  alert("Documents: " + snap.size);
 
 snap.forEach(doc => {
   console.log(doc.id, doc.data());
