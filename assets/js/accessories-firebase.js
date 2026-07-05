@@ -28,6 +28,7 @@ let imgs = "";
 
 
   return `
+  console.log(imgs);
     <div class="section">
 
       <div class="diorama-title">
@@ -64,7 +65,7 @@ async function loadProducts() {
       "beforeend",
       buildProductHTML(p)
     );
-
+console.log(container.innerHTML);
   });
 
 }
