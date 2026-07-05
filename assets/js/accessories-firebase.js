@@ -40,23 +40,47 @@ console.log(imgs);
 async function loadProducts() {
   const container = document.getElementById("productsContainer");
   const loader = document.getElementById("productsLoader");
+if(!container) return;
 
-  const snap = await getDocs(collection(db, "accessories"));
+  // ===== LOAD PRODUCTS DIRECTLY =====
+  const q = query(
+    collection(db,"accessories"),
+    orderBy("created","desc")
+  );
 
-  if (loader) loader.remove();
+  const snap = await getDocs(q);
 
-  container.innerHTML = "";
+  let count = 0;
 
-  snap.forEach(doc => {
+  snap.forEach(doc=>{
 
     const p = doc.data();
 
-    container.insertAdjacentHTML(
-      "beforeend",
-      buildProductHTML(p)
-    );
-console.log(container.innerHTML);
+    if(p.active === true){
+
+      container.insertAdjacentHTML(
+        "beforeend",
+        buildSaleHTML(p)
+      );
+
+      count++;
+    }
+
   });
+
+  // Remove loader
+  requestAnimationFrame(()=>{
+    if(loader) loader.remove();
+  });
+
+  // Empty state
+  if(count===0){
+
+    container.innerHTML=`
+          <h2>No products available</h2>
+    `;
+
+  }
 
 }
 
