@@ -7,7 +7,7 @@ import {
 
 function buildProductHTML(p) {
 
-  const imgs = (p.images || []).map(im => `
+  const imgs = p.images.map(im => `
     <div class="img-box">
       <div class="img-loader"></div>
 
