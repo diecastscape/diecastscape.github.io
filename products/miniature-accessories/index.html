@@ -71,24 +71,35 @@ class="search-bar">
     <div id="cartBar" class="cart-bar">
 
 <div class="cart-left">
-
-<div id="cartCount">
-0 Items
+<div id="cartCount">0 Items</div>
+<div id="cartTotal">₹0</div>
 </div>
 
-<div id="cartTotal">
-₹0
-</div>
+<div style="display:flex;gap:10px">
 
-</div>
+<button
+class="details-btn"
+onclick="toggleCartDetails()">
+Details
+</button>
 
 <button
 class="cart-btn"
 onclick="checkoutCart()">
-
 Checkout
-
 </button>
+
+</div>
+
+    </div>
+    <div id="cartDetails" class="cart-details">
+
+<div id="cartItemsList"></div>
+
+<div class="details-total">
+Total:
+<span id="detailsTotal">₹0</span>
+</div>
 
     </div>
     
