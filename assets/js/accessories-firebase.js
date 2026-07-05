@@ -6,15 +6,18 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildProductHTML(p) {
+const imgs = p.images.map(im => `
+  <div class="img-box">
+  <div class="img-loader"></div>
 
-  const images = (p.images || []).map(img => `
-    <div class="img-box">
-      <img
-        src="/images/products/${img}.webp"
-        style="width:100%;"
-        onclick="openLightbox(this.src)">
-    </div>
-  `).join("");
+  <img 
+    src="/images/products/${img}.webp"
+    onload="this.previousElementSibling.remove(); this.style.opacity=1"
+    style="opacity:0"
+    onclick="openLightbox(this.src)">
+</div>
+`).join("");
+  
 
   return `
     <div class="section">
@@ -24,7 +27,7 @@ function buildProductHTML(p) {
       </div>
 
       <div class="slider">
-        ${images}
+        ${imgs}
       </div>
 
       <div class="price">
@@ -35,43 +38,32 @@ function buildProductHTML(p) {
   `;
 }
 
+
 async function loadProducts() {
-const container = document.getElementById("productsContainer");
+  const container = document.getElementById("productsContainer");
   const loader = document.getElementById("productsLoader");
 
-  if(!container) return;
+  const snap = await getDocs(collection(db, "accessories"));
 
-  const q = query(
-    collection(db,"accessories"),
-    orderBy("created","desc")
-  );
+  if (loader) loader.remove();
 
-  const snap = await getDocs(q);
+  container.innerHTML = "";
 
-  let count = 0;
+  snap.forEach(doc => {
 
-  snap.forEach(doc=>{
     const p = doc.data();
-    if(p.active){
-      container.insertAdjacentHTML(
-        "beforeend",
-        buildProductHTML(p)
-      );
-      count++;
-    }
+
+    container.insertAdjacentHTML(
+      "beforeend",
+      buildProductHTML(p)
+    );
+
   });
 
-  // ✅ remove loader AFTER DOM updated
-  requestAnimationFrame(()=>{
-    if(loader) loader.remove();
-  });
-
-  // fallback: if no products
-  if(count === 0 && loader){
-    loader.innerText = "No products available";
-  }
 }
 
+window.addEventListener(
+  "DOMContentLoaded",
+  loadProducts
+);
 
-window.addEventListener("DOMContentLoaded", loadProducts);
-  
