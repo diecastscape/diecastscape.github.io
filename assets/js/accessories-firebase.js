@@ -57,7 +57,14 @@ id="qty-${p.id}">
 
 <button
 class="qty-btn"
-onclick="changeQty('${p.id}',1)">
+onclick="
+addProductInfo(
+'${p.id}',
+'${p.name}',
+${p.price}
+);
+changeQty('${p.id}',1);
+">
 
 +
 
