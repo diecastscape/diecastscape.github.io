@@ -2,7 +2,11 @@ import { db } from "./firebase-init.js";
 
 import {
   collection,
-  getDocs
+  query,
+  orderBy,
+  getDocs,
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildProductHTML(p) {
