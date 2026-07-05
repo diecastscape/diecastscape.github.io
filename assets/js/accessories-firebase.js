@@ -6,18 +6,22 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 function buildProductHTML(p) {
+let imgs = "";
 
-  const imgs = (p.images || []).map(im => `
-    <div class="img-box">
-      <div class="img-loader"></div>
+  if(Array.isArray(p.images)){
+    p.images.forEach(im=>{
+      imgs += `
+        <div class="img-box">
+          <div class="img-loader"></div>
+          <img src="/images/newsale/${im}.webp"
+            onload="this.previousElementSibling.remove(); this.style.opacity=1"
+            style="opacity:0"
+            onclick="openLightbox(this.src)">
+        </div>
+      `;
+    });
+  }
 
-      <img
-        src="/images/products/${im}.webp"
-        onload="this.previousElementSibling.remove();this.style.opacity=1"
-        style="opacity:0"
-        onclick="openLightbox(this.src)">
-    </div>
-  `).join("");
 
   return `
     <div class="section">
