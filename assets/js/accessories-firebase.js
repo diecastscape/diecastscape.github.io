@@ -41,7 +41,14 @@ function buildSaleHTML(p){
 
 <button
 class="qty-btn"
-onclick="changeQty('${p.id}',-1)">
+onclick="
+addProductInfo(
+'${p.id}',
+'${p.name}',
+${p.price}
+);
+changeQty('${p.id}',-1);
+">
 
 −
 
@@ -73,7 +80,21 @@ changeQty('${p.id}',1);
   </div>
   `;
 }
+function restoreCart() {
 
+  Object.keys(cart).forEach(id => {
+
+    const qtyBox = document.getElementById("qty-" + id);
+
+    if (qtyBox) {
+      qtyBox.innerText = cart[id].qty;
+    }
+
+  });
+
+  updateCartBar();
+
+}
 async function loadSaleProducts(){
 
   const container =
@@ -97,7 +118,7 @@ async function loadSaleProducts(){
   snap.forEach(doc=>{
 
     const p = doc.data();
-
+     p.id = doc.id;
     if(p.active === true){
 
       container.insertAdjacentHTML(
@@ -114,7 +135,7 @@ async function loadSaleProducts(){
   requestAnimationFrame(()=>{
     if(loader) loader.remove();
   });
-
+restoreCart();
   // Empty state
   if(count===0){
 
