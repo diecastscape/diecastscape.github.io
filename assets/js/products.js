@@ -175,15 +175,16 @@ function updateCartBar() {
 // RESTORE CART
 // ===========================
 
-window.addEventListener("DOMContentLoaded", () => {
+function restoreCart() {
 
   Object.keys(cart).forEach(id => {
 
-    const qtyBox = document.getElementById("qty-" + id);
+    const qty =
+      document.getElementById("qty-" + id);
 
-    if(qtyBox){
+    if (qty) {
 
-      qtyBox.innerText = cart[id].qty;
+      qty.innerText = cart[id].qty;
 
     }
 
@@ -191,7 +192,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   updateCartBar();
 
-});
+}
 
 
 // ===========================
