@@ -2,162 +2,54 @@ import { db } from "./firebase-init.js";
 
 import {
   collection,
- query,
- orderBy,
- getDocs
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-function buildProductHTML(p) {
-
-  const images = (p.images || []).map(img => `
-    <div class="img-box">
-      <div class="img-loader"></div>
-
-      <img
-        src="/images/accessories/${img}.webp"
-        style="opacity:0"
-        onload="this.previousElementSibling.remove();this.style.opacity=1"
-        onclick="openLightbox(this.src)">
-    </div>
-  `).join("");
-
-  return `
-
-<div class="section"
-data-name="${p.name}"
-data-price="${p.price}">
-
-<div class="diorama-title">
-${p.name}
-</div>
-
-<div class="slider">
-${images}
-</div>
-
-<div class="price">
-<span class="new">₹${p.price}</span>
-</div>
-
-<div class="cart-controls">
-
-<button
-class="qty-btn"
-onclick="
-addProductInfo(
-'${p.id}',
-'${p.name}',
-${p.price}
-);
-changeQty('${p.id}',-1);
-">
-
-−
-
-</button>
-
-<span
-class="qty"
-id="qty-${p.id}">
-0
-</span>
-
-<button
-class="qty-btn"
-onclick="
-addProductInfo(
-'${p.id}',
-'${p.name}',
-${p.price}
-);
-changeQty('${p.id}',1);
-">
-
-+
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}
 
 async function loadProducts() {
 
-  const container =
-    document.getElementById("productsContainer");
+  const container = document.getElementById("productsContainer");
+  const loader = document.getElementById("productsLoader");
 
-  const loader =
-    document.getElementById("productsLoader");
+  const snap = await getDocs(collection(db, "accessories"));
 
-  if (!container) return;
+  if (loader) loader.remove();
 
-  try {
+  container.innerHTML = "";
 
-    const q = query(
-      collection(db, "accessories"),
-      orderBy("created", "desc")
-    );
+  snap.forEach(doc => {
 
-    const snap = await getDocs(q);
+    const p = doc.data();
 
-    let count = 0;
+    container.insertAdjacentHTML("beforeend", `
 
-    snap.forEach(doc => {
+      <div class="section">
 
-      const p = doc.data();
+        <div class="diorama-title">
+          ${p.name}
+        </div>
 
-      p.id = doc.id;
+        <div class="slider">
 
-      if (p.active === true) {
+          ${(p.images || []).map(img => `
+            <div class="img-box">
+              <img
+                src="/images/accessories/${img}.webp"
+                style="width:100%;">
+            </div>
+          `).join("")}
 
-        container.insertAdjacentHTML(
-          "beforeend",
-          buildProductHTML(p)
-        );
+        </div>
 
-        count++;
+        <div class="price">
+          <span class="new">₹${p.price}</span>
+        </div>
 
-      }
-
-    });
-
-    if (loader) loader.remove();
-
-    if (count === 0) {
-
-      container.innerHTML = `
-      <div class="border-top">
-      <div class="sale-off">
-      No accessories available
       </div>
-      </div>
-      `;
 
-    }
+    `);
 
-    restoreCart();
-
-  }
-
-  catch (err) {
-
-    console.error(err);
-
-    if (loader) loader.remove();
-
-    container.innerHTML = `
-    <h2>${err.message}</h2>
-    `;
-
-  }
+  });
 
 }
 
-window.addEventListener(
-  "DOMContentLoaded",
-  loadProducts
-);
+window.addEventListener("DOMContentLoaded", loadProducts);
