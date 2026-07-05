@@ -1,5 +1,4 @@
-console.log("Accessories JS Loaded");
-alert("Accessories JS Loaded");
+
 import { db } from "./firebase-init.js";
 
 import {
@@ -94,36 +93,7 @@ const q=query(
 collection(db,"accessories"),
 orderBy("created","desc")
 );
-try {
 
-const snap = await getDocs(q);
-
-snap.forEach(doc=>{
-
-const p = doc.data();
-p.id = doc.id;
-
-if(p.active){
-
-container.insertAdjacentHTML(
-"beforeend",
-buildAccessoryHTML(p)
-);
-
-}
-
-});
-
-if(loader) loader.remove();
-
-}catch(err){
-
-console.error(err);
-
-container.innerHTML =
-"<h2>"+err.message+"</h2>";
-
-}
 const snap=await getDocs(q);
 
 let count=0;
@@ -154,19 +124,6 @@ loader.remove();
 
 });
 
-if(count===0){
-
-container.innerHTML=`
-<div class="border-top">
-<div class="sale-off">
-No accessories available
-</div>
-</div>
-`;
-
-}
-
-}
 
 window.addEventListener(
 "DOMContentLoaded",
