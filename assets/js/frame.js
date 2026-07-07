@@ -6,8 +6,7 @@ const viewHandle = document.getElementById("viewCartHandle");
 const cartSheet = document.getElementById("cartSheet");
 
 if(viewHandle){
-
-viewHandle.onclick = ()=>{
+viewHandle.onclick = function(){
 
 cartSheet.classList.toggle("show");
 
@@ -17,7 +16,6 @@ cartSheet.classList.contains("show")
 : "View Cart ▲";
 
 };
-
 }
 
 // ===============================
