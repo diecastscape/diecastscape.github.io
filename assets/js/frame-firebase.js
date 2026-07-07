@@ -65,52 +65,12 @@ async function loadSaleProducts(){
     document.getElementById("productsLoader");
 
   if(!container) return;
-
-  // ===== LOAD PRODUCTS DIRECTLY =====
-  const q = query(
-    collection(db,"frameProduct"),
-    orderBy("created","desc")
-  );
-
-  const snap = await getDocs(q);
-
-  let count = 0;
-
-  snap.forEach(doc=>{
-
-    const p = doc.data();
-     p.id = doc.id;
-    if(p.active === true){
-
-      container.insertAdjacentHTML(
-        "beforeend",
-        buildSaleHTML(p)
-      );
-
-      count++;
-    }
-
-  });
-
-  // Remove loader
-  requestAnimationFrame(()=>{
-    if(loader) loader.remove();
-  });
-restoreCart();
-  // Empty state
-  if(count===0){
-
-    container.innerHTML=`
-      <div class="border-top">
-        <div class="sale-off">
-          <p>No products available</p>
-        </div>
-      </div>
-    `;
-
-  }
-
-}
+container.innerHTML = buildSaleHTML({
+    id:"1",
+    name:"Test Frame",
+    price:299,
+    images:["911"]
+});
 
 window.addEventListener(
   "DOMContentLoaded",
