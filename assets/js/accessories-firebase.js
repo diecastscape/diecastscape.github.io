@@ -16,7 +16,7 @@ function buildSaleHTML(p){
       imgs += `
         <div class="img-box">
           <div class="img-loader"></div>
-          <img src="/images/frames/${im}.webp"
+          <img src="/images/frame/${im}.webp"
             onload="this.previousElementSibling.remove(); this.style.opacity=1"
             style="opacity:0"
             onclick="openLightbox(this.src)">
@@ -27,48 +27,57 @@ function buildSaleHTML(p){
 
   return `
   <div class="section">
-
     <div class="diorama-title">${p.name}</div>
-
     <div class="slider">
       ${imgs}
-    </div>
+   </div>
+
 
     <div class="price">
       <span class="new">₹${p.price}/-</span>
     </div>
+<div class="cart-controls">
 
-    <button
-      class="add-cart-btn"
-      onclick="
-        addProductInfo(
-          '${p.id}',
-          '${p.name}',
-          ${p.price}
-        );
-        changeQty('${p.id}',1);
-      ">
-      + Add to Cart
-    </button>
+<button
+class="qty-btn"
+onclick="
+addProductInfo(
+'${p.id}',
+'${p.name}',
+${p.price}
+);
+changeQty('${p.id}',-1);
+">
 
+−
+
+</button>
+
+<span
+class="qty"
+id="qty-${p.id}">
+
+0
+
+</span>
+
+<button
+class="qty-btn"
+onclick="
+addProductInfo(
+'${p.id}',
+'${p.name}',
+${p.price}
+);
+changeQty('${p.id}',1);
+">
+
++
+
+</button>
+    </div>
   </div>
   `;
-}
-
-function restoreCart() {
-
-  Object.keys(cart).forEach(id => {
-
-    const qtyBox = document.getElementById("qty-" + id);
-
-    if (qtyBox) {
-      qtyBox.innerText = cart[id].qty;
-    }
-
-  });
-
-  updateCartBar();
-
 }
 async function loadSaleProducts(){
 
