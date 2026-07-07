@@ -688,6 +688,9 @@ transform:scale(1.05);
   0%,100%{ opacity:.2; transform:scale(.8) }
   50%{ opacity:1; transform:scale(1.2) }
 }
+.size {
+  margin-top:8px;
+}
 .price {
   margin-top: 12px;
 }
