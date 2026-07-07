@@ -1446,26 +1446,79 @@ font-weight:700;
 /* =========================
 VIEW CART HANDLE
 ========================= */
+/* ===========================
+FIXED BOTTOM CART
+=========================== */
 
-.view-cart-handle{
-text-align:center;
-padding:10px;
-font-size:14px;
-font-weight:600;
-cursor:pointer;
-user-select:none;
-border-bottom:1px solid rgba(255,255,255,.08);
+.cart-bar{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+width:100%;
+background:#111;
+color:#fff;
+z-index:9999;
+
+border-radius:20px 20px 0 0;
+
+box-shadow:0 -5px 20px rgba(0,0,0,.25);
+
+overflow:hidden;
 }
 
-/* =========================
-BOTTOM BAR
-========================= */
+/* Fixed Bottom Bar */
 
 .cart-fixed{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:15px;
+padding:15px 18px;
+background:#111;
+}
+
+/* Expandable Sheet */
+
+.cart-sheet{
+
+display:none;
+
+max-height:65vh;
+
+overflow-y:auto;
+
+background:#111;
+
+border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+/* Open */
+
+.cart-sheet.show{
+
+display:block;
+
+}
+
+/* View Cart */
+
+.view-cart-handle{
+
+padding:10px;
+
+text-align:center;
+
+font-size:14px;
+
+font-weight:600;
+
+cursor:pointer;
+
+background:#111;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
 }
 
 .cart-left{
@@ -1484,22 +1537,6 @@ font-size:22px;
 font-weight:700;
 }
 
-/* =========================
-EXPANDABLE SHEET
-========================= */
-
-.cart-sheet{
-max-height:0;
-overflow:hidden;
-transition:max-height .35s ease;
-padding:0 15px;
-}
-
-.cart-sheet.show{
-max-height:420px;
-padding:15px;
-overflow-y:auto;
-}
 
 /* =========================
 HEADING
