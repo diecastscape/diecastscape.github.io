@@ -7,16 +7,54 @@ import {
   doc,
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 function buildSaleHTML(p){
 
-  return `
-    <div class="section">
-      <h2>${p.name}</h2>
-      <p>₹${p.price}</p>
-    </div>
-  `;
+  let imgs = "";
 
+  if(Array.isArray(p.images)){
+    p.images.forEach(im=>{
+      imgs += `
+        <div class="img-box">
+          <div class="img-loader"></div>
+          <img src="/images/frames/${im}.webp"
+            onload="this.previousElementSibling.remove(); this.style.opacity=1"
+            style="opacity:0"
+            onclick="openLightbox(this.src)">
+        </div>
+      `;
+    });
+  }
+
+  return `
+  <div class="section">
+
+    <div class="diorama-title">${p.name}</div>
+
+    <div class="slider">
+      ${imgs}
+    </div>
+
+    <div class="price">
+      <span class="new">₹${p.price}/-</span>
+    </div>
+    <div class="price">
+      <span class="new">₹${p.size}</span>
+    </div>
+    <button
+      class="add-cart-btn"
+      onclick="
+        addProductInfo(
+          '${p.id}',
+          '${p.name}',
+          ${p.price}
+        );
+        changeQty('${p.id}',1);
+      ">
+       Add to Cart
+    </button>
+
+  </div>
+  `;
 }
 async function loadSaleProducts(){
 
@@ -28,26 +66,48 @@ async function loadSaleProducts(){
 
   if(!container) return;
 
-  // Clear loader/content
-  container.innerHTML = "";
-const snap = await getDocs(collection(db, "frameProducts"));
+  // ===== LOAD PRODUCTS DIRECTLY =====
+  const q = query(
+    collection(db,"frameProducts"),
+    orderBy("created","desc")
+  );
 
-alert("Documents: " + snap.size);
+  const snap = await getDocs(q);
 
-snap.forEach(doc => {
+  let count = 0;
 
-  alert(doc.data().name);
+  snap.forEach(doc=>{
 
-  container.innerHTML += `
-    <div style="padding:20px;background:red;color:white;margin:10px;">
-      ${doc.data().name}
-    </div>
-  `;
+    const p = doc.data();
+     p.id = doc.id;
+    if(p.active === true){
 
-});
+      container.insertAdjacentHTML(
+        "beforeend",
+        buildSaleHTML(p)
+      );
 
-if(loader) loader.remove();
+      count++;
+    }
 
+  });
+
+  // Remove loader
+  requestAnimationFrame(()=>{
+    if(loader) loader.remove();
+  });
+  // Empty state
+  if(count===0){
+
+    container.innerHTML=`
+      <div class="border-top">
+        <div class="sale-off">
+          <p>No products available</p>
+        </div>
+      </div>
+    `;
+
+  }
 
 }
 
