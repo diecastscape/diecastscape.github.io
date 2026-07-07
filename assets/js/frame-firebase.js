@@ -58,19 +58,18 @@ function buildSaleHTML(p){
 
 async function loadSaleProducts(){
 
-  const container =
-    document.getElementById("sale-main");
-
-  const loader =
-    document.getElementById("productsLoader");
+  const container = document.getElementById("sale-main");
 
   if(!container) return;
-container.innerHTML = buildSaleHTML({
+
+  container.innerHTML = buildSaleHTML({
     id:"1",
     name:"Test Frame",
     price:299,
     images:["911"]
-});
+  });
+
+}
 
 window.addEventListener(
   "DOMContentLoaded",
