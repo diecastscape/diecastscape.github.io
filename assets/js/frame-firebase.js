@@ -68,7 +68,7 @@ async function loadSaleProducts(){
 
   // ===== LOAD PRODUCTS DIRECTLY =====
   const q = query(
-    collection(db,"accessoriesProducts"),
+    collection(db,"frameProducts"),
     orderBy("created","desc")
   );
 
