@@ -17,7 +17,7 @@ function buildSaleHTML(p){
       imgs += `
         <div class="img-box">
           <div class="img-loader"></div>
-          <img src="/images/accessories/${im}.webp"
+          <img src="/images/frame/${im}.webp"
             onload="this.previousElementSibling.remove(); this.style.opacity=1"
             style="opacity:0"
             onclick="openLightbox(this.src)">
@@ -28,11 +28,11 @@ function buildSaleHTML(p){
 
   return `
   <div class="section">
-    
+    <div class="diorama-title">${p.name}</div>
     <div class="slider">
       ${imgs}
    </div>
-<div class="diorama-title">${p.name}</div>
+
 
     <div class="price">
       <span class="new">₹${p.price}/-</span>
@@ -107,7 +107,7 @@ async function loadSaleProducts(){
 
   // ===== LOAD PRODUCTS DIRECTLY =====
   const q = query(
-    collection(db,"accessoriesProducts"),
+    collection(db,"frameProducts"),
     orderBy("created","desc")
   );
 
