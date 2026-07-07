@@ -37,7 +37,7 @@ function buildSaleHTML(p){
       <span class="new">${p.size}</span>
     </div>
     <div class="price">
-      <span class="new">₹${p.price}/-</span>
+      <span class="new">₹${p.price}/- Bigger cart, bigger deals</span>
     </div>
     
     <button
