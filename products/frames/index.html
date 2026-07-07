@@ -67,10 +67,124 @@ class="search-bar">
   </div>
 </div>
   </div>
-<!-- ===========================
-BOTTOM CART
-=========================== -->
 
+<div id="cartOverlay" class="cart-overlay"></div>
+
+<!-- ===========================
+VIEW CART HANDLE
+=========================== -->
+<div id="cartHandle" class="cart-handle">
+    <div class="cart-drag"></div>
+    <span>View Cart</span>
+</div>
+
+<!-- ===========================
+BOTTOM SHEET
+=========================== -->
+<div id="cartSheet" class="cart-sheet">
+
+    <div class="sheet-header">
+        <div class="sheet-drag"></div>
+        <h2>Cart</h2>
+    </div>
+
+    <div id="cartItems" class="cart-items">
+
+        
+    </div>
+
+    <button
+        id="clearCartBtn"
+        class="clear-cart">
+        Clear Cart
+    </button>
+
+    <div class="cart-summary">
+
+        <div class="summary-row">
+            <span>Products</span>
+            <span id="summaryCount">0</span>
+        </div>
+
+        <div class="summary-row">
+            <span>Total</span>
+            <span id="summaryTotal">₹0</span>
+        </div>
+
+        <div class="shipping-note">
+            Shipping Charges Applicable
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===========================
+FIXED CART BAR
+=========================== -->
+<div id="bottomCartBar" class="bottom-cart">
+
+    <div class="bottom-cart-left">
+
+        <div class="bottom-products">
+            Products :
+            <span id="bottomCount">
+                Add Items
+            </span>
+        </div>
+
+        <div class="bottom-total">
+            ₹<span id="bottomTotal">0</span>
+        </div>
+
+    </div>
+
+    <button
+        id="checkoutBtn"
+        class="checkout-btn">
+
+        Checkout
+
+    </button>
+
+</div>
+
+<!-- ===========================
+CLEAR CART DIALOG
+=========================== -->
+<div
+    id="confirmClear"
+    class="confirm-dialog">
+
+    <div class="confirm-box">
+
+        <h3>
+            Remove all items?
+        </h3>
+
+        <div class="confirm-buttons">
+
+            <button
+                id="cancelClear"
+                class="cancel-btn">
+
+                Cancel
+
+            </button>
+
+            <button
+                id="yesClear"
+                class="yes-btn">
+
+                Yes
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
       
 <a class="wa-float"
