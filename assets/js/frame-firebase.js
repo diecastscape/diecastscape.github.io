@@ -33,13 +33,13 @@ function buildSaleHTML(p){
     <div class="slider">
       ${imgs}
     </div>
-
+<div class="size">
+      <span class="new">${p.size}</span>
+    </div>
     <div class="price">
       <span class="new">₹${p.price}/-</span>
     </div>
-    <div class="size">
-      <span class="new">${p.size}</span>
-    </div>
+    
     <button
       class="add-cart-btn"
       onclick="
