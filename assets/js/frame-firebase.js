@@ -55,19 +55,39 @@ function buildSaleHTML(p){
   </div>
   `;
 }
-
 async function loadSaleProducts(){
 
-  const container = document.getElementById("sale-main");
+  const container =
+    document.getElementById("sale-main");
+
+  const loader =
+    document.getElementById("productsLoader");
 
   if(!container) return;
 
-  container.innerHTML = buildSaleHTML({
-    id:"1",
-    name:"Test Frame",
-    price:299,
-    images:["911"]
+  // Clear loader/content
+  container.innerHTML = "";
+
+  // Test Firestore
+  const snap = await getDocs(collection(db, "frameProduct"));
+
+  console.log("Documents:", snap.size);
+
+  snap.forEach(doc => {
+
+    console.log(doc.id, doc.data());
+
+    const p = doc.data();
+    p.id = doc.id;
+
+    container.insertAdjacentHTML(
+      "beforeend",
+      buildSaleHTML(p)
+    );
+
   });
+
+  if(loader) loader.remove();
 
 }
 
