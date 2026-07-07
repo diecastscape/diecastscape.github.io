@@ -1443,3 +1443,191 @@ font-weight:700;
   font-size:18px;
   font-weight:700;
 }
+/* =========================
+VIEW CART HANDLE
+========================= */
+
+.view-cart-handle{
+text-align:center;
+padding:10px;
+font-size:14px;
+font-weight:600;
+cursor:pointer;
+user-select:none;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+/* =========================
+BOTTOM BAR
+========================= */
+
+.cart-fixed{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+}
+
+.cart-left{
+display:flex;
+flex-direction:column;
+gap:4px;
+}
+
+#cartCount{
+font-size:15px;
+font-weight:700;
+}
+
+#cartTotal{
+font-size:22px;
+font-weight:700;
+}
+
+/* =========================
+EXPANDABLE SHEET
+========================= */
+
+.cart-sheet{
+max-height:0;
+overflow:hidden;
+transition:max-height .35s ease;
+padding:0 15px;
+}
+
+.cart-sheet.show{
+max-height:420px;
+padding:15px;
+overflow-y:auto;
+}
+
+/* =========================
+HEADING
+========================= */
+
+.cart-sheet h3{
+margin:0 0 15px;
+font-size:20px;
+text-align:center;
+}
+
+/* =========================
+PRODUCT LIST
+========================= */
+
+.cart-items{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-bottom:15px;
+}
+
+.cart-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 0;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.cart-item-info{
+display:flex;
+flex-direction:column;
+gap:5px;
+}
+
+.cart-item-name{
+font-size:15px;
+font-weight:600;
+}
+
+.cart-item-price{
+font-size:14px;
+opacity:.8;
+}
+
+/* =========================
+REMOVE BUTTON
+========================= */
+
+.remove-btn{
+border:none;
+background:none;
+color:#ff5c5c;
+font-weight:700;
+cursor:pointer;
+}
+
+/* =========================
+CLEAR CART
+========================= */
+
+.clear-cart-btn{
+width:100%;
+padding:12px;
+margin:15px 0;
+border:none;
+border-radius:10px;
+background:#252525;
+color:#fff;
+font-weight:700;
+cursor:pointer;
+}
+
+/* =========================
+SUMMARY
+========================= */
+
+.cart-summary{
+display:flex;
+flex-direction:column;
+gap:10px;
+margin-top:10px;
+font-size:15px;
+}
+
+.shipping-note{
+font-size:13px;
+opacity:.7;
+}
+
+/* =========================
+BIG CHECKOUT
+========================= */
+
+.checkout-big-btn{
+width:100%;
+margin-top:18px;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#25D366;
+color:#fff;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+}
+
+/* =========================
+EMPTY POPUP
+========================= */
+
+.cart-popup{
+position:fixed;
+left:50%;
+bottom:120px;
+transform:translateX(-50%);
+background:#111;
+color:#fff;
+padding:12px 20px;
+border-radius:10px;
+font-size:14px;
+opacity:0;
+pointer-events:none;
+transition:.25s;
+z-index:99999;
+}
+
+.cart-popup.show{
+opacity:1;
+}
