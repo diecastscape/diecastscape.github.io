@@ -10,50 +10,13 @@ import {
 
 function buildSaleHTML(p){
 
-  let imgs = "";
-
-  if(Array.isArray(p.images)){
-    p.images.forEach(im=>{
-      imgs += `
-        <div class="img-box">
-          <div class="img-loader"></div>
-          <img src="/images/frames/${im}.webp"
-            onload="this.previousElementSibling.remove(); this.style.opacity=1"
-            style="opacity:0"
-            onclick="openLightbox(this.src)">
-        </div>
-      `;
-    });
-  }
-
   return `
-  <div class="section">
-
-    <div class="diorama-title">${p.name}</div>
-
-    <div class="slider">
-      ${imgs}
+    <div class="section">
+      <h2>${p.name}</h2>
+      <p>₹${p.price}</p>
     </div>
-
-    <div class="price">
-      <span class="new">₹${p.price}/-</span>
-    </div>
-
-    <button
-      class="add-cart-btn"
-      onclick="
-        addProductInfo(
-          '${p.id}',
-          '${p.name}',
-          ${p.price}
-        );
-        changeQty('${p.id}',1);
-      ">
-       Add to Cart
-    </button>
-
-  </div>
   `;
+
 }
 async function loadSaleProducts(){
 
