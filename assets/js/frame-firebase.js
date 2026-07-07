@@ -30,27 +30,24 @@ async function loadSaleProducts(){
 
   // Clear loader/content
   container.innerHTML = "";
+const snap = await getDocs(collection(db, "frameProduct"));
 
-  // Test Firestore
-  const snap = await getDocs(collection(db, "frameProduct"));
+alert("Documents: " + snap.size);
 
-  console.log("Documents:", snap.size);
+snap.forEach(doc => {
 
-  snap.forEach(doc => {
+  alert(doc.data().name);
 
-    console.log(doc.id, doc.data());
+  container.innerHTML += `
+    <div style="padding:20px;background:red;color:white;margin:10px;">
+      ${doc.data().name}
+    </div>
+  `;
 
-    const p = doc.data();
-    p.id = doc.id;
+});
 
-    container.insertAdjacentHTML(
-      "beforeend",
-      buildSaleHTML(p)
-    );
+if(loader) loader.remove();
 
-  });
-
-  if(loader) loader.remove();
 
 }
 
