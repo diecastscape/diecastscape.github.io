@@ -1502,4 +1502,31 @@ cursor:pointer;
 
 .cart-btn{
   flex:2;
+}.add-cart-btn{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#111;
+  color:#fff;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.add-cart-btn:hover{
+  transform:translateY(-2px);
+}
+
+.add-cart-btn:active{
+  transform:scale(.98);
+}
+
+.add-cart-btn::before{
+  content:"+ ";
+  font-size:18px;
+  font-weight:700;
 }
