@@ -30,7 +30,7 @@ async function loadSaleProducts(){
 
   // Clear loader/content
   container.innerHTML = "";
-const snap = await getDocs(collection(db, "frameProduct"));
+const snap = await getDocs(collection(db, "frameProducts"));
 
 alert("Documents: " + snap.size);
 
