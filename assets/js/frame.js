@@ -15,12 +15,20 @@ function addProductInfo(id, name, price) {
             id,
             name,
             price,
-            qty: 0
+            qty: 1
         };
+
+    } else {
+
+        cart[id].qty++;
 
     }
 
+    saveCart();
+    renderCart();
+
 }
+
 function changeQty(id, qty) {
 
     if (!cart[id]) return;
@@ -127,13 +135,8 @@ function openCart(){
 const cartSheet = document.getElementById("cartSheet");
 const cartOverlay = document.getElementById("cartOverlay");
 const cartHandle = document.getElementById("cartHandle");
-constfunction openCart(){
 
-    cartSheet.classList.add("show");
-
-    cartOverlay.classList.add("show");
-
-} 
+let startY = 0;
 function closeCart(){
 
     cartSheet.classList.remove("show");
