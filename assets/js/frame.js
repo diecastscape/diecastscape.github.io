@@ -7,37 +7,22 @@ function saveCart() {
 function getCartProducts() {
     return Object.values(cart);
 }
-function addProductInfo(id, name, price) {
+function addProductInfo(id,name,price){
 
-    if (!cart[id]) {
-
-        cart[id] = {
-            id,
-            name,
-            price,
-            qty: 1
-        };
-
-    } else {
+    if(cart[id]){
 
         cart[id].qty++;
 
-    }
+    }else{
 
-    saveCart();
-    renderCart();
+        cart[id]={
 
-}
+            id,
+            name,
+            price,
+            qty:1
 
-function changeQty(id, qty) {
-
-    if (!cart[id]) return;
-
-    cart[id].qty += qty;
-
-    if (cart[id].qty <= 0) {
-
-        delete cart[id];
+        };
 
     }
 
@@ -46,6 +31,7 @@ function changeQty(id, qty) {
     renderCart();
 
 }
+
 function renderCart() {
 
     const list = document.getElementById("cartItems");
@@ -107,7 +93,7 @@ function renderCart() {
         count === 0;
 if(count===0){
 
-    closeCart();
+    cartBox.classList.remove("open");
 
 }
 }
@@ -181,55 +167,12 @@ function checkoutCart() {
     );
 
 }
-function openCart(){
+const cartBox = document.getElementById("cartBox");
+const cartHeader = document.getElementById("cartHeader");
 
-    cartSheet.classList.add("show");
+cartHeader.addEventListener("click", () => {
 
-    cartOverlay.classList.add("show");
+    cartBox.classList.toggle("open");
 
-}
-const cartSheet = document.getElementById("cartSheet");
-const cartOverlay = document.getElementById("cartOverlay");
-const cartHandle = document.getElementById("cartHandle");
-
-let startY = 0;
-function closeCart(){
-
-    cartSheet.classList.remove("show");
-
-    cartOverlay.classList.remove("show");
-
-}
-if(cartHandle){
-
-    cartHandle.addEventListener("click", openCart);
-
-}
-
-if(cartOverlay){
-
-    cartOverlay.addEventListener("click", closeCart);
-
-}
-
-if(cartSheet){
-
-    cartSheet.addEventListener("touchstart", function(e){
-
-        startY = e.touches[0].clientY;
-
-    });
-
-    cartSheet.addEventListener("touchend", function(e){
-
-        let endY = e.changedTouches[0].clientY;
-
-        if(endY - startY > 80){
-
-            closeCart();
-
-        }
-
-    });
-
-}
+});
+        
