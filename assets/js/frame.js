@@ -125,6 +125,62 @@ function removeItem(id) {
     renderCart();
 
 }
+function showToast(message){
+
+    const toast = document.getElementById("toast");
+
+    toast.innerText = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer = setTimeout(function(){
+
+        toast.classList.remove("show");
+
+    },2000);
+
+}
+function checkoutCart() {
+
+    const products = getCartProducts();
+
+    if (products.length === 0) {
+        showToast("No products in cart");
+        return;
+    }
+
+    let message = "Hi Diecast.scape,%0A%0A";
+    message += "I'd like to order these items.%0A%0A";
+
+    let total = 0;
+    let count = 0;
+
+    products.forEach(item => {
+
+        const subTotal = item.price * item.qty;
+
+        total += subTotal;
+        count += item.qty;
+
+        message +=
+`• ${item.name}%0AQty: ${item.qty}%0A₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
+
+    });
+
+    message += "--------------------%0A";
+    message += `Products: ${count}%0A`;
+    message += `Total: ₹${total}%0A`;
+    message += "Shipping Charges Applicable%0A%0A";
+    message += "Please share payment details.";
+
+    window.open(
+        "https://wa.me/918792744018?text=" + message,
+        "_blank"
+    );
+
+}
 function openCart(){
 
     cartSheet.classList.add("show");
