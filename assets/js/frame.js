@@ -103,11 +103,11 @@ if(count===0){
 
 }
 }
-window.onload = function () {
+window.addEventListener("DOMContentLoaded", () => {
 
     renderCart();
 
-}
+});
 function removeItem(id) {
 
     delete cart[id];
@@ -141,32 +141,36 @@ function closeCart(){
     cartOverlay.classList.remove("show");
 
 }
-cartHandle.addEventListener("click",function(){
+if(cartHandle){
 
-    openCart();
+    cartHandle.addEventListener("click", openCart);
 
-});
-cartOverlay.addEventListener("click",function(){
+}
 
-    closeCart();
+if(cartOverlay){
 
-});
-let startY = 0;
+    cartOverlay.addEventListener("click", closeCart);
 
-cartSheet.addEventListener("touchstart",function(e){
+}
 
-    startY = e.touches[0].clientY;
+if(cartSheet){
 
-});
-cartSheet.addEventListener("touchend",function(e){
+    cartSheet.addEventListener("touchstart", function(e){
 
-    let endY = e.changedTouches[0].clientY;
+        startY = e.touches[0].clientY;
 
-    if(endY - startY > 80){
+    });
 
-        closeCart();
+    cartSheet.addEventListener("touchend", function(e){
 
-    }
+        let endY = e.changedTouches[0].clientY;
 
-});
+        if(endY - startY > 80){
 
+            closeCart();
+
+        }
+
+    });
+
+}
