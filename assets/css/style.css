@@ -1525,22 +1525,22 @@ EXPANDABLE AREA
 =========================== */
 
 .cart-content{
-
     max-height:0;
-
     overflow:hidden;
-
-    transition:max-height .35s ease;
-
-    background:#111827;
-
+    opacity:0;
+    transform:translateY(15px);
+    transition:
+        max-height .35s ease,
+        opacity .25s ease,
+        transform .35s ease;
 }
 
 .cart-box.open .cart-content{
-
     max-height:70vh;
-
+    opacity:1;
+    transform:translateY(0);
 }
+
 
 /* ===========================
 TITLE
@@ -1576,7 +1576,7 @@ ITEMS
 
 .cart-item{
 
-    padding:16px 0;
+    padding:12px 0;
 
     border-bottom:1px solid rgba(255,255,255,.06);
 
