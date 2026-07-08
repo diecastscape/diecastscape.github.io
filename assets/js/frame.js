@@ -1,5 +1,13 @@
 const CART_KEY = "diecastscape_cart";
+const OFFERS=[
 
+{qty:3,discount:10},
+
+{qty:7,discount:20},
+
+{qty:12,discount:30}
+
+];
 let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
 function saveCart() {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
@@ -88,7 +96,7 @@ function renderCart() {
         count ? count : "Add Items";
 
     document.getElementById("bottomTotal").innerText = total;
-
+updateOffer(count);
 
 if(count===0){
 
@@ -200,3 +208,72 @@ clearCartBtn.addEventListener("click", () => {
     }
 
 });
+function updateOffer(count){
+
+const title=document.getElementById("offerTitle");
+const bar=document.getElementById("offerProgress");
+const txt=document.getElementById("offerText");
+const info=document.getElementById("offerCount");
+
+let previous=0;
+let next=null;
+let current=null;
+
+for(let offer of OFFERS){
+
+if(count>=offer.qty){
+
+current=offer;
+previous=offer.qty;
+
+}else{
+
+next=offer;
+break;
+
+}
+
+}
+
+if(!next){
+
+title.innerHTML="🎉 Maximum Discount";
+
+info.innerHTML=count+" Frames";
+
+txt.innerHTML=current.discount+"% OFF Applied";
+
+bar.style.width="100%";
+
+return;
+
+}
+
+let start=current?current.qty:0;
+
+let progress=((count-start)/(next.qty-start))*100;
+
+progress=Math.max(0,Math.min(progress,100));
+
+bar.style.width=progress+"%";
+
+info.innerHTML=count+" / "+next.qty+" Frames";
+
+if(current){
+
+title.innerHTML="✅ "+current.discount+"% OFF Applied";
+
+}else{
+
+title.innerHTML="🎁 Unlock Discount";
+
+}
+
+txt.innerHTML=
+"Add "+
+(next.qty-count)+
+" more frames for "+
+next.discount+
+"% OFF";
+
+}
