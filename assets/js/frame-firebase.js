@@ -48,7 +48,6 @@ function buildSaleHTML(p){
           '${p.name}',
           ${p.price}
         );
-        changeQty('${p.id}',1);
       ">
        Add to Cart
     </button>
