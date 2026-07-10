@@ -201,3 +201,75 @@ clearCartBtn.addEventListener("click", () => {
     }
 
 });
+const offerBar = document.getElementById("offerBar");
+const offerCount = document.getElementById("offerCount");
+const offerText = document.getElementById("offerText");
+
+const offers = [
+    {count:3, discount:10},
+    {count:7, discount:20},
+    {count:12, discount:30}
+];
+
+let previous = 0;
+let next = offers[0];
+
+for(const o of offers){
+
+    if(count >= o.count){
+
+        previous = o.count;
+
+    }else{
+
+        next = o;
+
+        break;
+
+    }
+
+}
+
+if(count < 3){
+
+    offerCount.innerText = `${count} / 3 Frames`;
+
+    offerText.innerText =
+    `Add ${3-count} more frame${3-count>1?"s":""} to unlock 10% OFF`;
+
+    offerBar.style.width = (count/3*100)+"%";
+
+}
+
+else if(count < 7){
+
+    offerCount.innerText = `${count} / 7 Frames`;
+
+    offerText.innerHTML =
+    `✓ 10% OFF Applied • Add ${7-count} more for 20% OFF`;
+
+    offerBar.style.width = (count/7*100)+"%";
+
+}
+
+else if(count < 12){
+
+    offerCount.innerText = `${count} / 12 Frames`;
+
+    offerText.innerHTML =
+    `✓ 20% OFF Applied • Add ${12-count} more for 30% OFF`;
+
+    offerBar.style.width = (count/12*100)+"%";
+
+}
+
+else{
+
+    offerCount.innerText = `12 / 12 Frames`;
+
+    offerText.innerHTML =
+    `🎉 Maximum 30% OFF Unlocked`;
+
+    offerBar.style.width = "100%";
+
+}
