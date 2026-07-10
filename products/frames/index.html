@@ -72,115 +72,73 @@ class="search-bar">
 <!-- ===========================
 SMART CART
 =========================== -->
-
+<div id="toast" class="toast">
+    No products in cart
+</div>
 <div id="cartBox" class="cart-box">
-
     <!-- Header -->
     <div id="cartHeader" class="cart-header">
-
         <div class="cart-grip"></div>
-
         <div class="cart-title">
             View Cart
         </div>
-
     </div>
-
     <!-- Expandable Content -->
-
     <div id="cartContent" class="cart-content">
-
-
         <div id="cartItems" class="cart-items">
         </div>
-
         <button
             id="clearCartBtn"
             class="clear-cart">
-
             Clear Cart
-
         </button>
-
         <div class="cart-summary">
-
             <div class="summary-row">
-
-                <span>Yotal frames</span>
-
+                <span>Total frames</span>
                 <span id="summaryCount">0</span>
-
             </div>
-
             <div class="summary-row">
-
                 <span>Total price</span>
-
                 <span id="summaryTotal">
-
-                    ₹0
-
-                </span>
-
+                  ₹0
+               </span>
             </div>
-
             <div class="shipping-note">
-
                 Shipping Charges Applicable
-
             </div>
-
         </div>
-
     </div>
-
     <!-- Fixed Footer -->
 <div class="cart-footer">
-
-    <div class="offer-box">
-
+    <div>
         <div class="offer-title">
             🔥 Unlock Bigger Discount
         </div>
 
         <div class="offer-progress">
-
             <div id="offerBar" class="offer-progress-fill"></div>
-
         </div>
-
+      <div class="footer-bottom">
+         <div>
         <div class="offer-count" id="offerCount">
             0 / 3 Frames
         </div>
-
         <div class="offer-text" id="offerText">
             Add 3 frames to unlock 10% OFF
         </div>
-
-    </div>
-
-    <div class="footer-bottom">
-
-        <div class="footer-info">
-
             <div class="footer-price">
-
                 ₹<span id="bottomTotal">0</span>
-
             </div>
-
-        </div>
-
-        <button
+         </div>
+     <button
             id="checkoutBtn"
             class="checkout-btn">
-
             Checkout
-
         </button>
-
+      </div>
     </div>
 
+    
 </div>
     
 
@@ -192,7 +150,7 @@ target="_blank">
 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
 </a>
 
-  <footer class="site-footer">
+  <footer class="site-footer-bottom">
   <div class="footer-buttons">
   <a href="https://instagram.com/diecast.scape" target="_blank" class="footer-btn footer-instagram">
     Instagram
@@ -247,9 +205,7 @@ Thank you for visiting.
   <a href="/policy's/terms/">Terms of Service</a>
   <a href="/policy's/faq/">FAQ</a>
 </nav>
-  <div id="toast" class="toast">
-    No products in cart
-  </div>
+  
 
 <script type="module" src="/assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/frame-firebase.js"></script>
