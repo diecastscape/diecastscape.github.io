@@ -85,12 +85,11 @@ function renderCart() {
 
     document.getElementById("summaryTotal").innerText = "₹" + total;
 
-    document.getElementById("bottomTotal").innerText = total;
-
     const offerBar = document.getElementById("offerBar");
 const offerCount = document.getElementById("offerCount");
 const offerText = document.getElementById("offerText");
-
+const offerApply = document.getElementById("offerApply");
+const bottomTotal = document.getElementById("bottomTotal");
 const offers = [
     {count:3, discount:10},
     {count:7, discount:20},
@@ -121,42 +120,55 @@ if(count < 3){
     offerCount.innerText = `${count} / 3 Frames`;
 
     offerText.innerText =
-    `Add ${3-count} more frame${3-count>1?"s":""} to unlock 10% OFF`;
-
+    `Add ${3-count} frame${3-count>1?"s":""} to unlock 10% OFF`;
+offerApply.innerText =
+    `no discount applied`;
     offerBar.style.width = (count/3*100)+"%";
-
+bottomTotal.innerHTML = `₹${total}`;
 }
 
 else if(count < 7){
+const finalPrice = Math.round(total * 0.90);
 
     offerCount.innerText = `${count} / 7 Frames`;
 
     offerText.innerHTML =
-    `✓ 10% OFF Applied • Add ${7-count} more for 20% OFF`;
-
+    ` Add ${7-count} more for 20% OFF`;
+     offerApply.innerText =
+    `✓ 10% OFF Applied`;
     offerBar.style.width = (count/7*100)+"%";
+bottomTotal.innerHTML =
+    `₹${finalPrice}`;
 
 }
 
 else if(count < 12){
+const finalPrice = Math.round(total * 0.80);
 
     offerCount.innerText = `${count} / 12 Frames`;
 
     offerText.innerHTML =
-    `✓ 20% OFF Applied • Add ${12-count} more for 30% OFF`;
-
+    `Add ${12-count} more for 30% OFF`;
+offerApply.innerText =
+    `✓ 20% OFF Applied`;
     offerBar.style.width = (count/12*100)+"%";
+bottomTotal.innerHTML =
+    `₹${finalPrice}`;
 
 }
 
 else{
+const finalPrice = Math.round(total * 0.70);
 
-    offerCount.innerText = `12 / 12 Frames`;
+    offerCount.innerText = `${count} / 12 Frames`;
 
     offerText.innerHTML =
-    `🎉 Maximum 30% OFF Unlocked`;
-
+    `🎉 Maximum OFF Unlocked`;
+offerApply.innerText =
+    `✓ 30% OFF Applied`;
     offerBar.style.width = "100%";
+bottomTotal.innerHTML =
+    `₹${finalPrice}`;
 
 }
 
