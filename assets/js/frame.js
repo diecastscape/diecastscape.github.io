@@ -56,7 +56,11 @@ function renderCart() {
 
                 <div class="cart-name">
 
-                    ${item.name}:- ${item.price}×${item.qty}
+                    ${item.name}:
+
+                </div>
+                <div class="cart-name">
+                 ${item.price}×${item.qty}
 
                 </div>
 
@@ -89,6 +93,8 @@ function renderCart() {
 const offerCount = document.getElementById("offerCount");
 const offerText = document.getElementById("offerText");
 const offerApply = document.getElementById("offerApply");
+const offerApply2 = document.getElementById("offerApply2");
+const bottomTotal2 = document.getElementById("bottomTotal2")
 const bottomTotal = document.getElementById("bottomTotal")
 const offerSave = document.getElementById("offerSave");
 const offers = [
@@ -123,9 +129,10 @@ if(count < 3){
     offerText.innerText =
     `Add ${3-count} frame${3-count>1?"s":""} to unlock 20% OFF`;
 offerApply.innerText =
-    `no discount applied`;
+    `Complete cart for discount `;
     offerBar.style.width = (count/3*100)+"%";
 bottomTotal.innerHTML = `₹${total}`;
+bottomTotal2.innerHTML = `₹${total}`;
 }
 
 else if(count < 6){
@@ -137,10 +144,15 @@ const finalSave = Math.round(total * 0.20);
     ` Add ${6-count} more for 30% OFF`;
      offerApply.innerText =
     `✓ 20% OFF Applied`;
+    offerApply2.innerText =
+    `✓ 20% OFF Applied`;
     offerBar.style.width = (count/6*100)+"%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
-
+bottomTotal2.innerHTML =
+    `₹${finalPrice}`;
+offerSave.innerHTML =
+    `₹${finalSave}`;
 }
 
 else if(count < 10){
@@ -152,10 +164,15 @@ const finalSave = Math.round(total * 0.30);
     `Add ${10-count} more for 35% OFF`;
 offerApply.innerText =
     `✓ 30% OFF Applied`;
+    offerApply2.innerText =
+    `✓ 30% OFF Applied`;
     offerBar.style.width = (count/10*100)+"%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
-
+    bottomTotal2.innerHTML =
+    `₹${finalPrice}`;
+offerSave.innerHTML =
+    `₹${finalSave}`;
 }
 
 else{
@@ -167,10 +184,15 @@ const finalSave = Math.round(total * 0.35);
     `🎉 Maximum OFF Unlocked`;
 offerApply.innerText =
     `✓ 35% OFF Applied`;
+    offerApply2.innerText =
+    `✓ 35% OFF Applied`;
     offerBar.style.width = "100%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
-
+    bottomTotal2.innerHTML =
+    `₹${finalPrice}`;
+offerSave.innerHTML =
+    `₹${finalSave}`;
 }
 
 
