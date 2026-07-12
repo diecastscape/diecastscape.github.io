@@ -1642,7 +1642,8 @@ FOOTER
 
 .cart-footer{
     display:flex;
-    padding:12px 18px;
+  align-items:center;
+  padding:12px 18px;
     background:#0b1220;
     border-top:1px solid rgba(255,255,255,.08);
 
@@ -1760,8 +1761,9 @@ margin-bottom:6px;
     font-weight:600;
 }
 .footer-bottom{
-    display:grid;
-    grid-template-columns:1fr auto;
-    align-items:end;
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:9px;
+    color:#fff;
+    font-size:15px;
 }
-.footer-bottom{display;justify-content;align-items;}
