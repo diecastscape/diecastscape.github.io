@@ -1619,14 +1619,14 @@ SUMMARY
 =========================== */
 
 .cart-summary{
-    padding:18px;
+    padding:15px;
    border-top:1px solid rgba(255,255,255,.06);
 }
 
 .summary-row{
     display:flex;
     justify-content:space-between;
-    margin-bottom:12px;
+    margin-bottom:9px;
     color:#fff;
     font-size:15px;
 }
@@ -1727,6 +1727,10 @@ background:linear-gradient(90deg,#ff9800,#22c55e);
 transition:.4s;
 border-radius:50px;
 }
+.bottom-row{
+    display:flex;
+    justify-content:space-between;
+}
 
 .offer-count{
 color:#fff;
@@ -1748,13 +1752,12 @@ margin-bottom:6px;
     flex-wrap:wrap;
 }
 
-
-
 .offer-apply{
     font-size:13px;
     font-weight:600;
     color:#FFD54A;
     white-space:nowrap;
+  align-items:center;
 }
 .footer-price{
     color:#fff;
@@ -1765,8 +1768,4 @@ margin-bottom:6px;
     display:grid;
     grid-template-columns:1fr auto;
     align-items:end;
-    gap:16px;
-}
-.footer-left{
-    min-width:0;
 }
