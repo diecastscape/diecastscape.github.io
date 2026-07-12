@@ -1653,8 +1653,8 @@ CHECKOUT
 =========================== */
 .checkout-btn{
     flex-shrink:0;
-    width:130px;
-    height:56px;
+    width:100px;
+    height:40px;
     border:none;
     border-radius:12px;
     background:#25D366;
