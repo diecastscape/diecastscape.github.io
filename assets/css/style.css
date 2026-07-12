@@ -1642,7 +1642,6 @@ FOOTER
 
 .cart-footer{
     display:flex;
-    align-items:center;
     padding:12px 18px;
     background:#0b1220;
     border-top:1px solid rgba(255,255,255,.08);
@@ -1721,15 +1720,11 @@ margin-bottom:6px;
 
 .offer-progress-fill{
 height:100%;
-min-width:3%;
+min-width:2%;
 width:0%;
 background:linear-gradient(90deg,#ff9800,#22c55e);
 transition:.4s;
 border-radius:50px;
-}
-.bottom-row{
-    display:flex;
-    justify-content:space-between;
 }
 
 .offer-count{
@@ -1769,3 +1764,4 @@ margin-bottom:6px;
     grid-template-columns:1fr auto;
     align-items:end;
 }
+.footer-bottom{display;justify-content;align-items;}
