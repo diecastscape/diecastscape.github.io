@@ -56,7 +56,7 @@ function renderCart() {
 
                 <div class="cart-name">
 
-                    ${item.name} ×${item.qty}
+                    ${item.name}:- ${item.price}×${item.qty}
 
                 </div>
 
@@ -89,11 +89,12 @@ function renderCart() {
 const offerCount = document.getElementById("offerCount");
 const offerText = document.getElementById("offerText");
 const offerApply = document.getElementById("offerApply");
-const bottomTotal = document.getElementById("bottomTotal");
+const bottomTotal = document.getElementById("bottomTotal")
+const offerSave = document.getElementById("offerSave");
 const offers = [
-    {count:3, discount:10},
-    {count:7, discount:20},
-    {count:12, discount:30}
+    {count:3, discount:20},
+    {count:6, discount:30},
+    {count:10, discount:35}
 ];
 
 let previous = 0;
@@ -120,52 +121,52 @@ if(count < 3){
     offerCount.innerText = `${count} / 3 Frames`;
 
     offerText.innerText =
-    `Add ${3-count} frame${3-count>1?"s":""} to unlock 10% OFF`;
+    `Add ${3-count} frame${3-count>1?"s":""} to unlock 20% OFF`;
 offerApply.innerText =
     `no discount applied`;
     offerBar.style.width = (count/3*100)+"%";
 bottomTotal.innerHTML = `₹${total}`;
 }
 
-else if(count < 7){
-const finalPrice = Math.round(total * 0.90);
-
-    offerCount.innerText = `${count} / 7 Frames`;
+else if(count < 6){
+const finalPrice = Math.round(total * 0.80);
+const finalSave = Math.round(total * 0.20);
+    offerCount.innerText = `${count} / 6 Frames`;
 
     offerText.innerHTML =
-    ` Add ${7-count} more for 20% OFF`;
+    ` Add ${6-count} more for 30% OFF`;
      offerApply.innerText =
-    `✓ 10% OFF Applied`;
-    offerBar.style.width = (count/7*100)+"%";
+    `✓ 20% OFF Applied`;
+    offerBar.style.width = (count/6*100)+"%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
 
 }
 
-else if(count < 12){
-const finalPrice = Math.round(total * 0.80);
-
-    offerCount.innerText = `${count} / 12 Frames`;
+else if(count < 10){
+const finalPrice = Math.round(total * 0.70);
+const finalSave = Math.round(total * 0.30);
+    offerCount.innerText = `${count} / 10 Frames`;
 
     offerText.innerHTML =
-    `Add ${12-count} more for 30% OFF`;
+    `Add ${10-count} more for 35% OFF`;
 offerApply.innerText =
-    `✓ 20% OFF Applied`;
-    offerBar.style.width = (count/12*100)+"%";
+    `✓ 30% OFF Applied`;
+    offerBar.style.width = (count/10*100)+"%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
 
 }
 
 else{
-const finalPrice = Math.round(total * 0.70);
-
-    offerCount.innerText = `${count} / 12 Frames`;
+const finalPrice = Math.round(total * 0.65);
+const finalSave = Math.round(total * 0.35);
+    offerCount.innerText = `${count} Frames`;
 
     offerText.innerHTML =
     `🎉 Maximum OFF Unlocked`;
 offerApply.innerText =
-    `✓ 30% OFF Applied`;
+    `✓ 35% OFF Applied`;
     offerBar.style.width = "100%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
