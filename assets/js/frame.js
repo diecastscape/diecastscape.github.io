@@ -1,4 +1,3 @@
-
 const CART_KEY = "diecastscape_cart";
 
 let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
@@ -123,13 +122,15 @@ for(const o of offers){
 }
 
 if(count < 3){
-
+const finalPrice = Math.round(total * 1);
+const finalSave = Math.round(total * 0);
     offerCount.innerText = `${count} / 3 Frames`;
-
     offerText.innerText =
     `Add ${3-count} frame${3-count>1?"s":""} to unlock 20% OFF`;
 offerApply.innerText =
-    `Complete cart for discount `;
+    `Fill cart for discount `;
+    offerApply2.innerText =
+    `Fill cart for discount`;
     offerBar.style.width = (count/3*100)+"%";
 bottomTotal.innerHTML = `₹${total}`;
 bottomTotal2.innerHTML = `₹${total}`;
@@ -139,7 +140,6 @@ else if(count < 6){
 const finalPrice = Math.round(total * 0.80);
 const finalSave = Math.round(total * 0.20);
     offerCount.innerText = `${count} / 6 Frames`;
-
     offerText.innerHTML =
     ` Add ${6-count} more for 30% OFF`;
      offerApply.innerText =
@@ -159,7 +159,6 @@ else if(count < 10){
 const finalPrice = Math.round(total * 0.70);
 const finalSave = Math.round(total * 0.30);
     offerCount.innerText = `${count} / 10 Frames`;
-
     offerText.innerHTML =
     `Add ${10-count} more for 35% OFF`;
 offerApply.innerText =
@@ -179,7 +178,6 @@ else{
 const finalPrice = Math.round(total * 0.65);
 const finalSave = Math.round(total * 0.35);
     offerCount.innerText = `${count} Frames`;
-
     offerText.innerHTML =
     `🎉 Maximum OFF Unlocked`;
 offerApply.innerText =
