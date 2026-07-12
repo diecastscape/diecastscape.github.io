@@ -1761,7 +1761,5 @@ margin-bottom:6px;
     font-weight:600;
 }
 .footer-bottom{
-   display:grid;
-    grid-template-columns:1fr auto;
-    align-items:end;
+   
 }
