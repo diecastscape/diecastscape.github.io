@@ -31,17 +31,27 @@ function addProductInfo(id,name,price){
     renderCart();
 
 }
+function getShipping(count){
 
+    const weight = count * 135; // grams per frame
+
+    if(weight <= 990) return 62;
+    if(weight <= 1490) return 80;
+    if(weight <= 1990) return 100;
+    if(weight <= 2490) return 118;
+    if(weight <= 2990) return 136;
+    if(weight <= 3490) return 156;
+    if(weight <= 3990) return 174;
+
+    return 212;
+}
 function renderCart() {
 
     const list = document.getElementById("cartItems");
-
     list.innerHTML = "";
-
     let total = 0;
-
     let count = 0;
-
+    let shipping = 0;
     getCartProducts().forEach(item => {
 
         total += item.price * item.qty;
@@ -55,17 +65,14 @@ function renderCart() {
 
                 <div class="cart-name">
 
-                    ${item.name}:
+                    ${item.name}:l
 
                 </div>
-                <div class="cart-name">
-                 ${item.price}×${item.qty}
-
-                </div>
+                
 
                 <div class="cart-price">
 
-                    ₹${item.price * item.qty}
+                ${item.price}×${item.qty}:-    ₹${item.price * item.qty}
 
                 </div>
 
@@ -123,6 +130,8 @@ for(const o of offers){
 
 if(count < 3){
 const finalPrice = Math.round(total * 1);
+    shipping = getShipping(count);
+const grandTotal = finalPrice + shipping;
 const finalSave = Math.round(total * 0);
     offerCount.innerText = `${count} / 3 Frames`;
     offerText.innerText =
@@ -132,12 +141,17 @@ offerApply.innerText =
     offerApply2.innerText =
     `Fill cart for discount`;
     offerBar.style.width = (count/3*100)+"%";
+    offerSave.innerHTML =
+    `₹${finalSave}`;
 bottomTotal.innerHTML = `₹${total}`;
-bottomTotal2.innerHTML = `₹${total}`;
+  document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
+document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`;  
 }
 
 else if(count < 6){
 const finalPrice = Math.round(total * 0.80);
+    shipping = getShipping(count);
+const grandTotal = finalPrice + shipping;
 const finalSave = Math.round(total * 0.20);
     offerCount.innerText = `${count} / 6 Frames`;
     offerText.innerHTML =
@@ -149,14 +163,16 @@ const finalSave = Math.round(total * 0.20);
     offerBar.style.width = (count/6*100)+"%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
-bottomTotal2.innerHTML =
-    `₹${finalPrice}`;
+document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
+document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`;
 offerSave.innerHTML =
     `₹${finalSave}`;
 }
 
 else if(count < 10){
 const finalPrice = Math.round(total * 0.70);
+    shipping = getShipping(count);
+const grandTotal = finalPrice + shipping;
 const finalSave = Math.round(total * 0.30);
     offerCount.innerText = `${count} / 10 Frames`;
     offerText.innerHTML =
@@ -168,14 +184,16 @@ offerApply.innerText =
     offerBar.style.width = (count/10*100)+"%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
-    bottomTotal2.innerHTML =
-    `₹${finalPrice}`;
+    document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
+document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`;
 offerSave.innerHTML =
     `₹${finalSave}`;
 }
 
 else{
 const finalPrice = Math.round(total * 0.65);
+    shipping = getShipping(count);
+const grandTotal = finalPrice + shipping;
 const finalSave = Math.round(total * 0.35);
     offerCount.innerText = `${count} Frames`;
     offerText.innerHTML =
@@ -187,8 +205,8 @@ offerApply.innerText =
     offerBar.style.width = "100%";
 bottomTotal.innerHTML =
     `₹${finalPrice}`;
-    bottomTotal2.innerHTML =
-    `₹${finalPrice}`;
+    document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
+document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`;
 offerSave.innerHTML =
     `₹${finalSave}`;
 }
