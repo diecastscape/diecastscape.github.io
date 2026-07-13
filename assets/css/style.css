@@ -1769,3 +1769,21 @@ margin-bottom:6px;
     flex:1;
     min-width:0;
 }
+.cart-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    opacity:0;
+    visibility:hidden;
+    transition:.25s;
+    z-index:998;
+}
+
+.cart-box{
+    z-index:999;
+}
+
+.cart-overlay.show{
+    opacity:1;
+    visibility:visible;
+}
