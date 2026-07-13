@@ -65,14 +65,14 @@ function renderCart() {
 
                 <div class="cart-name">
 
-                    ${item.name}:
+                    ${item.name}
 
                 </div>
                 
 
                 <div class="cart-price">
 
-                ${item.price}×${item.qty}:-    ₹${item.price * item.qty}
+                ${item.price}×${item.qty} =  ₹${item.price * item.qty}
 
                 </div>
 
@@ -147,81 +147,78 @@ offerApply2.innerText =
 offerBar.style.width = (count/3*100)+"%";
 }
 
-
 else if(count < 6){
-const finalPrice = Math.round(total * 0.80);
-    shipping = getShipping(count);
-const grandTotal = finalPrice + shipping;
-const grandTotal1 = finalPrice + shipping;
+
+shipping = getShipping(count);
 const finalSave = Math.round(total * 0.20);
-    offerCount.innerText = `${count} / 6 Frames`;
-    offerText.innerHTML =
-    ` Add ${6-count} more for 30% OFF`;
-     offerApply.innerText =
-    `20% OFF Applied`;
-    offerApply2.innerText =
-    `20% OFF`;
-    offerBar.style.width = (count/6*100)+"%";
-bottomTotal.innerHTML =
-    `₹${finalPrice}`;
+const finalPrice = total + shipping;
+const grandTotal = finalPrice - finalSave;
+const grandTotal1 = finalPrice - finalSave;
 document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
-document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`;
-       document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;
-offerSave.innerHTML =
-    `-₹${finalSave}`;
+document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
+document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
+document.getElementById("bottomTotal").innerHTML = `₹${finalPrice}`;
+document.getElementById("offerSave").innerHTML = `-₹${finalSave}`;  
+offerCount.innerText = `${count} / 6 Frames`;
+offerText.innerText =
+`Add ${6-count} frame to unlock 30% OFF`;
+offerApply.innerText =
+`20% OFF Applied `;
+offerApply2.innerText =
+`20% OFF`;
+offerBar.style.width = (count/6*100)+"%";
 }
 
 else if(count < 10){
-const finalPrice = Math.round(total * 0.70);
-    shipping = getShipping(count);
-const grandTotal = finalPrice + shipping;
-const grandTotal1 = finalPrice + shipping;
+
+shipping = getShipping(count);
 const finalSave = Math.round(total * 0.30);
-    offerCount.innerText = `${count} / 10 Frames`;
-    offerText.innerHTML =
-    `Add ${10-count} more for 35% OFF`;
+const finalPrice = total + shipping;
+const grandTotal = finalPrice - finalSave;
+const grandTotal1 = finalPrice - finalSave;
+document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
+document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
+document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
+document.getElementById("bottomTotal").innerHTML = `₹${finalPrice}`;
+document.getElementById("offerSave").innerHTML = `-₹${finalSave}`;  
+offerCount.innerText = `${count} / 10 Frames`;
+offerText.innerText =
+`Add ${10-count} frame to unlock 35% OFF`;
 offerApply.innerText =
-    `30% OFF Applied`;
-    offerApply2.innerText =
-    `30% OFF`;
-    offerBar.style.width = (count/10*100)+"%";
-bottomTotal.innerHTML =
-    `₹${finalPrice}`;
-    document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
-document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`;
-       document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;
-offerSave.innerHTML =
-    `-₹${finalSave}`;
+`30% OFF Applied `;
+offerApply2.innerText =
+`30% OFF`;
+offerBar.style.width = (count/6*100)+"%";
 }
 
-else{
-const finalPrice = Math.round(total * 0.65);
-    shipping = getShipping(count);
-const grandTotal = finalPrice + shipping;
-const grandTotal1 = finalPrice + shipping;
+    else if(count < 6){
+
+shipping = getShipping(count);
 const finalSave = Math.round(total * 0.35);
-    offerCount.innerText = `${count} Frames`;
-    offerText.innerHTML =
-    `🎉 Maximum OFF Unlocked`;
+const finalPrice = total + shipping;
+const grandTotal = finalPrice - finalSave;
+const grandTotal1 = finalPrice - finalSave;
+document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
+document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
+document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
+document.getElementById("bottomTotal").innerHTML = `₹${finalPrice}`;
+document.getElementById("offerSave").innerHTML = `-₹${finalSave}`;  
+offerCount.innerText = `${count} Frames`;
+offerText.innerText =
+`🎉 Maximum OFF Unlocked`;
 offerApply.innerText =
-    `35% OFF Applied`;
-    offerApply2.innerText =
-    `35% OFF`;
-    offerBar.style.width = "100%";
-bottomTotal.innerHTML =
-    `₹${finalPrice}`;
-    document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
-document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`;
-offerSave.innerHTML =`-₹${finalSave}`;
-       document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;
-    
-}
+`35% OFF Applied `;
+offerApply2.innerText =
+`35% OFF`;
+offerBar.style.width ="100%";
+    }
+
+
 
 
 if(count===0){
-
+    document.getElementById("shippingPrice").innerHTML = `₹0`;
     cartBox.classList.remove("open");
-
     cartHeader.style.display = "none";
 
 }else{
