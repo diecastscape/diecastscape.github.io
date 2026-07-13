@@ -65,7 +65,7 @@ function renderCart() {
 
                 <div class="cart-name">
 
-                    ${item.name}:l
+                    ${item.name}:
 
                 </div>
                 
@@ -149,7 +149,7 @@ bottomTotal.innerHTML = `₹${total}`;
 document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
     document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
 }
-}
+
 
 else if(count < 6){
 const finalPrice = Math.round(total * 0.80);
