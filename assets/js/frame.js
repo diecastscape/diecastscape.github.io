@@ -33,7 +33,9 @@ function addProductInfo(id,name,price){
 }
 function getShipping(count){
 
-    const weight = count * 135; // grams per frame
+    if(count === 0) return 0;
+
+    const weight = count * 135;
 
     if(weight <= 990) return 62;
     if(weight <= 1490) return 80;
@@ -45,6 +47,7 @@ function getShipping(count){
 
     return 212;
 }
+
 function renderCart() {
 
     const list = document.getElementById("cartItems");
@@ -191,7 +194,7 @@ offerApply2.innerText =
 offerBar.style.width = (count/6*100)+"%";
 }
 
-    else if(count < 6){
+    else{
 
 shipping = getShipping(count);
 const finalSave = Math.round(total * 0.35);
@@ -215,17 +218,24 @@ offerBar.style.width ="100%";
 
 
 
-
 if(count===0){
-    document.getElementById("shippingPrice").innerHTML = `₹0`;
+
+    document.getElementById("shippingPrice").innerHTML = "₹0";
+    document.getElementById("offerSave").innerHTML = "-₹0";
+    document.getElementById("grandTotal").innerHTML = "₹0";
+    document.getElementById("grandTotal1").innerHTML = "₹0";
+    document.getElementById("bottomTotal").innerHTML = "₹0";
+
     cartBox.classList.remove("open");
     cartHeader.style.display = "none";
 
-}else{
+}
+else{
 
     cartHeader.style.display = "flex";
 
 }
+
 }
 window.addEventListener("DOMContentLoaded", () => {
 
