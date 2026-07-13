@@ -227,6 +227,7 @@ if(count===0){
     document.getElementById("bottomTotal").innerHTML = "₹0";
 
     cartBox.classList.remove("open");
+    cartOverlay.classList.remove("show");
     cartHeader.style.display = "none";
 
 }
@@ -309,11 +310,21 @@ function checkoutCart() {
 }
 const cartBox = document.getElementById("cartBox");
 const cartHeader = document.getElementById("cartHeader");
+const cartOverlay = document.getElementById("cartOverlay");
 const checkoutBtn = document.getElementById("checkoutBtn");
 const clearCartBtn = document.getElementById("clearCartBtn");
 cartHeader.addEventListener("click", () => {
+
     cartBox.classList.toggle("open");
+
+    if(cartBox.classList.contains("open")){
+        cartOverlay.classList.add("show");
+    }else{
+        cartOverlay.classList.remove("show");
+    }
+
 });
+
 
 checkoutBtn.addEventListener("click", checkoutCart);
 
