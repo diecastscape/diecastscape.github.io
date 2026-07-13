@@ -91,7 +91,7 @@ function renderCart() {
 
     });
 
-    document.getElementById("summaryCount").innerText = count;
+
 
     document.getElementById("summaryTotal").innerText = "₹" + total;
 
