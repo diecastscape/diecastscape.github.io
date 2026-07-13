@@ -191,7 +191,7 @@ offerApply.innerText =
 `30% OFF Applied `;
 offerApply2.innerText =
 `30% OFF`;
-offerBar.style.width = (count/6*100)+"%";
+offerBar.style.width = (count/10*100)+"%";
 }
 
     else{
