@@ -100,9 +100,6 @@ const offerCount = document.getElementById("offerCount");
 const offerText = document.getElementById("offerText");
 const offerApply = document.getElementById("offerApply");
 const offerApply2 = document.getElementById("offerApply2");
-const bottomTotal2 = document.getElementById("bottomTotal2")
-const bottomTotal = document.getElementById("bottomTotal")
-const offerSave = document.getElementById("offerSave");
 const offers = [
     {count:3, discount:20},
     {count:6, discount:30},
@@ -129,25 +126,25 @@ for(const o of offers){
 }
 
 if(count < 3){
-const finalPrice = Math.round(total * 1);
-    shipping = getShipping(count);
-const grandTotal = finalPrice + shipping;
-const grandTotal1 = finalPrice + shipping;
+
+shipping = getShipping(count);
 const finalSave = Math.round(total * 0);
-    offerCount.innerText = `${count} / 3 Frames`;
-    offerText.innerText =
-    `Add ${3-count} frame${3-count>1?"s":""} to unlock 20% OFF`;
-offerApply.innerText =
-    `Fill cart for discount `;
-    offerApply2.innerText =
-    `Fill cart for discount`;
-    offerBar.style.width = (count/3*100)+"%";
-    offerSave.innerHTML =
-    `-₹${finalSave}`;
-bottomTotal.innerHTML = `₹${total}`;
-  document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
+const finalPrice = total + shipping;
+const grandTotal = finalPrice - finalSave;
+const grandTotal1 = finalPrice - finalSave;
+document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
 document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
-    document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
+document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
+document.getElementById("bottomTotal").innerHTML = `₹${finalPrice}`;
+document.getElementById("offerSave").innerHTML = `-₹${finalSave}`;  
+offerCount.innerText = `${count} / 3 Frames`;
+offerText.innerText =
+`Add ${3-count} frame to unlock 20% OFF`;
+offerApply.innerText =
+`Fill cart for discount `;
+offerApply2.innerText =
+`Fill cart for discount`;
+offerBar.style.width = (count/3*100)+"%";
 }
 
 
