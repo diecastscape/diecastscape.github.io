@@ -31,7 +31,31 @@
   <button onclick="openSection('special')">View</button>
 </div>
   </div>
+<div class="dash-card">
 
+<h3>Frames</h3>
+
+<h5>Name</h5>
+<input id="f-name" placeholder="Frame name">
+
+<h5>Price</h5>
+<input id="f-price" placeholder="Price">
+
+<h5>Image Paths</h5>
+<div id="f-imagesList"></div>
+
+<button onclick="addFrameImageField()" class="primary-btn">
++ Add Image
+</button>
+
+<button onclick="saveFrameProduct()" class="primary-btn">
+Save Frame
+</button>
+
+<div id="f-saveLoader" class="loader"></div>
+<p id="f-saveMsg" class="center-msg"></p>
+
+</div>
   <!-- ===== MAIN SALE SECTION ===== -->
   <div id="section-main" class="section-panel">
     <div class="section-top">
