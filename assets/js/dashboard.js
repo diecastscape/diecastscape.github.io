@@ -9,6 +9,8 @@ import {
   getDocs,
   orderBy,
   query,
+  getFirestore,
+  serverTimestamp,
   deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { signOut, onAuthStateChanged } 
@@ -47,6 +49,60 @@ function autoLogout() {
   });
 }
 
+window.addFrameImageField = function () {
+
+  const row = document.createElement("div");
+
+  row.innerHTML = `
+    <input class="frame-image" placeholder="Image URL">
+  `;
+
+  document.getElementById("f-imagesList").appendChild(row);
+};
+
+// Add first image field
+addFrameImageField();
+
+window.saveFrameProduct = async function () {
+
+  const loader = document.getElementById("f-saveLoader");
+  const msg = document.getElementById("f-saveMsg");
+
+  loader.style.display = "block";
+  msg.innerText = "";
+
+  const images = [];
+
+  document.querySelectorAll(".frame-image").forEach(input => {
+    if (input.value.trim()) images.push(input.value.trim());
+  });
+
+  try {
+
+    await addDoc(collection(db, "frames"), {
+      name: document.getElementById("f-name").value.trim(),
+      price: Number(document.getElementById("f-price").value),
+      images: images,
+      active: true,
+      created: serverTimestamp()
+    });
+
+    msg.innerText = "Frame Added ✔";
+
+    document.getElementById("f-name").value = "";
+    document.getElementById("f-price").value = "";
+    document.getElementById("f-imagesList").innerHTML = "";
+
+    addFrameImageField();
+
+  } catch (err) {
+
+    msg.innerText = err.message;
+
+  }
+
+  loader.style.display = "none";
+};
 const defaultDetails = `
   <p>
     This is a <strong>fully assembled, ready-to-display diorama</strong>,
