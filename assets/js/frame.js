@@ -274,16 +274,15 @@ function checkoutCart() {
 
     const products = getCartProducts();
 
-    if (products.length === 0) {
+    if(products.length === 0){
         showToast("No products in cart");
         return;
     }
 
-    let message = "Hi Diecast.scape,%0A%0A";
-    message += "I'd like to order these items.%0A%0A";
-
     let total = 0;
     let count = 0;
+
+    let message = "🛒 *New Order - Diecast.scape*%0A%0A";
 
     products.forEach(item => {
 
@@ -292,22 +291,39 @@ function checkoutCart() {
         total += subTotal;
         count += item.qty;
 
-        message +=
-`• ${item.name}%0AQty: ${item.qty}%0A₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
+        message += `• ${item.name}%0A`;
+        message += `Qty : ${item.qty}%0A`;
+        message += `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
 
     });
 
-    message += "--------------------%0A";
-    message += `Products: ${count}%0A`;
-    message += `Total: ₹${total}%0A`;
-    message += "Shipping Charges Applicable%0A%0A";
+    const shipping = getShipping(count);
+
+    let discount = 0;
+
+    if(count >= 10){
+        discount = Math.round(total * 0.35);
+    }else if(count >= 6){
+        discount = Math.round(total * 0.30);
+    }else if(count >= 3){
+        discount = Math.round(total * 0.20);
+    }
+
+    const grandTotal = total + shipping - discount;
+
+    message += "━━━━━━━━━━━━━━%0A";
+    message += `📦 Frames : ${count}%0A`;
+    message += `💰 Product Total : ₹${total}%0A`;
+    message += `🚚 Shipping : ₹${shipping}%0A`;
+    message += `🎁 Discount : -₹${discount}%0A`;
+    message += `━━━━━━━━━━━━━━%0A`;
+    message += `💵 *Grand Total : ₹${grandTotal}*%0A%0A`;
     message += "Please share payment details.";
 
     window.open(
         "https://wa.me/918792744018?text=" + message,
         "_blank"
     );
-
 }
 const cartBox = document.getElementById("cartBox");
 const cartHeader = document.getElementById("cartHeader");
