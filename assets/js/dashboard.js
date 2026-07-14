@@ -79,7 +79,7 @@ window.saveFrameProduct = async function () {
 
   try {
 
-    await addDoc(collection(db, "frames"), {
+    await addDoc(collection(db, "frameProducts"), {
       name: document.getElementById("f-name").value.trim(),
       price: Number(document.getElementById("f-price").value),
       images: images,
