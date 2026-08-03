@@ -103,7 +103,7 @@ function renderCart() {
     const offerText = document.getElementById("offerText");
     const offerApply = document.getElementById("offerApply");
     const offerApply2 = document.getElementById("offerApply2");
-
+    const offerApply3 = document.getElementById("offerApply3");
 
     // =========================
     // SHIPPING
@@ -221,14 +221,15 @@ function renderCart() {
             `${count} / 8 Frames`;
 
         offerText.innerText =
-            `Add ${remaining} frame${remaining > 1 ? "s" : ""} to get 25% OFF`;
+            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 25% OFF`;
 
         offerApply.innerText =
-            ``;
+            `special discount available on 8+frames`;
 
         offerApply2.innerText =
-            `OFFER APPLYD`;
-
+            `Offer applyd`;
+        offerApply3.innerText =
+            `Free delivery`;
         // Progress starts from 4 and goes to 8
         offerBar.style.width =
             ((count - 4) / 4 * 100) + "%";
@@ -247,7 +248,7 @@ function renderCart() {
             `${count} Frames`;
 
         offerText.innerText =
-            `🎉 25% OFF + FREE SHIPPING UNLOCKED`;
+            `🎉 25% Off + Free delivery Unlocked`;
 
         offerApply.innerText =
             `25% off`;
