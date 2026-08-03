@@ -31,23 +31,20 @@ function addProductInfo(id,name,price){
     renderCart();
 
 }
-function getShipping(count){
+function getShipping(count) {
 
-    if(count === 0) return 0;
+    if (count === 0) {
+        return 0;
+    }
 
-    const weight = count * 135;
+    // Up to 3 frames = ₹100 shipping
+    if (count <= 3) {
+        return 100;
+    }
 
-    if(weight <= 990) return 62;
-    if(weight <= 1490) return 80;
-    if(weight <= 1990) return 100;
-    if(weight <= 2490) return 118;
-    if(weight <= 2990) return 136;
-    if(weight <= 3490) return 156;
-    if(weight <= 3990) return 174;
-
-    return 212;
+    // 4 or more frames = FREE shipping
+    return 0;
 }
-
 function renderCart() {
 
     const list = document.getElementById("cartItems");
