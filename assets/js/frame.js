@@ -451,34 +451,34 @@ function checkoutCart() {
 
     message += "━━━━━━━━━━━━━━%0A";
 
-    message += `📦 Frames : ${count}%0A`;
+    message += `Total Frames : ${count}%0A`;
 
-    message += `💰 Product Total : ₹${total}%0A`;
+    message += `Product Total : ₹${total}%0A`;
 
 
     // Show FREE instead of ₹0 for 4+ frames
     if (count >= 4) {
 
-        message += `🚚 Shipping : FREE%0A`;
+        message += `Shipping : FREE%0A`;
 
     } else {
 
-        message += `🚚 Shipping : ₹${shipping}%0A`;
+        message += `Shipping : ₹${shipping}%0A`;
 
     }
 
 
-    message += `🎁 Discount : -₹${discount}%0A`;
+    message += `Discount : -₹${discount}%0A`;
 
-    message += `🏷️ Offer : ${offerText}%0A`;
+    message += `Offer : ${offerText}%0A`;
 
     message += "━━━━━━━━━━━━━━%0A";
 
     message +=
-        `💵 *Grand Total : ₹${grandTotal}*%0A%0A`;
+        `*Grand Total : ₹${grandTotal}*%0A%0A`;
 
     message +=
-        "Please share payment details.";
+        "Share me your payment option.";
 
 
     // =========================
