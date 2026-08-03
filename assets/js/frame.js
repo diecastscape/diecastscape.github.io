@@ -224,15 +224,15 @@ function renderCart() {
             `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 25% OFF`;
 
         offerApply.innerText =
-            `special discount available on 8+frames`;
+            ``;
 
         offerApply2.innerText =
-            `Offer applyd`;
+            `Offer applyd `;
         offerApply3.innerText =
             `Free delivery`;
         // Progress starts from 4 and goes to 8
         offerBar.style.width =
-            ((count - 4) / 4 * 100) + "%";
+            (count / 8 * 100) + "%";
 
     }
 
@@ -254,7 +254,7 @@ function renderCart() {
             `25% off`;
 
         offerApply2.innerText =
-            `OFFER APPLYD`;
+            `Offer applyd `;
 
         offerBar.style.width =
             "100%";
