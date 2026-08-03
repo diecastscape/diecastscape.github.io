@@ -351,7 +351,7 @@ function checkoutCart() {
 
     const products = getCartProducts();
 
-    if(products.length === 0){
+    if (products.length === 0) {
         showToast("No products in cart");
         return;
     }
@@ -359,7 +359,12 @@ function checkoutCart() {
     let total = 0;
     let count = 0;
 
-    let message = "🛒 *New Order - Diecast.scape*%0A%0A";
+    let message = "🛒 *Order - Diecast.scape*%0A%0A";
+
+
+    // =========================
+    // PRODUCTS
+    // =========================
 
     products.forEach(item => {
 
@@ -374,33 +379,117 @@ function checkoutCart() {
 
     });
 
+
+    // =========================
+    // NEW OFFER SYSTEM
+    // =========================
+
+    // 1–3 Frames
+    // ₹100 Shipping
+    // No Discount
+
+    // 4–7 Frames
+    // FREE Shipping
+    // No Discount
+
+    // 8+ Frames
+    // FREE Shipping
+    // 25% OFF
+
+
+    // Get shipping from new function
     const shipping = getShipping(count);
 
+
+    // Calculate 25% discount only for 8+ frames
     let discount = 0;
 
-    if(count >= 10){
-        discount = Math.round(total * 0.35);
-    }else if(count >= 6){
-        discount = Math.round(total * 0.30);
-    }else if(count >= 3){
-        discount = Math.round(total * 0.20);
+    if (count >= 8) {
+
+        discount = Math.round(total * 0.25);
+
     }
 
-    const grandTotal = total + shipping - discount;
+
+    // =========================
+    // GRAND TOTAL
+    // =========================
+
+    const grandTotal =
+        total + shipping - discount;
+
+
+    // =========================
+    // OFFER TEXT
+    // =========================
+
+    let offerText = "";
+
+    if (count < 4) {
+
+        offerText =
+            "Add 4 frames to unlock FREE SHIPPING";
+
+    }
+    else if (count < 8) {
+
+        offerText =
+            "FREE SHIPPING UNLOCKED";
+
+    }
+    else {
+
+        offerText =
+            "25% OFF + FREE SHIPPING UNLOCKED";
+
+    }
+
+
+    // =========================
+    // WHATSAPP MESSAGE
+    // =========================
 
     message += "━━━━━━━━━━━━━━%0A";
+
     message += `📦 Frames : ${count}%0A`;
+
     message += `💰 Product Total : ₹${total}%0A`;
-    message += `🚚 Shipping : ₹${shipping}%0A`;
+
+
+    // Show FREE instead of ₹0 for 4+ frames
+    if (count >= 4) {
+
+        message += `🚚 Shipping : FREE%0A`;
+
+    } else {
+
+        message += `🚚 Shipping : ₹${shipping}%0A`;
+
+    }
+
+
     message += `🎁 Discount : -₹${discount}%0A`;
-    message += `━━━━━━━━━━━━━━%0A`;
-    message += `💵 *Grand Total : ₹${grandTotal}*%0A%0A`;
-    message += "Please share payment details.";
+
+    message += `🏷️ Offer : ${offerText}%0A`;
+
+    message += "━━━━━━━━━━━━━━%0A";
+
+    message +=
+        `💵 *Grand Total : ₹${grandTotal}*%0A%0A`;
+
+    message +=
+        "Please share payment details.";
+
+
+    // =========================
+    // OPEN WHATSAPP
+    // =========================
 
     window.open(
         "https://wa.me/918792744018?text=" + message,
         "_blank"
     );
+
 }
 const cartBox = document.getElementById("cartBox");
 const cartHeader = document.getElementById("cartHeader");
