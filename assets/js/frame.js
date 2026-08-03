@@ -48,14 +48,21 @@ function getShipping(count) {
 function renderCart() {
 
     const list = document.getElementById("cartItems");
+
     list.innerHTML = "";
+
     let total = 0;
     let count = 0;
-    let shipping = 0;
+
+    // =========================
+    // CART ITEMS
+    // =========================
+
     getCartProducts().forEach(item => {
 
-        total += item.price * item.qty;
+        const subTotal = item.price * item.qty;
 
+        total += subTotal;
         count += item.qty;
 
         list.innerHTML += `
@@ -64,25 +71,20 @@ function renderCart() {
             <div class="cart-row">
 
                 <div class="cart-name">
-
                     ${item.name}
-
                 </div>
-                
 
                 <div class="cart-price">
-
-                ${item.price}×${item.qty} =  ₹${item.price * item.qty}
-
+                    ${item.price} × ${item.qty} = ₹${subTotal}
                 </div>
 
             </div>
 
             <button
-            class="remove-item"
-            onclick="removeItem('${item.id}')">
+                class="remove-item"
+                onclick="removeItem('${item.id}')">
 
-            Remove
+                Remove
 
             </button>
 
@@ -92,148 +94,225 @@ function renderCart() {
     });
 
 
-
-    document.getElementById("summaryTotal").innerText = "₹" + total;
+    // =========================
+    // OFFER ELEMENTS
+    // =========================
 
     const offerBar = document.getElementById("offerBar");
-const offerCount = document.getElementById("offerCount");
-const offerText = document.getElementById("offerText");
-const offerApply = document.getElementById("offerApply");
-const offerApply2 = document.getElementById("offerApply2");
-const offers = [
-    {count:3, discount:20},
-    {count:6, discount:30},
-    {count:10, discount:35}
-];
+    const offerCount = document.getElementById("offerCount");
+    const offerText = document.getElementById("offerText");
+    const offerApply = document.getElementById("offerApply");
+    const offerApply2 = document.getElementById("offerApply2");
 
-let previous = 0;
-let next = offers[0];
 
-for(const o of offers){
+    // =========================
+    // SHIPPING
+    // =========================
 
-    if(count >= o.count){
+    const shipping = getShipping(count);
 
-        previous = o.count;
 
-    }else{
+    // =========================
+    // DISCOUNT
+    // =========================
 
-        next = o;
+    let discount = 0;
 
-        break;
+
+    // 0–3 frames
+    if (count < 4) {
+
+        discount = 0;
 
     }
 
-}
+    // 4–7 frames
+    else if (count < 8) {
 
-if(count < 3){
+        discount = 0;
 
-shipping = getShipping(count);
-const finalSave = Math.round(total * 0);
-const finalPrice = total + shipping;
-const grandTotal = finalPrice - finalSave;
-const grandTotal1 = finalPrice - finalSave;
-document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
-document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
-document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
-document.getElementById("bottomTotal").innerHTML = `₹${finalPrice}`;
-document.getElementById("offerSave").innerHTML = `-₹${finalSave}`;  
-offerCount.innerText = `${count} / 3 Frames`;
-offerText.innerText =
-`Add ${3-count} frame to unlock 20% OFF`;
-offerApply.innerText =
-`Fill cart for discount `;
-offerApply2.innerText =
-`Fill cart for discount`;
-offerBar.style.width = (count/3*100)+"%";
-}
+    }
 
-else if(count < 6){
+    // 8+ frames
+    else {
 
-shipping = getShipping(count);
-const finalSave = Math.round(total * 0.20);
-const finalPrice = total + shipping;
-const grandTotal = finalPrice - finalSave;
-const grandTotal1 = finalPrice - finalSave;
-document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
-document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
-document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
-document.getElementById("bottomTotal").innerHTML = `₹${finalPrice}`;
-document.getElementById("offerSave").innerHTML = `-₹${finalSave}`;  
-offerCount.innerText = `${count} / 6 Frames`;
-offerText.innerText =
-`Add ${6-count} frame to unlock 30% OFF`;
-offerApply.innerText =
-`20% OFF Applied `;
-offerApply2.innerText =
-`20% OFF`;
-offerBar.style.width = (count/6*100)+"%";
-}
+        discount = Math.round(total * 0.25);
 
-else if(count < 10){
-
-shipping = getShipping(count);
-const finalSave = Math.round(total * 0.30);
-const finalPrice = total + shipping;
-const grandTotal = finalPrice - finalSave;
-const grandTotal1 = finalPrice - finalSave;
-document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
-document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
-document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
-document.getElementById("bottomTotal").innerHTML = `₹${finalPrice}`;
-document.getElementById("offerSave").innerHTML = `-₹${finalSave}`;  
-offerCount.innerText = `${count} / 10 Frames`;
-offerText.innerText =
-`Add ${10-count} frame to unlock 35% OFF`;
-offerApply.innerText =
-`30% OFF Applied `;
-offerApply2.innerText =
-`30% OFF`;
-offerBar.style.width = (count/10*100)+"%";
-}
-
-    else{
-
-shipping = getShipping(count);
-const finalSave = Math.round(total * 0.35);
-const finalPrice = total + shipping;
-const grandTotal = finalPrice - finalSave;
-const grandTotal1 = finalPrice - finalSave;
-document.getElementById("shippingPrice").innerHTML = `₹${shipping}`;
-document.getElementById("grandTotal").innerHTML = `₹${grandTotal}`; 
-document.getElementById("grandTotal1").innerHTML = `₹${grandTotal1}`;  
-document.getElementById("bottomTotal").innerHTML = `₹${finalPrice}`;
-document.getElementById("offerSave").innerHTML = `-₹${finalSave}`;  
-offerCount.innerText = `${count} Frames`;
-offerText.innerText =
-`🎉 Maximum OFF Unlocked`;
-offerApply.innerText =
-`35% OFF Applied `;
-offerApply2.innerText =
-`35% OFF`;
-offerBar.style.width ="100%";
     }
 
 
+    // =========================
+    // TOTAL CALCULATION
+    // =========================
 
-if(count===0){
+    const finalPrice = total + shipping;
 
-    document.getElementById("shippingPrice").innerHTML = "₹0";
-    document.getElementById("offerSave").innerHTML = "-₹0";
-    document.getElementById("grandTotal").innerHTML = "₹0";
-    document.getElementById("grandTotal1").innerHTML = "₹0";
-    document.getElementById("bottomTotal").innerHTML = "₹0";
+    const grandTotal = finalPrice - discount;
 
-    cartBox.classList.remove("open");
-    cartOverlay.classList.remove("show");
-    document.body.style.overflow = "";
-    cartHeader.style.display = "none";
 
-}
-else{
+    // =========================
+    // UPDATE CART SUMMARY
+    // =========================
 
-    cartHeader.style.display = "flex";
+    document.getElementById("summaryTotal").innerText =
+        "₹" + total;
 
-}
+    document.getElementById("shippingPrice").innerText =
+        shipping === 0 && count >= 4
+            ? "FREE"
+            : "₹" + shipping;
+
+    document.getElementById("bottomTotal").innerText =
+        "₹" + finalPrice;
+
+    document.getElementById("offerSave").innerText =
+        "-₹" + discount;
+
+    document.getElementById("grandTotal").innerText =
+        "₹" + grandTotal;
+
+    document.getElementById("grandTotal1").innerText =
+        "₹" + grandTotal;
+
+
+    // =========================
+    // PROGRESSIVE OFFER BAR
+    // =========================
+
+
+    // -------------------------
+    // 0–3 FRAMES
+    // Goal: FREE SHIPPING
+    // -------------------------
+
+    if (count < 4) {
+
+        const remaining = 4 - count;
+
+        offerCount.innerText =
+            `${count} / 4 Frames`;
+
+        offerText.innerText =
+            `Add ${remaining} frame${remaining > 1 ? "s" : ""} to unlock FREE SHIPPING`;
+
+        offerApply.innerText =
+            `₹100 Shipping`;
+
+        offerApply2.innerText =
+            `FREE SHIPPING`;
+
+        // Progress: 0 → 100%
+        offerBar.style.width =
+            (count / 4 * 100) + "%";
+
+    }
+
+
+    // -------------------------
+    // 4–7 FRAMES
+    // Goal: 25% OFF
+    // -------------------------
+
+    else if (count < 8) {
+
+        const remaining = 8 - count;
+
+        offerCount.innerText =
+            `${count} / 8 Frames`;
+
+        offerText.innerText =
+            `Add ${remaining} frame${remaining > 1 ? "s" : ""} to get 25% OFF`;
+
+        offerApply.innerText =
+            `FREE SHIPPING`;
+
+        offerApply2.innerText =
+            `FREE SHIPPING`;
+
+        // Progress starts from 4 and goes to 8
+        offerBar.style.width =
+            ((count - 4) / 4 * 100) + "%";
+
+    }
+
+
+    // -------------------------
+    // 8+ FRAMES
+    // 25% OFF + FREE SHIPPING
+    // -------------------------
+
+    else {
+
+        offerCount.innerText =
+            `${count} Frames`;
+
+        offerText.innerText =
+            `🎉 25% OFF + FREE SHIPPING UNLOCKED`;
+
+        offerApply.innerText =
+            `25% OFF + FREE SHIPPING`;
+
+        offerApply2.innerText =
+            `25% OFF`;
+
+        offerBar.style.width =
+            "100%";
+
+    }
+
+
+    // =========================
+    // EMPTY CART
+    // =========================
+
+    if (count === 0) {
+
+        document.getElementById("shippingPrice").innerText =
+            "₹0";
+
+        document.getElementById("offerSave").innerText =
+            "-₹0";
+
+        document.getElementById("grandTotal").innerText =
+            "₹0";
+
+        document.getElementById("grandTotal1").innerText =
+            "₹0";
+
+        document.getElementById("bottomTotal").innerText =
+            "₹0";
+
+        offerCount.innerText =
+            "0 / 4 Frames";
+
+        offerText.innerText =
+            "Add 4 frames to unlock FREE SHIPPING";
+
+        offerApply.innerText =
+            "₹100 Shipping";
+
+        offerApply2.innerText =
+            "FREE SHIPPING";
+
+        offerBar.style.width =
+            "0%";
+
+
+        cartBox.classList.remove("open");
+
+        cartOverlay.classList.remove("show");
+
+        document.body.style.overflow = "";
+
+        cartHeader.style.display = "none";
+
+    }
+
+    else {
+
+        cartHeader.style.display = "flex";
+
+    }
 
 }
 window.addEventListener("DOMContentLoaded", () => {
