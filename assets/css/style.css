@@ -1787,3 +1787,44 @@ margin-bottom:6px;
     opacity:1;
     visibility:visible;
 }
+.running-offer-bar {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.running-offer-track {
+    display: flex;
+    width: max-content;
+    animation: runningOffer 20s linear infinite;
+}
+
+.running-offer-content {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    padding-right: 50px;
+}
+
+.running-offer-content span {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Left → Right */
+@keyframes runningOffer {
+
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+
+}
