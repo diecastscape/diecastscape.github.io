@@ -159,7 +159,7 @@ function renderCart() {
 
     document.getElementById("shippingPrice").innerText =
         shipping === 0 && count >= 4
-            ? "FREE"
+            ? "₹0"
             : "₹" + shipping;
 
     document.getElementById("bottomTotal").innerText =
@@ -196,10 +196,10 @@ function renderCart() {
             `Add ${remaining} frame${remaining > 1 ? "s" : ""} to unlock FREE SHIPPING`;
 
         offerApply.innerText =
-            `₹100 Shipping`;
+            ``;
 
         offerApply2.innerText =
-            `FREE SHIPPING`;
+            ``;
 
         // Progress: 0 → 100%
         offerBar.style.width =
@@ -224,10 +224,10 @@ function renderCart() {
             `Add ${remaining} frame${remaining > 1 ? "s" : ""} to get 25% OFF`;
 
         offerApply.innerText =
-            `FREE SHIPPING`;
+            ``;
 
         offerApply2.innerText =
-            `FREE SHIPPING`;
+            `OFFER APPLYD`;
 
         // Progress starts from 4 and goes to 8
         offerBar.style.width =
@@ -250,10 +250,10 @@ function renderCart() {
             `🎉 25% OFF + FREE SHIPPING UNLOCKED`;
 
         offerApply.innerText =
-            `25% OFF + FREE SHIPPING`;
+            `25% off`;
 
         offerApply2.innerText =
-            `25% OFF`;
+            `OFFER APPLYD`;
 
         offerBar.style.width =
             "100%";
@@ -289,10 +289,10 @@ function renderCart() {
             "Add 4 frames to unlock FREE SHIPPING";
 
         offerApply.innerText =
-            "₹100 Shipping";
+            "";
 
         offerApply2.innerText =
-            "FREE SHIPPING";
+            "";
 
         offerBar.style.width =
             "0%";
