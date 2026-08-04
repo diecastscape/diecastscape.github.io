@@ -1,3 +1,4 @@
+line-height:1;
 html {
   scroll-behavior: smooth;
 }
@@ -229,7 +230,6 @@ background:
 .promo-overlay h2{
 font-size:42px;
 text-align:left;
-line-height:1;
 
 margin-top:0;
 margin-bottom:8px;
@@ -1775,7 +1775,7 @@ margin-bottom:6px;
 
 .running-offer-bar {
     position: fixed;
-    top: 0;
+    top:60px;
     left: 0;
     width: 100%;
     height: 38px;
@@ -1791,7 +1791,6 @@ margin-bottom:6px;
     display: flex;
     align-items: center;
 }
-
 
 /* Moving track */
 
