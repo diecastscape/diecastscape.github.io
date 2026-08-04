@@ -238,7 +238,13 @@ async function loadSaleProducts() {
     });
 
 
+if (
+  typeof restoreCart === "function"
+) {
 
+  restoreCart();
+
+}
 
 
     // ==========================================
