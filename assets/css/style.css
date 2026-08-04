@@ -942,7 +942,17 @@ color:#aaa;
 color:#c8a95a;
 }
 
+input{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border-radius:6px;
+border:none;
+outline:none;
+background:rgba(255,255,255,0.15);
+color:white;
 
+}
 
 #products {
   scroll-margin-top: 60px;
@@ -1188,7 +1198,22 @@ color:#c8a95a;
     gap: 8px;
     margin-top: 10px;
 }
-
+.qty-btn{
+  width:30px;
+  height:30px;
+  border:none;
+  border-radius:10px;
+  background:#111;
+  color:#fff;
+  font-size:25px;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s ease;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
 
 /* Small minus button */
 
@@ -1225,7 +1250,13 @@ color:#c8a95a;
 
     user-select: none;
 }
-
+.qty{
+width:35px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+font-weight:700;
 
 /* Add button */
 
