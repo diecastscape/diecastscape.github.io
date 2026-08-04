@@ -238,17 +238,7 @@ async function loadSaleProducts() {
     });
 
 
-    // ==========================================
-    // RESTORE EXISTING CART
-    // ==========================================
 
-    if (
-      typeof restoreCart === "function"
-    ) {
-
-      restoreCart();
-
-    }
 
 
     // ==========================================
