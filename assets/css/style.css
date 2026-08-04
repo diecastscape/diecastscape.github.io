@@ -1214,6 +1214,7 @@ color:white;
   transition:.2s ease;
   user-select:none;
   -webkit-tap-highlight-color:transparent;
+}
 
 /* Small minus button */
 
@@ -1257,7 +1258,7 @@ align-items:center;
 justify-content:center;
 font-size:18px;
 font-weight:700;
-
+}
 /* Add button */
 
 .cart-controls .add-cart-btn {
