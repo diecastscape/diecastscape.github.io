@@ -92,7 +92,7 @@ function buildSaleHTML(p) {
 <div class="cart-controls">
 
   <button
-    class="add-cart-btn"
+    class="maines-cart-btn"
     onclick="changeAccessoryQty(
       '${p.id}',
       '${String(p.name).replace(/'/g, "\\'")}',
