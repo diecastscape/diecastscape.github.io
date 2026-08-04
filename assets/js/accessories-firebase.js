@@ -1,85 +1,133 @@
 import { db } from "./firebase-init.js";
-import { 
+
+import {
   collection,
   query,
   orderBy,
-  getDocs,
-  doc,
-  getDoc
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-function buildSaleHTML(p){
+
+
+// ==========================================
+// BUILD ACCESSORY PRODUCT CARD
+// ==========================================
+
+function buildSaleHTML(p) {
 
   let imgs = "";
 
-  if(Array.isArray(p.images)){
-    p.images.forEach(im=>{
+
+  // ==========================================
+  // PRODUCT IMAGES
+  // ==========================================
+
+  if (Array.isArray(p.images)) {
+
+    p.images.forEach(im => {
+
       imgs += `
         <div class="img-box">
+
           <div class="img-loader"></div>
-          <img src="/images/frame/${im}.webp"
-            onload="this.previousElementSibling.remove(); this.style.opacity=1"
+
+          <img
+            src="/images/frame/${im}.webp"
+            alt="${p.name}"
+            onload="
+              this.previousElementSibling.remove();
+              this.style.opacity = 1;
+            "
             style="opacity:0"
-            onclick="openLightbox(this.src)">
+            onclick="openLightbox(this.src)"
+          >
+
         </div>
       `;
+
     });
+
   }
 
-  return `
-  <div class="section">
-    <div class="diorama-title">${p.name}</div>
-    <div class="slider">
-      ${imgs}
-   </div>
 
+  // ==========================================
+  // PRODUCT CARD
+  // ==========================================
+
+  return `
+
+  <div class="section">
+
+    <!-- Product Name -->
+
+    <div class="diorama-title">
+
+      ${p.name}
+
+    </div>
+
+
+    <!-- Image Slider -->
+
+    <div class="slider">
+
+      ${imgs}
+
+    </div>
+
+
+    <!-- Price -->
 
     <div class="price">
-      <span class="new">₹${p.price}/-</span>
+
+      <span class="new">
+
+        ₹${p.price}/-
+
+      </span>
+
     </div>
-<div class="cart-controls">
 
-<button
-class="qty-btn"
-onclick="
-addProductInfo(
-'${p.id}',
-'${p.name}',
-${p.price}
-);
-changeQty('${p.id}',-1);
-">
 
-−
+    <!-- Add To Cart -->
 
-</button>
+    <div class="cart-controls">
 
-<span
-class="qty"
-id="qty-${p.id}">
+      <button
+        class="add-cart-btn"
+        id="add-btn-${p.id}"
+        onclick="
+          addProductInfo(
+            '${p.id}',
+            '${String(p.name).replace(/'/g, "\\'")}',
+            ${Number(p.price)}
+          );
 
-0
+          this.innerText = 'Added ✓';
 
-</span>
+          setTimeout(() => {
+            this.innerText = 'Add to Cart';
+          }, 1000);
+        "
+      >
 
-<button
-class="qty-btn"
-onclick="
-addProductInfo(
-'${p.id}',
-'${p.name}',
-${p.price}
-);
-changeQty('${p.id}',1);
-">
+        Add to Cart
 
-+
+      </button>
 
-</button>
     </div>
+
   </div>
+
   `;
+
 }
-async function loadSaleProducts(){
+
+
+// ==========================================
+// LOAD ACCESSORIES FROM FIREBASE
+// ==========================================
+
+async function loadSaleProducts() {
 
   const container =
     document.getElementById("sale-main");
@@ -87,55 +135,190 @@ async function loadSaleProducts(){
   const loader =
     document.getElementById("productsLoader");
 
-  if(!container) return;
 
-  // ===== LOAD PRODUCTS DIRECTLY =====
-  const q = query(
-    collection(db,"accessoriesProducts"),
-    orderBy("created","desc")
-  );
+  // ==========================================
+  // SAFETY CHECK
+  // ==========================================
 
-  const snap = await getDocs(q);
+  if (!container) {
+    return;
+  }
 
-  let count = 0;
 
-  snap.forEach(doc=>{
+  try {
 
-    const p = doc.data();
-     p.id = doc.id;
-    if(p.active === true){
 
-      container.insertAdjacentHTML(
-        "beforeend",
-        buildSaleHTML(p)
-      );
+    // ==========================================
+    // FIREBASE QUERY
+    // ==========================================
 
-      count++;
+    const q = query(
+
+      collection(
+        db,
+        "accessoriesProducts"
+      ),
+
+      orderBy(
+        "created",
+        "desc"
+      )
+
+    );
+
+
+    // ==========================================
+    // GET PRODUCTS
+    // ==========================================
+
+    const snap =
+      await getDocs(q);
+
+
+    let count = 0;
+
+
+    // ==========================================
+    // ADD PRODUCTS
+    // ==========================================
+
+    snap.forEach(doc => {
+
+      const p =
+        doc.data();
+
+
+      // Add Firebase document ID
+
+      p.id =
+        doc.id;
+
+
+      // Only show active products
+
+      if (p.active === true) {
+
+        container.insertAdjacentHTML(
+
+          "beforeend",
+
+          buildSaleHTML(p)
+
+        );
+
+        count++;
+
+      }
+
+    });
+
+
+    // ==========================================
+    // REMOVE LOADER
+    // ==========================================
+
+    requestAnimationFrame(() => {
+
+      if (loader) {
+
+        loader.remove();
+
+      }
+
+    });
+
+
+    // ==========================================
+    // RESTORE EXISTING CART
+    // ==========================================
+
+    if (
+      typeof restoreCart === "function"
+    ) {
+
+      restoreCart();
+
     }
 
-  });
 
-  // Remove loader
-  requestAnimationFrame(()=>{
-    if(loader) loader.remove();
-  });
-restoreCart();
-  // Empty state
-  if(count===0){
+    // ==========================================
+    // EMPTY PRODUCT STATE
+    // ==========================================
 
-    container.innerHTML=`
-      <div class="border-top">
-        <div class="sale-off">
-          <p>No products available</p>
+    if (count === 0) {
+
+      container.innerHTML = `
+
+        <div class="border-top">
+
+          <div class="sale-off">
+
+            <p>
+              No products available
+            </p>
+
+          </div>
+
         </div>
+
+      `;
+
+    }
+
+
+  } catch (error) {
+
+
+    // ==========================================
+    // ERROR
+    // ==========================================
+
+    console.error(
+      "Error loading accessories:",
+      error
+    );
+
+
+    if (loader) {
+
+      loader.remove();
+
+    }
+
+
+    container.insertAdjacentHTML(
+
+      "beforeend",
+
+      `
+
+      <div class="sale-off">
+
+        <p>
+          Unable to load products.
+          Please try again later.
+        </p>
+
       </div>
-    `;
+
+      `
+
+    );
 
   }
 
 }
 
+
+// ==========================================
+// LOAD PRODUCTS WHEN PAGE IS READY
+// ==========================================
+
 window.addEventListener(
+
   "DOMContentLoaded",
+
   loadSaleProducts
+
 );
+    
