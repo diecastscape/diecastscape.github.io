@@ -1196,7 +1196,7 @@ color:white;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 8px;
+    
 }
 
 /* Quantity number */
@@ -1205,6 +1205,7 @@ color:white;
 .qty{
 
 margin:0 10px;
+  margin-top: 8px;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -1212,14 +1213,14 @@ font-size:18px;
 font-weight:700;
 }
 .maines-cart-btn{
-  min-width:24%;
-  height:55px;
-  padding:12px;
+  min-width:18%;
+  height:43px;
+  margin-top: 8px;
   border:none;
   border-radius:12px;
   background:#FF4B00;
   color:#fff;
-  font-size:15px;
+  font-size:18px;
   font-weight:700;
   cursor:pointer;
   transition:.2s;
@@ -1236,7 +1237,8 @@ font-weight:700;
 
 .add-cart-btn{
   width:100%;
-  height:55px;
+  height:43px;
+  margin-top: 8px;
   border:none;
   border-radius:12px;
   background:#111;
