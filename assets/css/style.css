@@ -1811,7 +1811,7 @@ margin-bottom:6px;
     /* Important */
     width: max-content;
 
-    animation: runningOffer 16s linear infinite;
+    animation: runningOffer 3s linear infinite;
 
     will-change: transform;
 }
