@@ -61,12 +61,106 @@ function addProductInfo(id, name, price) {
     renderCart();
 
 }
+// =====================================================
+// CHANGE ACCESSORY QUANTITY
+// =====================================================
 
+function changeAccessoryQty(id, name, price, change) {
+
+    // ==========================================
+    // ADD
+    // ==========================================
+
+    if (change > 0) {
+
+        if (cart[id]) {
+
+            cart[id].qty++;
+
+        } else {
+
+            cart[id] = {
+
+                id: id,
+                name: name,
+                price: Number(price),
+                qty: 1
+
+            };
+
+        }
+
+    }
+
+
+    // ==========================================
+    // REMOVE / DECREASE
+    // ==========================================
+
+    else if (change < 0) {
+
+        if (cart[id]) {
+
+            cart[id].qty--;
+
+            // Remove product completely
+            // when quantity reaches 0
+
+            if (cart[id].qty <= 0) {
+
+                delete cart[id];
+
+            }
+
+        }
+
+    }
+
+
+    // ==========================================
+    // SAVE
+    // ==========================================
+
+    saveCart();
+
+
+    // ==========================================
+    // UPDATE CART + QUANTITY UI
+    // ==========================================
+
+    renderCart();
+
+    updateAccessoryQuantity(id);
+
+}
+
+
+// =====================================================
+// UPDATE PRODUCT QUANTITY DISPLAY
+// =====================================================
+
+function updateAccessoryQuantity(id) {
+
+    const qtyElement =
+        document.getElementById(`qty-${id}`);
+
+    if (!qtyElement) return;
+
+
+    const qty =
+        cart[id]
+            ? cart[id].qty
+            : 0;
+
+
+    qtyElement.innerText =
+        qty;
+
+}
 
 // =====================================================
 // REMOVE PRODUCT
 // =====================================================
-
 function removeItem(id) {
 
     delete cart[id];
@@ -75,7 +169,10 @@ function removeItem(id) {
 
     renderCart();
 
+    updateAccessoryQuantity(id);
+
 }
+
 
 
 // =====================================================
@@ -487,7 +584,23 @@ function renderCart() {
             "flex";
 
     }
+// =================================================
+// UPDATE ALL ACCESSORY QUANTITY COUNTERS
+// =================================================
 
+document
+    .querySelectorAll(".qty")
+    .forEach(qtyElement => {
+
+        const id =
+            qtyElement.id.replace("qty-", "");
+
+        qtyElement.innerText =
+            cart[id]
+                ? cart[id].qty
+                : 0;
+
+    });
 }
 
 
