@@ -1213,15 +1213,14 @@ font-weight:700;
 }
 .maines-cart-btn{
   min-width:24%;
-  min-height:17px;
-  margin-top:12px;
+  height:30px;
   padding:12px;
   border:none;
   border-radius:12px;
   background:#111;
   color:#fff;
   font-size:15px;
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
   transition:.2s;
   -webkit-tap-highlight-color:transparent;
@@ -1237,8 +1236,7 @@ font-weight:700;
 
 .add-cart-btn{
   width:100%;
-  margin-top:12px;
-  padding:12px;
+  height:30px;
   border:none;
   border-radius:12px;
   background:#111;
