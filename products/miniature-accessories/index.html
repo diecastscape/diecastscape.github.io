@@ -68,7 +68,191 @@ class="search-bar">
   </div>
 </div>
   </div>
+<!-- ===========================
+SMART CART
+=========================== -->
 
+<div id="cartBox" class="cart-box">
+
+    <!-- Cart Header -->
+    <div id="cartHeader" class="cart-header">
+
+        <div class="cart-grip"></div>
+
+        <div class="cart-title">
+            View Cart
+        </div>
+
+    </div>
+
+
+    <!-- Expandable Cart Content -->
+    <div id="cartContent" class="cart-content">
+
+        <div id="cartItems" class="cart-items">
+        </div>
+
+
+        <button
+            id="clearCartBtn"
+            class="clear-cart">
+
+            Clear Cart
+
+        </button>
+
+
+        <!-- Cart Summary -->
+        <div class="cart-summary">
+
+            <div class="summary-row">
+
+                <span>Items</span>
+
+                <span id="summaryTotal">
+                </span>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>Delivery</span>
+
+                <span id="offerApply3"
+                      class="offer-apply">
+                </span>
+
+                <span id="shippingPrice">
+                </span>
+
+            </div>
+
+
+            <div class="summary-row cart-border">
+
+                <span>Total</span>
+
+                <span id="bottomTotal">
+                </span>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>Discount</span>
+
+                <span id="offerApply"
+                      class="offer-apply">
+                </span>
+
+                <span id="offerSave">
+                </span>
+
+            </div>
+
+
+            <div class="summary-row cart-border">
+
+                <span>Order Total</span>
+
+                <span id="grandTotal">
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Cart Footer -->
+    <div class="cart-footer">
+
+        <div>
+
+            <div class="offer-title">
+
+                🔥 Add More, Save More
+
+            </div>
+
+
+            <!-- Progressive Offer Bar -->
+            <div class="offer-progress">
+
+                <div
+                    id="offerBar"
+                    class="offer-progress-fill">
+                </div>
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                <div>
+
+                    <div
+                        class="offer-count"
+                        id="offerCount">
+                    </div>
+
+
+                    <div
+                        class="offer-text"
+                        id="offerText">
+                    </div>
+
+
+                    <div class="price-row">
+
+                        <div
+                            id="grandTotal1"
+                            class="footer-price">
+                        </div>
+
+
+                        <div
+                            id="offerApply2"
+                            class="offer-apply">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="checkoutBtn"
+                    class="checkout-btn">
+
+                    Checkout
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Cart Overlay -->
+
+<div id="cartOverlay"
+     class="cart-overlay">
+</div>
+
+
+<!-- Toast -->
+
+<div id="toast"
+     class="toast">
+</div>
     
   <div class="border-top"></div>
     <div class="trust-row">
@@ -173,5 +357,6 @@ Thank you for visiting.
 <script type="module" src="/assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/accessories-firebase.js"></script>
 <script src="/assets/js/products.js"></script>
+<script src="/assets/js/accessories.js"></script>
 </body>
 </html>
