@@ -93,10 +93,9 @@ html.light {
 }
 @media (max-width: 425px) {
 .header-inner {
-  height: 85px;
+  height: 45px;
 }
   .running-offer-bar {
-    top:15px;
   }
   .header-logo {
   width: 45px;
@@ -126,7 +125,6 @@ html.light {
   height: 65px;
   }
   .running-offer-bar {
-    top:00px;
   }
   .header-logo {
   width: 65px;
@@ -1781,10 +1779,10 @@ margin-bottom:6px;
 
 .running-offer-bar {
     position: fixed;
-    top:55px;
+    top:45px;
     left: 0;
     width: 100%;
-    height: 38px;
+    height: 35px;
 
     background: #111;
     color: #fff;
@@ -1825,7 +1823,7 @@ margin-bottom:6px;
 /* Offer text */
 
 .running-offer-content span {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
 
     white-space: nowrap;
@@ -1841,7 +1839,7 @@ margin-bottom:6px;
     }
 
     to {
-        transform: translateX(-50%);
+        transform: translateX(-55%);
     }
 
 }
