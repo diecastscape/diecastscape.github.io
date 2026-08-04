@@ -1203,8 +1203,8 @@ color:white;
 
 
 .qty{
-width:35px;
-padding:12px
+
+margin:0 10px;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -1212,7 +1212,8 @@ font-size:18px;
 font-weight:700;
 }
 .maines-cart-btn{
-  min-width:26%;
+  min-width:24%;
+  min-height:17px;
   margin-top:12px;
   padding:12px;
   border:none;
