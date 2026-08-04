@@ -136,7 +136,7 @@ function renderCart() {
     // 8+ frames
     else {
 
-        discount = Math.round(total * 0.25);
+        discount = Math.round(total * 0.20);
 
     }
 
@@ -210,7 +210,7 @@ function renderCart() {
 
     // -------------------------
     // 4–7 FRAMES
-    // Goal: 25% OFF
+    // Goal: 20% OFF
     // -------------------------
 
     else if (count < 8) {
@@ -221,7 +221,7 @@ function renderCart() {
             `${count} / 8 Frames`;
 
         offerText.innerText =
-            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 25% OFF`;
+            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
 
         offerApply.innerText =
             ``;
@@ -248,10 +248,10 @@ function renderCart() {
             `${count} Frames`;
 
         offerText.innerText =
-            `🎉 25% Off + Free delivery Unlocked`;
+            `🎉 20% Off + Free delivery Unlocked`;
 
         offerApply.innerText =
-            `25% off`;
+            `20% off`;
 
         offerApply2.innerText =
             `Offer applyd `;
@@ -406,7 +406,7 @@ function checkoutCart() {
 
     if (count >= 8) {
 
-        discount = Math.round(total * 0.25);
+        discount = Math.round(total * 0.20);
 
     }
 
@@ -440,7 +440,7 @@ function checkoutCart() {
     else {
 
         offerText =
-            "25% OFF + FREE SHIPPING UNLOCKED";
+            "20% OFF + FREE SHIPPING UNLOCKED";
 
     }
 
@@ -478,7 +478,7 @@ function checkoutCart() {
         `*Grand Total : ₹${grandTotal}*%0A%0A`;
 
     message +=
-        "Share me your payment option.";
+        "Share me payment option.";
 
 
     // =========================
