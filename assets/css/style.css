@@ -1090,7 +1090,8 @@ color:#c8a95a;
 }
 /* ===== BREADCRUMB (Premium Glass Style) ===== */
 .breadcrumb-wrap {
-  margin: 6px 14px;
+  margin: 0 14px;
+  margin top:80px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1782,7 +1783,7 @@ margin-bottom:6px;
     top:45px;
     left: 0;
     width: 100%;
-    height: 35px;
+    height: 34px;
 
     background: #111;
     color: #fff;
@@ -1790,7 +1791,7 @@ margin-bottom:6px;
     overflow: hidden;
     white-space: nowrap;
 
-    z-index: 9999;
+    z-index: 9000;
 
     display: flex;
     align-items: center;
