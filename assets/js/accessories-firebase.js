@@ -87,34 +87,44 @@ function buildSaleHTML(p) {
 
     </div>
 
+<!-- Quantity Controls -->
 
-    <!-- Add To Cart -->
+<div class="cart-controls">
 
-    <div class="cart-controls">
+  <button
+    class="qty-btn qty-minus"
+    onclick="changeAccessoryQty(
+      '${p.id}',
+      '${String(p.name).replace(/'/g, "\\'")}',
+      ${Number(p.price)},
+      -1
+    )"
+  >
+    −
+  </button>
 
-      <button
-        class="add-cart-btn"
-        id="add-btn-${p.id}"
-        onclick="
-          addProductInfo(
-            '${p.id}',
-            '${String(p.name).replace(/'/g, "\\'")}',
-            ${Number(p.price)}
-          );
 
-          this.innerText = 'Added ✓';
+  <span
+    class="qty"
+    id="qty-${p.id}"
+  >
+    0
+  </span>
 
-          setTimeout(() => {
-            this.innerText = 'Add to Cart';
-          }, 1000);
-        "
-      >
 
-        Add to Cart
+  <button
+    class="add-cart-btn"
+    onclick="changeAccessoryQty(
+      '${p.id}',
+      '${String(p.name).replace(/'/g, "\\'")}',
+      ${Number(p.price)},
+      1
+    )"
+  >
+    Add
+  </button>
 
-      </button>
-
-    </div>
+</div>
 
   </div>
 
