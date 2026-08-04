@@ -1196,7 +1196,7 @@ color:white;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 /* Quantity number */
@@ -1212,7 +1212,7 @@ font-size:18px;
 font-weight:700;
 }
 .maines-cart-btn{
-  max-width:26%;
+  mini-width:26%;
   margin-top:12px;
   padding:12px;
   border:none;
