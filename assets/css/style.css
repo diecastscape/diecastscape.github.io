@@ -93,7 +93,7 @@ html.light {
 }
 @media (max-width: 425px) {
 .header-inner {
-  height: 45px;
+  height: 85px;
 }
   .running-offer-bar {
     top:15px;
