@@ -149,9 +149,7 @@ var(--svg) center/contain no-repeat;
 flex-shrink:0;
 }
 
-.feature-text{
-    white-space:nowrap;
-}
+
 @media(max-width:768px){
 
 .footer{
