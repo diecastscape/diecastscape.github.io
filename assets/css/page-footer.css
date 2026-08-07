@@ -137,9 +137,9 @@
     border-right:none;
 }
 
-.feature-icon{
-    font-size:16px;
-    line-height:1;
+.feature-icon.icon{
+width:18px !important;
+height:18px !important;
 }
 
 .feature-text{
