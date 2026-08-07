@@ -111,13 +111,14 @@
   transform: translateY(-2px);}
 
 .footer-btn:active {
+    
   transform: scale(0.95);}
 .footer-features{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    border-top:1px solid #dbe8ec;
-    margin-top:16px;
+    
+    margin-top:8px;
 }
 
 .feature-item{
