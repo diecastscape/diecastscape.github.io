@@ -1,6 +1,6 @@
 .footer{
     margin-top:40px;
-    
+    padding:18px 16px 0;
     background:#fff;
     border-top:1px solid #d9f2ef;
     font-family:Arial,sans-serif;
@@ -14,7 +14,7 @@
     margin-bottom:18px;
 }
 
-.footer-title spn{
+.footer-title span{
     width:40px;
     height:2px;
     background:#36d6d3;
@@ -82,44 +82,58 @@
     flex-direction:column;
     gap:18px;
 }
-.footer-btn {
-  align-items:center;
-  align-tex: cente;
-  display: inline-block;
-  padding: 8px 18px;
-  border-radius: 22px;
-  font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
-  color: #fff;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+
+.social{
+    text-decoration:none;
+    text-align:center;
+    padding:12px;
+    border-radius:30px;
+    font-weight:700;
+    font-size:15px;
 }
 
-/* WhatsApp Button */
-.footer-whatsapp {
-  background: linear-gradient(135deg, #25d366, #128c7e);
-  box-shadow: 0 0 10px rgba(37, 211, 102, 0.4);
+.insta{
+    border:2px solid #d84cff;
+    color:#d84cff;
 }
 
-/* Instagram Button */
-.footer-instagram {
-  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
-  box-shadow: 0 0 10px rgba(221, 42, 123, 0.4);
+.whats{
+    border:2px solid #27c763;
+    color:#27c763;
+}.footer-features{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top:1px solid #dbe8ec;
+    margin-top:16px;
 }
 
-.footer-btn:hover {
-  transform: translateY(-2px);
+.feature-item{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    padding:12px 4px;
+    border-right:1px solid #ececec;
+    font-size:11px;
+    font-weight:500;
+    color:#444;
 }
 
-.footer-btn:active {
-  transform: scale(0.95);
+.feature-item:last-child{
+    border-right:none;
 }
 
+.feature-icon{
+    font-size:16px;
+    line-height:1;
+}
 
-
-@media(max-width:250px){
+.feature-text{
+    white-space:nowrap;
+}
+@media(max-width:768px){
 
 .footer{
     padding:14px 12px 0;
@@ -163,5 +177,9 @@
     gap:10px;
 }
 
+.social{
+    padding:8px;
+    font-size:13px;
+}
 
 }
