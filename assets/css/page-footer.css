@@ -83,6 +83,8 @@
     gap:18px;
 }
 .footer-btn {
+  align-items:center;
+  align-tex: cente;
   display: inline-block;
   padding: 8px 18px;
   border-radius: 22px;
