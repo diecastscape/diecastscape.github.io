@@ -143,7 +143,7 @@
 }
 
 .feature-icon{
-    font-size:10px;
+    font-size:6px;
 }
 
 .feature-text{
@@ -152,7 +152,6 @@
     color:#555;
     white-space:nowrap;
 }
-
 @media(max-width:768px){
 
 .footer{
