@@ -57,7 +57,7 @@ html.light {
   --bg-des:#13224a;
   --bg-des2:#0a7cff33;
   --pag-p1:#CBCCCD;
-    --card-main:#000E4D;
+    --card-main:#000B3D;
 }
 .site-header {
   position: fixed;
@@ -98,7 +98,7 @@ html.light {
   height: 45px;
 }
 .running-offer-bar {
-    top:46px   !important;
+    top:45px   !important;
 }
   .header-logo {
   width: 45px;
@@ -123,7 +123,7 @@ html.light {
   height: 65px;
   }
   .running-offer-bar {
-    top:66px   !important;
+    top:65px   !important;
   }
   .header-logo {
   width: 65px;
@@ -619,7 +619,7 @@ transform:scale(1.05);
   box-sizing: border-box;
 
   background: var(--card-main);
-  border: 1px solid #edf0f2;
+  border: 1px solid #5BC0BE;
   border-radius: 16px;
   overflow: hidden;
 
@@ -1651,7 +1651,7 @@ margin-bottom:6px;
     position: fixed;
 
     /* Your header is currently around 45px */
-    top: 55px;
+    top: 54px;
 
     left: 0;
     width: 100%;
