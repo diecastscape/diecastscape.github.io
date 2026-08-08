@@ -1375,13 +1375,11 @@ EXPANDABLE AREA
   box-shadow: 0 12px 35px rgba(0,0,0,.35);
   z-index: 999;
 }
-
 .cart-content {
-  max-height: 85vh;
+  max-height: 0;
   overflow: hidden;
   opacity: 0;
   transform: translateY(15px);
-
   transition:
     max-height .35s ease,
     opacity .25s ease,
@@ -1389,14 +1387,14 @@ EXPANDABLE AREA
 }
 
 .cart-box.open .cart-content {
-  max-height: 85vh;
+  max-height: 80vh;
   opacity: 1;
   transform: translateY(0);
 }
 
-/* PRODUCT LIST ONLY SCROLLS */
+/* ONLY PRODUCT LIST SCROLLS */
 .cart-items {
-  max-height: 38vh;
+  max-height: 320px;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0 18px;
@@ -1404,7 +1402,7 @@ EXPANDABLE AREA
   -webkit-overflow-scrolling: touch;
 }
 
-/* Optional scrollbar styling */
+/* Scrollbar */
 .cart-items::-webkit-scrollbar {
   width: 4px;
 }
