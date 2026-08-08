@@ -37,8 +37,8 @@ body {
   --bg-des2:#F5F7FA;
   --pag-p1:#CBCCCD;
   --card-main:#fff;
-  --boutt-bg:#111;
-    --boutt-tex:#fff;
+  --butto-bg:#111;
+    --butto-tex:#fff;
 }
 
 /* LIGHT THEME */
@@ -1307,8 +1307,8 @@ font-weight:700;
   margin-top: 8px;
   border:none;
   border-radius:12px;
-  background:#111;
-  color:#fff;
+  background:var(--butto-bg);
+  color:#fff;var(--butto-tex)
   font-size:15px;
   font-weight:600;
   cursor:pointer;
