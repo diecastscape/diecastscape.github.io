@@ -40,7 +40,7 @@ html.light {
 .footer{
     margin-top:40px;
     padding:18px 16px 0;
-  margin-bottom: 80px:
+  margin-bottom: 80px;
 border-top:1px solid #5BC0BE;
     font-family:Arial,sans-serif;
 }
@@ -196,9 +196,6 @@ flex-shrink:0;
 
 @media(max-width:768px){
 
-.footer{
-    padding:14px 12px 0;
-}
 
 .footer-title h3{
     font-size:17px;
