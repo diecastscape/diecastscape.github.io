@@ -725,6 +725,12 @@ transform:scale(1.05);
   color: var(--dio-tital);
   margin-bottom: 10px;
 }
+.diorama-title1 {
+  font-size: 18px;
+  font-weight: 620;
+  color:#111;
+  margin-bottom: 10px;
+}
 .slider {
   display: flex;
   gap: 10px;
@@ -864,6 +870,11 @@ transform:scale(1.05);
 }
 .new {
   color:var(--pri-tag);
+  font-size: 20px;
+  font-weight: bold;
+}
+.new1 {
+  color:#111;
   font-size: 20px;
   font-weight: bold;
 }
@@ -1307,8 +1318,8 @@ font-weight:700;
   margin-top: 8px;
   border:none;
   border-radius:12px;
-  background:#fff;
-  color:#111;
+  background:#111;
+  color:#fff;
   font-size:15px;
   font-weight:600;
   cursor:pointer;
