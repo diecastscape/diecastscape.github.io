@@ -97,7 +97,9 @@ html.light {
 .header-inner {
   height: 45px;
 }
-
+.running-offer-bar {
+    top:46px   !important;
+}
   .header-logo {
   width: 45px;
   height: 45px;
@@ -121,7 +123,7 @@ html.light {
   height: 65px;
   }
   .running-offer-bar {
-    top:75px   !important;
+    top:66px   !important;
   }
   .header-logo {
   width: 65px;
@@ -1649,7 +1651,7 @@ margin-bottom:6px;
     position: fixed;
 
     /* Your header is currently around 45px */
-    top: 48px;
+    top: 55px;
 
     left: 0;
     width: 100%;
