@@ -37,6 +37,8 @@ body {
   --bg-des2:#F5F7FA;
   --pag-p1:#CBCCCD;
   --card-main:#fff;
+  --boutt-bg:#111;
+    --boutt-tex:#fff;
 }
 
 /* LIGHT THEME */
@@ -57,7 +59,9 @@ html.light {
   --bg-des:#13224a;
   --bg-des2:#0a7cff33;
   --pag-p1:#CBCCCD;
-    --card-main:#000B3D;
+    --card-main:#F5F7FA;
+  --boutt-bg:#fff;
+    --boutt-tex:#111;
 }
 .site-header {
   position: fixed;
