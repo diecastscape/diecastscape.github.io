@@ -630,6 +630,42 @@ transform:scale(1.05);
   border-radius: 12px;
   transition: opacity .25s ease;
 }
+.slider1 {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; /* smooth on mobile */
+}
+.slider1 img {
+  width: 300px;
+  aspect-ratio: 1 / 1;     /* ✅ correct ratio */
+  height: auto;
+  object-fit: cover;       /* keeps nice crop */
+  border-radius: 12px;
+  scroll-snap-align: start;
+  background: #000;
+  flex-shrink: 0;          /* prevents squish */
+  will-change: transform; /* smoother scroll */
+}
+/* Image wrapper */
+.img-box1 {
+  position: relative;
+  width: 300px;             /* same as .slider img */
+  aspect-ratio: 1 / 1;     /* keep your ratio */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0b132b;
+  flex-shrink: 0;
+}
+/* Actual image */
+.img-box1 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: opacity .25s ease;
+}
 /* Glass blur loader */
 .img-loader {
   position: absolute;
