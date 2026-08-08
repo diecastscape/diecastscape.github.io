@@ -36,7 +36,7 @@ body {
   --bg-des:#F5F7FA;
   --bg-des2:#F5F7FA;
   --pag-p1:#CBCCCD;
-  --card-main:#000E4D;
+  --card-main:#fff;
 }
 
 /* LIGHT THEME */
@@ -57,7 +57,7 @@ html.light {
   --bg-des:#13224a;
   --bg-des2:#0a7cff33;
   --pag-p1:#CBCCCD;
-    --card-main:#fff;
+    --card-main:#000E4D;
 }
 .site-header {
   position: fixed;
@@ -97,9 +97,7 @@ html.light {
 .header-inner {
   height: 45px;
 }
-  .running-offer-bar {
-    top:45px;
-  }
+
   .header-logo {
   width: 45px;
   height: 45px;
@@ -123,7 +121,7 @@ html.light {
   height: 65px;
   }
   .running-offer-bar {
-    top:65px;
+    top:75px   !important;
   }
   .header-logo {
   width: 65px;
@@ -1651,7 +1649,7 @@ margin-bottom:6px;
     position: fixed;
 
     /* Your header is currently around 45px */
-    top: 55px;
+    top: 48px;
 
     left: 0;
     width: 100%;
