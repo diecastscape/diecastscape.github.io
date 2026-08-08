@@ -33,11 +33,9 @@ function buildSaleHTML(p){
     <div class="slider">
       ${imgs}
     </div>
-<div class="size">
-      <span class="new">${p.size}</span>
-    </div>
+
     <div class="price">
-      <span class="new">₹${p.price}/- Bigger cart, bigger deals</span>
+      <span class="new">₹${p.price}/-</span>
     </div>
     
     <button
