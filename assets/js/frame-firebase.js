@@ -34,8 +34,8 @@ function buildSaleHTML(p){
       ${imgs}
     </div>
 
-    <div class="price1">
-      <span class="new">₹${p.price}/-</span>
+    <div class="price">
+      <span class="new1">₹${p.price}/-</span>
     </div>
     
     <button
