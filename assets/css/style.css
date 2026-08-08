@@ -59,7 +59,7 @@ html.light {
   --bg-des:#13224a;
   --bg-des2:#0a7cff33;
   --pag-p1:#CBCCCD;
-    --card-main:#0B173D;
+    --card-main:#E6E6E6;
   --butto-bg:#fff;
     --butto-tex:#111;
 }
@@ -623,7 +623,7 @@ transform:scale(1.05);
   box-sizing: border-box;
 
   background: var(--card-main);
-  border: 1px solid #5BC0BE;
+  border: 1px solid #5BC0BE33;
   border-radius: 16px;
   overflow: hidden;
 
@@ -1307,8 +1307,8 @@ font-weight:700;
   margin-top: 8px;
   border:none;
   border-radius:12px;
-  background:var(--butto-bg);
-  color:var(--butto-tex);
+  background:#fff;
+  color:#111;
   font-size:15px;
   font-weight:600;
   cursor:pointer;
