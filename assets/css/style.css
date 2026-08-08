@@ -588,6 +588,26 @@ transform:scale(1.05);
     transform:none;
   }
 }
+/* =========================================
+   FRAME + ACCESSORIES
+   2 PRODUCTS SIDE-BY-SIDE ON DESKTOP
+   ========================================= */
+
+@media (min-width: 768px) {
+
+  #sale-main {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+  }
+
+  #sale-main .section {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+}
 .diorama-title {
   font-size: 18px;
   font-weight: 620;
