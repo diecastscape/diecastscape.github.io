@@ -59,9 +59,9 @@ html.light {
   --bg-des:#13224a;
   --bg-des2:#0a7cff33;
   --pag-p1:#CBCCCD;
-    --card-main:#F5F7FA;
-  --boutt-bg:#fff;
-    --boutt-tex:#111;
+    --card-main:#0B173D;
+  --butto-bg:#fff;
+    --butto-tex:#111;
 }
 .site-header {
   position: fixed;
@@ -1308,7 +1308,7 @@ font-weight:700;
   border:none;
   border-radius:12px;
   background:var(--butto-bg);
-  color:#fff;var(--butto-tex)
+  color:var(--butto-tex);
   font-size:15px;
   font-weight:600;
   cursor:pointer;
