@@ -607,6 +607,8 @@ transform:scale(1.05);
 /* CARD */
 
 .shop-card {
+  text-align: left;
+  padding: 20px 23px;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -688,20 +690,7 @@ transform:scale(1.05);
    PREVENT INNER CONTENT OVERFLOW
    ========================================= */
 
-.shop-card img,
-.shop-card iframe,
-.shop-card video {
-  max-width: 100%;
-  height: auto;
-}
 
-.shop-card .diorama-title,
-.shop-card .price,
-.shop-card .discount,
-.shop-card .ship {
-  max-width: 100%;
-  box-sizing: border-box;
-}
 
 
 /* =========================================
