@@ -14,7 +14,7 @@ function buildSaleHTML(p){
   if(Array.isArray(p.images)){
     p.images.forEach(im=>{
       imgs += `
-        <div class="img-box">
+        <div class="img-box1">
           <div class="img-loader"></div>
           <img src="/images/frames/${im}.webp"
             onload="this.previousElementSibling.remove(); this.style.opacity=1"
@@ -30,7 +30,7 @@ function buildSaleHTML(p){
 
     <div class="diorama-title">${p.name}</div>
 
-    <div class="slider">
+    <div class="slider1">
       ${imgs}
     </div>
 
