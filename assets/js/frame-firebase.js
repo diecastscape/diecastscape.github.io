@@ -28,13 +28,13 @@ function buildSaleHTML(p){
   return `
   <div class="shop-card">
 
-    <div class="diorama-title">${p.name}</div>
+    <div class="diorama-title1">${p.name}</div>
 
     <div class="slider1">
       ${imgs}
     </div>
 
-    <div class="price">
+    <div class="price1">
       <span class="new">₹${p.price}/-</span>
     </div>
     
