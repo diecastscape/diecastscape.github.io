@@ -37,14 +37,20 @@ html.light {
   --bg-des2:#0a7cff33;
   --pag-p1:#CBCCCD;
 }
-.footer{
+.footer1{
     margin-top:40px;
     padding:18px 16px 0;
-  margin-bottom: 80px;
+  margin-bottom: 130px;
 border-top:1px solid #5BC0BE;
     font-family:Arial,sans-serif;
 }
+.footer{
+    margin-top:40px;
+    padding:18px 16px 0;
 
+border-top:1px solid #5BC0BE;
+    font-family:Arial,sans-serif;
+}
 
 .footer-title{
 
