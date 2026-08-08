@@ -55,7 +55,7 @@ function buildSaleHTML(p) {
 
   return `
 
-  <div class="section">
+  <div class="shop-card">
 
     <!-- Product Name -->
 
