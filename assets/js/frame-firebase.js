@@ -26,7 +26,7 @@ function buildSaleHTML(p){
   }
 
   return `
-  <div class="section">
+  <div class="shop-card">
 
     <div class="diorama-title">${p.name}</div>
 
