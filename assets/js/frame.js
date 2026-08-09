@@ -256,7 +256,7 @@ else if (count < 10) {
             `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
 
         offerApply.innerText =
-            ``;
+            `10% off`;
 
         offerApply2.innerText =
             `Offer applyd `;
@@ -264,7 +264,7 @@ else if (count < 10) {
             `Free delivery`;
         // Progress starts from 4 and goes to 8
         offerBar.style.width =
-            (count / 8 * 100) + "%";
+            (count / 10 * 100) + "%";
 
     }
     // -------------------------
