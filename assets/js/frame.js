@@ -39,9 +39,12 @@ function getShipping(count) {
 
     // Up to 3 frames = ₹100 shipping
     if (count <= 3) {
-        return 100;
+        return 90;
     }
 
+    if (count <= 4) {
+        return 130;
+    }
     // 4 or more frames = FREE shipping
     return 0;
 }
@@ -120,7 +123,7 @@ function renderCart() {
 
 
     // 0–3 frames
-    if (count < 4) {
+    if (count < 5) {
 
         discount = 0;
 
@@ -132,7 +135,12 @@ function renderCart() {
         discount = 0;
 
     }
+else if (count < 10) {
 
+        discount = Math.round(total * 0.10);
+
+}
+        
     // 8+ frames
     else {
 
@@ -185,12 +193,12 @@ function renderCart() {
     // Goal: FREE SHIPPING
     // -------------------------
 
-    if (count < 4) {
+    if (count < 5) {
 
-        const remaining = 4 - count;
+        const remaining = 5 - count;
 
         offerCount.innerText =
-            `${count} / 4 Frames`;
+            `${count} / 5 Frames`;
 
         offerText.innerText =
             `Add ${remaining} frame${remaining > 1 ? "s" : ""} to unlock FREE SHIPPING`;
@@ -203,7 +211,7 @@ function renderCart() {
 
         // Progress: 0 → 100%
         offerBar.style.width =
-            (count / 4 * 100) + "%";
+            (count / 5 * 100) + "%";
 
     }
 
@@ -221,7 +229,7 @@ function renderCart() {
             `${count} / 8 Frames`;
 
         offerText.innerText =
-            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
+            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 10% OFF`;
 
         offerApply.innerText =
             ``;
@@ -237,6 +245,28 @@ function renderCart() {
     }
 
 
+    else if (count < 10) {
+
+        const remaining = 10 - count;
+
+        offerCount.innerText =
+            `${count} / 10 Frames`;
+
+        offerText.innerText =
+            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
+
+        offerApply.innerText =
+            ``;
+
+        offerApply2.innerText =
+            `Offer applyd `;
+        offerApply3.innerText =
+            `Free delivery`;
+        // Progress starts from 4 and goes to 8
+        offerBar.style.width =
+            (count / 8 * 100) + "%";
+
+    }
     // -------------------------
     // 8+ FRAMES
     // 25% OFF + FREE SHIPPING
@@ -406,10 +436,14 @@ function checkoutCart() {
 
     if (count >= 8) {
 
-        discount = Math.round(total * 0.20);
+        discount = Math.round(total * 0.10);
 
     }
+if (count >= 10) {
 
+        discount = Math.round(total * 0.20);
+
+}
 
     // =========================
     // GRAND TOTAL
@@ -425,7 +459,7 @@ function checkoutCart() {
 
     let offerText = "";
 
-    if (count < 4) {
+    if (count < 5) {
 
         offerText =
             "Add 4 frames to unlock FREE SHIPPING";
@@ -437,6 +471,12 @@ function checkoutCart() {
             "FREE SHIPPING UNLOCKED";
 
     }
+        else if (count < 10) {
+
+        offerText =
+            "10% OFF +FREE SHIPPING UNLOCKED";
+
+        }
     else {
 
         offerText =
