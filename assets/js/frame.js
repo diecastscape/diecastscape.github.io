@@ -37,9 +37,9 @@ function getShipping(count) {
         return 0;
     }
 
-    // Up to 3 frames = ₹100 shipping
-    if (count <= 3) {
-        return 70;
+    // Up to 2 frames = ₹100 shipping
+    if (count <= 2) {
+        return 75;
     }
 
     
@@ -160,7 +160,7 @@ function renderCart() {
         "₹" + total;
 
     document.getElementById("shippingPrice").innerText =
-        shipping === 0 && count >= 4
+        shipping === 0 && count >= 3
             ? "₹0"
             : "₹" + shipping;
 
@@ -393,7 +393,7 @@ function checkoutCart() {
     let discount = 0;
 
     
-    }
+    
 if (count >= 6) {
 
         discount = Math.round(total * 0.20);
