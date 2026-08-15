@@ -257,7 +257,8 @@ function renderCart() {
 
         offerApply2.innerText =
             `Offer applyd `;
-
+        offerApply3.innerText =
+            `Free delivery`;
         offerBar.style.width =
             "100%";
 
@@ -296,7 +297,8 @@ function renderCart() {
 
         offerApply2.innerText =
             "";
-
+        offerApply3.innerText =
+            `Free delivery`;
         offerBar.style.width =
             "0%";
 
@@ -376,7 +378,6 @@ function checkoutCart() {
         count += item.qty;
 
         message += `• ${item.name}%0A`;
-        message += `Qty : ${item.qty}%0A`;
         message += `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
 
     });
@@ -394,7 +395,7 @@ function checkoutCart() {
 
     
     
-if (count >= 6) {
+    if (count >= 6) {
 
         discount = Math.round(total * 0.20);
 
@@ -408,31 +409,7 @@ if (count >= 6) {
         total + shipping - discount;
 
 
-    // =========================
-    // OFFER TEXT
-    // =========================
 
-    let offerText = "";
-
-    if (count < 3) {
-
-        offerText =
-            "Add 4 frames to unlock FREE SHIPPING";
-
-    }
-    
-        else if (count < 6) {
-
-        offerText =
-            "20% OFF +FREE SHIPPING UNLOCKED";
-
-        }
-    else {
-
-        offerText =
-            "20% OFF + FREE SHIPPING UNLOCKED";
-
-    }
 
 
     // =========================
@@ -458,9 +435,8 @@ if (count >= 6) {
     }
 
 
-    message += `Discount : -₹${discount}%0A`;
+    message += `Discount : - ₹${discount}%0A`;
 
-    message += `Offer : ${offerText}%0A`;
 
     message += "━━━━━━━━━━━━━━%0A";
 
