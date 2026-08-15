@@ -298,7 +298,7 @@ function renderCart() {
         offerApply2.innerText =
             "";
         offerApply3.innerText =
-            `Free delivery`;
+            ``;
         offerBar.style.width =
             "0%";
 
