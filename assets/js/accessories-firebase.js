@@ -68,7 +68,7 @@ function buildSaleHTML(p) {
 
     <!-- Image Slider -->
 
-    <div class="slider1">
+    <div class="slide">
       ${imgs}
     </div>
 
