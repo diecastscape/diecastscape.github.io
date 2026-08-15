@@ -783,7 +783,7 @@ transform:scale(1.05);
   -webkit-overflow-scrolling: touch; /* smooth on mobile */
 }
 .slider1 img {
-  width: 300px;
+  width: 270px;
   aspect-ratio: 1 / 1;     /* ✅ correct ratio */
   height: auto;
   object-fit: cover;       /* keeps nice crop */
@@ -810,6 +810,15 @@ transform:scale(1.05);
   object-fit: cover;
   border-radius: 12px;
   transition: opacity .25s ease;
+}
+.img-box2 {
+  position: relative;
+  width: 270px;             /* same as .slider img */
+  aspect-ratio: 1 / 1;     /* keep your ratio */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0b132b;
+  flex-shrink: 0;
 }
 /* Glass blur loader */
 .img-loader {
