@@ -30,7 +30,7 @@ function buildSaleHTML(p){
 
     <div class="diorama-title1">${p.name}</div>
 
-    <div class="slider1">
+    <div class="slide">
       ${imgs}
     </div>
 
