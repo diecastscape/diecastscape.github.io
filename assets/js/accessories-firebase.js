@@ -26,7 +26,7 @@ function buildSaleHTML(p) {
     p.images.forEach(im => {
 
       imgs += `
-        <div class="img-box1">
+        <div class="img-box2">
 
           <div class="img-loader"></div>
 
@@ -68,7 +68,7 @@ function buildSaleHTML(p) {
 
     <!-- Image Slider -->
 
-    <div class="slide">
+    <div class="slider1">
       ${imgs}
     </div>
 
