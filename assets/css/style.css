@@ -767,6 +767,10 @@ transform:scale(1.05);
   border-radius: 12px;
   transition: opacity .25s ease;
 }
+.slide {
+  display: flex;
+  align-items: center; 
+}
 .slider1 {
   display: flex;
   gap: 10px;
