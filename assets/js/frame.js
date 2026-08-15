@@ -38,12 +38,12 @@ function getShipping(count) {
     }
 
     // Up to 3 frames = ₹100 shipping
-    if (count <= 2) {
+    if (count <= 3) {
         return 70;
     }
 
     
-    // 4 or more frames = FREE shipping
+    // 3 or more frames = FREE shipping
     return 0;
 }
 function renderCart() {
@@ -127,7 +127,7 @@ function renderCart() {
 
     }
 
-    // 4–7 frames
+    // 4–5 frames
     else if (count < 6) {
 
         discount = 0;
@@ -135,7 +135,7 @@ function renderCart() {
     }
 
         
-    // 8+ frames
+    // 6+ frames
     else {
 
         discount = Math.round(total * 0.20);
@@ -183,8 +183,7 @@ function renderCart() {
 
 
     // -------------------------
-    // 0–3 FRAMES
-    // Goal: FREE SHIPPING
+    // 0–3 FRAME 
     // -------------------------
 
     if (count < 3) {
@@ -211,8 +210,8 @@ function renderCart() {
 
 
     // -------------------------
-    // 4–7 FRAMES
-    // Goal: 20% OFF
+    // 4–5 FRAMES 
+        // free shipping
     // -------------------------
 
     
@@ -241,8 +240,8 @@ function renderCart() {
 
     }
     // -------------------------
-    // 8+ FRAMES
-    // 25% OFF + FREE SHIPPING
+    // 6+ FRAMES
+    // 20% OFF + FREE SHIPPING
     // -------------------------
 
     else {
@@ -383,28 +382,14 @@ function checkoutCart() {
     });
 
 
-    // =========================
-    // NEW OFFER SYSTEM
-    // =========================
-
-    // 1–3 Frames
-    // ₹100 Shipping
-    // No Discount
-
-    // 4–7 Frames
-    // FREE Shipping
-    // No Discount
-
-    // 8+ Frames
-    // FREE Shipping
-    // 25% OFF
+    
 
 
     // Get shipping from new function
     const shipping = getShipping(count);
 
 
-    // Calculate 25% discount only for 8+ frames
+    
     let discount = 0;
 
     
