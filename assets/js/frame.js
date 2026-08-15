@@ -38,13 +38,11 @@ function getShipping(count) {
     }
 
     // Up to 3 frames = ₹100 shipping
-    if (count <= 3) {
-        return 90;
+    if (count <= 2) {
+        return 70;
     }
 
-    if (count <= 4) {
-        return 130;
-    }
+    
     // 4 or more frames = FREE shipping
     return 0;
 }
@@ -123,23 +121,19 @@ function renderCart() {
 
 
     // 0–3 frames
-    if (count < 5) {
+    if (count < 3) {
 
         discount = 0;
 
     }
 
     // 4–7 frames
-    else if (count < 8) {
+    else if (count < 6) {
 
         discount = 0;
 
     }
-else if (count < 10) {
 
-        discount = Math.round(total * 0.10);
-
-}
         
     // 8+ frames
     else {
@@ -193,12 +187,12 @@ else if (count < 10) {
     // Goal: FREE SHIPPING
     // -------------------------
 
-    if (count < 5) {
+    if (count < 3) {
 
-        const remaining = 5 - count;
+        const remaining = 3 - count;
 
         offerCount.innerText =
-            `${count} / 5 Frames`;
+            `${count} / 3 Frames`;
 
         offerText.innerText =
             `Add ${remaining} frame${remaining > 1 ? "s" : ""} to unlock FREE SHIPPING`;
@@ -211,7 +205,7 @@ else if (count < 10) {
 
         // Progress: 0 → 100%
         offerBar.style.width =
-            (count / 5 * 100) + "%";
+            (count / 3 * 100) + "%";
 
     }
 
@@ -221,15 +215,18 @@ else if (count < 10) {
     // Goal: 20% OFF
     // -------------------------
 
-    else if (count < 8) {
+    
 
-        const remaining = 8 - count;
+
+    else if (count < 6) {
+
+        const remaining = 6 - count;
 
         offerCount.innerText =
-            `${count} / 8 Frames`;
+            `${count} / 6 Frames`;
 
         offerText.innerText =
-            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 10% OFF`;
+            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
 
         offerApply.innerText =
             ``;
@@ -240,31 +237,7 @@ else if (count < 10) {
             `Free delivery`;
         // Progress starts from 4 and goes to 8
         offerBar.style.width =
-            (count / 8 * 100) + "%";
-
-    }
-
-
-    else if (count < 10) {
-
-        const remaining = 10 - count;
-
-        offerCount.innerText =
-            `${count} / 10 Frames`;
-
-        offerText.innerText =
-            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
-
-        offerApply.innerText =
-            `10% off`;
-
-        offerApply2.innerText =
-            `Offer applyd `;
-        offerApply3.innerText =
-            `Free delivery`;
-        // Progress starts from 4 and goes to 8
-        offerBar.style.width =
-            (count / 10 * 100) + "%";
+            (count / 6 * 100) + "%";
 
     }
     // -------------------------
@@ -314,10 +287,10 @@ else if (count < 10) {
             "₹0";
 
         offerCount.innerText =
-            "0 / 4 Frames";
+            "0 / 3 Frames";
 
         offerText.innerText =
-            "Add 4 frames to unlock FREE SHIPPING";
+            "Add 3 frames to unlock FREE SHIPPING";
 
         offerApply.innerText =
             "";
@@ -389,7 +362,7 @@ function checkoutCart() {
     let total = 0;
     let count = 0;
 
-    let message = "🛒 *Order - Diecast.scape*%0A%0A";
+    let message = "🛒 *Hi - Diecast.scape*%0A%0A";
 
 
     // =========================
@@ -434,12 +407,9 @@ function checkoutCart() {
     // Calculate 25% discount only for 8+ frames
     let discount = 0;
 
-    if (count >= 8) {
-
-        discount = Math.round(total * 0.10);
-
+    
     }
-if (count >= 10) {
+if (count >= 6) {
 
         discount = Math.round(total * 0.20);
 
@@ -459,22 +429,17 @@ if (count >= 10) {
 
     let offerText = "";
 
-    if (count < 5) {
+    if (count < 3) {
 
         offerText =
             "Add 4 frames to unlock FREE SHIPPING";
 
     }
-    else if (count < 8) {
+    
+        else if (count < 6) {
 
         offerText =
-            "FREE SHIPPING UNLOCKED";
-
-    }
-        else if (count < 10) {
-
-        offerText =
-            "10% OFF +FREE SHIPPING UNLOCKED";
+            "20% OFF +FREE SHIPPING UNLOCKED";
 
         }
     else {
