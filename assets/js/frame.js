@@ -363,7 +363,7 @@ function checkoutCart() {
     let total = 0;
     let count = 0;
 
-    let message = "🛒 *Hi - Diecast.scape*%0A%0A";
+    let message = "*Hello - Diecast.scape*%0A%0A";
 
 
     // =========================
@@ -424,7 +424,7 @@ function checkoutCart() {
 
 
     // Show FREE instead of ₹0 for 4+ frames
-    if (count >= 4) {
+    if (count >= 3) {
 
         message += `Shipping : FREE%0A`;
 
@@ -444,7 +444,7 @@ function checkoutCart() {
         `*Grand Total : ₹${grandTotal}*%0A%0A`;
 
     message +=
-        "Share me payment option.";
+        "Share me payment details.";
 
 
     // =========================
