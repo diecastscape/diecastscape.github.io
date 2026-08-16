@@ -498,6 +498,14 @@ transform:scale(1.05);
 .search-bar:focus {
   border-color: var(--accent);
 }
+.no-products-message {
+  width: 100%;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #777;
+}
 .coming-soon {
   margin: 28px auto 18px;
   text-align: center;
