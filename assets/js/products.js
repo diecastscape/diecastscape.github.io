@@ -68,7 +68,7 @@ function searchProducts() {
     const message = document.createElement("div");
 
     message.className = "no-products-message";
-    message.textContent = "Product not available";
+    message.textContent = "No matching products found";
 
     container.appendChild(message);
   }
