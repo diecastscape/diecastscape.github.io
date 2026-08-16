@@ -6,9 +6,12 @@ function searchProducts() {
       .toLowerCase() || "";
 
   let products;
+  let container;
 
   // DIORAMA PAGE
   if (document.getElementById("productsContainer")) {
+    container = document.getElementById("productsContainer");
+
     products = document.querySelectorAll(
       "#productsContainer .section"
     );
@@ -16,6 +19,8 @@ function searchProducts() {
 
   // FRAME / ACCESSORIES PAGE
   else if (document.getElementById("sale-main")) {
+    container = document.getElementById("sale-main");
+
     products = document.querySelectorAll(
       "#sale-main .shop-card"
     );
@@ -25,10 +30,10 @@ function searchProducts() {
     return;
   }
 
+  let found = false;
+
   products.forEach(product => {
 
-    // Diorama uses .diorama-title
-    // Frame/Accessories use .diorama-title1
     const title =
       product
         .querySelector(".diorama-title, .diorama-title1")
@@ -38,15 +43,39 @@ function searchProducts() {
 
     if (input === "" || title.includes(input)) {
       product.style.display = "";
+      
+      if (input !== "") {
+        found = true;
+      }
+
     } else {
       product.style.display = "none";
     }
-
   });
+
+
+  // Remove old message
+  const oldMessage = container.querySelector(".no-products-message");
+
+  if (oldMessage) {
+    oldMessage.remove();
+  }
+
+
+  // Show message if search has no results
+  if (input !== "" && !found) {
+
+    const message = document.createElement("div");
+
+    message.className = "no-products-message";
+    message.textContent = "Product not available";
+
+    container.appendChild(message);
+  }
 }
 
 
-// Run once after Firebase products are loaded
+// Run after Firebase products are rendered
 window.addEventListener("load", () => {
   setTimeout(searchProducts, 1000);
 });
