@@ -499,7 +499,7 @@ transform:scale(1.05);
   border-color: var(--accent);
 }
 .no-products-message {
-  width: 100%;
+
   text-align: center;
   padding: 40px 20px;
   font-size: 16px;
