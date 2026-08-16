@@ -1,19 +1,30 @@
-
-// ===== SEARCH =====
 function searchProducts() {
   const input =
     document.getElementById("searchInput")
-    ?.value
-    .trim()
-    .toLowerCase() || "";
+      ?.value
+      .trim()
+      .toLowerCase() || "";
 
-  // Works for Diorama (.section), Frames & Accessories (.shop-card)
-  const products = document.querySelectorAll(".section, .shop-card");
+  let products;
+
+  // Diorama page
+  if (document.querySelector(".section")) {
+    products = document.querySelectorAll(".section");
+  }
+
+  // Frames / Accessories page
+  else if (document.querySelector(".shop-card")) {
+    products = document.querySelectorAll(".shop-card");
+  }
+
+  else {
+    return;
+  }
 
   products.forEach(product => {
+
     const title =
-      product
-        .querySelector(".diorama-title")
+      product.querySelector(".diorama-title")
         ?.textContent
         .trim()
         .toLowerCase() || "";
@@ -25,9 +36,9 @@ function searchProducts() {
   });
 }
 
-// Search again after Firebase products finish rendering
+// Firebase may take some time to render products
 window.addEventListener("load", () => {
-  setTimeout(searchProducts, 300);
+  setTimeout(searchProducts, 1000);
 });
 
 // ===== LIGHTBOX (Optimized HQ Loader) =====
