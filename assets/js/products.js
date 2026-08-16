@@ -7,14 +7,18 @@ function searchProducts() {
 
   let products;
 
-  // Diorama page
-  if (document.querySelector(".section")) {
-    products = document.querySelectorAll(".section");
+  // DIORAMA PAGE
+  if (document.getElementById("productsContainer")) {
+    products = document.querySelectorAll(
+      "#productsContainer .section"
+    );
   }
 
-  // Frames / Accessories page
-  else if (document.querySelector(".shop-card")) {
-    products = document.querySelectorAll(".shop-card");
+  // FRAME / ACCESSORIES PAGE
+  else if (document.getElementById("sale-main")) {
+    products = document.querySelectorAll(
+      "#sale-main .shop-card"
+    );
   }
 
   else {
@@ -23,24 +27,29 @@ function searchProducts() {
 
   products.forEach(product => {
 
+    // Diorama uses .diorama-title
+    // Frame/Accessories use .diorama-title1
     const title =
-      product.querySelector(".diorama-title")
+      product
+        .querySelector(".diorama-title, .diorama-title1")
         ?.textContent
         .trim()
         .toLowerCase() || "";
 
-    product.style.display =
-      input === "" || title.includes(input)
-        ? ""
-        : "none";
+    if (input === "" || title.includes(input)) {
+      product.style.display = "";
+    } else {
+      product.style.display = "none";
+    }
+
   });
 }
 
-// Firebase may take some time to render products
+
+// Run once after Firebase products are loaded
 window.addEventListener("load", () => {
   setTimeout(searchProducts, 1000);
 });
-
 // ===== LIGHTBOX (Optimized HQ Loader) =====
 function openLightbox(src) {
   const lightbox = document.getElementById("lightbox");
