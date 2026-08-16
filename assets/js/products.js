@@ -1,4 +1,4 @@
-// ===== SEARCH =====
+
 // ===== SEARCH =====
 function searchProducts() {
   const input =
@@ -7,27 +7,29 @@ function searchProducts() {
     .trim()
     .toLowerCase() || "";
 
-  const sections = document.querySelectorAll(".section");
+  // Works for Diorama (.section), Frames & Accessories (.shop-card)
+  const products = document.querySelectorAll(".section, .shop-card");
 
-  sections.forEach(section => {
+  products.forEach(product => {
     const title =
-      section
-      .querySelector(".diorama-title")
-      ?.textContent
-      .trim()
-      .toLowerCase() || "";
+      product
+        .querySelector(".diorama-title")
+        ?.textContent
+        .trim()
+        .toLowerCase() || "";
 
-    section.style.display =
+    product.style.display =
       input === "" || title.includes(input)
         ? ""
         : "none";
   });
 }
 
-// Search again after firebase products finish rendering
+// Search again after Firebase products finish rendering
 window.addEventListener("load", () => {
   setTimeout(searchProducts, 300);
 });
+
 // ===== LIGHTBOX (Optimized HQ Loader) =====
 function openLightbox(src) {
   const lightbox = document.getElementById("lightbox");
