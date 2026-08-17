@@ -335,67 +335,161 @@ window.addEventListener("DOMContentLoaded", ()=>{
 });
 window.openSection = function(type){
 
-  // hide all sections
+  // Hide all sections
   document.querySelectorAll(".section-panel")
     .forEach(s => s.style.display = "none");
 
-  // reset all add buttons
-  document.getElementById("mainAddBtn").innerText = "+ Add";
-  document.getElementById("mainAddBtn").classList.remove("cancel-btn");
 
-  document.getElementById("specialAddBtn").innerText = "+ Add";
-  document.getElementById("specialAddBtn").classList.remove("cancel-btn");
+  // Reset buttons
+  const mainBtn =
+    document.getElementById("mainAddBtn");
 
-  // reset forms + edit mode
+  const specialBtn =
+    document.getElementById("specialAddBtn");
+
+  const accessoriesBtn =
+    document.getElementById("accessoriesAddBtn");
+
+
+  if(mainBtn){
+    mainBtn.innerText = "+ Add";
+    mainBtn.classList.remove("cancel-btn");
+  }
+
+  if(specialBtn){
+    specialBtn.innerText = "+ Add";
+    specialBtn.classList.remove("cancel-btn");
+  }
+
+  if(accessoriesBtn){
+    accessoriesBtn.innerText = "+ Add";
+    accessoriesBtn.classList.remove("cancel-btn");
+  }
+
+
+  // Reset forms
   resetMainForm();
   resetSaleForm();
+  resetAccessoryForm();
+
   hideEditMode();
 
-  // show sale settings again
-  const saleControl = document.querySelector(".sale-control");
-  if(saleControl) saleControl.style.display = "block";
 
-  const sec = document.getElementById("section-" + type);
+  // Show sale settings again
+  const saleControl =
+    document.querySelector(".sale-control");
+
+  if(saleControl){
+    saleControl.style.display = "block";
+  }
+
+
+  // Open requested section
+  const sec =
+    document.getElementById("section-" + type);
+
   if(!sec) return;
 
   sec.style.display = "block";
 
-  const addWrap = document.getElementById("add-" + type);
-  if(addWrap) addWrap.style.display = "none";
 
-  const listBox =
-    type === "main"
-      ? document.getElementById("mainProducts")
-      : document.getElementById("specialProducts");
+  // Hide add form
+  const addWrap =
+    document.getElementById("add-" + type);
+
+  if(addWrap){
+    addWrap.style.display = "none";
+  }
+
+
+  // Find product list
+  let listBox = null;
+
+  if(type === "main"){
+
+    listBox =
+      document.getElementById("mainProducts");
+
+  }else if(type === "special"){
+
+    listBox =
+      document.getElementById("specialProducts");
+
+  }else if(type === "accessories"){
+
+    listBox =
+      document.getElementById("accessoriesProducts");
+
+  }
+
 
   if(listBox){
+
     listBox.style.display = "block";
+
     loadAdminProducts(type);
+
   }
+
 };
 window.toggleList = function(type){
 
-  const addWrap = document.getElementById("add-"+type);
+  const addWrap =
+    document.getElementById("add-" + type);
+
 
   const btn =
-    type==="main"
-      ? document.getElementById("mainAddBtn")
-      : document.getElementById("specialAddBtn");
+    document.getElementById(
+      type === "main"
+        ? "mainAddBtn"
+        : type === "special"
+        ? "specialAddBtn"
+        : "accessoriesAddBtn"
+    );
 
-  if(addWrap) addWrap.style.display = "none";
-if(type === "special"){
-  document.getElementById("saleControlBox").style.display = "block";
-}
-  if(type==="main"){
-    resetMainForm();
-  }else{
-    resetSaleForm();
+
+  if(addWrap){
+    addWrap.style.display = "none";
   }
 
-  btn.innerText = "+ Add";
-  btn.classList.remove("cancel-btn");
+
+  if(type === "special"){
+
+    const saleBox =
+      document.getElementById("saleControlBox");
+
+    if(saleBox){
+      saleBox.style.display = "block";
+    }
+
+  }
+
+
+  if(type === "main"){
+
+    resetMainForm();
+
+  }else if(type === "special"){
+
+    resetSaleForm();
+
+  }else if(type === "accessories"){
+
+    resetAccessoryForm();
+
+  }
+
+
+  if(btn){
+
+    btn.innerText = "+ Add";
+    btn.classList.remove("cancel-btn");
+
+  }
+
 
   loadAdminProducts(type);
+
 };
 
 async function loadAdminProducts(type){
@@ -420,7 +514,11 @@ async function loadAdminProducts(type){
 `;
 
   const colName =
-    type==="main" ? "products" : "specialSaleProducts";
+  type === "main"
+    ? "products"
+    : type === "special"
+    ? "specialSaleProducts"
+    : "accessoriesProducts";
 
   const q = query(
     collection(db, colName),
@@ -443,18 +541,25 @@ async function loadAdminProducts(type){
     </div>
 <div class="admin-price-row">
 
-  ${
-  type==="main"
-  ? `
-    <div class="price-stack">
-      <div class="admin-old-price">₹${p.priceOld || 0}</div>
-      <div class="admin-price">₹${p.priceNew || 0}</div>
-    </div>
-  `
-  : `
-    <div class="admin-price">₹${p.price || 0}</div>
-  `
-  }
+${
+  type === "main"
+    ? `
+      <div class="price-stack">
+        <div class="admin-old-price">
+          ₹${p.priceOld || 0}
+        </div>
+
+        <div class="admin-price">
+          ₹${p.priceNew || 0}
+        </div>
+      </div>
+    `
+    : `
+      <div class="admin-price">
+        ₹${p.price || 0}
+      </div>
+    `
+}
 
   ${type==="special" ? `
     <div class="sold-toggle">
@@ -579,38 +684,115 @@ window.cancelEdit = function(type){
   editingId = null;
   editingType = null;
 
+
   hideEditMode();
 
-  const addWrap = document.getElementById("add-"+type);
 
-  const listBox =
-    type==="main"
-      ? document.getElementById("mainProducts")
-      : document.getElementById("specialProducts");
+  const addWrap =
+    document.getElementById(
+      "add-" + type
+    );
+
+
+  let listBox;
+
+
+  if(type === "main"){
+
+    listBox =
+      document.getElementById(
+        "mainProducts"
+      );
+
+  }else if(type === "special"){
+
+    listBox =
+      document.getElementById(
+        "specialProducts"
+      );
+
+  }else if(type === "accessories"){
+
+    listBox =
+      document.getElementById(
+        "accessoriesProducts"
+      );
+
+  }
+
 
   const btn =
-    type==="main"
+    type === "main"
       ? document.getElementById("mainAddBtn")
-      : document.getElementById("specialAddBtn");
+      : type === "special"
+      ? document.getElementById("specialAddBtn")
+      : document.getElementById("accessoriesAddBtn");
 
-  // close form
-  if(addWrap) addWrap.style.display = "none";
 
-  // show products
-  if(listBox) listBox.style.display = "block";
-if(type === "special"){
-  document.getElementById("saleControlBox").style.display = "block";
-}
-  // reset add button
-  btn.innerText = "+ Add";
-  btn.classList.remove("cancel-btn");
+  // Close form
+  if(addWrap){
 
-  // reset form also
-  if(type==="main"){
-    resetMainForm();
-  }else{
-    resetSaleForm();
+    addWrap.style.display =
+      "none";
+
   }
+
+
+  // Show products
+  if(listBox){
+
+    listBox.style.display =
+      "block";
+
+  }
+
+
+  // Sale settings
+  if(type === "special"){
+
+    const saleBox =
+      document.getElementById(
+        "saleControlBox"
+      );
+
+    if(saleBox){
+
+      saleBox.style.display =
+        "block";
+
+    }
+
+  }
+
+
+  // Reset button
+  if(btn){
+
+    btn.innerText =
+      "+ Add";
+
+    btn.classList.remove(
+      "cancel-btn"
+    );
+
+  }
+
+
+  // Reset form
+  if(type === "main"){
+
+    resetMainForm();
+
+  }else if(type === "special"){
+
+    resetSaleForm();
+
+  }else if(type === "accessories"){
+
+    resetAccessoryForm();
+
+  }
+
 };
 
 window.deleteProduct = async function(type,id){
@@ -634,57 +816,184 @@ window.toggleSold = async function(id, status){
   console.log("Sold status updated");
 };
 window.toggleAdd = function(type){
+window.toggleAdd = function(type){
 
-  const addWrap = document.getElementById("add-"+type);
+  const addWrap =
+    document.getElementById(
+      "add-" + type
+    );
+
 
   const listBox =
-    type==="main"
+    type === "main"
       ? document.getElementById("mainProducts")
-      : document.getElementById("specialProducts");
+      : type === "special"
+      ? document.getElementById("specialProducts")
+      : document.getElementById("accessoriesProducts");
+
 
   const btn =
-    type==="main"
+    type === "main"
       ? document.getElementById("mainAddBtn")
-      : document.getElementById("specialAddBtn");
-      const saleBox = document.getElementById("saleControlBox");
+      : type === "special"
+      ? document.getElementById("specialAddBtn")
+      : document.getElementById("accessoriesAddBtn");
+
+
+  const saleBox =
+    document.getElementById(
+      "saleControlBox"
+    );
+
+
   if(!addWrap) return;
 
-  const opening = addWrap.style.display !== "block";
-if(opening){
 
-  if(!editingId){
-    if(type==="main"){
-      resetMainForm();
-    }else{
-      resetSaleForm();
+  const opening =
+    addWrap.style.display !== "block";
+
+
+  if(opening){
+
+    // Reset only when creating a NEW product
+    if(!editingId){
+
+      if(type === "main"){
+
+        resetMainForm();
+
+      }else if(type === "special"){
+
+        resetSaleForm();
+
+      }else if(type === "accessories"){
+
+        resetAccessoryForm();
+
+      }
+
     }
-  }
 
-  showEditMode(type, false);
-  
-    addWrap.style.display = "block";
-  if(type === "special") saleBox.style.display = "none";
-    if(listBox) listBox.style.display = "none";
 
-    btn.innerText = "Cancel";
-    btn.classList.add("cancel-btn");
+    // Show correct edit bar
+    if(type === "accessories"){
+
+      const bar =
+        document.getElementById(
+          "accessoriesEditModeBar"
+        );
+
+
+      if(bar){
+
+        bar.style.display =
+          "block";
+
+        bar.innerText =
+          editingId
+            ? "Editing Product"
+            : "Adding Product";
+
+      }
+
+    }else{
+
+      showEditMode(
+        type,
+        false
+      );
+
+    }
+
+
+    addWrap.style.display =
+      "block";
+
+
+    if(type === "special" && saleBox){
+
+      saleBox.style.display =
+        "none";
+
+    }
+
+
+    if(listBox){
+
+      listBox.style.display =
+        "none";
+
+    }
+
+
+    if(btn){
+
+      btn.innerText =
+        "Cancel";
+
+      btn.classList.add(
+        "cancel-btn"
+      );
+
+    }
+
 
   }else{
 
-    // close form + reset edit mode
-    if(type==="main"){
+
+    // Close form
+    if(type === "main"){
+
       resetMainForm();
-    }else{
+
+    }else if(type === "special"){
+
       resetSaleForm();
+
+    }else if(type === "accessories"){
+
+      resetAccessoryForm();
+
     }
 
-    addWrap.style.display = "none";
-  if(type === "special") saleBox.style.display = "block";
-    if(listBox) listBox.style.display = "block";
 
-    btn.innerText = "+ Add";
-    btn.classList.remove("cancel-btn");
+    editingId = null;
+    editingType = null;
+
+
+    addWrap.style.display =
+      "none";
+
+
+    if(type === "special" && saleBox){
+
+      saleBox.style.display =
+        "block";
+
+    }
+
+
+    if(listBox){
+
+      listBox.style.display =
+        "block";
+
+    }
+
+
+    if(btn){
+
+      btn.innerText =
+        "+ Add";
+
+      btn.classList.remove(
+        "cancel-btn"
+      );
+
+    }
+
   }
+
 };
 function resetMainForm(){
   hideEditMode();
@@ -824,3 +1133,564 @@ window.addEventListener("DOMContentLoaded", ()=>{
     for(let i=0;i<3;i++) addSaleImageField();
   }
 });
+// ======================================================
+// ACCESSORIES ADMIN
+// ======================================================
+
+
+// ------------------------------------------------------
+// ADD IMAGE FIELD
+// ------------------------------------------------------
+
+window.addAccessoryImageField = function(){
+
+  const list =
+    document.getElementById("a-imagesList");
+
+  if(!list) return;
+
+
+  const div =
+    document.createElement("div");
+
+  div.innerHTML = `
+    <input
+      class="a-img"
+      placeholder="Image path (accessories)"
+    >
+  `;
+
+
+  list.appendChild(div);
+
+};
+
+
+// ------------------------------------------------------
+// SAVE ACCESSORY
+// ------------------------------------------------------
+
+window.saveAccessoryProduct = async function(){
+
+  const loader =
+    document.getElementById("a-saveLoader");
+
+  const btn =
+    document.getElementById("a-saveBtn");
+
+  const msg =
+    document.getElementById("a-saveMsg");
+
+
+  if(btn.disabled) return;
+
+
+  const name =
+    document.getElementById("a-name")
+      .value
+      .trim();
+
+
+  const price =
+    Number(
+      document.getElementById("a-price").value
+    );
+
+
+  msg.innerText = "";
+
+
+  // Validation
+  if(!name){
+
+    msg.innerText =
+      "Enter accessory name";
+
+    return;
+
+  }
+
+
+  if(!price){
+
+    msg.innerText =
+      "Enter price";
+
+    return;
+
+  }
+
+
+  // Get images
+  const imageInputs =
+    document.querySelectorAll(".a-img");
+
+
+  const images = [];
+
+
+  imageInputs.forEach(input => {
+
+    const value =
+      input.value.trim();
+
+    if(value){
+
+      images.push(value);
+
+    }
+
+  });
+
+
+  if(images.length === 0){
+
+    msg.innerText =
+      "Add at least 1 image";
+
+    return;
+
+  }
+
+
+  loader.classList.add("show");
+
+  btn.disabled = true;
+
+
+  try{
+
+
+    // ------------------------------------------
+    // UPDATE
+    // ------------------------------------------
+
+    if(
+      editingId &&
+      editingType === "accessories"
+    ){
+
+      await updateDoc(
+        doc(
+          db,
+          "accessoriesProducts",
+          editingId
+        ),
+        {
+          name,
+          price,
+          images
+        }
+      );
+
+
+    }
+
+    // ------------------------------------------
+    // ADD NEW
+    // ------------------------------------------
+
+    else{
+
+      await addDoc(
+        collection(
+          db,
+          "accessoriesProducts"
+        ),
+        {
+          name,
+          price,
+          images,
+          active: true,
+          created: Date.now()
+        }
+      );
+
+    }
+
+
+    loader.classList.remove("show");
+
+    btn.disabled = false;
+
+
+    msg.innerText =
+      "Saved successfully";
+
+
+    // Reset edit state
+    editingId = null;
+    editingType = null;
+
+
+    // Reset button
+    document.getElementById(
+      "a-saveBtn"
+    ).innerText =
+      "Save Product";
+
+
+    hideEditMode();
+
+
+    // Clear form
+    resetAccessoryForm();
+
+
+    // Close form
+    const addWrap =
+      document.getElementById(
+        "add-accessories"
+      );
+
+    if(addWrap){
+
+      addWrap.style.display =
+        "none";
+
+    }
+
+
+    // Show list
+    const listBox =
+      document.getElementById(
+        "accessoriesProducts"
+      );
+
+    if(listBox){
+
+      listBox.style.display =
+        "block";
+
+    }
+
+
+    // Reset Add button
+    const addBtn =
+      document.getElementById(
+        "accessoriesAddBtn"
+      );
+
+    if(addBtn){
+
+      addBtn.innerText =
+        "+ Add";
+
+      addBtn.classList.remove(
+        "cancel-btn"
+      );
+
+    }
+
+
+    // Reload products
+    loadAdminProducts(
+      "accessories"
+    );
+
+
+    setTimeout(() => {
+
+      msg.innerText = "";
+
+    }, 3000);
+
+
+  }catch(error){
+
+    console.error(
+      "Error saving accessory:",
+      error
+    );
+
+
+    loader.classList.remove("show");
+
+    btn.disabled = false;
+
+
+    msg.innerText =
+      "Error saving product";
+
+  }
+
+};
+
+
+// ------------------------------------------------------
+// EDIT ACCESSORY
+// ------------------------------------------------------
+
+window.editAccessoryProduct =
+  async function(id){
+
+    const snap =
+      await getDoc(
+        doc(
+          db,
+          "accessoriesProducts",
+          id
+        )
+      );
+
+
+    if(!snap.exists()) return;
+
+
+    const data =
+      snap.data();
+
+
+    editingId = id;
+
+    editingType =
+      "accessories";
+
+
+    // Open form
+    toggleAdd("accessories");
+
+
+    // Edit mode
+    const bar =
+      document.getElementById(
+        "accessoriesEditModeBar"
+      );
+
+
+    if(bar){
+
+      bar.style.display =
+        "block";
+
+      bar.innerText =
+        "Editing Product";
+
+    }
+
+
+    // Fill fields
+    document.getElementById(
+      "a-name"
+    ).value =
+      data.name || "";
+
+
+    document.getElementById(
+      "a-price"
+    ).value =
+      data.price || "";
+
+
+    // Images
+    const list =
+      document.getElementById(
+        "a-imagesList"
+      );
+
+
+    list.innerHTML = "";
+
+
+    if(Array.isArray(data.images)){
+
+      data.images.forEach(img => {
+
+        const div =
+          document.createElement("div");
+
+
+        div.innerHTML = `
+          <input
+            class="a-img"
+            value="${img}"
+          >
+        `;
+
+
+        list.appendChild(div);
+
+      });
+
+    }
+
+
+    // Update button
+    document.getElementById(
+      "a-saveBtn"
+    ).innerText =
+      "Update Product";
+
+
+    // Add button
+    const addBtn =
+      document.getElementById(
+        "accessoriesAddBtn"
+      );
+
+
+    if(addBtn){
+
+      addBtn.innerText =
+        "Cancel";
+
+      addBtn.classList.add(
+        "cancel-btn"
+      );
+
+    }
+
+};
+
+
+// ------------------------------------------------------
+// DELETE ACCESSORY
+// ------------------------------------------------------
+
+window.deleteAccessoryProduct =
+  async function(id){
+
+    if(
+      !confirm(
+        "Delete this accessory?"
+      )
+    ){
+
+      return;
+
+    }
+
+
+    try{
+
+      await deleteDoc(
+        doc(
+          db,
+          "accessoriesProducts",
+          id
+        )
+      );
+
+
+      loadAdminProducts(
+        "accessories"
+      );
+
+
+    }catch(error){
+
+      console.error(
+        "Error deleting accessory:",
+        error
+      );
+
+    }
+
+};
+
+
+// ------------------------------------------------------
+// RESET ACCESSORY FORM
+// ------------------------------------------------------
+
+function resetAccessoryForm(){
+
+  const name =
+    document.getElementById(
+      "a-name"
+    );
+
+  const price =
+    document.getElementById(
+      "a-price"
+    );
+
+  const list =
+    document.getElementById(
+      "a-imagesList"
+    );
+
+  const btn =
+    document.getElementById(
+      "a-saveBtn"
+    );
+
+
+  if(name){
+    name.value = "";
+  }
+
+
+  if(price){
+    price.value = "";
+  }
+
+
+  if(btn){
+
+    btn.innerText =
+      "Save Product";
+
+  }
+
+
+  if(list){
+
+    list.innerHTML = "";
+
+    for(
+      let i = 0;
+      i < 3;
+      i++
+    ){
+
+      addAccessoryImageField();
+
+    }
+
+  }
+
+
+  const bar =
+    document.getElementById(
+      "accessoriesEditModeBar"
+    );
+
+
+  if(bar){
+
+    bar.style.display =
+      "none";
+
+  }
+
+      }
+  window.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const list =
+      document.getElementById(
+        "a-imagesList"
+      );
+
+
+    if(
+      list &&
+      list.children.length === 0
+    ){
+
+      for(
+        let i = 0;
+        i < 3;
+        i++
+      ){
+
+        addAccessoryImageField();
+
+      }
+
+    }
+
+  }
+);
