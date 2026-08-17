@@ -56,6 +56,13 @@ Save Frame
 <p id="f-saveMsg" class="center-msg"></p>
 
 </div>
+  <!-- ACCESSORIES -->
+<div class="dash-card">
+  <div class="dash-top">
+    <h3>Accessories</h3>
+    <button onclick="openSection('accessories')">View</button>
+  </div>
+</div>
   <!-- ===== MAIN SALE SECTION ===== -->
   <div id="section-main" class="section-panel">
     <div class="section-top">
@@ -161,6 +168,103 @@ Save Product
     </div>
   
   </div>
+  <!-- ===== ACCESSORIES SECTION ===== -->
+<div id="section-accessories" class="section-panel">
+
+  <div class="section-top">
+
+    <h3>Accessories</h3>
+
+    <div class="btn-row">
+
+      <button onclick="toggleList('accessories')">
+        Refresh
+      </button>
+
+      <button
+        onclick="toggleAdd('accessories')"
+        id="accessoriesAddBtn"
+      >
+        + Add
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="border-top"></div>
+
+  <!-- ACCESSORIES PRODUCTS -->
+  <div id="accessoriesProducts"></div>
+
+  <!-- ADD ACCESSORY FORM -->
+  <div id="add-accessories" class="add-wrap">
+
+    <div id="accessoriesAddForm">
+
+      <h4
+        id="accessoriesEditModeBar"
+        class="edit-mode-bar"
+        style="display:none;"
+      >
+        Adding Product
+      </h4>
+
+      <h5>Name</h5>
+
+      <input
+        id="a-name"
+        placeholder="Accessory name"
+      >
+
+      <h5>Price</h5>
+
+      <input
+        id="a-price"
+        placeholder="Price"
+      >
+
+      <h5>Image path</h5>
+
+      <div id="a-imagesList"></div>
+
+      <button
+        onclick="addAccessoryImageField()"
+        class="primary-btn"
+      >
+        + Add Image
+      </button>
+
+      <button
+        onclick="saveAccessoryProduct()"
+        class="primary-btn"
+        id="a-saveBtn"
+      >
+        Save Product
+      </button>
+
+      <button
+        onclick="cancelEdit('accessories')"
+        class="primary-btn secondary-btn"
+      >
+        Cancel
+      </button>
+
+      <div
+        id="a-saveLoader"
+        class="loader"
+      ></div>
+
+      <p
+        class="center-msg"
+        id="a-saveMsg"
+      ></p>
+
+    </div>
+
+  </div>
+
+</div>
 </div>
 
 <script type="module" src="/assets/js/admin-auth.js"></script>
