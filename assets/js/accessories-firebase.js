@@ -59,7 +59,7 @@ function buildSaleHTML(p) {
 
     <!-- Product Name -->
 
-    <div class="diorama-title">
+    <div class="diorama-title1">
 
       ${p.name}
 
