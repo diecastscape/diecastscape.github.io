@@ -849,8 +849,8 @@ transform:scale(1.05);
   margin-bottom: 10px;
 }
 .diorama-title1 {
-  font-size: 18px;
-  font-weight: 620;
+  font-size: 12px;
+  font-weight: 550;
   color:#111;
   margin-bottom: 10px;
 }
@@ -900,13 +900,13 @@ transform:scale(1.05);
 
 .slider1 {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; /* smooth on mobile */
 }
 .slider1 img {
-  width: 270px;
+  width: 150px;
   aspect-ratio: 1 / 1;     /* ✅ correct ratio */
   height: auto;
   object-fit: cover;       /* keeps nice crop */
@@ -919,7 +919,7 @@ transform:scale(1.05);
 /* Image wrapper */
 .img-box1 {
   position: relative;
-  width: 300px;             /* same as .slider img */
+  width: 150px;             /* same as .slider img */
   aspect-ratio: 1 / 1;     /* keep your ratio */
   border-radius: 12px;
   overflow: hidden;
@@ -936,7 +936,7 @@ transform:scale(1.05);
 }
 .img-box2 {
   position: relative;
-  width: 270px;             /* same as .slider img */
+  width: 150px;             /* same as .slider img */
   aspect-ratio: 1 / 1;     /* keep your ratio */
   border-radius: 12px;
   overflow: hidden;
