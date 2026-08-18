@@ -726,7 +726,7 @@ transform:scale(1.05);
 
 .shop-card {
   text-align: left;
-  padding: 20px 23px;
+  padding: 15px 17px;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -734,7 +734,7 @@ transform:scale(1.05);
 
   background: var(--card-main);
   border: 1px solid #5BC0BE33;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
 
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
@@ -900,13 +900,13 @@ transform:scale(1.05);
 
 .slider1 {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; /* smooth on mobile */
 }
 .slider1 img {
-  width: 150px;
+  width: 160px;
   aspect-ratio: 1 / 1;     /* ✅ correct ratio */
   height: auto;
   object-fit: cover;       /* keeps nice crop */
@@ -919,7 +919,7 @@ transform:scale(1.05);
 /* Image wrapper */
 .img-box1 {
   position: relative;
-  width: 150px;             /* same as .slider img */
+  width: 160px;             /* same as .slider img */
   aspect-ratio: 1 / 1;     /* keep your ratio */
   border-radius: 12px;
   overflow: hidden;
@@ -936,7 +936,7 @@ transform:scale(1.05);
 }
 .img-box2 {
   position: relative;
-  width: 150px;             /* same as .slider img */
+  width: 160px;             /* same as .slider img */
   aspect-ratio: 1 / 1;     /* keep your ratio */
   border-radius: 12px;
   overflow: hidden;
