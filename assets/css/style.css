@@ -755,40 +755,50 @@ transform:scale(1.05);
 /* =========================================
    MOBILE
    ========================================= */
+/* =========================================
+   MOBILE — 2 CARDS
+========================================= */
 
 @media (max-width: 767px) {
 
   #sale-main {
-    display: block;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+
     width: 100%;
     max-width: 100%;
-    padding: 0 12px;
+
+    padding: 12px;
     margin: 0;
+
     box-sizing: border-box;
   }
 
   .shop-card {
     width: 100%;
     max-width: 100%;
-    margin: 0 0 16px 0;
+    min-width: 0;
+    margin: 0;
+    padding: 12px;
   }
 
 }
 
 
 /* =========================================
-   DESKTOP
-   ========================================= */
+   LAPTOP / DESKTOP — 4 CARDS
+========================================= */
 
 @media (min-width: 768px) {
 
   #sale-main {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
 
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
 
     padding: 18px 20px;
     margin: 0 auto;
@@ -797,11 +807,14 @@ transform:scale(1.05);
   }
 
   .shop-card {
-    min-width: 0;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
   }
 
 }
+
 
 
 /* =========================================
