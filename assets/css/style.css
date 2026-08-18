@@ -193,14 +193,86 @@ letter-spacing:2px;
 margin-bottom:8px; /* bring closer */
 transform:translateY(8px);
 }
+.promo-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  border-radius: 24px;
 
-.promo-card{
-  position:relative;
-  width:100%;
-  aspect-ratio:3/4;
-  overflow:hidden;
-  border-radius:24px;
+  /* Scroll animation */
+  opacity: 0;
+  transform: translateX(-60px);
+
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
 }
+
+/* Alternate direction */
+.promo-card:nth-child(even) {
+  transform: translateX(60px);
+}
+
+/* Card visible */
+.promo-card.card-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+/* 45° glossy light */
+.promo-card::after {
+  content: "";
+  position: absolute;
+
+  width: 45%;
+  height: 180%;
+
+  top: -40%;
+  left: -80%;
+
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.05) 35%,
+    rgba(255,255,255,0.45) 50%,
+    rgba(255,255,255,0.05) 65%,
+    transparent 100%
+  );
+
+  transform: rotate(45deg);
+
+  pointer-events: none;
+  opacity: 0;
+}
+
+.promo-card.shine::after {
+  animation: cardShine 1.1s ease-in-out forwards;
+}
+
+@keyframes cardShine {
+
+  0% {
+    left: -80%;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 140%;
+    opacity: 0;
+  }
+
+}
+
 
 .promo-card img{
   width:100%;
