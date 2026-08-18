@@ -209,72 +209,99 @@ transform:translateY(8px);
   opacity: 1;
 }
 
-
-/* =================================
-   SMOOTH DOUBLE BORDER LIGHT
-================================= */
-
-@property --border-angle {
+@property --border-angle-1 {
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
 }
 
-.promo-card::after {
+@property --border-angle-2 {
+  syntax: "<angle>";
+  initial-value: 180deg;
+  inherits: false;
+}
+
+
+/* First light */
+.promo-card::before {
   content: "";
   position: absolute;
   inset: 0;
 
-  padding: 2.5px;
+  padding: 2px;
   border-radius: 24px;
 
   background: conic-gradient(
-  from var(--border-angle),
+    from var(--border-angle-1),
+    transparent 0deg,
+    transparent 330deg,
+    rgba(10,161,167,0.2) 340deg,
+    #0AA1A7 350deg,
+    rgba(10,161,167,0.2) 360deg
+  );
 
-  transparent 0deg,
-  transparent 25deg,
-
-  rgba(10,161,167,0.15) 35deg,
-  rgba(10,161,167,0.8) 45deg,
-  #0AA1A7 50deg,
-  rgba(10,161,167,0.8) 55deg,
-  rgba(10,161,167,0.15) 65deg,
-
-  transparent 75deg,
-  transparent 205deg,
-
-  rgba(10,161,167,0.15) 215deg,
-  rgba(10,161,167,0.8) 225deg,
-  #0AA1A7 230deg,
-  rgba(10,161,167,0.8) 235deg,
-  rgba(10,161,167,0.15) 245deg,
-
-  transparent 255deg,
-  transparent 360deg
-);
-
-  /* Show gradient ONLY on border */
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
-
   -webkit-mask-composite: xor;
 
   mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
-
   mask-composite: exclude;
 
   pointer-events: none;
 
-  animation: borderSweep 7s linear infinite;
+  animation: borderLightOne 4s linear infinite;
 }
 
 
-@keyframes borderSweep {
+/* Second light — opposite direction */
+.promo-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  padding: 2px;
+  border-radius: 24px;
+
+  background: conic-gradient(
+    from var(--border-angle-2),
+    transparent 0deg,
+    transparent 330deg,
+    rgba(10,161,167,0.2) 340deg,
+    #0AA1A7 350deg,
+    rgba(10,161,167,0.2) 360deg
+  );
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+
+  pointer-events: none;
+
+  animation: borderLightTwo 4s linear infinite;
+}
+
+
+/* Clockwise */
+@keyframes borderLightOne {
   to {
-    --border-angle: 360deg;
+    --border-angle-1: 360deg;
+  }
+}
+
+
+/* Counter-clockwise */
+@keyframes borderLightTwo {
+  to {
+    --border-angle-2: -180deg;
   }
 }
 .promo-card img{
