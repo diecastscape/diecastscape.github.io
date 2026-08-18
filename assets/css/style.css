@@ -228,7 +228,7 @@ transform:translateY(8px);
   position: absolute;
   inset: 0;
 
-  padding: 2px;
+  padding: 3px;
   border-radius: 24px;
 
   background: conic-gradient(
@@ -252,7 +252,7 @@ transform:translateY(8px);
 
   pointer-events: none;
 
-  animation: borderLightOne 4s linear infinite;
+  animation: borderLightOne 8s linear infinite;
 }
 
 
@@ -262,7 +262,7 @@ transform:translateY(8px);
   position: absolute;
   inset: 0;
 
-  padding: 2px;
+  padding: 3px;
   border-radius: 24px;
 
   background: conic-gradient(
@@ -286,7 +286,7 @@ transform:translateY(8px);
 
   pointer-events: none;
 
-  animation: borderLightTwo 4s linear infinite;
+  animation: borderLightTwo 8s linear infinite;
 }
 
 
