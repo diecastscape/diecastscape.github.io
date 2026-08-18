@@ -225,33 +225,33 @@ transform:translateY(8px);
   position: absolute;
   inset: 0;
 
-  padding: 1.5px;
+  padding: 2.5px;
   border-radius: 24px;
 
   background: conic-gradient(
-    from var(--border-angle),
+  from var(--border-angle),
 
-    transparent 0deg,
-    transparent 25deg,
+  transparent 0deg,
+  transparent 25deg,
 
-    rgba(91,192,190,0.15) 35deg,
-    rgba(91,192,190,0.9) 45deg,
-    rgba(255,255,255,1) 50deg,
-    rgba(91,192,190,0.9) 55deg,
-    rgba(91,192,190,0.15) 65deg,
+  rgba(10,161,167,0.15) 35deg,
+  rgba(10,161,167,0.8) 45deg,
+  #0AA1A7 50deg,
+  rgba(10,161,167,0.8) 55deg,
+  rgba(10,161,167,0.15) 65deg,
 
-    transparent 75deg,
-    transparent 205deg,
+  transparent 75deg,
+  transparent 205deg,
 
-    rgba(91,192,190,0.15) 215deg,
-    rgba(91,192,190,0.9) 225deg,
-    rgba(255,255,255,1) 230deg,
-    rgba(91,192,190,0.9) 235deg,
-    rgba(91,192,190,0.15) 245deg,
+  rgba(10,161,167,0.15) 215deg,
+  rgba(10,161,167,0.8) 225deg,
+  #0AA1A7 230deg,
+  rgba(10,161,167,0.8) 235deg,
+  rgba(10,161,167,0.15) 245deg,
 
-    transparent 255deg,
-    transparent 360deg
-  );
+  transparent 255deg,
+  transparent 360deg
+);
 
   /* Show gradient ONLY on border */
   -webkit-mask:
