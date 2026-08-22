@@ -387,6 +387,7 @@ function removeItem(id) {
     saveCart();
 
     renderCart();
+    updateFrameAddedStatus();
 
 }
 function showToast(message){
@@ -548,6 +549,7 @@ clearCartBtn.addEventListener("click", () => {
         saveCart();
 
         renderCart();
+        updateFrameAddedStatus();
 
     }
 
