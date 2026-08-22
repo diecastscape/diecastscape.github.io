@@ -1501,7 +1501,13 @@ TITLE
 ITEMS
 =========================== */
 
-
+.added-cart-text {
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #18a558;
+  white-space: nowrap;
+}
 .cart-item{
     padding:8px 20px;
     border-bottom:1px solid rgba(255,255,255,.06);
