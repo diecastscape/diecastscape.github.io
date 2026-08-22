@@ -46,6 +46,61 @@ function getShipping(count) {
     // 3 or more frames = FREE shipping
     return 0;
 }
+window.updateFrameAddedStatus = function () {
+
+  const cart =
+    JSON.parse(localStorage.getItem("diecastscape_cart")) || {};
+
+  document.querySelectorAll(".shop-card").forEach(card => {
+
+    const button =
+      card.querySelector(".add-cart-btn");
+
+    if (!button) return;
+
+    const price =
+      card.querySelector(".price");
+
+    if (!price) return;
+
+    const match =
+      button.getAttribute("onclick")?.match(
+        /addProductInfo\(\s*['"]([^'"]+)['"]/
+      );
+
+    if (!match) return;
+
+    const productId = match[1];
+
+    const addedText =
+      price.querySelector(".added-cart-text");
+
+    /* Product is in cart */
+    if (cart[productId]) {
+
+      if (!addedText) {
+
+        price.insertAdjacentHTML(
+          "beforeend",
+          `<span class="added-cart-text">Added ✔️</span>`
+        );
+
+      }
+
+    }
+
+    /* Product is NOT in cart */
+    else {
+
+      if (addedText) {
+        addedText.remove();
+      }
+
+    }
+
+  });
+
+};
 function renderCart() {
 
     const list = document.getElementById("cartItems");
