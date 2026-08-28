@@ -36,7 +36,7 @@ const whatsappText = encodeURIComponent(message);
 <div class="slider-wrap">
 
   <div class="offer-badge">
-🔥 Limited Time Offer
+📸 Real Product Images
   </div>
 
   <div class="slider">
