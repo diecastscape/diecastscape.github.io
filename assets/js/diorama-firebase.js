@@ -43,7 +43,9 @@ const whatsappText = encodeURIComponent(message);
     ${imgs}
   </div>
 </div>
-
+<button class="details-btn" onclick="openDetailsSheet(this)">
+      Details ▾
+    </button>
     <div class="price">
       <span class="old">₹${p.priceOld}</span>
       <span class="new">₹${p.priceNew}</span>
@@ -72,9 +74,7 @@ const whatsappText = encodeURIComponent(message);
   ${p.shippingText || "Shipping charges applicable"}
 </div>
 
-    <button class="details-btn" onclick="openDetailsSheet(this)">
-      Details ▾
-    </button>
+    
 
     <div class="product-details">
       ${p.detailsHTML}
