@@ -1,242 +1,478 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
 <title>Admin Dashboard — Diecast.scape</title>
-<link rel="stylesheet" href="/assets/css/admin-style.css">
+
+<link
+  rel="stylesheet"
+  href="/assets/css/admin-style.css"
+>
+
 </head>
+
+
 <body class="auth-loading">
 
+
 <div class="header">
+
   <b>Diecast.scape Admin</b>
-  <button onclick="adminLogout()" id="logoutBtn">Logout</button>
+
+  <button
+    onclick="adminLogout()"
+    id="logoutBtn"
+  >
+    Logout
+  </button>
+
 </div>
-<div id="logoutLoader" class="loader-bar"></div>
-  
+
+
+<div
+  id="logoutLoader"
+  class="loader-bar"
+></div>
+
+
+
 <div class="container">
-  <h2 class="dash-title">Dashboard</h2>
 
-    <!-- MAIN SALE -->
-    <div class="dash-card">
-    <div class="dash-top">
-  <h3>Main Store</h3>
-  <button onclick="openSection('main')">View</button>
-  </div>
-    </div>
-    <!-- SPECIAL SALE -->
-  <div class="dash-card">
-  <div class="dash-top">
-  <h3>Special Store</h3>
-  <button onclick="openSection('special')">View</button>
-</div>
-  </div>
 
-  <!-- ACCESSORIES -->
+<h2 class="dash-title">
+  Dashboard
+</h2>
+
+
+
+<!-- ==================================================
+     MAIN STORE CARD
+================================================== -->
+
 <div class="dash-card">
+
   <div class="dash-top">
-    <h3>Accessories</h3>
-    <button onclick="openSection('accessories')">View</button>
-  </div>
-</div>
-  <!-- ===== MAIN SALE SECTION ===== -->
-  <div id="section-main" class="section-panel">
-    <div class="section-top">
-      <h3>Main Store</h3>
-      <div class="btn-row">
-      <button onclick="toggleList('main')">Refresh</button>
-      <button onclick="toggleAdd('main')" id="mainAddBtn">+ Add</button>
-    </div>
-    </div>
-    <div class="border-top"></div>
-  <div id="mainProducts"></div>
-    <div id="add-main" class="add-wrap">
-      <div id="mainAddForm">
-        <h4 id="mainEditModeBar" class="edit-mode-bar" style="display:none;">
-  Adding Product
-        </h4>  
- <h5>Name</h5>
-<input id="p-name" placeholder="Product title">
 
-<h5>Subtitle</h5>
-<input
-  id="p-subtitle"
-  placeholder="Example: Premium 1:64 Display Diorama"
+    <h3>
+      Main Store
+    </h3>
+
+    <button
+      onclick="openSection('main')"
+    >
+      View
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     ACCESSORIES CARD
+================================================== -->
+
+<div class="dash-card">
+
+  <div class="dash-top">
+
+    <h3>
+      Accessories
+    </h3>
+
+    <button
+      onclick="openSection('accessories')"
+    >
+      View
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     FRAMES CARD
+================================================== -->
+
+<div class="dash-card">
+
+  <div class="dash-top">
+
+    <h3>
+      Frames
+    </h3>
+
+    <button
+      onclick="openSection('frames')"
+    >
+      View
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     MAIN STORE SECTION
+================================================== -->
+
+<div
+  id="section-main"
+  class="section-panel"
 >
-<h5>Price</h5>
-        <div class="price-row">
-  <input id="p-old" placeholder="Retail price">
-  <input id="p-new" placeholder="Discounted price">
-</div>
- <h5>Details (description)</h5>       
-<textarea id="p-details"></textarea>
-   <h5>Shipping</h5>     
-<input id="p-shipping" placeholder="shipping charges">   
-        <h5>Quick Specifications</h5>
 
-<div class="spec-input-grid">
-
-  <div class="spec-input">
-    <label>Dimensions</label>
-    <input
-      id="p-dimensions"
-      placeholder="Example: 40 × 30 × 30 cm"
-    >
-  </div>
-
-  <div class="spec-input">
-    <label>Floor Type</label>
-    <input
-      id="p-flore"
-      placeholder="Example: 2 Floor"
-    >
-  </div>
-
-  <div class="spec-input">
-    <label>Perfect Scale Model For</label>
-    <input
-      id="p-suitableScale"
-      placeholder="Example: 1:64"
-    >
-  </div>
-
-  <div class="spec-input">
-    <label>Capacity</label>
-    <input
-      id="p-capacity"
-      placeholder="Example: Up to 23+ Cars"
-    >
-  </div>
-
-  <div class="spec-input">
-    <label>Accessories</label>
-    <input
-      id="p-accessories"
-      placeholder="Example: Included"
-    >
-  </div>
-
-  <div class="spec-input">
-    <label>Rotating</label>
-    <input
-      id="p-rotating"
-      placeholder="Example: Rotating Display"
-    >
-  </div>
-
-  <div class="spec-input">
-    <label>Lighting</label>
-    <input
-      id="p-lighting"
-      placeholder="Example: Warm Gold Light"
-    >
-  </div>
-
-  <div class="spec-input">
-    <label>Cover</label>
-    <input
-      id="p-cover"
-      placeholder="Example: Clear Acrylic Cover"
-    >
-  </div>
-
-  <div class="spec-input">
-    <label>Build</label>
-    <input
-      id="p-build"
-      placeholder="Example: Disassembled Set"
-    >
-  </div>
-
-</div>
-<h5>Image path</h5>
-<div id="imagesList"></div>
-<button onclick="addImageField()" class="primary-btn">+ Add Image</button>
-  <button onclick="saveProduct()" class="primary-btn" id="saveBtn">Save Product</button>
-  <button onclick="cancelEdit('main')" class="primary-btn secondary-btn">Cancel</button>
-<div id="saveLoader" class="loader"></div>
-<p class="center-msg" id="saveMsg"></p>
-      </div>
-    </div>
-  </div>
-  
-
-  <!-- ===== SPECIAL SALE SECTION ===== -->
-  <div id="section-special" class="section-panel">
-    <div class="section-top">
-      <h3>Special Store</h3>
-      <div class="btn-row">
-      <button onclick="toggleList('special')">Refresh</button>
-      <button onclick="toggleAdd('special')" id="specialAddBtn">+ Add</button>
-    </div>
-    </div>
-    <div class="border-top"></div>
-    <div id="saleControlBox" class="sale-control">
-  <h4>Sale Time Control</h4>
-
-  <div class="toggle-row">
-    <span>Enable Sale Manually</span>
-
-    <label class="toggle-switch">
-      <input type="checkbox" id="sale-enabled">
-      <span class="toggle-slider"></span>
-    </label>
-  </div>
-
-  <br>
-
-  <label>
-    Sale Start Time:
-    <input type="datetime-local" id="sale-start">
-  </label>
-
-  <br><br>
-  <button onclick="saveSaleConfig()" class="primary-btn" id="saleSaveBtn">Save Sale Settings</button>
-<div id="saleSaveLoader" class="loader"></div>
-  <div class="center-msg" id="sale-save-msg"></div>
-   <div class="border-top"></div>
-    </div>
-    <div id="specialProducts"></div>
-    <div id="add-special" class="add-wrap">
-      <div id="specialAddForm">
-        <h4 id="specialEditModeBar" class="edit-mode-bar" style="display:none;">
-  Adding Product
-        </h4>
-  <h5>Name</h5>      
-<input id="s-name" placeholder="Product title">
-<h5>Price</h5>
-<input id="s-price" placeholder="Sale price">
-<h5>Shipping</h5>
-<input id="s-shipping" placeholder="shipping charges">       
-<h5>Image path</h5>
-<div id="s-imagesList"></div>
-
-<button onclick="addSaleImageField()" class="primary-btn">
-+ Add Image
-</button>
-
-<button onclick="saveSaleProduct()" class="primary-btn" id="s-saveBtn">
-Save Product
-</button>
-<button onclick="cancelEdit('special')" class="primary-btn secondary-btn">Cancel</button>
-
-
-<div id="s-saveLoader" class="loader"></div>
-<p class="center-msg" id="s-saveMsg"></p>
-    </div>
-    </div>
-  
-  </div>
-  <!-- ===== ACCESSORIES SECTION ===== -->
-<div id="section-accessories" class="section-panel">
 
   <div class="section-top">
 
-    <h3>Accessories</h3>
+    <h3>
+      Main Store
+    </h3>
 
     <div class="btn-row">
 
-      <button onclick="toggleList('accessories')">
+      <button
+        onclick="toggleList('main')"
+      >
+        Refresh
+      </button>
+
+      <button
+        onclick="toggleAdd('main')"
+        id="mainAddBtn"
+      >
+        + Add
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="border-top"></div>
+
+
+  <div id="mainProducts"></div>
+
+
+
+  <!-- MAIN ADD FORM -->
+
+  <div
+    id="add-main"
+    class="add-wrap"
+  >
+
+    <div id="mainAddForm">
+
+
+      <h4
+        id="mainEditModeBar"
+        class="edit-mode-bar"
+        style="display:none;"
+      >
+        Adding Product
+      </h4>
+
+
+
+      <h5>
+        Name
+      </h5>
+
+      <input
+        id="p-name"
+        placeholder="Product title"
+      >
+
+
+
+      <h5>
+        Subtitle
+      </h5>
+
+      <input
+        id="p-subtitle"
+        placeholder="Example: Premium 1:64 Display Diorama"
+      >
+
+
+
+      <h5>
+        Price
+      </h5>
+
+      <div class="price-row">
+
+        <input
+          id="p-old"
+          placeholder="Retail price"
+        >
+
+        <input
+          id="p-new"
+          placeholder="Discounted price"
+        >
+
+      </div>
+
+
+
+      <h5>
+        Details (description)
+      </h5>
+
+      <textarea
+        id="p-details"
+      ></textarea>
+
+
+
+      <h5>
+        Shipping
+      </h5>
+
+      <input
+        id="p-shipping"
+        placeholder="shipping charges"
+      >
+
+
+
+      <!-- QUICK SPECIFICATIONS -->
+
+      <h5>
+        Quick Specifications
+      </h5>
+
+
+      <div class="spec-input-grid">
+
+
+        <div class="spec-input">
+
+          <label>
+            Dimensions
+          </label>
+
+          <input
+            id="p-dimensions"
+            placeholder="Example: 40 × 30 × 30 cm"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Floor Type
+          </label>
+
+          <input
+            id="p-flore"
+            placeholder="Example: 2 Floor"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Perfect Scale Model For
+          </label>
+
+          <input
+            id="p-suitableScale"
+            placeholder="Example: 1:64"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Capacity
+          </label>
+
+          <input
+            id="p-capacity"
+            placeholder="Example: Up to 23+ Cars"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Accessories
+          </label>
+
+          <input
+            id="p-accessories"
+            placeholder="Example: Included"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Rotating
+          </label>
+
+          <input
+            id="p-rotating"
+            placeholder="Example: Rotating Display"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Lighting
+          </label>
+
+          <input
+            id="p-lighting"
+            placeholder="Example: Warm Gold Light"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Cover
+          </label>
+
+          <input
+            id="p-cover"
+            placeholder="Example: Clear Acrylic Cover"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Build
+          </label>
+
+          <input
+            id="p-build"
+            placeholder="Example: Disassembled Set"
+          >
+
+        </div>
+
+
+      </div>
+
+
+
+      <h5>
+        Image path
+      </h5>
+
+
+      <div id="imagesList"></div>
+
+
+      <button
+        onclick="addImageField()"
+        class="primary-btn"
+      >
+        + Add Image
+      </button>
+
+
+      <button
+        onclick="saveProduct()"
+        class="primary-btn"
+        id="saveBtn"
+      >
+        Save Product
+      </button>
+
+
+      <button
+        onclick="cancelEdit('main')"
+        class="primary-btn secondary-btn"
+      >
+        Cancel
+      </button>
+
+
+      <div
+        id="saveLoader"
+        class="loader"
+      ></div>
+
+
+      <p
+        class="center-msg"
+        id="saveMsg"
+      ></p>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     ACCESSORIES SECTION
+================================================== -->
+
+<div
+  id="section-accessories"
+  class="section-panel"
+>
+
+
+  <div class="section-top">
+
+    <h3>
+      Accessories
+    </h3>
+
+    <div class="btn-row">
+
+      <button
+        onclick="toggleList('accessories')"
+      >
         Refresh
       </button>
 
@@ -251,15 +487,23 @@ Save Product
 
   </div>
 
+
   <div class="border-top"></div>
 
-  <!-- ACCESSORIES PRODUCTS -->
+
   <div id="accessoriesProducts"></div>
 
-  <!-- ADD ACCESSORY FORM -->
-  <div id="add-accessories" class="add-wrap">
+
+
+  <!-- ACCESSORY FORM -->
+
+  <div
+    id="add-accessories"
+    class="add-wrap"
+  >
 
     <div id="accessoriesAddForm">
+
 
       <h4
         id="accessoriesEditModeBar"
@@ -269,23 +513,36 @@ Save Product
         Adding Product
       </h4>
 
-      <h5>Name</h5>
+
+
+      <h5>
+        Name
+      </h5>
 
       <input
         id="a-name"
         placeholder="Accessory name"
       >
 
-      <h5>Price</h5>
+
+
+      <h5>
+        Price
+      </h5>
 
       <input
         id="a-price"
         placeholder="Price"
       >
 
-      <h5>Image path</h5>
+
+
+      <h5>
+        Image path
+      </h5>
 
       <div id="a-imagesList"></div>
+
 
       <button
         onclick="addAccessoryImageField()"
@@ -293,6 +550,7 @@ Save Product
       >
         + Add Image
       </button>
+
 
       <button
         onclick="saveAccessoryProduct()"
@@ -302,6 +560,7 @@ Save Product
         Save Product
       </button>
 
+
       <button
         onclick="cancelEdit('accessories')"
         class="primary-btn secondary-btn"
@@ -309,52 +568,203 @@ Save Product
         Cancel
       </button>
 
+
       <div
         id="a-saveLoader"
         class="loader"
       ></div>
+
 
       <p
         class="center-msg"
         id="a-saveMsg"
       ></p>
 
+
     </div>
 
   </div>
 
 </div>
-  <div class="dash-card">
 
-<h3>Frames</h3>
 
-<h5>Name</h5>
-<input id="f-name" placeholder="Frame name">
 
-<h5>Price</h5>
-<input id="f-price" placeholder="Price">
+<!-- ==================================================
+     FRAMES SECTION
+================================================== -->
 
-<h5>Image Paths</h5>
-<div id="f-imagesList"></div>
+<div
+  id="section-frames"
+  class="section-panel"
+>
 
-<button onclick="addFrameImageField()" class="primary-btn">
-+ Add Image
-</button>
 
-<button onclick="saveFrameProduct()" class="primary-btn">
-Save Frame
-</button>
+  <div class="section-top">
 
-<div id="f-saveLoader" class="loader"></div>
-<p id="f-saveMsg" class="center-msg"></p>
+    <h3>
+      Frames
+    </h3>
+
+    <div class="btn-row">
+
+      <button
+        onclick="toggleList('frames')"
+      >
+        Refresh
+      </button>
+
+
+      <button
+        onclick="toggleAdd('frames')"
+        id="framesAddBtn"
+      >
+        + Add
+      </button>
+
+    </div>
 
   </div>
+
+
+  <div class="border-top"></div>
+
+
+
+  <!-- FRAME PRODUCTS -->
+
+  <div id="frameProducts"></div>
+
+
+
+  <!-- FRAME ADD FORM -->
+
+  <div
+    id="add-frames"
+    class="add-wrap"
+  >
+
+    <div id="framesAddForm">
+
+
+      <h4
+        id="framesEditModeBar"
+        class="edit-mode-bar"
+        style="display:none;"
+      >
+        Adding Frame
+      </h4>
+
+
+
+      <h5>
+        Frame Name
+      </h5>
+
+      <input
+        id="f-name"
+        placeholder="Frame name"
+      >
+
+
+
+      <h5>
+        Price
+      </h5>
+
+      <input
+        id="f-price"
+        placeholder="Price"
+      >
+
+
+
+      <h5>
+        Shipping
+      </h5>
+
+      <input
+        id="f-shipping"
+        placeholder="shipping charges"
+      >
+
+
+
+      <h5>
+        Image Paths
+      </h5>
+
+      <div id="f-imagesList"></div>
+
+
+
+      <button
+        onclick="addFrameImageField()"
+        class="primary-btn"
+      >
+        + Add Image
+      </button>
+
+
+
+      <button
+        onclick="saveFrameProduct()"
+        class="primary-btn"
+        id="f-saveBtn"
+      >
+        Save Frame
+      </button>
+
+
+
+      <button
+        onclick="cancelEdit('frames')"
+        class="primary-btn secondary-btn"
+      >
+        Cancel
+      </button>
+
+
+
+      <div
+        id="f-saveLoader"
+        class="loader"
+      ></div>
+
+
+
+      <p
+        id="f-saveMsg"
+        class="center-msg"
+      ></p>
+
+
+    </div>
+
+  </div>
+
 </div>
 
-<script type="module" src="/assets/js/admin-auth.js"></script>
-<script type="module" src="/assets/js/firebase-init.js"></script>
-<script type="module" src="/assets/js/dashboard.js"></script>
+
+
+</div>
+
+
+
+<script
+  type="module"
+  src="/assets/js/admin-auth.js"
+></script>
+
+<script
+  type="module"
+  src="/assets/js/firebase-init.js"
+></script>
+
+<script
+  type="module"
+  src="/assets/js/dashboard.js"
+></script>
+
 
 </body>
 </html>
-
