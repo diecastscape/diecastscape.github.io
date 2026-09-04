@@ -49,40 +49,42 @@ const whatsappText = encodeURIComponent(message);
     QUICK SPECS
   </div>
 
+  <div class="quick-specs">
+
+  <div class="quick-specs-title">
+    QUICK SPECS
+  </div>
+
   <div class="spec-row">
-    <span class="spec-icon">📐</span>
     <span class="spec-name">Dimensions</span>
     <span class="spec-value">${p.dimensions || "—"}</span>
   </div>
 
   <div class="spec-row">
-    <span class="spec-icon">🎯</span>
-    <span class="spec-name">Suitable Scale</span>
+    <span class="spec-name">Floor</span>
+    <span class="spec-value">${p.flore || "—"}</span>
+  </div>
+
+  <div class="spec-row">
+    <span class="spec-name">Scale</span>
     <span class="spec-value">${p.suitableScale || "—"}</span>
   </div>
 
   <div class="spec-row">
-    <span class="spec-icon">🚗</span>
     <span class="spec-name">Capacity</span>
     <span class="spec-value">${p.capacity || "—"}</span>
   </div>
 
-  <div class="spec-row">
-    <span class="spec-icon">💡</span>
-    <span class="spec-name">Light</span>
-    <span class="spec-value">${p.lighting || "—"}</span>
-  </div>
+  <div class="spec-features">
 
-  <div class="spec-row">
-    <span class="spec-icon">🛡️</span>
-    <span class="spec-name">Cover</span>
-    <span class="spec-value">${p.cover || "—"}</span>
-  </div>
+    <span>${p.lighting || "Warm gold light"}</span>
 
-  <div class="spec-row">
-    <span class="spec-icon">🛠️</span>
-    <span class="spec-name">Build</span>
-    <span class="spec-value">${p.build || "—"}</span>
+    <span>${p.cover || "Clear acrylic cover"}</span>
+
+    <span>${p.build || "Disassembled set"}</span>
+
+    <span>${p.rotating || "Rotating display"}</span>
+
   </div>
 
 </div>
