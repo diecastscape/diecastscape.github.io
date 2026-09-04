@@ -710,48 +710,64 @@ window.saveProduct = async function () {
       .value
       .trim();
 
+// ==========================================
+// QUICK SPECIFICATIONS
+// ==========================================
 
-  // ==========================================
-  // QUICK SPECIFICATIONS
-  // ==========================================
+const dimensions =
+  document
+    .getElementById("p-dimensions")
+    .value
+    .trim();
 
-  const dimensions =
-    document
-      .getElementById("p-dimensions")
-      .value
-      .trim();
+const flore =
+  document
+    .getElementById("p-flore")
+    .value
+    .trim();
 
-  const suitableScale =
-    document
-      .getElementById("p-suitableScale")
-      .value
-      .trim();
+const suitableScale =
+  document
+    .getElementById("p-suitableScale")
+    .value
+    .trim();
 
-  const capacity =
-    document
-      .getElementById("p-capacity")
-      .value
-      .trim();
+const capacity =
+  document
+    .getElementById("p-capacity")
+    .value
+    .trim();
 
-  const lighting =
-    document
-      .getElementById("p-lighting")
-      .value
-      .trim();
+const accessories =
+  document
+    .getElementById("p-accessories")
+    .value
+    .trim();
 
-  const cover =
-    document
-      .getElementById("p-cover")
-      .value
-      .trim();
+const rotating =
+  document
+    .getElementById("p-rotating")
+    .value
+    .trim();
 
-  const build =
-    document
-      .getElementById("p-build")
-      .value
-      .trim();
+const lighting =
+  document
+    .getElementById("p-lighting")
+    .value
+    .trim();
 
+const cover =
+  document
+    .getElementById("p-cover")
+    .value
+    .trim();
 
+const build =
+  document
+    .getElementById("p-build")
+    .value
+    .trim();
+  
   if (msg) {
     msg.innerText = "";
   }
@@ -840,31 +856,22 @@ window.saveProduct = async function () {
         ),
         {
 
-          name,
-
-          priceOld,
-
-          priceNew,
-
-          detailsHTML,
-
-          shippingText,
-
-          images,
-
-          // QUICK SPECS
-          dimensions,
-
-          suitableScale,
-
-          capacity,
-
-          lighting,
-
-          cover,
-
-          build
-
+name,
+priceOld,
+priceNew,
+detailsHTML,
+shippingText,
+images,
+dimensions,
+flore,
+suitableScale,
+capacity,
+accessories,
+rotating,
+lighting,
+cover,
+build
+          
         }
       );
 
@@ -884,29 +891,20 @@ window.saveProduct = async function () {
         {
 
           name,
-
-          priceOld,
-
-          priceNew,
-
-          detailsHTML,
-
-          shippingText,
-
-          images,
-
-          // QUICK SPECS
-          dimensions,
-
-          suitableScale,
-
-          capacity,
-
-          lighting,
-
-          cover,
-
-          build,
+priceOld,
+priceNew,
+detailsHTML,
+shippingText,
+images,
+dimensions,
+flore,
+suitableScale,
+capacity,
+accessories,
+rotating,
+lighting,
+cover,
+build
 
           active: true,
 
