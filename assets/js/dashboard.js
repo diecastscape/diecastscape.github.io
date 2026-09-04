@@ -664,269 +664,319 @@ function hideEditMode() {
 // ======================================================
 // SAVE MAIN PRODUCT
 // ======================================================
+window.saveProduct = async function () {
 
-window.saveProduct =
-  async function () {
+  const loader =
+    document.getElementById("saveLoader");
 
-    const loader =
-      document.getElementById(
-        "saveLoader"
-      );
+  const btn =
+    document.getElementById("saveBtn");
 
-    const btn =
-      document.getElementById(
-        "saveBtn"
-      );
-
-    const msg =
-      document.getElementById(
-        "saveMsg"
-      );
+  const msg =
+    document.getElementById("saveMsg");
 
 
-    if (
-      !btn ||
-      btn.disabled
-    ) {
-
-      return;
-
-    }
+  if (!btn || btn.disabled) {
+    return;
+  }
 
 
-    const name =
-      document
-        .getElementById("p-name")
-        .value
-        .trim();
+  // ==========================================
+  // BASIC PRODUCT DATA
+  // ==========================================
 
+  const name =
+    document.getElementById("p-name").value.trim();
 
-    const priceOld =
-      Number(
-        document
-          .getElementById("p-old")
-          .value
-      );
-
-
-    const priceNew =
-      Number(
-        document
-          .getElementById("p-new")
-          .value
-      );
-
-
-    const shippingText =
-      document
-        .getElementById("p-shipping")
-        .value
-        .trim();
-
-
-    const detailsHTML =
-      document
-        .getElementById("p-details")
-        .value
-        .trim();
-
-
-    if (msg) {
-      msg.innerText = "";
-    }
-
-
-    // VALIDATION
-
-    if (!name) {
-
-      msg.innerText =
-        "Enter product title";
-
-      return;
-
-    }
-
-
-    if (
-      !priceOld ||
-      !priceNew
-    ) {
-
-      msg.innerText =
-        "Enter prices";
-
-      return;
-
-    }
-
-
-    // IMAGES
-
-    const fulls =
-      document.querySelectorAll(
-        ".img-full"
-      );
-
-
-    const images = [];
-
-
-    fulls.forEach(input => {
-
-      if (
-        input.value.trim()
-      ) {
-
-        images.push({
-          full:
-            input.value.trim()
-        });
-
-      }
-
-    });
-
-
-    if (
-      images.length === 0
-    ) {
-
-      msg.innerText =
-        "Add at least 1 image";
-
-      return;
-
-    }
-
-
-    // LOADER
-
-    loader.classList.add(
-      "show"
+  const priceOld =
+    Number(
+      document.getElementById("p-old").value
     );
 
-    btn.disabled = true;
+  const priceNew =
+    Number(
+      document.getElementById("p-new").value
+    );
+
+  const shippingText =
+    document
+      .getElementById("p-shipping")
+      .value
+      .trim();
+
+  const detailsHTML =
+    document
+      .getElementById("p-details")
+      .value
+      .trim();
 
 
-    try {
+  // ==========================================
+  // QUICK SPECIFICATIONS
+  // ==========================================
 
-      // UPDATE
+  const dimensions =
+    document
+      .getElementById("p-dimensions")
+      .value
+      .trim();
 
-      if (
-        editingId &&
-        editingType === "main"
-      ) {
+  const suitableScale =
+    document
+      .getElementById("p-suitableScale")
+      .value
+      .trim();
 
-        await updateDoc(
-          doc(
-            db,
-            "products",
-            editingId
-          ),
-          {
+  const capacity =
+    document
+      .getElementById("p-capacity")
+      .value
+      .trim();
 
-            name,
-            priceOld,
-            priceNew,
-            detailsHTML,
-            shippingText,
-            images
+  const lighting =
+    document
+      .getElementById("p-lighting")
+      .value
+      .trim();
 
-          }
-        );
+  const cover =
+    document
+      .getElementById("p-cover")
+      .value
+      .trim();
 
-      }
-
-      // ADD
-
-      else {
-
-        await addDoc(
-          collection(
-            db,
-            "products"
-          ),
-          {
-
-            name,
-            priceOld,
-            priceNew,
-            detailsHTML,
-            shippingText,
-            images,
-
-            active: true,
-
-            created:
-              Date.now()
-
-          }
-        );
-
-      }
+  const build =
+    document
+      .getElementById("p-build")
+      .value
+      .trim();
 
 
-      loader.classList.remove(
-        "show"
-      );
-
-      btn.disabled = false;
+  if (msg) {
+    msg.innerText = "";
+  }
 
 
-      msg.innerText =
-        "Saved successfully";
+  // ==========================================
+  // VALIDATION
+  // ==========================================
+
+  if (!name) {
+
+    msg.innerText =
+      "Enter product title";
+
+    return;
+  }
 
 
-      editingId = null;
-      editingType = null;
+  if (!priceOld || !priceNew) {
+
+    msg.innerText =
+      "Enter prices";
+
+    return;
+  }
 
 
-      hideEditMode();
+  // ==========================================
+  // IMAGES
+  // ==========================================
 
+  const fulls =
+    document.querySelectorAll(".img-full");
 
-      btn.innerText =
-        "Save Product";
+  const images = [];
 
+  fulls.forEach(input => {
 
-      resetMainForm();
+    if (input.value.trim()) {
 
-
-      setTimeout(() => {
-
-        msg.innerText = "";
-
-      }, 3000);
-
-
-      loadAdminProducts(
-        "main"
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Error saving product:",
-        error
-      );
-
-
-      loader.classList.remove(
-        "show"
-      );
-
-      btn.disabled = false;
-
-
-      msg.innerText =
-        "Error saving";
+      images.push({
+        full: input.value.trim()
+      });
 
     }
 
-  };
+  });
 
 
+  if (images.length === 0) {
+
+    msg.innerText =
+      "Add at least 1 image";
+
+    return;
+  }
+
+
+  // ==========================================
+  // LOADER
+  // ==========================================
+
+  if (loader) {
+    loader.classList.add("show");
+  }
+
+  btn.disabled = true;
+
+
+  try {
+
+    // ========================================
+    // UPDATE EXISTING PRODUCT
+    // ========================================
+
+    if (
+      editingId &&
+      editingType === "main"
+    ) {
+
+      await updateDoc(
+        doc(
+          db,
+          "products",
+          editingId
+        ),
+        {
+
+          name,
+
+          priceOld,
+
+          priceNew,
+
+          detailsHTML,
+
+          shippingText,
+
+          images,
+
+          // QUICK SPECS
+          dimensions,
+
+          suitableScale,
+
+          capacity,
+
+          lighting,
+
+          cover,
+
+          build
+
+        }
+      );
+
+    }
+
+    // ========================================
+    // ADD NEW PRODUCT
+    // ========================================
+
+    else {
+
+      await addDoc(
+        collection(
+          db,
+          "products"
+        ),
+        {
+
+          name,
+
+          priceOld,
+
+          priceNew,
+
+          detailsHTML,
+
+          shippingText,
+
+          images,
+
+          // QUICK SPECS
+          dimensions,
+
+          suitableScale,
+
+          capacity,
+
+          lighting,
+
+          cover,
+
+          build,
+
+          active: true,
+
+          created: Date.now()
+
+        }
+      );
+
+    }
+
+
+    // ========================================
+    // SUCCESS
+    // ========================================
+
+    if (loader) {
+      loader.classList.remove("show");
+    }
+
+    btn.disabled = false;
+
+    msg.innerText =
+      "Saved successfully ✔";
+
+
+    editingId = null;
+    editingType = null;
+
+
+    hideEditMode();
+
+
+    btn.innerText =
+      "Save Product";
+
+
+    resetMainForm();
+
+
+    setTimeout(() => {
+
+      msg.innerText = "";
+
+    }, 3000);
+
+
+    loadAdminProducts("main");
+
+
+  } catch (error) {
+
+    console.error(
+      "Error saving product:",
+      error
+    );
+
+
+    if (loader) {
+      loader.classList.remove("show");
+    }
+
+    btn.disabled = false;
+
+
+    msg.innerText =
+      "Error saving product";
+
+  }
+
+};
 // ======================================================
 // INITIAL MAIN IMAGE FIELDS
 // ======================================================
