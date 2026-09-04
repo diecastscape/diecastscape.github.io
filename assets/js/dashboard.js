@@ -687,7 +687,8 @@ window.saveProduct = async function () {
 
   const name =
     document.getElementById("p-name").value.trim();
-
+const subtitle =
+  document.getElementById("p-subtitle").value.trim();
   const priceOld =
     Number(
       document.getElementById("p-old").value
@@ -857,6 +858,7 @@ const build =
         {
 
 name,
+subtitle,
 priceOld,
 priceNew,
 detailsHTML,
@@ -890,7 +892,8 @@ build
         ),
         {
 
-          name,
+name,
+subtitle,
 priceOld,
 priceNew,
 detailsHTML,
@@ -2252,6 +2255,10 @@ window.editProduct =
         ).value =
           data.name || "";
 
+        document.getElementById(
+  "p-subtitle"
+).value =
+  data.subtitle || "";
 
         document.getElementById(
           "p-old"
@@ -2732,7 +2739,10 @@ function resetMainForm() {
     document.getElementById(
       "p-name"
     );
-
+const subtitle =
+  document.getElementById(
+    "p-subtitle"
+  );
   const oldPrice =
     document.getElementById(
       "p-old"
@@ -2767,7 +2777,9 @@ function resetMainForm() {
   if (name) {
     name.value = "";
   }
-
+if (subtitle) {
+  subtitle.value = "";
+}
 
   if (oldPrice) {
     oldPrice.value = "";
