@@ -86,12 +86,7 @@ const whatsappText = encodeURIComponent(message);
   </div>
 
 </div>
-<button class="details-btn" onclick="openDetailsSheet(this)">
-      Details ▾
-    </button>
-	<div class="product-details">
-      ${p.detailsHTML}
-    </div>
+
     <div class="price">
       <span class="old">₹${p.priceOld}</span>
       <span class="new">₹${p.priceNew}</span>
