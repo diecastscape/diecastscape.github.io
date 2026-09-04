@@ -31,31 +31,7 @@
   <button onclick="openSection('special')">View</button>
 </div>
   </div>
-<div class="dash-card">
 
-<h3>Frames</h3>
-
-<h5>Name</h5>
-<input id="f-name" placeholder="Frame name">
-
-<h5>Price</h5>
-<input id="f-price" placeholder="Price">
-
-<h5>Image Paths</h5>
-<div id="f-imagesList"></div>
-
-<button onclick="addFrameImageField()" class="primary-btn">
-+ Add Image
-</button>
-
-<button onclick="saveFrameProduct()" class="primary-btn">
-Save Frame
-</button>
-
-<div id="f-saveLoader" class="loader"></div>
-<p id="f-saveMsg" class="center-msg"></p>
-
-</div>
   <!-- ACCESSORIES -->
 <div class="dash-card">
   <div class="dash-top">
@@ -89,7 +65,60 @@ Save Frame
  <h5>Details (description)</h5>       
 <textarea id="p-details"></textarea>
    <h5>Shipping</h5>     
-<input id="p-shipping" placeholder="shipping charges">        
+<input id="p-shipping" placeholder="shipping charges">   
+        <h5>Quick Specifications</h5>
+
+<div class="spec-input-grid">
+
+  <div class="spec-input">
+    <label>Dimensions</label>
+    <input
+      id="p-dimensions"
+      placeholder="Example: 40 × 30 × 30 cm"
+    >
+  </div>
+
+  <div class="spec-input">
+    <label>Suitable Scale</label>
+    <input
+      id="p-suitableScale"
+      placeholder="Example: 1:64"
+    >
+  </div>
+
+  <div class="spec-input">
+    <label>Capacity</label>
+    <input
+      id="p-capacity"
+      placeholder="Example: Up to 23+ Cars"
+    >
+  </div>
+
+  <div class="spec-input">
+    <label>Lighting</label>
+    <input
+      id="p-lighting"
+      placeholder="Example: LED Light"
+    >
+  </div>
+
+  <div class="spec-input">
+    <label>Cover</label>
+    <input
+      id="p-cover"
+      placeholder="Example: Clear Acrylic"
+    >
+  </div>
+
+  <div class="spec-input">
+    <label>Build</label>
+    <input
+      id="p-build"
+      placeholder="Example: Fully Assembled"
+    >
+  </div>
+
+</div>
 <h5>Image path</h5>
 <div id="imagesList"></div>
 <button onclick="addImageField()" class="primary-btn">+ Add Image</button>
@@ -265,6 +294,31 @@ Save Product
   </div>
 
 </div>
+  <div class="dash-card">
+
+<h3>Frames</h3>
+
+<h5>Name</h5>
+<input id="f-name" placeholder="Frame name">
+
+<h5>Price</h5>
+<input id="f-price" placeholder="Price">
+
+<h5>Image Paths</h5>
+<div id="f-imagesList"></div>
+
+<button onclick="addFrameImageField()" class="primary-btn">
++ Add Image
+</button>
+
+<button onclick="saveFrameProduct()" class="primary-btn">
+Save Frame
+</button>
+
+<div id="f-saveLoader" class="loader"></div>
+<p id="f-saveMsg" class="center-msg"></p>
+
+  </div>
 </div>
 
 <script type="module" src="/assets/js/admin-auth.js"></script>
