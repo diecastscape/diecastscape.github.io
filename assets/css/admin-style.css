@@ -360,3 +360,32 @@ h5 {
     margin:0;
   }
 }
+.spec-input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.spec-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.spec-input label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.spec-input input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .spec-input-grid {
+    grid-template-columns: 1fr;
+  }
+}
