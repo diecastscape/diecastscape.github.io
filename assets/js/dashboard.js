@@ -904,7 +904,7 @@ accessories,
 rotating,
 lighting,
 cover,
-build
+build,
 
           active: true,
 
