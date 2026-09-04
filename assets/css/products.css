@@ -59,7 +59,7 @@ html.light {
 /* Heading */
 
 .quick-specs-title {
-  padding: 6px 10px;
+  padding: 7px 10px;
   background: #f7fafa;
   color: #16838b;
   font-size: 12px;
@@ -67,12 +67,13 @@ html.light {
   letter-spacing: 0.3px;
 }
 
-/* Row */
+/* Main specification rows */
 
 .spec-row {
-  min-height: 25px;
+  min-height: 27px;
+
   display: grid;
-  grid-template-columns: 30px 1fr auto;
+  grid-template-columns: 1fr auto;
   align-items: center;
 
   padding: 0 10px;
@@ -82,36 +83,60 @@ html.light {
   box-sizing: border-box;
 }
 
-.spec-row:last-child {
+.spec-row:last-of-type {
   border-bottom: none;
 }
 
-/* Icon */
-
-.spec-icon {
-  width: 20px;
-  text-align: center;
-  font-size: 16px;
-}
-
-/* Name */
+/* Specification name */
 
 .spec-name {
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
   color: #333;
 }
 
-/* Firebase value */
+/* Specification value */
 
 .spec-value {
   font-size: 10px;
   font-weight: 500;
   color: #444;
+
   text-align: right;
   white-space: nowrap;
 }
 
+/* Extra features */
+
+.spec-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  padding: 9px 10px;
+
+  background: #fafcfc;
+  border-top: 1px solid #eeeeee;
+
+  box-sizing: border-box;
+}
+
+/* Feature text */
+
+.spec-features span {
+  font-size: 9px;
+  font-weight: 500;
+  color: #555;
+
+  background: #f1f5f5;
+  border: 1px solid #e3e9e9;
+
+  border-radius: 20px;
+
+  padding: 5px 8px;
+
+  white-space: nowrap;
+}
 
 /* Mobile */
 
