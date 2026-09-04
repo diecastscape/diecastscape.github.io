@@ -95,188 +95,6 @@ function autoLogout() {
 
 
 // ======================================================
-// FRAME PRODUCT
-// ======================================================
-
-window.addFrameImageField = function () {
-
-  const list =
-    document.getElementById(
-      "f-imagesList"
-    );
-
-  if (!list) return;
-
-  const row =
-    document.createElement("div");
-
-  row.innerHTML = `
-    <input
-      class="frame-image"
-      placeholder="Image URL"
-    >
-  `;
-
-  list.appendChild(row);
-
-};
-
-
-// Add first frame image field
-window.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    const list =
-      document.getElementById(
-        "f-imagesList"
-      );
-
-    if (
-      list &&
-      list.children.length === 0
-    ) {
-
-      addFrameImageField();
-
-    }
-
-  }
-);
-
-
-// SAVE FRAME PRODUCT
-
-window.saveFrameProduct =
-  async function () {
-
-    const loader =
-      document.getElementById(
-        "f-saveLoader"
-      );
-
-    const msg =
-      document.getElementById(
-        "f-saveMsg"
-      );
-
-    if (loader) {
-      loader.style.display =
-        "block";
-    }
-
-    if (msg) {
-      msg.innerText = "";
-    }
-
-
-    const images = [];
-
-
-    document
-      .querySelectorAll(".frame-image")
-      .forEach(input => {
-
-        if (
-          input.value.trim()
-        ) {
-
-          images.push(
-            input.value.trim()
-          );
-
-        }
-
-      });
-
-
-    try {
-
-      await addDoc(
-        collection(
-          db,
-          "frameProducts"
-        ),
-        {
-
-          name:
-            document
-              .getElementById("f-name")
-              .value
-              .trim(),
-
-          price:
-            Number(
-              document
-                .getElementById("f-price")
-                .value
-            ),
-
-          images,
-
-          active: true,
-
-          created:
-            serverTimestamp()
-
-        }
-      );
-
-
-      if (msg) {
-
-        msg.innerText =
-          "Frame Added ✔";
-
-      }
-
-
-      document.getElementById(
-        "f-name"
-      ).value = "";
-
-      document.getElementById(
-        "f-price"
-      ).value = "";
-
-
-      document.getElementById(
-        "f-imagesList"
-      ).innerHTML = "";
-
-
-      addFrameImageField();
-
-
-    } catch (err) {
-
-      console.error(
-        "Frame save error:",
-        err
-      );
-
-
-      if (msg) {
-
-        msg.innerText =
-          err.message;
-
-      }
-
-    }
-
-
-    if (loader) {
-
-      loader.style.display =
-        "none";
-
-    }
-
-  };
-
-
-// ======================================================
 // DEFAULT PRODUCT DETAILS
 // ======================================================
 
@@ -338,7 +156,373 @@ window.addEventListener(
 
 
 // ======================================================
-// MAIN PRODUCT IMAGE FIELD
+// FRAME PRODUCT IMAGE FIELD
+// ======================================================
+
+window.addFrameImageField = function () {
+
+  const list =
+    document.getElementById(
+      "f-imagesList"
+    );
+
+  if (!list) return;
+
+  const row =
+    document.createElement("div");
+
+  row.innerHTML = `
+    <input
+      class="frame-image"
+      placeholder="Image path (frames)"
+    >
+  `;
+
+  list.appendChild(row);
+
+};
+
+
+// ======================================================
+// SAVE FRAME PRODUCT
+// ======================================================
+
+window.saveFrameProduct =
+  async function () {
+
+    const loader =
+      document.getElementById(
+        "f-saveLoader"
+      );
+
+    const btn =
+      document.getElementById(
+        "f-saveBtn"
+      );
+
+    const msg =
+      document.getElementById(
+        "f-saveMsg"
+      );
+
+    if (
+      !btn ||
+      btn.disabled
+    ) {
+      return;
+    }
+
+
+    const name =
+      document.getElementById(
+        "f-name"
+      ).value.trim();
+
+
+    const price =
+      Number(
+        document.getElementById(
+          "f-price"
+        ).value
+      );
+
+
+    const shippingText =
+      document.getElementById(
+        "f-shipping"
+      ).value.trim();
+
+
+    if (msg) {
+      msg.innerText = "";
+    }
+
+
+    // ==========================================
+    // VALIDATION
+    // ==========================================
+
+    if (!name) {
+
+      if (msg) {
+        msg.innerText =
+          "Enter frame name";
+      }
+
+      return;
+
+    }
+
+
+    if (!price) {
+
+      if (msg) {
+        msg.innerText =
+          "Enter price";
+      }
+
+      return;
+
+    }
+
+
+    // ==========================================
+    // IMAGES
+    // ==========================================
+
+    const inputs =
+      document.querySelectorAll(
+        ".frame-image"
+      );
+
+    const images = [];
+
+
+    inputs.forEach(input => {
+
+      const value =
+        input.value.trim();
+
+      if (value) {
+        images.push(value);
+      }
+
+    });
+
+
+    if (
+      images.length === 0
+    ) {
+
+      if (msg) {
+        msg.innerText =
+          "Add at least 1 image";
+      }
+
+      return;
+
+    }
+
+
+    // ==========================================
+    // LOADER
+    // ==========================================
+
+    if (loader) {
+      loader.classList.add("show");
+    }
+
+    btn.disabled = true;
+
+
+    try {
+
+      // ========================================
+      // UPDATE
+      // ========================================
+
+      if (
+        editingId &&
+        editingType === "frames"
+      ) {
+
+        await updateDoc(
+          doc(
+            db,
+            "frameProducts",
+            editingId
+          ),
+          {
+            name,
+            price,
+            shippingText,
+            images
+          }
+        );
+
+      }
+
+
+      // ========================================
+      // ADD
+      // ========================================
+
+      else {
+
+        await addDoc(
+          collection(
+            db,
+            "frameProducts"
+          ),
+          {
+
+            name,
+            price,
+            shippingText,
+            images,
+
+            active: true,
+
+            created:
+              Date.now()
+
+          }
+        );
+
+      }
+
+
+      // ========================================
+      // SUCCESS
+      // ========================================
+
+      if (loader) {
+        loader.classList.remove("show");
+      }
+
+      btn.disabled = false;
+
+
+      if (msg) {
+        msg.innerText =
+          "Saved successfully ✔";
+      }
+
+
+      editingId = null;
+      editingType = null;
+
+
+      hideEditMode();
+
+
+      btn.innerText =
+        "Save Frame";
+
+
+      resetFrameForm();
+
+
+      // Close form
+
+      const addWrap =
+        document.getElementById(
+          "add-frames"
+        );
+
+      if (addWrap) {
+        addWrap.style.display =
+          "none";
+      }
+
+
+      // Show list
+
+      const listBox =
+        document.getElementById(
+          "frameProducts"
+        );
+
+      if (listBox) {
+        listBox.style.display =
+          "block";
+      }
+
+
+      // Reset button
+
+      const addBtn =
+        document.getElementById(
+          "framesAddBtn"
+        );
+
+      if (addBtn) {
+
+        addBtn.innerText =
+          "+ Add";
+
+        addBtn.classList.remove(
+          "cancel-btn"
+        );
+
+      }
+
+
+      loadAdminProducts(
+        "frames"
+      );
+
+
+      setTimeout(() => {
+
+        if (msg) {
+          msg.innerText = "";
+        }
+
+      }, 3000);
+
+
+    } catch (error) {
+
+      console.error(
+        "Error saving frame:",
+        error
+      );
+
+
+      if (loader) {
+        loader.classList.remove("show");
+      }
+
+      btn.disabled = false;
+
+
+      if (msg) {
+        msg.innerText =
+          "Error saving frame";
+      }
+
+    }
+
+  };
+
+
+// ======================================================
+// INITIAL FRAME IMAGE FIELDS
+// ======================================================
+
+window.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const list =
+      document.getElementById(
+        "f-imagesList"
+      );
+
+    if (
+      list &&
+      list.children.length === 0
+    ) {
+
+      for (
+        let i = 0;
+        i < 3;
+        i++
+      ) {
+
+        addFrameImageField();
+
+      }
+
+    }
+
+  }
+);
+
+
+// ======================================================
+// MAIN IMAGE FIELD
 // ======================================================
 
 window.addImageField = function () {
@@ -368,616 +552,6 @@ window.addImageField = function () {
 };
 
 
-// ======================================================
-// SALE CONFIG
-// ======================================================
-
-const saleRef =
-  doc(
-    db,
-    "siteConfig",
-    "sale"
-  );
-
-
-async function loadSaleConfig() {
-
-  try {
-
-    const snap =
-      await getDoc(
-        saleRef
-      );
-
-
-    if (!snap.exists()) {
-      return;
-    }
-
-
-    const cfg =
-      snap.data();
-
-
-    const enabled =
-      document.getElementById(
-        "sale-enabled"
-      );
-
-    const start =
-      document.getElementById(
-        "sale-start"
-      );
-
-
-    if (enabled) {
-
-      enabled.checked =
-        cfg.enabled || false;
-
-    }
-
-
-    if (
-      start &&
-      cfg.start
-    ) {
-
-      start.value =
-        cfg.start.substring(
-          0,
-          16
-        );
-
-    }
-
-
-  } catch (error) {
-
-    console.error(
-      "Error loading sale settings:",
-      error
-    );
-
-  }
-
-}
-
-
-window.saveSaleConfig =
-  async function () {
-
-    const btn =
-      document.getElementById(
-        "saleSaveBtn"
-      );
-
-    const loader =
-      document.getElementById(
-        "saleSaveLoader"
-      );
-
-    const msg =
-      document.getElementById(
-        "sale-save-msg"
-      );
-
-
-    if (
-      !btn ||
-      btn.disabled
-    ) {
-
-      return;
-
-    }
-
-
-    const enabled =
-      document.getElementById(
-        "sale-enabled"
-      ).checked;
-
-
-    const start =
-      document.getElementById(
-        "sale-start"
-      ).value;
-
-
-    if (msg) {
-      msg.innerText = "";
-    }
-
-
-    if (loader) {
-      loader.classList.add(
-        "show"
-      );
-    }
-
-
-    btn.disabled = true;
-
-
-    try {
-
-      await setDoc(
-        saleRef,
-        {
-          enabled,
-          start
-        }
-      );
-
-
-      if (loader) {
-
-        loader.classList.remove(
-          "show"
-        );
-
-      }
-
-
-      btn.disabled = false;
-
-
-      if (msg) {
-
-        msg.innerText =
-          "Sale settings saved";
-
-        setTimeout(() => {
-
-          msg.innerText = "";
-
-        }, 2500);
-
-      }
-
-
-    } catch (error) {
-
-      console.error(
-        "Sale settings error:",
-        error
-      );
-
-
-      if (loader) {
-
-        loader.classList.remove(
-          "show"
-        );
-
-      }
-
-
-      btn.disabled = false;
-
-
-      if (msg) {
-
-        msg.innerText =
-          "Error saving settings";
-
-      }
-
-    }
-
-  };
-
-
-window.addEventListener(
-  "DOMContentLoaded",
-  loadSaleConfig
-);
-
-
-// ======================================================
-// EDIT MODE BAR
-// ======================================================
-
-function showEditMode(
-  type,
-  editing = false
-) {
-
-  let id;
-
-
-  if (type === "main") {
-
-    id =
-      "mainEditModeBar";
-
-  } else if (
-    type === "special"
-  ) {
-
-    id =
-      "specialEditModeBar";
-
-  }
-
-
-  const bar =
-    document.getElementById(
-      id
-    );
-
-
-  if (bar) {
-
-    bar.style.display =
-      "block";
-
-    bar.innerText =
-      editing
-        ? "Editing Product"
-        : "Adding Product";
-
-  }
-
-}
-
-
-function hideEditMode() {
-
-  const main =
-    document.getElementById(
-      "mainEditModeBar"
-    );
-
-  const special =
-    document.getElementById(
-      "specialEditModeBar"
-    );
-
-  const accessories =
-    document.getElementById(
-      "accessoriesEditModeBar"
-    );
-
-
-  if (main) {
-    main.style.display =
-      "none";
-  }
-
-
-  if (special) {
-    special.style.display =
-      "none";
-  }
-
-
-  if (accessories) {
-    accessories.style.display =
-      "none";
-  }
-
-}
-
-
-// ======================================================
-// SAVE MAIN PRODUCT
-// ======================================================
-window.saveProduct = async function () {
-
-  const loader =
-    document.getElementById("saveLoader");
-
-  const btn =
-    document.getElementById("saveBtn");
-
-  const msg =
-    document.getElementById("saveMsg");
-
-
-  if (!btn || btn.disabled) {
-    return;
-  }
-
-
-  // ==========================================
-  // BASIC PRODUCT DATA
-  // ==========================================
-
-  const name =
-    document.getElementById("p-name").value.trim();
-const subtitle =
-  document.getElementById("p-subtitle").value.trim();
-  const priceOld =
-    Number(
-      document.getElementById("p-old").value
-    );
-
-  const priceNew =
-    Number(
-      document.getElementById("p-new").value
-    );
-
-  const shippingText =
-    document
-      .getElementById("p-shipping")
-      .value
-      .trim();
-
-  const detailsHTML =
-    document
-      .getElementById("p-details")
-      .value
-      .trim();
-
-// ==========================================
-// QUICK SPECIFICATIONS
-// ==========================================
-
-const dimensions =
-  document
-    .getElementById("p-dimensions")
-    .value
-    .trim();
-
-const flore =
-  document
-    .getElementById("p-flore")
-    .value
-    .trim();
-
-const suitableScale =
-  document
-    .getElementById("p-suitableScale")
-    .value
-    .trim();
-
-const capacity =
-  document
-    .getElementById("p-capacity")
-    .value
-    .trim();
-
-const accessories =
-  document
-    .getElementById("p-accessories")
-    .value
-    .trim();
-
-const rotating =
-  document
-    .getElementById("p-rotating")
-    .value
-    .trim();
-
-const lighting =
-  document
-    .getElementById("p-lighting")
-    .value
-    .trim();
-
-const cover =
-  document
-    .getElementById("p-cover")
-    .value
-    .trim();
-
-const build =
-  document
-    .getElementById("p-build")
-    .value
-    .trim();
-  
-  if (msg) {
-    msg.innerText = "";
-  }
-
-
-  // ==========================================
-  // VALIDATION
-  // ==========================================
-
-  if (!name) {
-
-    msg.innerText =
-      "Enter product title";
-
-    return;
-  }
-
-
-  if (!priceOld || !priceNew) {
-
-    msg.innerText =
-      "Enter prices";
-
-    return;
-  }
-
-
-  // ==========================================
-  // IMAGES
-  // ==========================================
-
-  const fulls =
-    document.querySelectorAll(".img-full");
-
-  const images = [];
-
-  fulls.forEach(input => {
-
-    if (input.value.trim()) {
-
-      images.push({
-        full: input.value.trim()
-      });
-
-    }
-
-  });
-
-
-  if (images.length === 0) {
-
-    msg.innerText =
-      "Add at least 1 image";
-
-    return;
-  }
-
-
-  // ==========================================
-  // LOADER
-  // ==========================================
-
-  if (loader) {
-    loader.classList.add("show");
-  }
-
-  btn.disabled = true;
-
-
-  try {
-
-    // ========================================
-    // UPDATE EXISTING PRODUCT
-    // ========================================
-
-    if (
-      editingId &&
-      editingType === "main"
-    ) {
-
-      await updateDoc(
-        doc(
-          db,
-          "products",
-          editingId
-        ),
-        {
-
-name,
-subtitle,
-priceOld,
-priceNew,
-detailsHTML,
-shippingText,
-images,
-dimensions,
-flore,
-suitableScale,
-capacity,
-accessories,
-rotating,
-lighting,
-cover,
-build
-          
-        }
-      );
-
-    }
-
-    // ========================================
-    // ADD NEW PRODUCT
-    // ========================================
-
-    else {
-
-      await addDoc(
-        collection(
-          db,
-          "products"
-        ),
-        {
-
-name,
-subtitle,
-priceOld,
-priceNew,
-detailsHTML,
-shippingText,
-images,
-dimensions,
-flore,
-suitableScale,
-capacity,
-accessories,
-rotating,
-lighting,
-cover,
-build,
-
-          active: true,
-
-          created: Date.now()
-
-        }
-      );
-
-    }
-
-
-    // ========================================
-    // SUCCESS
-    // ========================================
-
-    if (loader) {
-      loader.classList.remove("show");
-    }
-
-    btn.disabled = false;
-
-    msg.innerText =
-      "Saved successfully ✔";
-
-
-    editingId = null;
-    editingType = null;
-
-
-    hideEditMode();
-
-
-    btn.innerText =
-      "Save Product";
-
-
-    resetMainForm();
-
-
-    setTimeout(() => {
-
-      msg.innerText = "";
-
-    }, 3000);
-
-
-    loadAdminProducts("main");
-
-
-  } catch (error) {
-
-    console.error(
-      "Error saving product:",
-      error
-    );
-
-
-    if (loader) {
-      loader.classList.remove("show");
-    }
-
-    btn.disabled = false;
-
-
-    msg.innerText =
-      "Error saving product";
-
-  }
-
-};
 // ======================================================
 // INITIAL MAIN IMAGE FIELDS
 // ======================================================
@@ -1014,13 +588,1071 @@ window.addEventListener(
 
 
 // ======================================================
+// EDIT MODE BAR
+// ======================================================
+
+function showEditMode(
+  type,
+  editing = false
+) {
+
+  let id;
+
+
+  if (type === "main") {
+
+    id =
+      "mainEditModeBar";
+
+  }
+
+  else if (type === "frames") {
+
+    id =
+      "framesEditModeBar";
+
+  }
+
+
+  const bar =
+    document.getElementById(
+      id
+    );
+
+
+  if (bar) {
+
+    bar.style.display =
+      "block";
+
+    bar.innerText =
+      editing
+        ? "Editing Product"
+        : "Adding Product";
+
+  }
+
+}
+
+
+function hideEditMode() {
+
+  const main =
+    document.getElementById(
+      "mainEditModeBar"
+    );
+
+  const frames =
+    document.getElementById(
+      "framesEditModeBar"
+    );
+
+  const accessories =
+    document.getElementById(
+      "accessoriesEditModeBar"
+    );
+
+
+  if (main) {
+    main.style.display =
+      "none";
+  }
+
+
+  if (frames) {
+    frames.style.display =
+      "none";
+  }
+
+
+  if (accessories) {
+    accessories.style.display =
+      "none";
+  }
+
+}
+
+
+// ======================================================
+// SAVE MAIN PRODUCT
+// ======================================================
+
+window.saveProduct = async function () {
+
+  const loader =
+    document.getElementById("saveLoader");
+
+  const btn =
+    document.getElementById("saveBtn");
+
+  const msg =
+    document.getElementById("saveMsg");
+
+
+  if (!btn || btn.disabled) {
+    return;
+  }
+
+
+  const name =
+    document.getElementById("p-name")
+      .value.trim();
+
+  const subtitle =
+    document.getElementById("p-subtitle")
+      .value.trim();
+
+  const priceOld =
+    Number(
+      document.getElementById("p-old").value
+    );
+
+  const priceNew =
+    Number(
+      document.getElementById("p-new").value
+    );
+
+  const shippingText =
+    document.getElementById("p-shipping")
+      .value.trim();
+
+  const detailsHTML =
+    document.getElementById("p-details")
+      .value.trim();
+
+
+  // ==========================================
+  // QUICK SPECIFICATIONS
+  // ==========================================
+
+  const dimensions =
+    document.getElementById("p-dimensions")
+      .value.trim();
+
+  const flore =
+    document.getElementById("p-flore")
+      .value.trim();
+
+  const suitableScale =
+    document.getElementById("p-suitableScale")
+      .value.trim();
+
+  const capacity =
+    document.getElementById("p-capacity")
+      .value.trim();
+
+  const accessories =
+    document.getElementById("p-accessories")
+      .value.trim();
+
+  const rotating =
+    document.getElementById("p-rotating")
+      .value.trim();
+
+  const lighting =
+    document.getElementById("p-lighting")
+      .value.trim();
+
+  const cover =
+    document.getElementById("p-cover")
+      .value.trim();
+
+  const build =
+    document.getElementById("p-build")
+      .value.trim();
+
+
+  if (msg) {
+    msg.innerText = "";
+  }
+
+
+  // ==========================================
+  // VALIDATION
+  // ==========================================
+
+  if (!name) {
+
+    msg.innerText =
+      "Enter product title";
+
+    return;
+
+  }
+
+
+  if (!priceOld || !priceNew) {
+
+    msg.innerText =
+      "Enter prices";
+
+    return;
+
+  }
+
+
+  // ==========================================
+  // IMAGES
+  // ==========================================
+
+  const fulls =
+    document.querySelectorAll(".img-full");
+
+  const images = [];
+
+
+  fulls.forEach(input => {
+
+    if (input.value.trim()) {
+
+      images.push({
+        full:
+          input.value.trim()
+      });
+
+    }
+
+  });
+
+
+  if (images.length === 0) {
+
+    msg.innerText =
+      "Add at least 1 image";
+
+    return;
+
+  }
+
+
+  if (loader) {
+    loader.classList.add("show");
+  }
+
+  btn.disabled = true;
+
+
+  try {
+
+    if (
+      editingId &&
+      editingType === "main"
+    ) {
+
+      await updateDoc(
+        doc(
+          db,
+          "products",
+          editingId
+        ),
+        {
+
+          name,
+          subtitle,
+          priceOld,
+          priceNew,
+          detailsHTML,
+          shippingText,
+          images,
+
+          dimensions,
+          flore,
+          suitableScale,
+          capacity,
+          accessories,
+          rotating,
+          lighting,
+          cover,
+          build
+
+        }
+      );
+
+    }
+
+    else {
+
+      await addDoc(
+        collection(
+          db,
+          "products"
+        ),
+        {
+
+          name,
+          subtitle,
+          priceOld,
+          priceNew,
+          detailsHTML,
+          shippingText,
+          images,
+
+          dimensions,
+          flore,
+          suitableScale,
+          capacity,
+          accessories,
+          rotating,
+          lighting,
+          cover,
+          build,
+
+          active: true,
+
+          created:
+            Date.now()
+
+        }
+      );
+
+    }
+
+
+    if (loader) {
+      loader.classList.remove("show");
+    }
+
+    btn.disabled = false;
+
+
+    msg.innerText =
+      "Saved successfully ✔";
+
+
+    editingId = null;
+    editingType = null;
+
+
+    hideEditMode();
+
+
+    btn.innerText =
+      "Save Product";
+
+
+    resetMainForm();
+
+
+    setTimeout(() => {
+
+      msg.innerText = "";
+
+    }, 3000);
+
+
+    loadAdminProducts(
+      "main"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Error saving product:",
+      error
+    );
+
+
+    if (loader) {
+      loader.classList.remove("show");
+    }
+
+    btn.disabled = false;
+
+
+    msg.innerText =
+      "Error saving product";
+
+  }
+
+};
+
+
+// ======================================================
+// ACCESSORY IMAGE FIELD
+// ======================================================
+
+window.addAccessoryImageField =
+  function () {
+
+    const list =
+      document.getElementById(
+        "a-imagesList"
+      );
+
+    if (!list) {
+      return;
+    }
+
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+
+    div.innerHTML = `
+      <input
+        class="a-img"
+        placeholder="Image path (accessories)"
+      >
+    `;
+
+
+    list.appendChild(div);
+
+  };
+
+
+// ======================================================
+// SAVE ACCESSORY
+// ======================================================
+
+window.saveAccessoryProduct =
+  async function () {
+
+    const loader =
+      document.getElementById(
+        "a-saveLoader"
+      );
+
+    const btn =
+      document.getElementById(
+        "a-saveBtn"
+      );
+
+    const msg =
+      document.getElementById(
+        "a-saveMsg"
+      );
+
+
+    if (
+      !btn ||
+      btn.disabled
+    ) {
+
+      return;
+
+    }
+
+
+    const name =
+      document.getElementById(
+        "a-name"
+      ).value.trim();
+
+
+    const price =
+      Number(
+        document.getElementById(
+          "a-price"
+        ).value
+      );
+
+
+    if (msg) {
+      msg.innerText = "";
+    }
+
+
+    if (!name) {
+
+      msg.innerText =
+        "Enter accessory name";
+
+      return;
+
+    }
+
+
+    if (!price) {
+
+      msg.innerText =
+        "Enter price";
+
+      return;
+
+    }
+
+
+    const inputs =
+      document.querySelectorAll(
+        ".a-img"
+      );
+
+
+    const images = [];
+
+
+    inputs.forEach(
+      input => {
+
+        const value =
+          input.value.trim();
+
+
+        if (value) {
+          images.push(value);
+        }
+
+      }
+    );
+
+
+    if (
+      images.length === 0
+    ) {
+
+      msg.innerText =
+        "Add at least 1 image";
+
+      return;
+
+    }
+
+
+    if (loader) {
+      loader.classList.add("show");
+    }
+
+    btn.disabled = true;
+
+
+    try {
+
+      if (
+        editingId &&
+        editingType === "accessories"
+      ) {
+
+        await updateDoc(
+          doc(
+            db,
+            "accessoriesProducts",
+            editingId
+          ),
+          {
+            name,
+            price,
+            images
+          }
+        );
+
+      }
+
+      else {
+
+        await addDoc(
+          collection(
+            db,
+            "accessoriesProducts"
+          ),
+          {
+
+            name,
+            price,
+            images,
+
+            active: true,
+
+            created:
+              Date.now()
+
+          }
+        );
+
+      }
+
+
+      if (loader) {
+        loader.classList.remove("show");
+      }
+
+      btn.disabled = false;
+
+
+      msg.innerText =
+        "Saved successfully";
+
+
+      editingId = null;
+      editingType = null;
+
+
+      hideEditMode();
+
+
+      btn.innerText =
+        "Save Product";
+
+
+      resetAccessoryForm();
+
+
+      const addWrap =
+        document.getElementById(
+          "add-accessories"
+        );
+
+      if (addWrap) {
+        addWrap.style.display =
+          "none";
+      }
+
+
+      const listBox =
+        document.getElementById(
+          "accessoriesProducts"
+        );
+
+      if (listBox) {
+        listBox.style.display =
+          "block";
+      }
+
+
+      const addBtn =
+        document.getElementById(
+          "accessoriesAddBtn"
+        );
+
+      if (addBtn) {
+
+        addBtn.innerText =
+          "+ Add";
+
+        addBtn.classList.remove(
+          "cancel-btn"
+        );
+
+      }
+
+
+      loadAdminProducts(
+        "accessories"
+      );
+
+
+      setTimeout(() => {
+
+        msg.innerText = "";
+
+      }, 3000);
+
+
+    } catch (error) {
+
+      console.error(
+        "Error saving accessory:",
+        error
+      );
+
+
+      if (loader) {
+        loader.classList.remove("show");
+      }
+
+      btn.disabled = false;
+
+
+      msg.innerText =
+        "Error saving product";
+
+    }
+
+  };
+
+
+// ======================================================
+// EDIT ACCESSORY
+// ======================================================
+
+window.editAccessoryProduct =
+  async function (id) {
+
+    try {
+
+      const snap =
+        await getDoc(
+          doc(
+            db,
+            "accessoriesProducts",
+            id
+          )
+        );
+
+
+      if (!snap.exists()) {
+        return;
+      }
+
+
+      const data =
+        snap.data();
+
+
+      editingId =
+        id;
+
+      editingType =
+        "accessories";
+
+
+      toggleAdd(
+        "accessories"
+      );
+
+
+      const bar =
+        document.getElementById(
+          "accessoriesEditModeBar"
+        );
+
+
+      if (bar) {
+
+        bar.style.display =
+          "block";
+
+        bar.innerText =
+          "Editing Product";
+
+      }
+
+
+      document.getElementById(
+        "a-name"
+      ).value =
+        data.name || "";
+
+
+      document.getElementById(
+        "a-price"
+      ).value =
+        data.price || "";
+
+
+      const list =
+        document.getElementById(
+          "a-imagesList"
+        );
+
+
+      list.innerHTML =
+        "";
+
+
+      if (
+        Array.isArray(
+          data.images
+        )
+      ) {
+
+        data.images.forEach(
+          image => {
+
+            const div =
+              document.createElement(
+                "div"
+              );
+
+
+            div.innerHTML = `
+              <input
+                class="a-img"
+                value="${image}"
+              >
+            `;
+
+
+            list.appendChild(
+              div
+            );
+
+          }
+        );
+
+      }
+
+
+      document.getElementById(
+        "a-saveBtn"
+      ).innerText =
+        "Update Product";
+
+
+      const addBtn =
+        document.getElementById(
+          "accessoriesAddBtn"
+        );
+
+
+      if (addBtn) {
+
+        addBtn.innerText =
+          "Cancel";
+
+        addBtn.classList.add(
+          "cancel-btn"
+        );
+
+      }
+
+
+    } catch (error) {
+
+      console.error(
+        "Error editing accessory:",
+        error
+      );
+
+    }
+
+  };
+
+
+// ======================================================
+// EDIT FRAME
+// ======================================================
+
+window.editFrameProduct =
+  async function (id) {
+
+    try {
+
+      const snap =
+        await getDoc(
+          doc(
+            db,
+            "frameProducts",
+            id
+          )
+        );
+
+
+      if (!snap.exists()) {
+        return;
+      }
+
+
+      const data =
+        snap.data();
+
+
+      editingId =
+        id;
+
+      editingType =
+        "frames";
+
+
+      toggleAdd(
+        "frames"
+      );
+
+
+      showEditMode(
+        "frames",
+        true
+      );
+
+
+      const addBtn =
+        document.getElementById(
+          "framesAddBtn"
+        );
+
+
+      if (addBtn) {
+
+        addBtn.innerText =
+          "Cancel";
+
+        addBtn.classList.add(
+          "cancel-btn"
+        );
+
+      }
+
+
+      document.getElementById(
+        "f-name"
+      ).value =
+        data.name || "";
+
+
+      document.getElementById(
+        "f-price"
+      ).value =
+        data.price || "";
+
+
+      document.getElementById(
+        "f-shipping"
+      ).value =
+        data.shippingText || "";
+
+
+      const list =
+        document.getElementById(
+          "f-imagesList"
+        );
+
+
+      list.innerHTML =
+        "";
+
+
+      if (
+        Array.isArray(
+          data.images
+        )
+      ) {
+
+        data.images.forEach(
+          image => {
+
+            const div =
+              document.createElement(
+                "div"
+              );
+
+
+            div.innerHTML = `
+              <input
+                class="frame-image"
+                value="${image}"
+              >
+            `;
+
+
+            list.appendChild(
+              div
+            );
+
+          }
+        );
+
+      }
+
+
+      document.getElementById(
+        "f-saveBtn"
+      ).innerText =
+        "Update Frame";
+
+
+    } catch (error) {
+
+      console.error(
+        "Error editing frame:",
+        error
+      );
+
+    }
+
+  };
+
+
+// ======================================================
+// DELETE FRAME
+// ======================================================
+
+window.deleteFrameProduct =
+  async function (id) {
+
+    if (
+      !confirm(
+        "Delete this frame?"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      await deleteDoc(
+        doc(
+          db,
+          "frameProducts",
+          id
+        )
+      );
+
+
+      loadAdminProducts(
+        "frames"
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Error deleting frame:",
+        error
+      );
+
+    }
+
+  };
+
+
+// ======================================================
+// DELETE ACCESSORY
+// ======================================================
+
+window.deleteAccessoryProduct =
+  async function (id) {
+
+    if (
+      !confirm(
+        "Delete this accessory?"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      await deleteDoc(
+        doc(
+          db,
+          "accessoriesProducts",
+          id
+        )
+      );
+
+
+      loadAdminProducts(
+        "accessories"
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Error deleting accessory:",
+        error
+      );
+
+    }
+
+  };
+
+
+// ======================================================
 // OPEN SECTION
 // ======================================================
 
 window.openSection =
   function (type) {
-
-    // Hide all sections
 
     document
       .querySelectorAll(
@@ -1034,16 +1666,14 @@ window.openSection =
       });
 
 
-    // Buttons
-
     const mainBtn =
       document.getElementById(
         "mainAddBtn"
       );
 
-    const specialBtn =
+    const framesBtn =
       document.getElementById(
-        "specialAddBtn"
+        "framesAddBtn"
       );
 
     const accessoriesBtn =
@@ -1054,7 +1684,7 @@ window.openSection =
 
     [
       mainBtn,
-      specialBtn,
+      framesBtn,
       accessoriesBtn
     ].forEach(btn => {
 
@@ -1072,10 +1702,8 @@ window.openSection =
     });
 
 
-    // Reset forms
-
     resetMainForm();
-    resetSaleForm();
+    resetFrameForm();
     resetAccessoryForm();
 
 
@@ -1085,24 +1713,6 @@ window.openSection =
 
     hideEditMode();
 
-
-    // Sale control
-
-    const saleControl =
-      document.querySelector(
-        ".sale-control"
-      );
-
-
-    if (saleControl) {
-
-      saleControl.style.display =
-        "block";
-
-    }
-
-
-    // Open section
 
     const section =
       document.getElementById(
@@ -1119,8 +1729,6 @@ window.openSection =
       "block";
 
 
-    // Hide add form
-
     const addWrap =
       document.getElementById(
         "add-" + type
@@ -1128,21 +1736,15 @@ window.openSection =
 
 
     if (addWrap) {
-
       addWrap.style.display =
         "none";
-
     }
 
 
-    // Find list
-
-    let listBox = null;
+    let listBox;
 
 
-    if (
-      type === "main"
-    ) {
+    if (type === "main") {
 
       listBox =
         document.getElementById(
@@ -1151,20 +1753,16 @@ window.openSection =
 
     }
 
-    else if (
-      type === "special"
-    ) {
+    else if (type === "frames") {
 
       listBox =
         document.getElementById(
-          "specialProducts"
+          "frameProducts"
         );
 
     }
 
-    else if (
-      type === "accessories"
-    ) {
+    else if (type === "accessories") {
 
       listBox =
         document.getElementById(
@@ -1189,7 +1787,7 @@ window.openSection =
 
 
 // ======================================================
-// TOGGLE ADD FORM
+// TOGGLE ADD
 // ======================================================
 
 window.toggleAdd =
@@ -1201,38 +1799,51 @@ window.toggleAdd =
       );
 
 
-    const listBox =
-      type === "main"
-        ? document.getElementById(
-            "mainProducts"
-          )
-        : type === "special"
-        ? document.getElementById(
-            "specialProducts"
-          )
-        : document.getElementById(
-            "accessoriesProducts"
-          );
+    let listBox;
+    let btn;
 
 
-    const btn =
-      type === "main"
-        ? document.getElementById(
-            "mainAddBtn"
-          )
-        : type === "special"
-        ? document.getElementById(
-            "specialAddBtn"
-          )
-        : document.getElementById(
-            "accessoriesAddBtn"
-          );
+    if (type === "main") {
 
+      listBox =
+        document.getElementById(
+          "mainProducts"
+        );
 
-    const saleBox =
-      document.getElementById(
-        "saleControlBox"
-      );
+      btn =
+        document.getElementById(
+          "mainAddBtn"
+        );
+
+    }
+
+    else if (type === "frames") {
+
+      listBox =
+        document.getElementById(
+          "frameProducts"
+        );
+
+      btn =
+        document.getElementById(
+          "framesAddBtn"
+        );
+
+    }
+
+    else if (type === "accessories") {
+
+      listBox =
+        document.getElementById(
+          "accessoriesProducts"
+        );
+
+      btn =
+        document.getElementById(
+          "accessoriesAddBtn"
+        );
+
+    }
 
 
     if (!addWrap) {
@@ -1251,101 +1862,38 @@ window.toggleAdd =
 
     if (opening) {
 
-      // Reset only for new product
-
       if (!editingId) {
 
-        if (
-          type === "main"
-        ) {
-
+        if (type === "main") {
           resetMainForm();
-
         }
 
-        else if (
-          type === "special"
-        ) {
-
-          resetSaleForm();
-
+        else if (type === "frames") {
+          resetFrameForm();
         }
 
-        else if (
-          type === "accessories"
-        ) {
-
+        else if (type === "accessories") {
           resetAccessoryForm();
-
         }
 
       }
 
 
-      // Edit bar
-
-      if (
-        type === "accessories"
-      ) {
-
-        const bar =
-          document.getElementById(
-            "accessoriesEditModeBar"
-          );
-
-
-        if (bar) {
-
-          bar.style.display =
-            "block";
-
-          bar.innerText =
-            editingId
-              ? "Editing Product"
-              : "Adding Product";
-
-        }
-
-      }
-
-      else {
-
-        showEditMode(
-          type,
-          Boolean(editingId)
-        );
-
-      }
+      showEditMode(
+        type,
+        Boolean(editingId)
+      );
 
 
       addWrap.style.display =
         "block";
 
 
-      // Hide sale settings
-
-      if (
-        type === "special" &&
-        saleBox
-      ) {
-
-        saleBox.style.display =
-          "none";
-
-      }
-
-
-      // Hide list
-
       if (listBox) {
-
         listBox.style.display =
           "none";
-
       }
 
-
-      // Change button
 
       if (btn) {
 
@@ -1367,28 +1915,16 @@ window.toggleAdd =
 
     else {
 
-      if (
-        type === "main"
-      ) {
-
+      if (type === "main") {
         resetMainForm();
-
       }
 
-      else if (
-        type === "special"
-      ) {
-
-        resetSaleForm();
-
+      else if (type === "frames") {
+        resetFrameForm();
       }
 
-      else if (
-        type === "accessories"
-      ) {
-
+      else if (type === "accessories") {
         resetAccessoryForm();
-
       }
 
 
@@ -1403,22 +1939,9 @@ window.toggleAdd =
         "none";
 
 
-      if (
-        type === "special" &&
-        saleBox
-      ) {
-
-        saleBox.style.display =
-          "block";
-
-      }
-
-
       if (listBox) {
-
         listBox.style.display =
           "block";
-
       }
 
 
@@ -1439,7 +1962,7 @@ window.toggleAdd =
 
 
 // ======================================================
-// TOGGLE LIST
+// TOGGLE LIST / REFRESH
 // ======================================================
 
 window.toggleList =
@@ -1451,70 +1974,22 @@ window.toggleList =
       );
 
 
-    const btn =
-      type === "main"
-        ? document.getElementById(
-            "mainAddBtn"
-          )
-        : type === "special"
-        ? document.getElementById(
-            "specialAddBtn"
-          )
-        : document.getElementById(
-            "accessoriesAddBtn"
-          );
-
-
     if (addWrap) {
-
       addWrap.style.display =
         "none";
-
     }
 
 
-    if (
-      type === "special"
-    ) {
-
-      const saleBox =
-        document.getElementById(
-          "saleControlBox"
-        );
-
-
-      if (saleBox) {
-
-        saleBox.style.display =
-          "block";
-
-      }
-
-    }
-
-
-    if (
-      type === "main"
-    ) {
-
+    if (type === "main") {
       resetMainForm();
-
     }
 
-    else if (
-      type === "special"
-    ) {
-
-      resetSaleForm();
-
+    else if (type === "frames") {
+      resetFrameForm();
     }
 
-    else if (
-      type === "accessories"
-    ) {
-
+    else if (type === "accessories") {
       resetAccessoryForm();
-
     }
 
 
@@ -1523,6 +1998,37 @@ window.toggleList =
 
 
     hideEditMode();
+
+
+    let btn;
+
+
+    if (type === "main") {
+
+      btn =
+        document.getElementById(
+          "mainAddBtn"
+        );
+
+    }
+
+    else if (type === "frames") {
+
+      btn =
+        document.getElementById(
+          "framesAddBtn"
+        );
+
+    }
+
+    else if (type === "accessories") {
+
+      btn =
+        document.getElementById(
+          "accessoriesAddBtn"
+        );
+
+    }
 
 
     if (btn) {
@@ -1552,16 +2058,10 @@ async function loadAdminProducts(
   type
 ) {
 
-  // ==========================================
-  // CORRECT CONTAINER
-  // ==========================================
-
   let container = null;
 
 
-  if (
-    type === "main"
-  ) {
+  if (type === "main") {
 
     container =
       document.getElementById(
@@ -1570,20 +2070,16 @@ async function loadAdminProducts(
 
   }
 
-  else if (
-    type === "special"
-  ) {
+  else if (type === "frames") {
 
     container =
       document.getElementById(
-        "specialProducts"
+        "frameProducts"
       );
 
   }
 
-  else if (
-    type === "accessories"
-  ) {
+  else if (type === "accessories") {
 
     container =
       document.getElementById(
@@ -1598,8 +2094,6 @@ async function loadAdminProducts(
   }
 
 
-  // Add wrapper
-
   const addWrap =
     document.getElementById(
       "add-" + type
@@ -1607,10 +2101,8 @@ async function loadAdminProducts(
 
 
   if (addWrap) {
-
     addWrap.style.display =
       "none";
-
   }
 
 
@@ -1625,34 +2117,24 @@ async function loadAdminProducts(
   `;
 
 
-  // ==========================================
-  // COLLECTION
-  // ==========================================
-
   let colName;
 
 
-  if (
-    type === "main"
-  ) {
+  if (type === "main") {
 
     colName =
       "products";
 
   }
 
-  else if (
-    type === "special"
-  ) {
+  else if (type === "frames") {
 
     colName =
-      "specialSaleProducts";
+      "frameProducts";
 
   }
 
-  else if (
-    type === "accessories"
-  ) {
+  else if (type === "accessories") {
 
     colName =
       "accessoriesProducts";
@@ -1699,9 +2181,7 @@ async function loadAdminProducts(
         let priceHTML = "";
 
 
-        if (
-          type === "main"
-        ) {
+        if (type === "main") {
 
           priceHTML = `
             <div class="price-stack">
@@ -1731,57 +2211,24 @@ async function loadAdminProducts(
 
 
         // ======================================
-        // SOLD TOGGLE
-        // ======================================
-
-        let soldHTML = "";
-
-
-        if (
-          type === "special"
-        ) {
-
-          soldHTML = `
-            <div class="sold-toggle">
-
-              <label class="toggle-switch">
-
-                <input
-                  type="checkbox"
-                  ${p.sold ? "checked" : ""}
-                  onchange="
-                    toggleSold(
-                      '${id}',
-                      this.checked
-                    )
-                  "
-                >
-
-                <span class="toggle-slider"></span>
-
-              </label>
-
-              <span class="sold-text">
-                Sold
-              </span>
-
-            </div>
-          `;
-
-        }
-
-
-        // ======================================
-        // EDIT / DELETE BUTTONS
+        // EDIT / DELETE
         // ======================================
 
         let editFunction;
         let deleteFunction;
 
 
-        if (
-          type === "accessories"
-        ) {
+        if (type === "frames") {
+
+          editFunction =
+            `editFrameProduct('${id}')`;
+
+          deleteFunction =
+            `deleteFrameProduct('${id}')`;
+
+        }
+
+        else if (type === "accessories") {
 
           editFunction =
             `editAccessoryProduct('${id}')`;
@@ -1819,8 +2266,6 @@ async function loadAdminProducts(
 
               ${priceHTML}
 
-              ${soldHTML}
-
             </div>
 
 
@@ -1850,13 +2295,8 @@ async function loadAdminProducts(
 
                   <g
                     transform="
-                      translate(
-                        1.4066
-                        1.4066
-                      )
-                      scale(
-                        2.81
-                      )
+                      translate(1.4066 1.4066)
+                      scale(2.81)
                     "
                   >
 
@@ -1922,8 +2362,7 @@ async function loadAdminProducts(
                       c0 1.946
                       -1.584 3.529
                       -3.53 3.529H7.53
-                      C5.583 86
-                      4 84.417
+                      C5.583 86 4 84.417
                       4 82.471V16.142
                       c0-1.946
                       1.583-3.53
@@ -1969,13 +2408,8 @@ async function loadAdminProducts(
 
                   <g
                     transform="
-                      translate(
-                        1.4066
-                        1.4066
-                      )
-                      scale(
-                        2.81
-                      )
+                      translate(1.4066 1.4066)
+                      scale(2.81)
                     "
                   >
 
@@ -1991,8 +2425,7 @@ async function loadAdminProducts(
                       .567-.601
                       1.356-.941
                       2.183-.941h51.201
-                      c.826 0
-                      1.615.341
+                      c.826 0 1.615.341
                       2.183.941
                       .566.601
                       .86 1.409
@@ -2007,14 +2440,10 @@ async function loadAdminProducts(
                     <path
                       d="M75.977 26.983
                       H14.023
-                      c-1.657 0
-                      -3-1.343
-                      -3-3v-3.869
-                      c0-5.645
-                      4.592-10.237
+                      c-1.657 0-3-1.343-3-3v-3.869
+                      c0-5.645 4.592-10.237
                       10.237-10.237h47.479
-                      c5.645 0
-                      10.237 4.592
+                      c5.645 0 10.237 4.592
                       10.237 10.237v3.869
                       c0 1.657-1.343 3-3 3z"
                       fill="currentColor"
@@ -2023,14 +2452,10 @@ async function loadAdminProducts(
                     <path
                       d="M56.913 15.876
                       H33.086
-                      c-1.657 0
-                      -3-1.343
-                      -3-3
+                      c-1.657 0-3-1.343-3-3
                       C30.086 5.776
-                      35.863 0
-                      42.963 0h4.074
-                      c7.1 0
-                      12.876 5.776
+                      35.863 0 42.963 0h4.074
+                      c7.1 0 12.876 5.776
                       12.876 12.876
                       c0 1.657-1.343 3-3 3z"
                       fill="currentColor"
@@ -2038,59 +2463,33 @@ async function loadAdminProducts(
 
                     <path
                       d="M55.613 76.021
-                      c-.06 0-.118-.002
-                      -.179-.005
-                      -1.653-.097
-                      -2.916-1.517
-                      -2.819-3.171
+                      c-.06 0-.118-.002-.179-.005
+                      -1.653-.097-2.916-1.517-2.819-3.171
                       l2.146-36.658
-                      c.098-1.654
-                      1.509-2.911
-                      3.171-2.82
-                      1.653.097
-                      2.916 1.517
-                      2.819 3.17
+                      c.098-1.654 1.509-2.911 3.171-2.82
+                      1.653.097 2.916 1.517 2.819 3.17
                       l-2.146 36.659
-                      c-.093 1.594
-                      -1.416 2.825
-                      -2.992 2.825z"
+                      c-.093 1.594-1.416 2.825-2.992 2.825z"
                       fill="currentColor"
                     />
 
                     <path
                       d="M34.386 76.021
-                      c-1.577 0
-                      -2.898-1.23
-                      -2.992-2.824
+                      c-1.577 0-2.898-1.23-2.992-2.824
                       l-2.146-36.659
-                      c-.097-1.654
-                      1.166-3.073
-                      2.82-3.17
-                      1.644-.088
-                      3.073 1.166
-                      3.17 2.82
+                      c-.097-1.654 1.166-3.073 2.82-3.17
+                      1.644-.088 3.073 1.166 3.17 2.82
                       l2.146 36.658
-                      c.097 1.654
-                      -1.166 3.074
-                      -2.819 3.171
-                      -.06.002
-                      -.12.004
-                      -.179.004z"
+                      c.097 1.658-1.166 3.074-2.819 3.171
+                      -.06.002-.12.004-.179.004z"
                       fill="currentColor"
                     />
 
                     <path
                       d="M45 76.021
-                      c-1.657 0
-                      -3-1.343
-                      -3-3V36.362
-                      c0-1.657
-                      1.343-3
-                      3-3s3 1.343
-                      3 3v36.658
-                      c0 1.658
-                      -1.343 3.001
-                      -3 3.001z"
+                      c-1.657 0-3-1.343-3-3V36.362
+                      c0-1.657 1.343-3 3-3s3 1.343 3 3v36.658
+                      c0 1.658-1.343 3.001-3 3.001z"
                       fill="currentColor"
                     />
 
@@ -2142,7 +2541,7 @@ async function loadAdminProducts(
 
 
 // ======================================================
-// EDIT MAIN / SPECIAL PRODUCT
+// EDIT MAIN PRODUCT
 // ======================================================
 
 window.editProduct =
@@ -2151,31 +2550,8 @@ window.editProduct =
     id
   ) {
 
-    let colName;
-
-
-    if (
-      type === "main"
-    ) {
-
-      colName =
-        "products";
-
-    }
-
-    else if (
-      type === "special"
-    ) {
-
-      colName =
-        "specialSaleProducts";
-
-    }
-
-    else {
-
+    if (type !== "main") {
       return;
-
     }
 
 
@@ -2185,7 +2561,7 @@ window.editProduct =
         await getDoc(
           doc(
             db,
-            colName,
+            "products",
             id
           )
         );
@@ -2204,30 +2580,24 @@ window.editProduct =
         id;
 
       editingType =
-        type;
+        "main";
 
-
-      // Open form
 
       toggleAdd(
-        type
+        "main"
       );
 
 
       showEditMode(
-        type,
+        "main",
         true
       );
 
 
       const btn =
-        type === "main"
-          ? document.getElementById(
-              "mainAddBtn"
-            )
-          : document.getElementById(
-              "specialAddBtn"
-            );
+        document.getElementById(
+          "mainAddBtn"
+        );
 
 
       if (btn) {
@@ -2242,211 +2612,204 @@ window.editProduct =
       }
 
 
-      // ======================================
-      // MAIN
-      // ======================================
+      document.getElementById(
+        "p-name"
+      ).value =
+        data.name || "";
+
+
+      document.getElementById(
+        "p-subtitle"
+      ).value =
+        data.subtitle || "";
+
+
+      document.getElementById(
+        "p-old"
+      ).value =
+        data.priceOld || "";
+
+
+      document.getElementById(
+        "p-new"
+      ).value =
+        data.priceNew || "";
+
+
+      document.getElementById(
+        "p-details"
+      ).value =
+        data.detailsHTML ||
+        defaultDetails;
+
+
+      document.getElementById(
+        "p-shipping"
+      ).value =
+        data.shippingText || "";
+
+
+      document.getElementById(
+        "p-dimensions"
+      ).value =
+        data.dimensions || "";
+
+
+      document.getElementById(
+        "p-flore"
+      ).value =
+        data.flore || "";
+
+
+      document.getElementById(
+        "p-suitableScale"
+      ).value =
+        data.suitableScale || "";
+
+
+      document.getElementById(
+        "p-capacity"
+      ).value =
+        data.capacity || "";
+
+
+      document.getElementById(
+        "p-accessories"
+      ).value =
+        data.accessories || "";
+
+
+      document.getElementById(
+        "p-rotating"
+      ).value =
+        data.rotating || "";
+
+
+      document.getElementById(
+        "p-lighting"
+      ).value =
+        data.lighting || "";
+
+
+      document.getElementById(
+        "p-cover"
+      ).value =
+        data.cover || "";
+
+
+      document.getElementById(
+        "p-build"
+      ).value =
+        data.build || "";
+
+
+      const list =
+        document.getElementById(
+          "imagesList"
+        );
+
+
+      list.innerHTML =
+        "";
+
 
       if (
-        type === "main"
+        Array.isArray(
+          data.images
+        )
       ) {
 
-        document.getElementById(
-          "p-name"
-        ).value =
-          data.name || "";
+        data.images.forEach(
+          image => {
 
-        document.getElementById(
-  "p-subtitle"
-).value =
-  data.subtitle || "";
-
-        document.getElementById(
-          "p-old"
-        ).value =
-          data.priceOld || "";
-
-
-        document.getElementById(
-          "p-new"
-        ).value =
-          data.priceNew || "";
-
-
-        document.getElementById(
-          "p-details"
-        ).value =
-          data.detailsHTML ||
-          defaultDetails;
-
-
-        document.getElementById(
-          "p-shipping"
-        ).value =
-          data.shippingText ||
-          "";
-// ======================================
-// QUICK SPECIFICATIONS
-// ======================================
-
-document.getElementById("p-dimensions").value =
-  data.dimensions || "";
-
-document.getElementById("p-flore").value =
-  data.flore || "";
-
-document.getElementById("p-suitableScale").value =
-  data.suitableScale || "";
-
-document.getElementById("p-capacity").value =
-  data.capacity || "";
-
-document.getElementById("p-accessories").value =
-  data.accessories || "";
-
-document.getElementById("p-rotating").value =
-  data.rotating || "";
-
-document.getElementById("p-lighting").value =
-  data.lighting || "";
-
-document.getElementById("p-cover").value =
-  data.cover || "";
-
-document.getElementById("p-build").value =
-  data.build || "";
-        const list =
-          document.getElementById(
-            "imagesList"
-          );
-
-
-        list.innerHTML =
-          "";
-
-
-        if (
-          Array.isArray(
-            data.images
-          )
-        ) {
-
-          data.images.forEach(
-            image => {
-
-              const div =
-                document.createElement(
-                  "div"
-                );
-
-
-              div.innerHTML = `
-                <input
-                  class="img-full"
-                  value="${image.full || ""}"
-                >
-              `;
-
-
-              list.appendChild(
-                div
+            const div =
+              document.createElement(
+                "div"
               );
 
-            }
-          );
 
-        }
+            div.innerHTML = `
+              <input
+                class="img-full"
+                value="${image.full || ""}"
+              >
+            `;
 
 
-        document.getElementById(
-          "saveBtn"
-        ).innerText =
-          "Update Product";
+            list.appendChild(
+              div
+            );
+
+          }
+        );
 
       }
 
 
-      // ======================================
-      // SPECIAL SALE
-      // ======================================
-
-      else if (
-        type === "special"
-      ) {
-
-        document.getElementById(
-          "s-name"
-        ).value =
-          data.name || "";
-
-
-        document.getElementById(
-          "s-price"
-        ).value =
-          data.price || "";
-
-
-        document.getElementById(
-          "s-shipping"
-        ).value =
-          data.shippingText ||
-          "";
-
-
-        const list =
-          document.getElementById(
-            "s-imagesList"
-          );
-
-
-        list.innerHTML =
-          "";
-
-
-        if (
-          Array.isArray(
-            data.images
-          )
-        ) {
-
-          data.images.forEach(
-            image => {
-
-              const div =
-                document.createElement(
-                  "div"
-                );
-
-
-              div.innerHTML = `
-                <input
-                  class="s-img-full"
-                  value="${image}"
-                >
-              `;
-
-
-              list.appendChild(
-                div
-              );
-
-            }
-          );
-
-        }
-
-
-        document.getElementById(
-          "s-saveBtn"
-        ).innerText =
-          "Update Product";
-
-      }
+      document.getElementById(
+        "saveBtn"
+      ).innerText =
+        "Update Product";
 
 
     } catch (error) {
 
       console.error(
         "Error editing product:",
+        error
+      );
+
+    }
+
+  };
+
+
+// ======================================================
+// DELETE MAIN PRODUCT
+// ======================================================
+
+window.deleteProduct =
+  async function (
+    type,
+    id
+  ) {
+
+    if (type !== "main") {
+      return;
+    }
+
+
+    if (
+      !confirm(
+        "Delete this product?"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    try {
+
+      await deleteDoc(
+        doc(
+          db,
+          "products",
+          id
+        )
+      );
+
+
+      loadAdminProducts(
+        "main"
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Error deleting product:",
         error
       );
 
@@ -2478,36 +2841,36 @@ window.cancelEdit =
     let listBox;
 
 
-    if (
-      type === "main"
-    ) {
+    if (type === "main") {
 
       listBox =
         document.getElementById(
           "mainProducts"
         );
 
+      resetMainForm();
+
     }
 
-    else if (
-      type === "special"
-    ) {
+    else if (type === "frames") {
 
       listBox =
         document.getElementById(
-          "specialProducts"
+          "frameProducts"
         );
+
+      resetFrameForm();
 
     }
 
-    else if (
-      type === "accessories"
-    ) {
+    else if (type === "accessories") {
 
       listBox =
         document.getElementById(
           "accessoriesProducts"
         );
+
+      resetAccessoryForm();
 
     }
 
@@ -2517,16 +2880,14 @@ window.cancelEdit =
         ? document.getElementById(
             "mainAddBtn"
           )
-        : type === "special"
+        : type === "frames"
         ? document.getElementById(
-            "specialAddBtn"
+            "framesAddBtn"
           )
         : document.getElementById(
             "accessoriesAddBtn"
           );
 
-
-    // Close form
 
     if (addWrap) {
 
@@ -2536,8 +2897,6 @@ window.cancelEdit =
     }
 
 
-    // Show list
-
     if (listBox) {
 
       listBox.style.display =
@@ -2546,30 +2905,6 @@ window.cancelEdit =
     }
 
 
-    // Sale settings
-
-    if (
-      type === "special"
-    ) {
-
-      const saleBox =
-        document.getElementById(
-          "saleControlBox"
-        );
-
-
-      if (saleBox) {
-
-        saleBox.style.display =
-          "block";
-
-      }
-
-    }
-
-
-    // Reset button
-
     if (btn) {
 
       btn.innerText =
@@ -2577,151 +2912,6 @@ window.cancelEdit =
 
       btn.classList.remove(
         "cancel-btn"
-      );
-
-    }
-
-
-    // Reset form
-
-    if (
-      type === "main"
-    ) {
-
-      resetMainForm();
-
-    }
-
-    else if (
-      type === "special"
-    ) {
-
-      resetSaleForm();
-
-    }
-
-    else if (
-      type === "accessories"
-    ) {
-
-      resetAccessoryForm();
-
-    }
-
-  };
-
-
-// ======================================================
-// DELETE MAIN / SPECIAL PRODUCT
-// ======================================================
-
-window.deleteProduct =
-  async function (
-    type,
-    id
-  ) {
-
-    if (
-      !confirm(
-        "Delete this product?"
-      )
-    ) {
-
-      return;
-
-    }
-
-
-    let colName;
-
-
-    if (
-      type === "main"
-    ) {
-
-      colName =
-        "products";
-
-    }
-
-    else if (
-      type === "special"
-    ) {
-
-      colName =
-        "specialSaleProducts";
-
-    }
-
-    else {
-
-      return;
-
-    }
-
-
-    try {
-
-      await deleteDoc(
-        doc(
-          db,
-          colName,
-          id
-        )
-      );
-
-
-      loadAdminProducts(
-        type
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Error deleting product:",
-        error
-      );
-
-    }
-
-  };
-
-
-// ======================================================
-// SOLD TOGGLE
-// ======================================================
-
-window.toggleSold =
-  async function (
-    id,
-    status
-  ) {
-
-    try {
-
-      await updateDoc(
-        doc(
-          db,
-          "specialSaleProducts",
-          id
-        ),
-        {
-          sold: status
-        }
-      );
-
-
-      console.log(
-        "Sold status updated"
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Error updating sold status:",
-        error
       );
 
     }
@@ -2735,61 +2925,40 @@ window.toggleSold =
 
 function resetMainForm() {
 
-  const name =
-    document.getElementById(
-      "p-name"
-    );
-const subtitle =
-  document.getElementById(
-    "p-subtitle"
-  );
-  const oldPrice =
-    document.getElementById(
-      "p-old"
-    );
+  const ids = [
+    "p-name",
+    "p-subtitle",
+    "p-old",
+    "p-new",
+    "p-shipping",
+    "p-dimensions",
+    "p-flore",
+    "p-suitableScale",
+    "p-capacity",
+    "p-accessories",
+    "p-rotating",
+    "p-lighting",
+    "p-cover",
+    "p-build"
+  ];
 
-  const newPrice =
-    document.getElementById(
-      "p-new"
-    );
+
+  ids.forEach(id => {
+
+    const el =
+      document.getElementById(id);
+
+    if (el) {
+      el.value = "";
+    }
+
+  });
+
 
   const details =
     document.getElementById(
       "p-details"
     );
-
-  const shipping =
-    document.getElementById(
-      "p-shipping"
-    );
-  
-  const btn =
-    document.getElementById(
-      "saveBtn"
-    );
-
-  const list =
-    document.getElementById(
-      "imagesList"
-    );
-
-
-  if (name) {
-    name.value = "";
-  }
-if (subtitle) {
-  subtitle.value = "";
-}
-
-  if (oldPrice) {
-    oldPrice.value = "";
-  }
-
-
-  if (newPrice) {
-    newPrice.value = "";
-  }
-
 
   if (details) {
     details.value =
@@ -2797,76 +2966,21 @@ if (subtitle) {
   }
 
 
-  if (shipping) {
-    shipping.value = "";
-  }
-const dimensions =
-  document.getElementById("p-dimensions");
+  const btn =
+    document.getElementById(
+      "saveBtn"
+    );
 
-const flore =
-  document.getElementById("p-flore");
-
-const suitableScale =
-  document.getElementById("p-suitableScale");
-
-const capacity =
-  document.getElementById("p-capacity");
-
-const accessories =
-  document.getElementById("p-accessories");
-
-const rotating =
-  document.getElementById("p-rotating");
-
-const lighting =
-  document.getElementById("p-lighting");
-
-const cover =
-  document.getElementById("p-cover");
-
-const build =
-  document.getElementById("p-build");
-
-
-if (dimensions) {
-  dimensions.value = "";
-}
-
-if (flore) {
-  flore.value = "";
-}
-
-if (suitableScale) {
-  suitableScale.value = "";
-}
-
-if (capacity) {
-  capacity.value = "";
-}
-
-if (accessories) {
-  accessories.value = "";
-}
-
-if (rotating) {
-  rotating.value = "";
-}
-
-if (lighting) {
-  lighting.value = "";
-}
-
-if (cover) {
-  cover.value = "";
-}
-
-if (build) {
-  build.value = "";
-}
   if (btn) {
     btn.innerText =
       "Save Product";
   }
+
+
+  const list =
+    document.getElementById(
+      "imagesList"
+    );
 
 
   if (list) {
@@ -2891,73 +3005,34 @@ if (build) {
 
 
 // ======================================================
-// SALE IMAGE FIELD
+// RESET FRAME FORM
 // ======================================================
 
-window.addSaleImageField =
-  function () {
-
-    const list =
-      document.getElementById(
-        "s-imagesList"
-      );
-
-
-    if (!list) {
-      return;
-    }
-
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-
-    div.innerHTML = `
-      <input
-        class="s-img-full"
-        placeholder="Image path (newsale)"
-      >
-    `;
-
-
-    list.appendChild(
-      div
-    );
-
-  };
-
-
-// ======================================================
-// RESET SALE FORM
-// ======================================================
-
-function resetSaleForm() {
+function resetFrameForm() {
 
   const name =
     document.getElementById(
-      "s-name"
+      "f-name"
     );
 
   const price =
     document.getElementById(
-      "s-price"
+      "f-price"
     );
 
   const shipping =
     document.getElementById(
-      "s-shipping"
+      "f-shipping"
     );
 
   const btn =
     document.getElementById(
-      "s-saveBtn"
+      "f-saveBtn"
     );
 
   const list =
     document.getElementById(
-      "s-imagesList"
+      "f-imagesList"
     );
 
 
@@ -2978,7 +3053,7 @@ function resetSaleForm() {
 
   if (btn) {
     btn.innerText =
-      "Save Product";
+      "Save Frame";
   }
 
 
@@ -2994,838 +3069,30 @@ function resetSaleForm() {
       i++
     ) {
 
-      addSaleImageField();
+      addFrameImageField();
 
     }
 
+  }
+
+
+  const bar =
+    document.getElementById(
+      "framesEditModeBar"
+    );
+
+
+  if (bar) {
+    bar.style.display =
+      "none";
   }
 
 }
 
 
 // ======================================================
-// SAVE SALE PRODUCT
-// ======================================================
-
-window.saveSaleProduct =
-  async function () {
-
-    const loader =
-      document.getElementById(
-        "s-saveLoader"
-      );
-
-    const btn =
-      document.getElementById(
-        "s-saveBtn"
-      );
-
-    const msg =
-      document.getElementById(
-        "s-saveMsg"
-      );
-
-
-    if (
-      !btn ||
-      btn.disabled
-    ) {
-
-      return;
-
-    }
-
-
-    const name =
-      document.getElementById(
-        "s-name"
-      ).value.trim();
-
-
-    const price =
-      Number(
-        document.getElementById(
-          "s-price"
-        ).value
-      );
-
-
-    const shippingText =
-      document.getElementById(
-        "s-shipping"
-      ).value.trim();
-
-
-    msg.innerText = "";
-
-
-    // VALIDATION
-
-    if (!name) {
-
-      msg.innerText =
-        "Enter product title";
-
-      return;
-
-    }
-
-
-    if (!price) {
-
-      msg.innerText =
-        "Enter price";
-
-      return;
-
-    }
-
-
-    // IMAGES
-
-    const fulls =
-      document.querySelectorAll(
-        ".s-img-full"
-      );
-
-
-    const images = [];
-
-
-    fulls.forEach(
-      input => {
-
-        if (
-          input.value.trim()
-        ) {
-
-          images.push(
-            input.value.trim()
-          );
-
-        }
-
-      }
-    );
-
-
-    if (
-      images.length === 0
-    ) {
-
-      msg.innerText =
-        "Add at least 1 image";
-
-      return;
-
-    }
-
-
-    loader.classList.add(
-      "show"
-    );
-
-    btn.disabled = true;
-
-
-    try {
-
-      // UPDATE
-
-      if (
-        editingId &&
-        editingType === "special"
-      ) {
-
-        await updateDoc(
-          doc(
-            db,
-            "specialSaleProducts",
-            editingId
-          ),
-          {
-
-            name,
-            price,
-            shippingText,
-            images
-
-          }
-        );
-
-      }
-
-
-      // ADD
-
-      else {
-
-        await addDoc(
-          collection(
-            db,
-            "specialSaleProducts"
-          ),
-          {
-
-            name,
-            price,
-            shippingText,
-            images,
-
-            active: true,
-
-            sold: false,
-
-            created:
-              Date.now()
-
-          }
-        );
-
-      }
-
-
-      loader.classList.remove(
-        "show"
-      );
-
-      btn.disabled = false;
-
-
-      msg.innerText =
-        "Saved successfully";
-
-
-      editingId = null;
-      editingType = null;
-
-
-      hideEditMode();
-
-
-      btn.innerText =
-        "Save Product";
-
-
-      resetSaleForm();
-
-
-      setTimeout(() => {
-
-        msg.innerText = "";
-
-      }, 3000);
-
-
-      loadAdminProducts(
-        "special"
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Error saving sale product:",
-        error
-      );
-
-
-      loader.classList.remove(
-        "show"
-      );
-
-      btn.disabled = false;
-
-
-      msg.innerText =
-        "Error saving";
-
-    }
-
-  };
-
-
-// ======================================================
-// INITIAL SALE IMAGE FIELDS
-// ======================================================
-
-window.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    const list =
-      document.getElementById(
-        "s-imagesList"
-      );
-
-
-    if (
-      list &&
-      list.children.length === 0
-    ) {
-
-      for (
-        let i = 0;
-        i < 3;
-        i++
-      ) {
-
-        addSaleImageField();
-
-      }
-
-    }
-
-  }
-);
-
-
-// ======================================================
-// ACCESSORIES ADMIN
-// ======================================================
-
-
-// ------------------------------------------------------
-// ADD ACCESSORY IMAGE FIELD
-// ------------------------------------------------------
-
-window.addAccessoryImageField =
-  function () {
-
-    const list =
-      document.getElementById(
-        "a-imagesList"
-      );
-
-
-    if (!list) {
-      return;
-    }
-
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-
-    div.innerHTML = `
-      <input
-        class="a-img"
-        placeholder="Image path (accessories)"
-      >
-    `;
-
-
-    list.appendChild(
-      div
-    );
-
-  };
-
-
-// ------------------------------------------------------
-// SAVE ACCESSORY
-// ------------------------------------------------------
-
-window.saveAccessoryProduct =
-  async function () {
-
-    const loader =
-      document.getElementById(
-        "a-saveLoader"
-      );
-
-    const btn =
-      document.getElementById(
-        "a-saveBtn"
-      );
-
-    const msg =
-      document.getElementById(
-        "a-saveMsg"
-      );
-
-
-    if (
-      !btn ||
-      btn.disabled
-    ) {
-
-      return;
-
-    }
-
-
-    const name =
-      document.getElementById(
-        "a-name"
-      ).value.trim();
-
-
-    const price =
-      Number(
-        document.getElementById(
-          "a-price"
-        ).value
-      );
-
-
-    msg.innerText = "";
-
-
-    // VALIDATION
-
-    if (!name) {
-
-      msg.innerText =
-        "Enter accessory name";
-
-      return;
-
-    }
-
-
-    if (!price) {
-
-      msg.innerText =
-        "Enter price";
-
-      return;
-
-    }
-
-
-    // IMAGES
-
-    const inputs =
-      document.querySelectorAll(
-        ".a-img"
-      );
-
-
-    const images = [];
-
-
-    inputs.forEach(
-      input => {
-
-        const value =
-          input.value.trim();
-
-
-        if (value) {
-
-          images.push(
-            value
-          );
-
-        }
-
-      }
-    );
-
-
-    if (
-      images.length === 0
-    ) {
-
-      msg.innerText =
-        "Add at least 1 image";
-
-      return;
-
-    }
-
-
-    loader.classList.add(
-      "show"
-    );
-
-    btn.disabled = true;
-
-
-    try {
-
-      // ==========================================
-      // UPDATE
-      // ==========================================
-
-      if (
-        editingId &&
-        editingType === "accessories"
-      ) {
-
-        await updateDoc(
-          doc(
-            db,
-            "accessoriesProducts",
-            editingId
-          ),
-          {
-
-            name,
-            price,
-            images
-
-          }
-        );
-
-      }
-
-
-      // ==========================================
-      // ADD
-      // ==========================================
-
-      else {
-
-        await addDoc(
-          collection(
-            db,
-            "accessoriesProducts"
-          ),
-          {
-
-            name,
-            price,
-            images,
-
-            active: true,
-
-            created:
-              Date.now()
-
-          }
-        );
-
-      }
-
-
-      loader.classList.remove(
-        "show"
-      );
-
-      btn.disabled = false;
-
-
-      msg.innerText =
-        "Saved successfully";
-
-
-      editingId = null;
-      editingType = null;
-
-
-      hideEditMode();
-
-
-      btn.innerText =
-        "Save Product";
-
-
-      resetAccessoryForm();
-
-
-      // CLOSE FORM
-
-      const addWrap =
-        document.getElementById(
-          "add-accessories"
-        );
-
-
-      if (addWrap) {
-
-        addWrap.style.display =
-          "none";
-
-      }
-
-
-      // SHOW LIST
-
-      const listBox =
-        document.getElementById(
-          "accessoriesProducts"
-        );
-
-
-      if (listBox) {
-
-        listBox.style.display =
-          "block";
-
-      }
-
-
-      // RESET ADD BUTTON
-
-      const addBtn =
-        document.getElementById(
-          "accessoriesAddBtn"
-        );
-
-
-      if (addBtn) {
-
-        addBtn.innerText =
-          "+ Add";
-
-        addBtn.classList.remove(
-          "cancel-btn"
-        );
-
-      }
-
-
-      // RELOAD
-
-      loadAdminProducts(
-        "accessories"
-      );
-
-
-      setTimeout(() => {
-
-        msg.innerText = "";
-
-      }, 3000);
-
-
-    } catch (error) {
-
-      console.error(
-        "Error saving accessory:",
-        error
-      );
-
-
-      loader.classList.remove(
-        "show"
-      );
-
-      btn.disabled = false;
-
-
-      msg.innerText =
-        "Error saving product";
-
-    }
-
-  };
-
-
-// ------------------------------------------------------
-// EDIT ACCESSORY
-// ------------------------------------------------------
-
-window.editAccessoryProduct =
-  async function (id) {
-
-    try {
-
-      const snap =
-        await getDoc(
-          doc(
-            db,
-            "accessoriesProducts",
-            id
-          )
-        );
-
-
-      if (!snap.exists()) {
-        return;
-      }
-
-
-      const data =
-        snap.data();
-
-
-      editingId =
-        id;
-
-      editingType =
-        "accessories";
-
-
-      // IMPORTANT:
-      // Set edit state BEFORE toggleAdd()
-
-      toggleAdd(
-        "accessories"
-      );
-
-
-      const bar =
-        document.getElementById(
-          "accessoriesEditModeBar"
-        );
-
-
-      if (bar) {
-
-        bar.style.display =
-          "block";
-
-        bar.innerText =
-          "Editing Product";
-
-      }
-
-
-      // NAME
-
-      document.getElementById(
-        "a-name"
-      ).value =
-        data.name || "";
-
-
-      // PRICE
-
-      document.getElementById(
-        "a-price"
-      ).value =
-        data.price || "";
-
-
-      // IMAGES
-
-      const list =
-        document.getElementById(
-          "a-imagesList"
-        );
-
-
-      list.innerHTML =
-        "";
-
-
-      if (
-        Array.isArray(
-          data.images
-        )
-      ) {
-
-        data.images.forEach(
-          image => {
-
-            const div =
-              document.createElement(
-                "div"
-              );
-
-
-            div.innerHTML = `
-              <input
-                class="a-img"
-                value="${image}"
-              >
-            `;
-
-
-            list.appendChild(
-              div
-            );
-
-          }
-        );
-
-      }
-
-
-      // UPDATE BUTTON
-
-      document.getElementById(
-        "a-saveBtn"
-      ).innerText =
-        "Update Product";
-
-
-      // ADD BUTTON
-
-      const addBtn =
-        document.getElementById(
-          "accessoriesAddBtn"
-        );
-
-
-      if (addBtn) {
-
-        addBtn.innerText =
-          "Cancel";
-
-        addBtn.classList.add(
-          "cancel-btn"
-        );
-
-      }
-
-
-    } catch (error) {
-
-      console.error(
-        "Error editing accessory:",
-        error
-      );
-
-    }
-
-  };
-
-
-// ------------------------------------------------------
-// DELETE ACCESSORY
-// ------------------------------------------------------
-
-window.deleteAccessoryProduct =
-  async function (id) {
-
-    if (
-      !confirm(
-        "Delete this accessory?"
-      )
-    ) {
-
-      return;
-
-    }
-
-
-    try {
-
-      await deleteDoc(
-        doc(
-          db,
-          "accessoriesProducts",
-          id
-        )
-      );
-
-
-      loadAdminProducts(
-        "accessories"
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Error deleting accessory:",
-        error
-      );
-
-    }
-
-  };
-
-
-// ------------------------------------------------------
 // RESET ACCESSORY FORM
-// ------------------------------------------------------
+// ======================================================
 
 function resetAccessoryForm() {
 
