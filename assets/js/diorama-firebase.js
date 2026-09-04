@@ -43,6 +43,49 @@ const whatsappText = encodeURIComponent(message);
     ${imgs}
   </div>
 </div>
+<div class="quick-specs">
+
+  <div class="quick-specs-title">
+    QUICK SPECS
+  </div>
+
+  <div class="spec-row">
+    <span class="spec-icon">📐</span>
+    <span class="spec-name">Dimensions</span>
+    <span class="spec-value">${p.dimensions || "—"}</span>
+  </div>
+
+  <div class="spec-row">
+    <span class="spec-icon">🎯</span>
+    <span class="spec-name">Suitable Scale</span>
+    <span class="spec-value">${p.scale || "—"}</span>
+  </div>
+
+  <div class="spec-row">
+    <span class="spec-icon">🚗</span>
+    <span class="spec-name">Capacity</span>
+    <span class="spec-value">${p.capacity || "—"}</span>
+  </div>
+
+  <div class="spec-row">
+    <span class="spec-icon">💡</span>
+    <span class="spec-name">Light</span>
+    <span class="spec-value">${p.light || "—"}</span>
+  </div>
+
+  <div class="spec-row">
+    <span class="spec-icon">🛡️</span>
+    <span class="spec-name">Cover</span>
+    <span class="spec-value">${p.cover || "—"}</span>
+  </div>
+
+  <div class="spec-row">
+    <span class="spec-icon">🛠️</span>
+    <span class="spec-name">Build</span>
+    <span class="spec-value">${p.build || "—"}</span>
+  </div>
+
+</div>
 <button class="details-btn" onclick="openDetailsSheet(this)">
       Details ▾
     </button>
