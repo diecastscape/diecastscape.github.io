@@ -43,78 +43,81 @@ const whatsappText = encodeURIComponent(message);
     ${imgs}
   </div>
 </div>
+<div class="qs-box">
 
-
-  <div class="quick-specs">
-
-  <div class="quick-specs-title">
+  <div class="qs-title">
     QUICK SPECS
   </div>
 
-  <div class="spec-grid">
+  <div class="qs-grid">
 
     ${p.dimensions ? `
-    <div class="spec-item">
-      <div class="spec-name">Dimensions</div>
-      <div class="spec-value">${p.dimensions}</div>
+    <div class="qs-item">
+      <div class="qs-name">Dimensions</div>
+      <div class="qs-value">${p.dimensions}</div>
     </div>
     ` : ''}
 
     ${p.flore ? `
-    <div class="spec-item">
-      <div class="spec-name">Floor</div>
-      <div class="spec-value">${p.flore}</div>
+    <div class="qs-item">
+      <div class="qs-name">Floor</div>
+      <div class="qs-value">${p.flore}</div>
     </div>
     ` : ''}
 
     ${p.suitableScale ? `
-    <div class="spec-item">
-      <div class="spec-name">Scale model for</div>
-      <div class="spec-value">${p.suitableScale}</div>
+    <div class="qs-item">
+      <div class="qs-name">Scale</div>
+      <div class="qs-value">${p.suitableScale}</div>
     </div>
     ` : ''}
 
     ${p.capacity ? `
-    <div class="spec-item">
-      <div class="spec-name">Capacity</div>
-      <div class="spec-value">${p.capacity}</div>
+    <div class="qs-item">
+      <div class="qs-name">Capacity</div>
+      <div class="qs-value">${p.capacity}</div>
     </div>
     ` : ''}
 
   </div>
 
 
-  <div class="spec-features">
+  ${
+    (p.lighting || p.cover || p.build || p.rotating) ? `
 
-    ${p.lighting ? `
-    <div class="feature-item">
-      <span class="feature-dot"></span>
-      ${p.lighting}
+    <div class="qs-features">
+
+      ${p.lighting ? `
+      <div class="qs-feature">
+        <span class="qs-dot"></span>
+        ${p.lighting}
+      </div>
+      ` : ''}
+
+      ${p.cover ? `
+      <div class="qs-feature">
+        <span class="qs-dot"></span>
+        ${p.cover}
+      </div>
+      ` : ''}
+
+      ${p.build ? `
+      <div class="qs-feature">
+        <span class="qs-dot"></span>
+        ${p.build}
+      </div>
+      ` : ''}
+
+      ${p.rotating ? `
+      <div class="qs-feature">
+        <span class="qs-dot"></span>
+        ${p.rotating}
+      </div>
+      ` : ''}
+
     </div>
-    ` : ''}
 
-    ${p.cover ? `
-    <div class="feature-item">
-      <span class="feature-dot"></span>
-      ${p.cover}
-    </div>
-    ` : ''}
-
-    ${p.build ? `
-    <div class="feature-item">
-      <span class="feature-dot"></span>
-      ${p.build}
-    </div>
-    ` : ''}
-
-    ${p.rotating ? `
-    <div class="feature-item">
-      <span class="feature-dot"></span>
-      ${p.rotating}
-    </div>
-    ` : ''}
-
-  </div>
+  ` : ''}
 
 </div>
 
