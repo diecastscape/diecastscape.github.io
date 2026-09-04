@@ -60,14 +60,14 @@ const whatsappText = encodeURIComponent(message);
 
     ${p.flore ? `
     <div class="qs-item">
-      <div class="qs-name">Floor</div>
+      <div class="qs-name">Floor Type</div>
       <div class="qs-value">${p.flore}</div>
     </div>
     ` : ''}
 
     ${p.suitableScale ? `
     <div class="qs-item">
-      <div class="qs-name">Scale</div>
+      <div class="qs-name">Perfect Scale Modal For</div>
       <div class="qs-value">${p.suitableScale}</div>
     </div>
     ` : ''}
@@ -86,7 +86,20 @@ const whatsappText = encodeURIComponent(message);
     (p.lighting || p.cover || p.build || p.rotating) ? `
 
     <div class="qs-features">
+      ${p.accessories ? `
+      <div class="qs-feature">
+        <span class="qs-dot"></span>
+        ${p.lighting}
+      </div>
+      ` : ''}
 
+	  ${p.rotating ? `
+      <div class="qs-feature">
+        <span class="qs-dot"></span>
+        ${p.rotating}
+      </div>
+      ` : ''}
+	  
       ${p.lighting ? `
       <div class="qs-feature">
         <span class="qs-dot"></span>
@@ -108,12 +121,7 @@ const whatsappText = encodeURIComponent(message);
       </div>
       ` : ''}
 
-      ${p.rotating ? `
-      <div class="qs-feature">
-        <span class="qs-dot"></span>
-        ${p.rotating}
-      </div>
-      ` : ''}
+      
 
     </div>
 
