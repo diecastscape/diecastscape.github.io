@@ -58,7 +58,7 @@ const whatsappText = encodeURIComponent(message);
   <div class="spec-row">
     <span class="spec-icon">🎯</span>
     <span class="spec-name">Suitable Scale</span>
-    <span class="spec-value">${p.scale || "—"}</span>
+    <span class="spec-value">${p.suitableScale || "—"}</span>
   </div>
 
   <div class="spec-row">
@@ -70,7 +70,7 @@ const whatsappText = encodeURIComponent(message);
   <div class="spec-row">
     <span class="spec-icon">💡</span>
     <span class="spec-name">Light</span>
-    <span class="spec-value">${p.light || "—"}</span>
+    <span class="spec-value">${p.lighting || "—"}</span>
   </div>
 
   <div class="spec-row">
