@@ -31,7 +31,12 @@ const whatsappText = encodeURIComponent(message);
 
   return `
   <div class="section">
-    <div class="diorama-title">${p.name}</div>
+  <div class="diorama-title">${p.name}</div>
+
+${p.subtitle ? `
+<div class="diorama-subtitle">${p.subtitle}</div>
+` : ''}
+    
 	
 <div class="slider-wrap">
 
