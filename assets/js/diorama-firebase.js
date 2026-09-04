@@ -43,11 +43,7 @@ const whatsappText = encodeURIComponent(message);
     ${imgs}
   </div>
 </div>
-<div class="quick-specs">
 
-  <div class="quick-specs-title">
-    QUICK SPECS
-  </div>
 
   <div class="quick-specs">
 
@@ -83,7 +79,7 @@ const whatsappText = encodeURIComponent(message);
 
     <span>${p.build || "Disassembled set"}</span>
 
-    <span>${p.rotating || "Rotating display"}</span>
+    <span>${p.rotating || ""}</span>
 
   </div>
 
