@@ -59,7 +59,7 @@ html.light {
 /* Heading */
 
 .quick-specs-title {
-  padding: 8px 10px;
+  padding: 6px 10px;
   background: #f7fafa;
   color: #16838b;
   font-size: 12px;
@@ -70,7 +70,7 @@ html.light {
 /* Row */
 
 .spec-row {
-  min-height: 20px;
+  min-height: 30px;
   display: grid;
   grid-template-columns: 30px 1fr auto;
   align-items: center;
