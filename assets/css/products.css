@@ -1,0 +1,96 @@
+/* =========================
+   QUICK SPECS
+========================= */
+
+.quick-specs {
+  width: 100%;
+  margin-top: 12px;
+  background: #fff;
+  border: 1px solid #e4e4e4;
+  border-radius: 9px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Heading */
+
+.quick-specs-title {
+  padding: 8px 10px;
+  background: #f7fafa;
+  color: #16838b;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Row */
+
+.spec-row {
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  align-items: center;
+
+  padding: 0 10px;
+
+  border-bottom: 1px solid #eeeeee;
+
+  box-sizing: border-box;
+}
+
+.spec-row:last-child {
+  border-bottom: none;
+}
+
+/* Icon */
+
+.spec-icon {
+  width: 24px;
+  text-align: center;
+  font-size: 16px;
+}
+
+/* Name */
+
+.spec-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Firebase value */
+
+.spec-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+  text-align: right;
+  white-space: nowrap;
+}
+
+
+/* Mobile */
+
+@media (max-width: 480px) {
+
+  .quick-specs-title {
+    font-size: 12px;
+    padding: 7px 9px;
+  }
+
+  .spec-row {
+    min-height: 37px;
+    grid-template-columns: 28px 1fr auto;
+    padding: 0 8px;
+  }
+
+  .spec-icon {
+    font-size: 15px;
+  }
+
+  .spec-name,
+  .spec-value {
+    font-size: 12.5px;
+  }
+
+}
