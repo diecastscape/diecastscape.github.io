@@ -42,15 +42,12 @@ html.light {
   --butto-bg:#E6E6E6;
     --butto-tex:#111;
 }
-/* =========================
-   QUICK SPECS
-========================= */
-
 /* =========================================
    PREMIUM QUICK SPECS
+   UNIQUE CLASS NAMES: qs-
    ========================================= */
 
-.quick-specs {
+.qs-box {
   width: 100%;
   margin-top: 6px;
 
@@ -70,7 +67,7 @@ html.light {
    TITLE
    ========================================= */
 
-.quick-specs-title {
+.qs-title {
   padding: 9px 12px;
 
   background: #f7faf9;
@@ -88,7 +85,7 @@ html.light {
    MAIN SPEC GRID
    ========================================= */
 
-.spec-grid {
+.qs-grid {
   display: grid;
 
   grid-template-columns: 1fr 1fr;
@@ -101,7 +98,7 @@ html.light {
    SPEC ITEM
    ========================================= */
 
-.spec-item {
+.qs-item {
   min-height: 48px;
 
   padding: 7px 10px;
@@ -118,16 +115,8 @@ html.light {
 
 /* Vertical divider */
 
-.spec-item:nth-child(odd) {
+.qs-item:nth-child(odd) {
   border-right: 1px solid #eeeeee;
-}
-
-
-/* Remove bottom border from last row */
-
-.spec-item:nth-child(3),
-.spec-item:nth-child(4) {
-  border-bottom: none;
 }
 
 
@@ -135,7 +124,7 @@ html.light {
    SPEC NAME
    ========================================= */
 
-.spec-name {
+.qs-name {
   font-size: 9px;
 
   font-weight: 500;
@@ -154,7 +143,7 @@ html.light {
    SPEC VALUE
    ========================================= */
 
-.spec-value {
+.qs-value {
   font-size: 10px;
 
   font-weight: 700;
@@ -171,8 +160,7 @@ html.light {
    FEATURES AREA
    ========================================= */
 
-.spec-features {
-
+.qs-features {
   display: flex;
 
   flex-wrap: wrap;
@@ -193,8 +181,7 @@ html.light {
    FEATURE
    ========================================= */
 
-.feature-item {
-
+.qs-feature {
   display: inline-flex;
 
   align-items: center;
@@ -227,8 +214,7 @@ html.light {
    SMALL DOT
    ========================================= */
 
-.feature-dot {
-
+.qs-dot {
   width: 5px;
   height: 5px;
 
@@ -238,7 +224,6 @@ html.light {
 
   flex-shrink: 0;
 }
-
 /* Mobile */
 
 @media (max-width: 450px) {
