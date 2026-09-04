@@ -2277,18 +2277,27 @@ window.editProduct =
         ).value =
           data.shippingText ||
           "";
-       // ======================================
+// ======================================
 // QUICK SPECIFICATIONS
 // ======================================
 
 document.getElementById("p-dimensions").value =
   data.dimensions || "";
 
+document.getElementById("p-flore").value =
+  data.flore || "";
+
 document.getElementById("p-suitableScale").value =
   data.suitableScale || "";
 
 document.getElementById("p-capacity").value =
   data.capacity || "";
+
+document.getElementById("p-accessories").value =
+  data.accessories || "";
+
+document.getElementById("p-rotating").value =
+  data.rotating || "";
 
 document.getElementById("p-lighting").value =
   data.lighting || "";
@@ -2298,7 +2307,6 @@ document.getElementById("p-cover").value =
 
 document.getElementById("p-build").value =
   data.build || "";
-
         const list =
           document.getElementById(
             "imagesList"
@@ -2783,11 +2791,20 @@ function resetMainForm() {
 const dimensions =
   document.getElementById("p-dimensions");
 
+const flore =
+  document.getElementById("p-flore");
+
 const suitableScale =
   document.getElementById("p-suitableScale");
 
 const capacity =
   document.getElementById("p-capacity");
+
+const accessories =
+  document.getElementById("p-accessories");
+
+const rotating =
+  document.getElementById("p-rotating");
 
 const lighting =
   document.getElementById("p-lighting");
@@ -2803,12 +2820,24 @@ if (dimensions) {
   dimensions.value = "";
 }
 
+if (flore) {
+  flore.value = "";
+}
+
 if (suitableScale) {
   suitableScale.value = "";
 }
 
 if (capacity) {
   capacity.value = "";
+}
+
+if (accessories) {
+  accessories.value = "";
+}
+
+if (rotating) {
+  rotating.value = "";
 }
 
 if (lighting) {
@@ -2822,7 +2851,6 @@ if (cover) {
 if (build) {
   build.value = "";
 }
-
   if (btn) {
     btn.innerText =
       "Save Product";
