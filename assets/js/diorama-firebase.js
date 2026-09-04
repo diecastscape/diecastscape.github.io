@@ -51,35 +51,68 @@ const whatsappText = encodeURIComponent(message);
     QUICK SPECS
   </div>
 
-  <div class="spec-row">
-    <span class="spec-name">Dimensions</span>
-    <span class="spec-value">${p.dimensions || "—"}</span>
+  <div class="spec-grid">
+
+    ${p.dimensions ? `
+    <div class="spec-item">
+      <div class="spec-name">Dimensions</div>
+      <div class="spec-value">${p.dimensions}</div>
+    </div>
+    ` : ''}
+
+    ${p.flore ? `
+    <div class="spec-item">
+      <div class="spec-name">Floor</div>
+      <div class="spec-value">${p.flore}</div>
+    </div>
+    ` : ''}
+
+    ${p.suitableScale ? `
+    <div class="spec-item">
+      <div class="spec-name">Scale model for</div>
+      <div class="spec-value">${p.suitableScale}</div>
+    </div>
+    ` : ''}
+
+    ${p.capacity ? `
+    <div class="spec-item">
+      <div class="spec-name">Capacity</div>
+      <div class="spec-value">${p.capacity}</div>
+    </div>
+    ` : ''}
+
   </div>
 
-  <div class="spec-row">
-    <span class="spec-name">Floor</span>
-    <span class="spec-value">${p.flore || "—"}</span>
-  </div>
-
-  <div class="spec-row">
-    <span class="spec-name">Scale</span>
-    <span class="spec-value">${p.suitableScale || "—"}</span>
-  </div>
-
-  <div class="spec-row">
-    <span class="spec-name">Capacity</span>
-    <span class="spec-value">${p.capacity || "—"}</span>
-  </div>
 
   <div class="spec-features">
 
-    <span>${p.lighting || "Warm gold light"}</span>
+    ${p.lighting ? `
+    <div class="feature-item">
+      <span class="feature-dot"></span>
+      ${p.lighting}
+    </div>
+    ` : ''}
 
-    <span>${p.cover || "Clear acrylic cover"}</span>
+    ${p.cover ? `
+    <div class="feature-item">
+      <span class="feature-dot"></span>
+      ${p.cover}
+    </div>
+    ` : ''}
 
-    <span>${p.build || "Disassembled set"}</span>
+    ${p.build ? `
+    <div class="feature-item">
+      <span class="feature-dot"></span>
+      ${p.build}
+    </div>
+    ` : ''}
 
-    <span>${p.rotating || ""}</span>
+    ${p.rotating ? `
+    <div class="feature-item">
+      <span class="feature-dot"></span>
+      ${p.rotating}
+    </div>
+    ` : ''}
 
   </div>
 
