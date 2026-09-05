@@ -110,6 +110,12 @@ ${p.subtitle ? `
       </div>
       ` : ''}
 
+${p.cover ? `
+      <div class="qs-feature">
+        <span class="qs-dot"></span>
+        ${p.cover}
+      </div>
+      ` : ''}
       ${p.lighting ? `
       <div class="qs-feature">
         <span class="qs-dot"></span>
@@ -117,12 +123,7 @@ ${p.subtitle ? `
       </div>
       ` : ''}
 
-      ${p.cover ? `
-      <div class="qs-feature">
-        <span class="qs-dot"></span>
-        ${p.cover}
-      </div>
-      ` : ''}
+
 
       ${p.build ? `
       <div class="qs-feature">
