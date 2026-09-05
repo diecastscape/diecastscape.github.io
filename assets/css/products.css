@@ -284,7 +284,7 @@ html.light {
 }
 .section {
   text-align: left;
-  padding: 20px 23px;
+  padding: 12px 20px;
   border-top: 1px solid #5BC0BE;
   content-visibility: auto;
   contain-intrinsic-size: 300px;
