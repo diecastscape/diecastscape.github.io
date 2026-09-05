@@ -138,14 +138,21 @@ ${p.cover ? `
 
 </div>
 
-    <div class="price">
-      <span class="old">₹${p.priceOld}</span>
-      <span class="new">₹${p.priceNew}</span>
-    </div>
+    <div class="price-card">
 
-    <div class="discount">${discount}% OFF · Save ₹${save}</div>
+  <div class="price-main">
+    <span class="old">₹${p.priceOld}</span>
+    <span class="new">₹${p.priceNew}</span>
+  </div>
+
+  <div class="discount-box">
+    <div class="discount">${discount}% OFF</div>
+    <div class="save">Save ₹${save}</div>
+  </div>
+
+</div>
+
     <div class="ship">
-  
   <svg width="18" height="18" viewBox="0 0 256 256">
 <g style="" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
 	<polygon points="28.55,28.74 45,35.39 45,89 2.44,71.81 2.44,38.43 2.44,18.19 18.89,24.84 18.89,24.84 18.89,47.27 28.55,51.18 " style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(226,174,131); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) "/>
@@ -162,28 +169,29 @@ ${p.cover ? `
 	<path d="M 52.542 65.887 c -0.396 0 -0.77 -0.236 -0.927 -0.625 c -0.207 -0.513 0.04 -1.096 0.552 -1.302 l 9.661 -3.902 c 0.513 -0.207 1.095 0.04 1.302 0.552 c 0.207 0.513 -0.04 1.096 -0.552 1.302 l -9.661 3.902 C 52.794 65.863 52.667 65.887 52.542 65.887 z" style="fill: rgb(0,0,0);" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"/>
 </g>
 </svg>
-  
   ${p.shippingText || "Shipping charges applicable"}
 </div>
-
     
-
     
 <div class="customize-row">
-    <a class="buy-btn"
-      href="https://wa.me/918792744018?text=${whatsappText}"
-      target="_blank">
-      Order on WhatsApp
-    </a>
-	
-<a 
-    class="customize-btn"
-    href="https://wa.me/918792744018?text=${encodeURIComponent(
-      `Hi, I want to customize the "${p.name}" display.`
-    )}"
-    target="_blank"
-  >Customize This</a>
-  </div>
+
+  <a class="buy-btn"
+     href="https://wa.me/918792744018?text=${whatsappText}"
+     target="_blank">
+    Order on WhatsApp
+  </a>
+
+  <a class="customize-btn"
+     href="https://wa.me/918792744018?text=${encodeURIComponent(
+       `Hi, I want to customize the "${p.name}" display.`
+     )}"
+     target="_blank">
+    Customize This
+  </a>
+
+</div>
+    
+
   </div>
   `;
 }
