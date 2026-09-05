@@ -284,13 +284,31 @@ html.light {
 }
 .section {
   text-align: left;
-  padding: 15px 13px;
-  border-top: 1px solid #5BC0BE;
+
+  /* Card spacing */
+  margin: 18px 12px;
+  padding: 18px 14px;
+
+  /* Card appearance */
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+
+  /* Soft card shadow */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* Keep content inside card */
+  box-sizing: border-box;
+  overflow: hidden;
+
+  /* Performance */
   content-visibility: auto;
   contain-intrinsic-size: 300px;
-  opacity:0;
-  transform:translateY(8px);
-  animation:fadeProduct .4s ease forwards;
+
+  /* Animation */
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeProduct .4s ease forwards;
 }
 @keyframes fadeProduct{
   to{
