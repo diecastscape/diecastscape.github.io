@@ -289,15 +289,12 @@ html.light {
   margin: 18px 12px;
   padding: 18px 14px;
 
-  /* Card appearance */
-  background: #ffffff;
+  /* Card design */
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 18px;
-
-  /* Soft card shadow */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 
-  /* Keep content inside card */
   box-sizing: border-box;
   overflow: hidden;
 
@@ -309,6 +306,44 @@ html.light {
   opacity: 0;
   transform: translateY(8px);
   animation: fadeProduct .4s ease forwards;
+}
+
+
+/* =========================
+   DESKTOP — 2 CARDS / ROW
+   ========================= */
+@media (min-width: 768px) {
+
+  /* The parent containing all .section cards */
+  .products-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+  }
+
+  .section {
+    margin: 0;
+    width: 100%;
+  }
+}
+
+
+/* =========================
+   MOBILE — 1 CARD / ROW
+   ========================= */
+@media (max-width: 767px) {
+
+  .products-container {
+    display: block;
+    padding: 0;
+  }
+
+  .section {
+    margin: 18px 8px;
+  }
 }
 @keyframes fadeProduct{
   to{
