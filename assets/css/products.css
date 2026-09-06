@@ -886,7 +886,582 @@ color:#c8a95a;
   box-shadow:0 4px 15px rgba(0,0,0,.25);
 }
 
+/* =========================================================
+   DIECAST.SCAPE
+   MINIATURE ACCESSORY CARDS
+   UNIQUE ACC- CLASSES
+========================================================= */
 
+
+/* =========================================================
+   PRODUCT GRID
+========================================================= */
+
+#sale-main {
+
+  width: 100%;
+  max-width: 1400px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 16px;
+
+  padding: 16px;
+
+  margin: 0 auto;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ACCESSORY CARD
+========================================================= */
+
+.acc-card {
+
+  width: 100%;
+  min-width: 0;
+
+  padding: 10px;
+
+  box-sizing: border-box;
+
+  background: var(--card-main);
+
+  border: 1px solid rgba(91, 192, 190, 0.25);
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.06);
+
+  opacity: 0;
+
+  transform: translateY(8px);
+
+  animation:
+    accCardAppear .35s ease forwards;
+}
+
+
+@keyframes accCardAppear {
+
+  to {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+  }
+
+}
+
+
+/* =========================================================
+   PRODUCT NAME
+========================================================= */
+
+.acc-name {
+
+  width: 100%;
+
+  min-height: 34px;
+
+  padding: 2px 2px;
+
+  margin-bottom: 8px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  color: var(--dio-tital);
+
+  font-size: 13px;
+
+  font-weight: 650;
+
+  line-height: 1.25;
+
+  text-align: left;
+
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   IMAGE AREA
+========================================================= */
+
+.acc-image-area {
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  gap: 7px;
+
+  overflow-x: auto;
+
+  overflow-y: hidden;
+
+  scroll-snap-type: x mandatory;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+}
+
+
+.acc-image-area::-webkit-scrollbar {
+
+  display: none;
+
+}
+
+
+/* =========================================================
+   IMAGE BOX
+========================================================= */
+
+.acc-img-box {
+
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  flex: 0 0 100%;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: #0b132b;
+
+  scroll-snap-align: start;
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+========================================================= */
+
+.acc-img-box img {
+
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  transition:
+    transform .25s ease,
+    opacity .25s ease;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   IMAGE HOVER
+========================================================= */
+
+@media (hover: hover) {
+
+  .acc-card:hover
+  .acc-img-box img {
+
+    transform: scale(1.025);
+
+  }
+
+}
+
+
+/* =========================================================
+   IMAGE LOADER
+========================================================= */
+
+.acc-img-loader {
+
+  position: absolute;
+
+  inset: 0;
+
+  display: grid;
+
+  place-items: center;
+
+  background: rgba(10, 15, 30, .78);
+
+  backdrop-filter: blur(5px);
+
+  -webkit-backdrop-filter: blur(5px);
+
+  z-index: 2;
+}
+
+
+.acc-img-loader::after {
+
+  content: "";
+
+  width: 23px;
+
+  height: 23px;
+
+  border-radius: 50%;
+
+  border:
+    3px solid rgba(255,255,255,.2);
+
+  border-top-color: #5BC0BE;
+
+  animation:
+    accSpin .8s linear infinite;
+}
+
+
+@keyframes accSpin {
+
+  to {
+
+    transform: rotate(360deg);
+
+  }
+
+}
+
+
+/* =========================================================
+   PRICE ROW
+========================================================= */
+
+.acc-price-row {
+
+  width: 100%;
+
+  min-height: 34px;
+
+  margin-top: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 5px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.acc-price {
+
+  color: var(--dio-tital);
+
+  font-size: 18px;
+
+  font-weight: 800;
+
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ADDED STATUS
+========================================================= */
+
+.acc-added {
+
+  margin-left: auto;
+
+  padding: 4px 7px;
+
+  border-radius: 20px;
+
+  background: rgba(24,165,88,.10);
+
+  color: #18a558;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ADD TO CART BUTTON
+========================================================= */
+
+.acc-cart-btn {
+
+  width: 100%;
+
+  height: 40px;
+
+  margin-top: 6px;
+
+  padding: 0 10px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #111;
+
+  color: #fff;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition:
+    transform .15s ease,
+    background .15s ease;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   PLUS ICON
+========================================================= */
+
+.acc-cart-plus {
+
+  font-size: 19px;
+
+  font-weight: 500;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
+   BUTTON HOVER
+========================================================= */
+
+@media (hover: hover) {
+
+  .acc-cart-btn:hover {
+
+    background: #242424;
+
+    transform: translateY(-1px);
+
+  }
+
+}
+
+
+/* =========================================================
+   BUTTON PRESS
+========================================================= */
+
+.acc-cart-btn:active {
+
+  transform: scale(.97);
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+  #sale-main {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    padding: 10px;
+
+  }
+
+
+  .acc-card {
+
+    padding: 9px;
+
+    border-radius: 13px;
+
+  }
+
+
+  .acc-name {
+
+    min-height: 34px;
+
+    margin-bottom: 7px;
+
+    font-size: 12px;
+
+  }
+
+
+  .acc-img-box {
+
+    border-radius: 9px;
+
+  }
+
+
+  .acc-img-box img {
+
+    border-radius: 9px;
+
+  }
+
+
+  .acc-price-row {
+
+    margin-top: 7px;
+
+    min-height: 31px;
+
+  }
+
+
+  .acc-price {
+
+    font-size: 17px;
+
+  }
+
+
+  .acc-cart-btn {
+
+    height: 38px;
+
+    margin-top: 6px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+
+  }
+
+
+  .acc-cart-plus {
+
+    font-size: 17px;
+
+  }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  #sale-main {
+
+    gap: 8px;
+
+    padding: 8px;
+
+  }
+
+
+  .acc-card {
+
+    padding: 8px;
+
+  }
+
+
+  .acc-name {
+
+    font-size: 11px;
+
+  }
+
+
+  .acc-price {
+
+    font-size: 16px;
+
+  }
+
+
+  .acc-cart-btn {
+
+    height: 36px;
+
+    font-size: 11px;
+
+  }
+
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 768px) {
+
+  .acc-card {
+
+    padding: 12px;
+
+  }
+
+
+  .acc-name {
+
+    font-size: 13px;
+
+  }
+
+}
   
 
 
