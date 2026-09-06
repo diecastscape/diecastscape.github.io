@@ -37,6 +37,10 @@ function isProductInCart(productId) {
    BUILD PRODUCT CARD
 ========================================= */
 
+/* =========================================
+   ACCESSORY PRODUCT CARD
+========================================= */
+
 function buildSaleHTML(p) {
 
   let imgs = "";
@@ -46,13 +50,18 @@ function buildSaleHTML(p) {
     p.images.forEach(im => {
 
       imgs += `
-        <div class="img-box1">
+        <div class="acc-img-box">
 
-          <div class="img-loader"></div>
+          <div class="acc-img-loader"></div>
 
           <img
             src="/images/frames/${im}.webp"
-            onload="this.previousElementSibling.remove(); this.style.opacity=1"
+            alt="${p.name}"
+            loading="lazy"
+            onload="
+              this.previousElementSibling.remove();
+              this.style.opacity='1';
+            "
             style="opacity:0"
             onclick="openLightbox(this.src)"
           >
@@ -68,24 +77,39 @@ function buildSaleHTML(p) {
   /* Check existing cart */
 
   const addedText = isProductInCart(p.id)
-    ? `<span class="added-cart-text">Added ✔️</span>`
+    ? `
+      <span class="acc-added">
+        Added ✓
+      </span>
+      `
     : "";
 
 
   return `
-    <div class="shop-card">
 
-      <div class="diorama-title1">
+    <div class="acc-card">
+
+      <!-- PRODUCT NAME -->
+
+      <div class="acc-name">
         ${p.name}
       </div>
 
-      <div class="slide">
+
+      <!-- PRODUCT IMAGE -->
+
+      <div class="acc-image-area">
+
         ${imgs}
+
       </div>
 
-      <div class="price">
 
-        <span class="new1">
+      <!-- PRICE + STATUS -->
+
+      <div class="acc-price-row">
+
+        <span class="acc-price">
           ₹${p.price}/-
         </span>
 
@@ -94,48 +118,48 @@ function buildSaleHTML(p) {
       </div>
 
 
-      <!-- BUTTON REMAINS EXACTLY THE SAME -->
+      <!-- CART BUTTON -->
 
       <button
-        class="add-cart-btn"
+        class="acc-cart-btn"
         onclick="
           addProductInfo(
             '${p.id}',
             '${p.name}',
             ${p.price}
           );
-          showAddedStatus('${p.id}');
+          showAccessoryAdded('${p.id}');
         "
       >
-        Add to Cart
+        <span class="acc-cart-plus">+</span>
+        <span>Add to Cart</span>
       </button>
 
     </div>
+
   `;
 }
 
-
 /* =========================================
-   SHOW ADDED STATUS AFTER CLICK
+   SHOW ACCESSORY ADDED STATUS
 ========================================= */
 
-window.showAddedStatus = function(productId) {
+window.showAccessoryAdded = function(productId) {
 
-  const productCards =
-    document.querySelectorAll(".shop-card");
+  const cards =
+    document.querySelectorAll(".acc-card");
 
 
-  productCards.forEach(card => {
+  cards.forEach(card => {
 
     const button =
-      card.querySelector(".add-cart-btn");
+      card.querySelector(".acc-cart-btn");
 
     if (!button) return;
 
 
     /*
-      Check the onclick attribute to identify
-      the product ID of this card
+      Identify product using existing Firebase ID
     */
 
     if (
@@ -143,24 +167,28 @@ window.showAddedStatus = function(productId) {
       button.getAttribute("onclick").includes(productId)
     ) {
 
-      const price =
-        card.querySelector(".price");
+      const priceRow =
+        card.querySelector(".acc-price-row");
 
-      if (!price) return;
+      if (!priceRow) return;
 
 
-      /* Don't add it twice */
+      /* Don't add twice */
 
       if (
-        price.querySelector(".added-cart-text")
+        priceRow.querySelector(".acc-added")
       ) {
         return;
       }
 
 
-      price.insertAdjacentHTML(
+      priceRow.insertAdjacentHTML(
         "beforeend",
-        `<span class="added-cart-text">Added ✔️</span>`
+        `
+        <span class="acc-added">
+          Added ✓
+        </span>
+        `
       );
 
     }
@@ -168,8 +196,6 @@ window.showAddedStatus = function(productId) {
   });
 
 };
-
-
 /* =========================================
    LOAD PRODUCTS
 ========================================= */
