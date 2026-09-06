@@ -124,13 +124,16 @@ ${p.cover ? `
       ` : ''}
 
 
-
       ${p.build ? `
       <div class="qs-feature">
         <span class="qs-dot"></span>
         ${p.build}
       </div>
-      ` : ''}
+      ` : ''}  
+	  <div class="qs-feature">
+        <span class="qs-dot"></span>
+        quick assemble set🛠
+      </div>
 
     </div>
 
