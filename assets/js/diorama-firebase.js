@@ -23,7 +23,7 @@ const imgs = p.images.map(im => `
 
 const message =
 `Hi Diecast.scape,
-I would like to place an order for the ${p.name},
+I would like to place an order for the ${p.name} - ${p.subtitle},
 priced at ₹${p.priceNew} (${discount}% discount).
 Kindly let me know the payment details.`;
 
@@ -183,7 +183,7 @@ ${p.cover ? `
 
   <a class="customize-btn"
      href="https://wa.me/918792744018?text=${encodeURIComponent(
-       `Hi, I want to customize the "${p.name}" display.`
+       `Hi, I want to customize the "${p.name} - ${p.subtitle}".`
      )}"
      target="_blank">
     Customize This
