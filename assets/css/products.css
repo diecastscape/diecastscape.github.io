@@ -769,7 +769,7 @@ color:#c8a95a;
   display: flex;
 
 
-  gap: 10px;
+  gap: 7px;
 
   margin-top: 14px;
 }
@@ -790,9 +790,9 @@ color:#c8a95a;
   align-items: center;
   justify-content: center;
 
-  border-radius: 13px;
+  border-radius: 10px;
 
-  font-size: 17px;
+  font-size: 13px;
   font-weight: 700;
 
   text-decoration: none;
