@@ -385,9 +385,11 @@ function removeItem(id) {
     delete cart[id];
 
     saveCart();
-
-    renderCart();
-    updateFrameAddedStatus();
+  renderCart();
+updateFrameAddedStatus();
+if (window.updateAccessoryAddedStatus) {
+    updateAccessoryAddedStatus();
+}
 
 }
 function showToast(message){
@@ -549,7 +551,11 @@ clearCartBtn.addEventListener("click", () => {
         saveCart();
 
         renderCart();
-        updateFrameAddedStatus();
+updateFrameAddedStatus();
+
+if (window.updateAccessoryAddedStatus) {
+    updateAccessoryAddedStatus();
+}
 
     }
 
