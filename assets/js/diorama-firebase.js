@@ -132,7 +132,7 @@ ${p.cover ? `
       ` : ''}  
 	  <div class="qs-feature">
         <span class="qs-dot"></span>
-        quick assemble set🛠
+       With 12v adapter for hassle-free setup
       </div>
 
     </div>
