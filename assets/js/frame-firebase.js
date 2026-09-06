@@ -144,58 +144,100 @@ function buildSaleHTML(p) {
    SHOW ACCESSORY ADDED STATUS
 ========================================= */
 
+
 window.showAccessoryAdded = function(productId) {
 
-  const cards =
-    document.querySelectorAll(".acc-card");
-
+  const cards = document.querySelectorAll(".acc-card");
 
   cards.forEach(card => {
 
-    const button =
-      card.querySelector(".acc-cart-btn");
+    const button = card.querySelector(".acc-cart-btn");
 
     if (!button) return;
-
-
-    /*
-      Identify product using existing Firebase ID
-    */
 
     if (
       button.getAttribute("onclick") &&
       button.getAttribute("onclick").includes(productId)
     ) {
 
-      const priceRow =
-        card.querySelector(".acc-price-row");
+      const priceRow = card.querySelector(".acc-price-row");
 
       if (!priceRow) return;
 
+      if (!priceRow.querySelector(".acc-added")) {
 
-      /* Don't add twice */
+        priceRow.insertAdjacentHTML(
+          "beforeend",
+          `<span class="acc-added">Added ✓</span>`
+        );
 
-      if (
-        priceRow.querySelector(".acc-added")
-      ) {
-        return;
       }
-
-
-      priceRow.insertAdjacentHTML(
-        "beforeend",
-        `
-        <span class="acc-added">
-          Added ✓
-        </span>
-        `
-      );
 
     }
 
   });
 
 };
+
+
+window.updateAccessoryAddedStatus = function() {
+
+  const cart =
+    JSON.parse(localStorage.getItem("diecastscape_cart")) || {};
+
+  document.querySelectorAll(".acc-card").forEach(card => {
+
+    const button =
+      card.querySelector(".acc-cart-btn");
+
+    if (!button) return;
+
+    const priceRow =
+      card.querySelector(".acc-price-row");
+
+    if (!priceRow) return;
+
+    const onclick =
+      button.getAttribute("onclick") || "";
+
+    const match =
+      onclick.match(
+        /addProductInfo\(\s*['"]([^'"]+)['"]/
+      );
+
+    if (!match) return;
+
+    const productId = match[1];
+
+    const addedText =
+      priceRow.querySelector(".acc-added");
+
+    if (cart[productId]) {
+
+      if (!addedText) {
+
+        priceRow.insertAdjacentHTML(
+          "beforeend",
+          `<span class="acc-added">Added ✓</span>`
+        );
+
+      }
+
+    } else {
+
+      if (addedText) {
+
+        addedText.remove();
+
+      }
+
+    }
+
+  });
+
+};
+
+
 /* =========================================
    LOAD PRODUCTS
 ========================================= */
