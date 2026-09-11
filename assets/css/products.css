@@ -340,11 +340,7 @@ html.light {
     transform:none;
   }
 }
-#sale-main {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
+
 
 /* CARD */
 
@@ -377,19 +373,7 @@ html.light {
 
 @media (max-width: 767px) {
 
-  #sale-main {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-
-    width: 100%;
-    max-width: 100%;
-
-    padding: 12px;
-    margin: 0;
-
-    box-sizing: border-box;
-  }
+  
 
   .shop-card {
     width: 100%;
@@ -404,19 +388,7 @@ html.light {
 
 @media (min-width: 768px) {
 
-  #sale-main {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 20px;
-
-    width: 100%;
-    max-width: 1400px;
-
-    padding: 18px 20px;
-    margin: 0 auto;
-
-    box-sizing: border-box;
-  }
+  
 
   .shop-card {
     width: 100%;
@@ -458,12 +430,7 @@ html.light {
   line-height: 1.3;
   letter-spacing: 0.15px;
 }
-.diorama-title1 {
-  font-size: 12px;
-  font-weight: 550;
-  color:#111;
-  margin-bottom: 10px;
-}
+
 .slider {
   display: flex;
   gap: 10px;
@@ -624,9 +591,7 @@ html.light {
   border-radius: 12px;
 }
 
-.ship svg{
-color:#c8a95a;
-}
+
 /* =========================================================
    PRICE + DISCOUNT + SHIPPING + ACTION BUTTONS
    MOBILE FIRST
@@ -754,7 +719,7 @@ color:#c8a95a;
 .ship svg {
   width: 13px;
   height: 13px;
-
+color:#c8a95a;
   flex-shrink: 0;
 }
 
@@ -995,7 +960,63 @@ color:#c8a95a;
 
   word-break: break-word;
 }
+/* =========================================================
+   ACCESSORY PRODUCT QUANTITY
+   Example: Set of 5
+========================================================= */
 
+.acc-quantity {
+
+  width: 100%;
+
+  margin-top: -4px;
+  margin-bottom: 2px;
+
+  padding: 0 2px;
+
+  box-sizing: border-box;
+
+  color: #555;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  text-align: left;
+
+}
+
+
+/* =========================================================
+   ACCESSORY SUBTITLE
+   Example: 3D Printed | Miniature
+========================================================= */
+
+.acc-subtitle {
+
+  width: 100%;
+
+  padding: 0 2px;
+
+  margin-bottom: 7px;
+
+  box-sizing: border-box;
+
+  color: #888;
+
+  font-size: 9px;
+
+  font-weight: 500;
+
+  line-height: 1.25;
+
+  text-align: left;
+
+  letter-spacing: 0.15px;
+
+}
 
 /* =========================================================
    IMAGE AREA
