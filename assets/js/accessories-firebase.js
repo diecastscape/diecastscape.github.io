@@ -24,18 +24,18 @@ function buildSaleHTML(p) {
   if (Array.isArray(p.images)) {
 
     p.images.forEach(im => {
+    imgs += `
+        <div class="acc-img-box">
 
-      imgs += `
-        <div class="img-box2">
-
-          <div class="img-loader"></div>
+          <div class="acc-img-loader"></div>
 
           <img
             src="/images/frame/${im}.webp"
             alt="${p.name}"
+            loading="lazy"
             onload="
               this.previousElementSibling.remove();
-              this.style.opacity = 1;
+              this.style.opacity='1';
             "
             style="opacity:0"
             onclick="openLightbox(this.src)"
@@ -52,37 +52,33 @@ function buildSaleHTML(p) {
   // ==========================================
   // PRODUCT CARD
   // ==========================================
-
+    
   return `
 
-  <div class="shop-card">
+  <div class="acc-card">
 
-    <!-- Product Name -->
+      <!-- PRODUCT NAME -->
 
-    <div class="diorama-title1">
-
-      ${p.name}
-
-    </div>
+      <div class="acc-name">
+        ${p.name}
+      </div>
 
 
-    <!-- Image Slider -->
+    <div class="acc-image-area">
 
-    <div class="slider1">
-      ${imgs}
-    </div>
+        ${imgs}
 
-    <!-- Price -->
+      </div>
 
-    <div class="price">
+<div class="acc-price-row">
 
-      <span class="new1">
+        <span class="acc-price">
+          ₹${p.price}/-
+        </span>
 
-        ₹${p.price}/-
+        ${addedText}
 
-      </span>
-
-    </div>
+      </div>
 
 <!-- Quantity Controls -->
 
