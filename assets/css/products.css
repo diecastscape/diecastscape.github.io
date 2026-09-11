@@ -226,13 +226,6 @@ html.light {
 }
 /* Mobile */
 
-@media (max-width: 450px) {
-
-  
-
-  
-  
-}
 @media (min-width: 650px) {
   
   #lightbox img {
@@ -468,58 +461,8 @@ html.light {
   transition: opacity .25s ease;
 }
 .slide {
-  
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.slider1 {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch; /* smooth on mobile */
-}
-.slider1 img {
-  width: 160px;
-  aspect-ratio: 1 / 1;     /* ✅ correct ratio */
-  height: auto;
-  object-fit: cover;       /* keeps nice crop */
-  border-radius: 12px;
-  scroll-snap-align: start;
-  background: #000;
-  flex-shrink: 0;          /* prevents squish */
-  will-change: transform; /* smoother scroll */
-}
-/* Image wrapper */
-.img-box1 {
-  position: relative;
-  width: 160px;             /* same as .slider img */
-  aspect-ratio: 1 / 1;     /* keep your ratio */
-  border-radius: 12px;
-  overflow: hidden;
-  background: #0b132b;
-  flex-shrink: 0;
-}
-/* Actual image */
-.img-box1 img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-  transition: opacity .25s ease;
-}
-.img-box2 {
-  position: relative;
-  width: 160px;             /* same as .slider img */
-  aspect-ratio: 1 / 1;     /* keep your ratio */
-  border-radius: 12px;
-  overflow: hidden;
-  background: #0b132b;
-  flex-shrink: 0;
-}
+
 /* Glass blur loader */
 .img-loader {
   position: absolute;
@@ -936,10 +879,8 @@ color:#c8a95a;
 
   width: 100%;
 
-  min-height: 34px;
-
   padding: 2px 2px;
-
+margin-top:15px;
   margin-bottom: 8px;
 
   box-sizing: border-box;
@@ -950,7 +891,7 @@ color:#c8a95a;
 
   color: var(--dio-tital);
 
-  font-size: 13px;
+  font-size: 12px;
 
   font-weight: 650;
 
@@ -969,7 +910,7 @@ color:#c8a95a;
 
   width: 100%;
 
-  margin-top: -4px;
+  margin-top: 2px;
   margin-bottom: 2px;
 
   padding: 0 2px;
@@ -1069,7 +1010,7 @@ color:#c8a95a;
 
   overflow: hidden;
 
-  border-radius: 10px;
+  border-radius: 9px;
 
   background: #0b132b;
 
@@ -1091,7 +1032,7 @@ color:#c8a95a;
 
   object-fit: cover;
 
-  border-radius: 10px;
+  border-radius: ppx;
 
   transition:
     transform .25s ease,
@@ -1353,29 +1294,7 @@ color:#c8a95a;
   }
 
 
-  .acc-name {
-
-    min-height: 34px;
-
-    margin-bottom: 7px;
-
-    font-size: 12px;
-
-  }
-
-
-  .acc-img-box {
-
-    border-radius: 9px;
-
-  }
-
-
-  .acc-img-box img {
-
-    border-radius: 9px;
-
-  }
+  
 
 
   .acc-price-row {
@@ -1419,48 +1338,6 @@ color:#c8a95a;
 /* =========================================================
    SMALL PHONES
 ========================================================= */
-
-@media (max-width: 360px) {
-
-  #sale-main {
-
-    gap: 8px;
-
-    padding: 8px;
-
-  }
-
-
-  .acc-card {
-
-    padding: 8px;
-
-  }
-
-
-  .acc-name {
-
-    font-size: 11px;
-
-  }
-
-
-  .acc-price {
-
-    font-size: 16px;
-
-  }
-
-
-  .acc-cart-btn {
-
-    height: 36px;
-
-    font-size: 11px;
-
-  }
-
-}
 
 
 /* =========================================================
