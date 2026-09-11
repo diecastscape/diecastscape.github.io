@@ -76,7 +76,7 @@ function buildSaleHTML(p) {
           ₹${p.price}/-
         </span>
 
-        ${addedText}
+      
 
       </div>
 
