@@ -461,7 +461,6 @@
   class="section-panel"
 >
 
-
   <div class="section-top">
 
     <h3>
@@ -491,11 +490,14 @@
   <div class="border-top"></div>
 
 
+  <!-- ACCESSORIES PRODUCT LIST -->
+
   <div id="accessoriesProducts"></div>
 
 
-
-  <!-- ACCESSORY FORM -->
+  <!-- ==================================================
+       ACCESSORY ADD / EDIT FORM
+  ================================================== -->
 
   <div
     id="add-accessories"
@@ -504,6 +506,8 @@
 
     <div id="accessoriesAddForm">
 
+
+      <!-- EDIT MODE -->
 
       <h4
         id="accessoriesEditModeBar"
@@ -514,17 +518,46 @@
       </h4>
 
 
+      <!-- NAME -->
 
       <h5>
-        Name
+        Product Name
       </h5>
 
       <input
         id="a-name"
-        placeholder="Accessory name"
+        type="text"
+        placeholder="Example: Traffic Cones"
       >
 
 
+      <!-- QUANTITY / PACK -->
+
+      <h5>
+        Quantity / Pack
+      </h5>
+
+      <input
+        id="a-quantity"
+        type="text"
+        placeholder="Example: Set of 5"
+      >
+
+
+      <!-- SUBTITLE -->
+
+      <h5>
+        Subtitle
+      </h5>
+
+      <input
+        id="a-subtitle"
+        type="text"
+        placeholder="Example: 3D Printed | Miniature"
+      >
+
+
+      <!-- PRICE -->
 
       <h5>
         Price
@@ -532,19 +565,23 @@
 
       <input
         id="a-price"
-        placeholder="Price"
+        type="number"
+        inputmode="numeric"
+        placeholder="Example: 99"
       >
 
 
+      <!-- IMAGES -->
 
       <h5>
-        Image path
+        Image Paths
       </h5>
 
       <div id="a-imagesList"></div>
 
 
       <button
+        type="button"
         onclick="addAccessoryImageField()"
         class="primary-btn"
       >
@@ -552,7 +589,10 @@
       </button>
 
 
+      <!-- SAVE -->
+
       <button
+        type="button"
         onclick="saveAccessoryProduct()"
         class="primary-btn"
         id="a-saveBtn"
@@ -561,7 +601,10 @@
       </button>
 
 
+      <!-- CANCEL -->
+
       <button
+        type="button"
         onclick="cancelEdit('accessories')"
         class="primary-btn secondary-btn"
       >
@@ -569,11 +612,15 @@
       </button>
 
 
+      <!-- LOADER -->
+
       <div
         id="a-saveLoader"
         class="loader"
       ></div>
 
+
+      <!-- MESSAGE -->
 
       <p
         class="center-msg"
@@ -586,8 +633,6 @@
   </div>
 
 </div>
-
-
 
 <!-- ==================================================
      FRAMES SECTION
