@@ -16,7 +16,6 @@ function buildSaleHTML(p) {
 
   let imgs = "";
 
-
   // ==========================================
   // PRODUCT IMAGES
   // ==========================================
@@ -24,7 +23,8 @@ function buildSaleHTML(p) {
   if (Array.isArray(p.images)) {
 
     p.images.forEach(im => {
-    imgs += `
+
+      imgs += `
         <div class="acc-img-box">
 
           <div class="acc-img-loader"></div>
@@ -50,76 +50,134 @@ function buildSaleHTML(p) {
 
 
   // ==========================================
+  // PRODUCT NAME
+  // ==========================================
+
+  const productName =
+    p.name || "";
+
+
+  // ==========================================
+  // QUANTITY TEXT
+  // Example: Set of 5
+  // ==========================================
+
+  const quantityText =
+    p.quantity || "";
+
+
+  // ==========================================
+  // SUBTITLE
+  // Example: 3D Printed | Miniature
+  // ==========================================
+
+  const subtitleText =
+    p.subtitle || "";
+
+
+  // ==========================================
   // PRODUCT CARD
   // ==========================================
-    
+
   return `
 
-  <div class="acc-card">
+    <div class="acc-card">
+
 
       <!-- PRODUCT NAME -->
 
       <div class="acc-name">
-        ${p.name}
+        ${productName}
       </div>
 
 
-    <div class="acc-image-area">
+      <!-- QUANTITY -->
+
+      ${
+        quantityText
+          ? `
+            <div class="acc-quantity">
+              ${quantityText}
+            </div>
+          `
+          : ""
+      }
+
+
+      <!-- SUBTITLE -->
+
+      ${
+        subtitleText
+          ? `
+            <div class="acc-subtitle">
+              ${subtitleText}
+            </div>
+          `
+          : ""
+      }
+
+
+      <!-- PRODUCT IMAGE -->
+
+      <div class="acc-image-area">
 
         ${imgs}
 
       </div>
 
-<div class="acc-price-row">
+
+      <!-- PRICE -->
+
+      <div class="acc-price-row">
 
         <span class="acc-price">
-          ₹${p.price}/-
+          ₹${Number(p.price)}/-
         </span>
-
-      
 
       </div>
 
-<!-- Quantity Controls -->
 
-<div class="cart-controls">
+      <!-- QUANTITY CONTROLS -->
 
-  <button
-    class="maines-cart-btn"
-    onclick="changeAccessoryQty(
-      '${p.id}',
-      '${String(p.name).replace(/'/g, "\\'")}',
-      ${Number(p.price)},
-      -1
-    )"
-  >
-    −
-  </button>
+      <div class="cart-controls">
 
-
-  <span
-    class="qty"
-    id="qty-${p.id}"
-  >
-    0
-  </span>
+        <button
+          class="maines-cart-btn"
+          onclick="changeAccessoryQty(
+            '${p.id}',
+            '${String(p.name).replace(/'/g, "\\'")}',
+            ${Number(p.price)},
+            -1
+          )"
+        >
+          −
+        </button>
 
 
-  <button
-    class="add-cart-btn"
-    onclick="changeAccessoryQty(
-      '${p.id}',
-      '${String(p.name).replace(/'/g, "\\'")}',
-      ${Number(p.price)},
-      1
-    )"
-  >
-    Add
-  </button>
+        <span
+          class="qty"
+          id="qty-${p.id}"
+        >
+          0
+        </span>
 
-</div>
 
-  </div>
+        <button
+          class="add-cart-btn"
+          onclick="changeAccessoryQty(
+            '${p.id}',
+            '${String(p.name).replace(/'/g, "\\'")}',
+            ${Number(p.price)},
+            1
+          )"
+        >
+          Add
+        </button>
+
+      </div>
+
+
+    </div>
 
   `;
 
