@@ -590,40 +590,41 @@ window.addEventListener(
 // ======================================================
 // EDIT MODE BAR
 // ======================================================
+function showEditMode(type, editing = false) {
 
-function showEditMode(
-  type,
-  editing = false
-) {
-
-  let id;
-
+  let id = null;
 
   if (type === "main") {
 
-    id =
-      "mainEditModeBar";
+    id = "mainEditModeBar";
 
   }
 
   else if (type === "frames") {
 
-    id =
-      "framesEditModeBar";
+    id = "framesEditModeBar";
+
+  }
+
+  else if (type === "accessories") {
+
+    id = "accessoriesEditModeBar";
 
   }
 
 
+  if (!id) {
+    return;
+  }
+
+
   const bar =
-    document.getElementById(
-      id
-    );
+    document.getElementById(id);
 
 
   if (bar) {
 
-    bar.style.display =
-      "block";
+    bar.style.display = "block";
 
     bar.innerText =
       editing
@@ -633,8 +634,6 @@ function showEditMode(
   }
 
 }
-
-
 function hideEditMode() {
 
   const main =
@@ -968,450 +967,602 @@ window.saveProduct = async function () {
 };
 
 
+
+
 // ======================================================
 // ACCESSORY IMAGE FIELD
 // ======================================================
 
-window.addAccessoryImageField =
-  function () {
+window.addAccessoryImageField = function (value = "") {
 
-    const list =
-      document.getElementById(
-        "a-imagesList"
-      );
+  const list =
+    document.getElementById(
+      "a-imagesList"
+    );
 
-    if (!list) {
-      return;
-    }
-
-
-    const div =
-      document.createElement(
-        "div"
-      );
+  if (!list) {
+    return;
+  }
 
 
-    div.innerHTML = `
-      <input
-        class="a-img"
-        placeholder="Image path (accessories)"
-      >
-    `;
+  const div =
+    document.createElement("div");
 
 
-    list.appendChild(div);
+  div.innerHTML = `
+    <input
+      class="a-img"
+      type="text"
+      placeholder="Image filename"
+      value="${value}"
+    >
+  `;
 
-  };
+
+  list.appendChild(div);
+
+};
 
 
 // ======================================================
-// SAVE ACCESSORY
+// SAVE / UPDATE ACCESSORY PRODUCT
 // ======================================================
 
 window.saveAccessoryProduct =
-  async function () {
+async function () {
 
-    const loader =
-      document.getElementById(
-        "a-saveLoader"
-      );
+  const loader =
+    document.getElementById(
+      "a-saveLoader"
+    );
 
-    const btn =
-      document.getElementById(
-        "a-saveBtn"
-      );
+  const btn =
+    document.getElementById(
+      "a-saveBtn"
+    );
 
-    const msg =
-      document.getElementById(
-        "a-saveMsg"
-      );
-
-
-    if (
-      !btn ||
-      btn.disabled
-    ) {
-
-      return;
-
-    }
-
-
-    const name =
-      document.getElementById(
-        "a-name"
-      ).value.trim();
-
-
-    const price =
-      Number(
-        document.getElementById(
-          "a-price"
-        ).value
-      );
-
-
-    if (msg) {
-      msg.innerText = "";
-    }
-
-
-    if (!name) {
-
-      msg.innerText =
-        "Enter accessory name";
-
-      return;
-
-    }
-
-
-    if (!price) {
-
-      msg.innerText =
-        "Enter price";
-
-      return;
-
-    }
-
-
-    const inputs =
-      document.querySelectorAll(
-        ".a-img"
-      );
-
-
-    const images = [];
-
-
-    inputs.forEach(
-      input => {
-
-        const value =
-          input.value.trim();
-
-
-        if (value) {
-          images.push(value);
-        }
-
-      }
+  const msg =
+    document.getElementById(
+      "a-saveMsg"
     );
 
 
-    if (
-      images.length === 0
-    ) {
+  if (!btn || btn.disabled) {
+    return;
+  }
 
+
+  // ====================================================
+  // FORM VALUES
+  // ====================================================
+
+  const name =
+    document
+      .getElementById("a-name")
+      .value
+      .trim();
+
+
+  const quantity =
+    document
+      .getElementById("a-quantity")
+      .value
+      .trim();
+
+
+  const subtitle =
+    document
+      .getElementById("a-subtitle")
+      .value
+      .trim();
+
+
+  const price =
+    Number(
+      document
+        .getElementById("a-price")
+        .value
+    );
+
+
+  if (msg) {
+    msg.innerText = "";
+  }
+
+
+  // ====================================================
+  // VALIDATION
+  // ====================================================
+
+  if (!name) {
+
+    if (msg) {
+      msg.innerText =
+        "Enter accessory name";
+    }
+
+    return;
+  }
+
+
+  if (!quantity) {
+
+    if (msg) {
+      msg.innerText =
+        "Enter quantity / pack";
+    }
+
+    return;
+  }
+
+
+  if (!subtitle) {
+
+    if (msg) {
+      msg.innerText =
+        "Enter subtitle";
+    }
+
+    return;
+  }
+
+
+  if (
+    !Number.isFinite(price) ||
+    price <= 0
+  ) {
+
+    if (msg) {
+      msg.innerText =
+        "Enter a valid price";
+    }
+
+    return;
+  }
+
+
+  // ====================================================
+  // IMAGES
+  // ====================================================
+
+  const imageInputs =
+    document.querySelectorAll(
+      ".a-img"
+    );
+
+
+  const images = [];
+
+
+  imageInputs.forEach(input => {
+
+    const value =
+      input.value.trim();
+
+    if (value) {
+      images.push(value);
+    }
+
+  });
+
+
+  if (images.length === 0) {
+
+    if (msg) {
       msg.innerText =
         "Add at least 1 image";
+    }
 
-      return;
+    return;
+  }
+
+
+  // ====================================================
+  // START LOADER
+  // ====================================================
+
+  if (loader) {
+    loader.classList.add("show");
+  }
+
+  btn.disabled = true;
+
+
+  try {
+
+    // ==================================================
+    // EDIT EXISTING PRODUCT
+    // ==================================================
+
+    if (
+      editingId &&
+      editingType === "accessories"
+    ) {
+
+      await updateDoc(
+
+        doc(
+          db,
+          "accessoriesProducts",
+          editingId
+        ),
+
+        {
+          name,
+          quantity,
+          subtitle,
+          price,
+          images
+        }
+
+      );
 
     }
+
+
+    // ==================================================
+    // ADD NEW PRODUCT
+    // ==================================================
+
+    else {
+
+      await addDoc(
+
+        collection(
+          db,
+          "accessoriesProducts"
+        ),
+
+        {
+          name,
+          quantity,
+          subtitle,
+          price,
+          images,
+
+          active: true,
+
+          created:
+            Date.now()
+        }
+
+      );
+
+    }
+
+
+    // ==================================================
+    // SUCCESS
+    // ==================================================
+
+    if (loader) {
+      loader.classList.remove("show");
+    }
+
+    btn.disabled = false;
+
+
+    if (msg) {
+
+      msg.innerText =
+        editingId
+          ? "Product updated successfully ✔"
+          : "Product added successfully ✔";
+
+    }
+
+
+    editingId = null;
+    editingType = null;
+
+
+    hideEditMode();
+
+
+    btn.innerText =
+      "Save Product";
+
+
+    resetAccessoryForm();
+
+
+    // Hide add/edit form
+
+    const addWrap =
+      document.getElementById(
+        "add-accessories"
+      );
+
+    if (addWrap) {
+
+      addWrap.style.display =
+        "none";
+
+    }
+
+
+    // Show products list
+
+    const listBox =
+      document.getElementById(
+        "accessoriesProducts"
+      );
+
+    if (listBox) {
+
+      listBox.style.display =
+        "block";
+
+    }
+
+
+    // Reset top add button
+
+    const addBtn =
+      document.getElementById(
+        "accessoriesAddBtn"
+      );
+
+    if (addBtn) {
+
+      addBtn.innerText =
+        "+ Add";
+
+      addBtn.classList.remove(
+        "cancel-btn"
+      );
+
+    }
+
+
+    // Reload products
+
+    loadAdminProducts(
+      "accessories"
+    );
+
+
+    setTimeout(() => {
+
+      if (msg) {
+        msg.innerText = "";
+      }
+
+    }, 3000);
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Error saving accessory:",
+      error
+    );
 
 
     if (loader) {
-      loader.classList.add("show");
+      loader.classList.remove("show");
     }
 
-    btn.disabled = true;
+    btn.disabled = false;
 
 
-    try {
-
-      if (
-        editingId &&
-        editingType === "accessories"
-      ) {
-
-        await updateDoc(
-          doc(
-            db,
-            "accessoriesProducts",
-            editingId
-          ),
-          {
-            name,
-            price,
-            images
-          }
-        );
-
-      }
-
-      else {
-
-        await addDoc(
-          collection(
-            db,
-            "accessoriesProducts"
-          ),
-          {
-
-            name,
-            price,
-            images,
-
-            active: true,
-
-            created:
-              Date.now()
-
-          }
-        );
-
-      }
-
-
-      if (loader) {
-        loader.classList.remove("show");
-      }
-
-      btn.disabled = false;
-
-
-      msg.innerText =
-        "Saved successfully";
-
-
-      editingId = null;
-      editingType = null;
-
-
-      hideEditMode();
-
-
-      btn.innerText =
-        "Save Product";
-
-
-      resetAccessoryForm();
-
-
-      const addWrap =
-        document.getElementById(
-          "add-accessories"
-        );
-
-      if (addWrap) {
-        addWrap.style.display =
-          "none";
-      }
-
-
-      const listBox =
-        document.getElementById(
-          "accessoriesProducts"
-        );
-
-      if (listBox) {
-        listBox.style.display =
-          "block";
-      }
-
-
-      const addBtn =
-        document.getElementById(
-          "accessoriesAddBtn"
-        );
-
-      if (addBtn) {
-
-        addBtn.innerText =
-          "+ Add";
-
-        addBtn.classList.remove(
-          "cancel-btn"
-        );
-
-      }
-
-
-      loadAdminProducts(
-        "accessories"
-      );
-
-
-      setTimeout(() => {
-
-        msg.innerText = "";
-
-      }, 3000);
-
-
-    } catch (error) {
-
-      console.error(
-        "Error saving accessory:",
-        error
-      );
-
-
-      if (loader) {
-        loader.classList.remove("show");
-      }
-
-      btn.disabled = false;
-
+    if (msg) {
 
       msg.innerText =
         "Error saving product";
 
     }
 
-  };
+  }
+
+};
 
 
 // ======================================================
-// EDIT ACCESSORY
+// EDIT ACCESSORY PRODUCT
 // ======================================================
 
 window.editAccessoryProduct =
-  async function (id) {
+async function (id) {
 
-    try {
+  try {
 
-      const snap =
-        await getDoc(
-          doc(
-            db,
-            "accessoriesProducts",
-            id
-          )
-        );
+    const snap =
+      await getDoc(
 
+        doc(
+          db,
+          "accessoriesProducts",
+          id
+        )
 
-      if (!snap.exists()) {
-        return;
-      }
-
-
-      const data =
-        snap.data();
-
-
-      editingId =
-        id;
-
-      editingType =
-        "accessories";
-
-
-      toggleAdd(
-        "accessories"
       );
 
 
-      const bar =
-        document.getElementById(
-          "accessoriesEditModeBar"
-        );
+    if (!snap.exists()) {
+
+      console.error(
+        "Accessory does not exist"
+      );
+
+      return;
+
+    }
 
 
-      if (bar) {
-
-        bar.style.display =
-          "block";
-
-        bar.innerText =
-          "Editing Product";
-
-      }
+    const data =
+      snap.data();
 
 
+    // ==================================================
+    // SET EDIT STATE
+    // ==================================================
+
+    editingId =
+      id;
+
+    editingType =
+      "accessories";
+
+
+    // ==================================================
+    // OPEN FORM
+    // ==================================================
+
+    const addWrap =
       document.getElementById(
-        "a-name"
-      ).value =
-        data.name || "";
+        "add-accessories"
+      );
 
-
+    const listBox =
       document.getElementById(
-        "a-price"
-      ).value =
-        data.price || "";
+        "accessoriesProducts"
+      );
 
 
-      const list =
-        document.getElementById(
-          "a-imagesList"
-        );
+    if (addWrap) {
+
+      addWrap.style.display =
+        "block";
+
+    }
 
 
-      list.innerHTML =
-        "";
+    if (listBox) {
+
+      listBox.style.display =
+        "none";
+
+    }
+
+
+    showEditMode(
+      "accessories",
+      true
+    );
+
+
+    // ==================================================
+    // LOAD PRODUCT DATA
+    // ==================================================
+
+    document.getElementById(
+      "a-name"
+    ).value =
+      data.name || "";
+
+
+    document.getElementById(
+      "a-quantity"
+    ).value =
+      data.quantity || "";
+
+
+    document.getElementById(
+      "a-subtitle"
+    ).value =
+      data.subtitle || "";
+
+
+    document.getElementById(
+      "a-price"
+    ).value =
+      data.price ?? "";
+
+
+    // ==================================================
+    // LOAD IMAGES
+    // ==================================================
+
+    const imagesList =
+      document.getElementById(
+        "a-imagesList"
+      );
+
+
+    if (imagesList) {
+
+      imagesList.innerHTML = "";
 
 
       if (
-        Array.isArray(
-          data.images
-        )
+        Array.isArray(data.images) &&
+        data.images.length
       ) {
 
-        data.images.forEach(
-          image => {
+        data.images.forEach(image => {
 
-            const div =
-              document.createElement(
-                "div"
-              );
+          addAccessoryImageField(
+            image
+          );
 
-
-            div.innerHTML = `
-              <input
-                class="a-img"
-                value="${image}"
-              >
-            `;
-
-
-            list.appendChild(
-              div
-            );
-
-          }
-        );
+        });
 
       }
 
+      else {
 
+        addAccessoryImageField();
+
+      }
+
+    }
+
+
+    // ==================================================
+    // UPDATE SAVE BUTTON
+    // ==================================================
+
+    const saveBtn =
       document.getElementById(
         "a-saveBtn"
-      ).innerText =
+      );
+
+
+    if (saveBtn) {
+
+      saveBtn.innerText =
         "Update Product";
 
-
-      const addBtn =
-        document.getElementById(
-          "accessoriesAddBtn"
-        );
+    }
 
 
-      if (addBtn) {
+    // ==================================================
+    // UPDATE +ADD BUTTON
+    // ==================================================
 
-        addBtn.innerText =
-          "Cancel";
-
-        addBtn.classList.add(
-          "cancel-btn"
-        );
-
-      }
+    const addBtn =
+      document.getElementById(
+        "accessoriesAddBtn"
+      );
 
 
-    } catch (error) {
+    if (addBtn) {
 
-      console.error(
-        "Error editing accessory:",
-        error
+      addBtn.innerText =
+        "Cancel";
+
+      addBtn.classList.add(
+        "cancel-btn"
       );
 
     }
 
-  };
 
+  }
 
+  catch (error) {
+
+    console.error(
+      "Error editing accessory:",
+      error
+    );
+
+  }
+
+};
 // ======================================================
 // EDIT FRAME
 // ======================================================
@@ -3101,6 +3252,16 @@ function resetAccessoryForm() {
       "a-name"
     );
 
+  const quantity =
+    document.getElementById(
+      "a-quantity"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "a-subtitle"
+    );
+
   const price =
     document.getElementById(
       "a-price"
@@ -3116,9 +3277,24 @@ function resetAccessoryForm() {
       "a-saveBtn"
     );
 
+  const msg =
+    document.getElementById(
+      "a-saveMsg"
+    );
+
 
   if (name) {
     name.value = "";
+  }
+
+
+  if (quantity) {
+    quantity.value = "";
+  }
+
+
+  if (subtitle) {
+    subtitle.value = "";
   }
 
 
@@ -3127,18 +3303,29 @@ function resetAccessoryForm() {
   }
 
 
+  if (msg) {
+    msg.innerText = "";
+  }
+
+
   if (btn) {
 
     btn.innerText =
       "Save Product";
 
+    btn.disabled =
+      false;
+
   }
 
 
+  // ====================================================
+  // RESET IMAGE FIELDS
+  // ====================================================
+
   if (list) {
 
-    list.innerHTML =
-      "";
+    list.innerHTML = "";
 
 
     for (
@@ -3154,6 +3341,10 @@ function resetAccessoryForm() {
   }
 
 
+  // ====================================================
+  // HIDE EDIT BAR
+  // ====================================================
+
   const bar =
     document.getElementById(
       "accessoriesEditModeBar"
@@ -3168,7 +3359,6 @@ function resetAccessoryForm() {
   }
 
 }
-
 
 // ======================================================
 // INITIAL ACCESSORY IMAGE FIELDS
