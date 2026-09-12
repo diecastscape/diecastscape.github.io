@@ -61,6 +61,8 @@ function addProductInfo(id, name, price) {
     renderCart();
 
 }
+
+
 // =====================================================
 // CHANGE ACCESSORY QUANTITY
 // =====================================================
@@ -102,9 +104,6 @@ function changeAccessoryQty(id, name, price, change) {
         if (cart[id]) {
 
             cart[id].qty--;
-
-            // Remove product completely
-            // when quantity reaches 0
 
             if (cart[id].qty <= 0) {
 
@@ -158,9 +157,11 @@ function updateAccessoryQuantity(id) {
 
 }
 
+
 // =====================================================
 // REMOVE PRODUCT
 // =====================================================
+
 function removeItem(id) {
 
     delete cart[id];
@@ -172,7 +173,6 @@ function removeItem(id) {
     updateAccessoryQuantity(id);
 
 }
-
 
 
 // =====================================================
@@ -187,15 +187,15 @@ function getShipping(total) {
 
     }
 
-    // Below ₹500 = ₹100 shipping
-    if (total < 500) {
+    // ₹650 or more = FREE SHIPPING
+    if (total >= 650) {
 
-        return 100;
+        return 0;
 
     }
 
-    // ₹500 or more = FREE SHIPPING
-    return 0;
+    // Below ₹650 = ₹69 shipping
+    return 69;
 
 }
 
@@ -211,6 +211,7 @@ function renderCart() {
 
     if (!list) return;
 
+
     list.innerHTML = "";
 
     let total = 0;
@@ -223,7 +224,8 @@ function renderCart() {
     getCartProducts().forEach(item => {
 
         const subTotal =
-            Number(item.price) * Number(item.qty);
+            Number(item.price) *
+            Number(item.qty);
 
         total += subTotal;
 
@@ -296,19 +298,10 @@ function renderCart() {
 
 
     // =================================================
-    // DISCOUNT
+    // NO DISCOUNT FOR NOW
     // =================================================
 
-    let discount = 0;
-
-
-    // ₹1000+ = 25% OFF
-    if (total >= 1000) {
-
-        discount =
-            Math.round(total * 0.25);
-
-    }
+    const discount = 0;
 
 
     // =================================================
@@ -326,165 +319,203 @@ function renderCart() {
     // CART SUMMARY
     // =================================================
 
-    document.getElementById(
-        "summaryTotal"
-    ).innerText =
-        "₹" + total;
+    const summaryTotal =
+        document.getElementById("summaryTotal");
 
+    if (summaryTotal) {
 
-    // Delivery
-    if (total >= 500) {
-
-        document.getElementById(
-            "shippingPrice"
-        ).innerText = "FREE";
-
-    } else {
-
-        document.getElementById(
-            "shippingPrice"
-        ).innerText =
-            "₹" + shipping;
+        summaryTotal.innerText =
+            "₹" + total;
 
     }
 
 
-    // Total before discount
-    document.getElementById(
-        "bottomTotal"
-    ).innerText =
-        "₹" + finalPrice;
-
-
-    // Discount
-    document.getElementById(
-        "offerSave"
-    ).innerText =
-        "-₹" + discount;
-
-
-    // Final order total
-    document.getElementById(
-        "grandTotal"
-    ).innerText =
-        "₹" + grandTotal;
-
-
-    document.getElementById(
-        "grandTotal1"
-    ).innerText =
-        "₹" + grandTotal;
-
-
     // =================================================
-    // PROGRESSIVE OFFER BAR
+    // DELIVERY
     // =================================================
 
+    const shippingPrice =
+        document.getElementById("shippingPrice");
 
-    // -------------------------------------------------
-    // ₹0 – ₹499
-    // GOAL = FREE SHIPPING AT ₹500
-    // -------------------------------------------------
+    if (shippingPrice) {
 
-    if (total < 500) {
+        if (total >= 650) {
 
-        const remaining =
-            500 - total;
-
-
-        offerCount.innerText =
-            `₹${total} / ₹500`;
-
-
-        offerText.innerText =
-            `Add ₹${remaining} more to unlock FREE SHIPPING`;
-
-
-        offerApply.innerText =
-            "";
-
-
-        offerApply2.innerText =
-            "";
-
-
-        if (offerApply3) {
-
-            offerApply3.innerText =
-                "₹100 Delivery";
-
-        }
-
-
-        offerBar.style.width =
-            (total / 500 * 100) + "%";
-
-    }
-
-
-    // -------------------------------------------------
-    // ₹500 – ₹999
-    // GOAL = 25% OFF AT ₹1000
-    // -------------------------------------------------
-
-    else if (total < 1000) {
-
-        const remaining =
-            1000 - total;
-
-
-        offerCount.innerText =
-            `₹${total} / ₹1000`;
-
-
-        offerText.innerText =
-            `FREE SHIPPING UNLOCKED. Add ₹${remaining} more to get 25% OFF`;
-
-
-        offerApply.innerText =
-            "";
-
-
-        offerApply2.innerText =
-            "FREE SHIPPING";
-
-
-        if (offerApply3) {
-
-            offerApply3.innerText =
+            shippingPrice.innerText =
                 "FREE";
 
+        } else if (total > 0) {
+
+            shippingPrice.innerText =
+                "₹69";
+
+        } else {
+
+            shippingPrice.innerText =
+                "₹0";
+
         }
-
-
-        // Progress from ₹500 to ₹1000
-        offerBar.style.width =
-            ((total - 500) / 500 * 100) + "%";
 
     }
 
 
-    // -------------------------------------------------
-    // ₹1000+
-    // 25% OFF + FREE SHIPPING
-    // -------------------------------------------------
+    // =================================================
+    // TOTAL BEFORE DISCOUNT
+    // =================================================
+
+    const bottomTotal =
+        document.getElementById("bottomTotal");
+
+    if (bottomTotal) {
+
+        bottomTotal.innerText =
+            "₹" + finalPrice;
+
+    }
+
+
+    // =================================================
+    // DISCOUNT
+    // =================================================
+
+    const offerSave =
+        document.getElementById("offerSave");
+
+    if (offerSave) {
+
+        offerSave.innerText =
+            "-₹0";
+
+    }
+
+
+    // =================================================
+    // FINAL ORDER TOTAL
+    // =================================================
+
+    const grandTotalElement =
+        document.getElementById("grandTotal");
+
+    if (grandTotalElement) {
+
+        grandTotalElement.innerText =
+            "₹" + grandTotal;
+
+    }
+
+
+    const grandTotal1 =
+        document.getElementById("grandTotal1");
+
+    if (grandTotal1) {
+
+        grandTotal1.innerText =
+            "₹" + grandTotal;
+
+    }
+
+
+    // =================================================
+    // FREE SHIPPING PROGRESS
+    // =================================================
+
+    if (total < 650) {
+
+        const remaining =
+            650 - total;
+
+
+        if (offerCount) {
+
+            offerCount.innerText =
+                `₹${total} / ₹650`;
+
+        }
+
+
+        if (offerText) {
+
+            offerText.innerText =
+                `Add ₹${remaining} more to unlock FREE SHIPPING`;
+
+        }
+
+
+        if (offerApply) {
+
+            offerApply.innerText =
+                "";
+
+        }
+
+
+        if (offerApply2) {
+
+            offerApply2.innerText =
+                "";
+
+        }
+
+
+        if (offerApply3) {
+
+            offerApply3.innerText =
+                "₹69 Delivery";
+
+        }
+
+
+        if (offerBar) {
+
+            offerBar.style.width =
+                Math.min(
+                    (total / 650) * 100,
+                    100
+                ) + "%";
+
+        }
+
+    }
+
+
+    // =================================================
+    // ₹650+
+    // FREE SHIPPING UNLOCKED
+    // NO MORE OFFER
+    // =================================================
 
     else {
 
-        offerCount.innerText =
-            `₹${total}`;
+        if (offerCount) {
+
+            offerCount.innerText =
+                `₹${total} / ₹650`;
+
+        }
 
 
-        offerText.innerText =
-            `🎉 25% OFF + FREE SHIPPING UNLOCKED`;
+        if (offerText) {
+
+            offerText.innerText =
+                "🎉 FREE SHIPPING UNLOCKED";
+
+        }
 
 
-        offerApply.innerText =
-            "25% OFF";
+        if (offerApply) {
+
+            offerApply.innerText =
+                "";
+
+        }
 
 
-        offerApply2.innerText =
-            "25% OFF";
+        if (offerApply2) {
+
+            offerApply2.innerText =
+                "FREE SHIPPING";
+
+        }
 
 
         if (offerApply3) {
@@ -495,8 +526,12 @@ function renderCart() {
         }
 
 
-        offerBar.style.width =
-            "100%";
+        if (offerBar) {
+
+            offerBar.style.width =
+                "100%";
+
+        }
 
     }
 
@@ -507,50 +542,76 @@ function renderCart() {
 
     if (total === 0) {
 
-        document.getElementById(
-            "shippingPrice"
-        ).innerText =
-            "₹0";
+        if (shippingPrice) {
+
+            shippingPrice.innerText =
+                "₹0";
+
+        }
 
 
-        document.getElementById(
-            "offerSave"
-        ).innerText =
-            "-₹0";
+        if (offerSave) {
+
+            offerSave.innerText =
+                "-₹0";
+
+        }
 
 
-        document.getElementById(
-            "grandTotal"
-        ).innerText =
-            "₹0";
+        if (grandTotalElement) {
+
+            grandTotalElement.innerText =
+                "₹0";
+
+        }
 
 
-        document.getElementById(
-            "grandTotal1"
-        ).innerText =
-            "₹0";
+        if (grandTotal1) {
+
+            grandTotal1.innerText =
+                "₹0";
+
+        }
 
 
-        document.getElementById(
-            "bottomTotal"
-        ).innerText =
-            "₹0";
+        if (bottomTotal) {
+
+            bottomTotal.innerText =
+                "₹0";
+
+        }
 
 
-        offerCount.innerText =
-            "₹0 / ₹500";
+        if (offerCount) {
+
+            offerCount.innerText =
+                "₹0 / ₹650";
+
+        }
 
 
-        offerText.innerText =
-            "Add ₹500 to unlock FREE SHIPPING";
+        if (offerText) {
+
+            offerText.innerText =
+                "Add ₹650 to unlock FREE SHIPPING";
+
+        }
 
 
-        offerApply.innerText =
-            "";
+        if (offerApply) {
+
+            offerApply.innerText =
+                "";
+
+        }
 
 
-        offerApply2.innerText =
-            "";
+        if (offerApply2) {
+
+            offerApply2.innerText =
+                "";
+
+        }
 
 
         if (offerApply3) {
@@ -561,46 +622,86 @@ function renderCart() {
         }
 
 
-        offerBar.style.width =
-            "0%";
+        if (offerBar) {
+
+            offerBar.style.width =
+                "0%";
+
+        }
 
 
-        cartBox.classList.remove("open");
+        const cartBox =
+            document.getElementById("cartBox");
 
-        cartOverlay.classList.remove("show");
+        const cartOverlay =
+            document.getElementById("cartOverlay");
 
-        document.body.style.overflow =
-            "";
+        const cartHeader =
+            document.getElementById("cartHeader");
 
 
-        cartHeader.style.display =
-            "none";
+        if (cartBox) {
+
+            cartBox.classList.remove("open");
+
+        }
+
+
+        if (cartOverlay) {
+
+            cartOverlay.classList.remove("show");
+
+        }
+
+
+        document.body.style.overflow = "";
+
+
+        if (cartHeader) {
+
+            cartHeader.style.display =
+                "none";
+
+        }
 
     }
 
     else {
 
-        cartHeader.style.display =
-            "flex";
+        const cartHeader =
+            document.getElementById("cartHeader");
+
+        if (cartHeader) {
+
+            cartHeader.style.display =
+                "flex";
+
+        }
 
     }
-// =================================================
-// UPDATE ALL ACCESSORY QUANTITY COUNTERS
-// =================================================
 
-document
-    .querySelectorAll(".qty")
-    .forEach(qtyElement => {
 
-        const id =
-            qtyElement.id.replace("qty-", "");
+    // =================================================
+    // UPDATE ALL ACCESSORY QUANTITY COUNTERS
+    // =================================================
 
-        qtyElement.innerText =
-            cart[id]
-                ? cart[id].qty
-                : 0;
+    document
+        .querySelectorAll(".qty")
+        .forEach(qtyElement => {
 
-    });
+            const id =
+                qtyElement.id.replace(
+                    "qty-",
+                    ""
+                );
+
+            qtyElement.innerText =
+                cart[id]
+                    ? cart[id].qty
+                    : 0;
+
+        });
+
 }
 
 
@@ -639,7 +740,8 @@ function checkoutCart() {
     products.forEach(item => {
 
         const subTotal =
-            item.price * item.qty;
+            Number(item.price) *
+            Number(item.qty);
 
 
         total += subTotal;
@@ -648,10 +750,8 @@ function checkoutCart() {
         message +=
             `• ${item.name}%0A`;
 
-
         message +=
             `Qty : ${item.qty}%0A`;
-
 
         message +=
             `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
@@ -660,24 +760,23 @@ function checkoutCart() {
 
 
     // =================================================
-    // OFFER SYSTEM
+    // SHIPPING
     // =================================================
 
     const shipping =
         getShipping(total);
 
 
-    let discount = 0;
+    // =================================================
+    // NO DISCOUNT
+    // =================================================
+
+    const discount = 0;
 
 
-    // ₹1000+ = 25% OFF
-    if (total >= 1000) {
-
-        discount =
-            Math.round(total * 0.25);
-
-    }
-
+    // =================================================
+    // GRAND TOTAL
+    // =================================================
 
     const grandTotal =
         total +
@@ -692,30 +791,23 @@ function checkoutCart() {
     let offerText = "";
 
 
-    if (total < 500) {
+    if (total < 650) {
 
         offerText =
-            "Add ₹500 to unlock FREE SHIPPING";
-
-    }
-
-    else if (total < 1000) {
-
-        offerText =
-            "FREE SHIPPING UNLOCKED";
+            `Add ₹${650 - total} more to unlock FREE SHIPPING`;
 
     }
 
     else {
 
         offerText =
-            "25% OFF + FREE SHIPPING UNLOCKED";
+            "FREE SHIPPING UNLOCKED";
 
     }
 
 
     // =================================================
-    // WHATSAPP ORDER
+    // WHATSAPP ORDER SUMMARY
     // =================================================
 
     message +=
@@ -726,23 +818,23 @@ function checkoutCart() {
         `Product Total : ₹${total}%0A`;
 
 
-    if (total >= 500) {
+    if (total >= 650) {
 
         message +=
-            `Shipping : FREE%0A`;
+            "Shipping : FREE%0A";
 
     }
 
     else {
 
         message +=
-            `Shipping : ₹${shipping}%0A`;
+            "Shipping : ₹69%0A";
 
     }
 
 
     message +=
-        `Discount : -₹${discount}%0A`;
+        "Discount : -₹0%0A";
 
 
     message +=
@@ -760,6 +852,10 @@ function checkoutCart() {
     message +=
         "Share me your payment option.";
 
+
+    // =================================================
+    // WHATSAPP
+    // =================================================
 
     window.open(
 
@@ -846,7 +942,10 @@ window.addEventListener(
             );
 
 
-        // Render saved cart
+        // =================================================
+        // RENDER SAVED CART
+        // =================================================
+
         renderCart();
 
 
