@@ -2,10 +2,13 @@
 // ACCESSORIES CART SYSTEM
 // =====================================================
 
-const CART_KEY = "diecastscape_accessories_cart";
+const CART_KEY =
+    "diecastscape_accessories_cart";
 
 let cart =
-    JSON.parse(localStorage.getItem(CART_KEY)) || {};
+    JSON.parse(
+        localStorage.getItem(CART_KEY)
+    ) || {};
 
 
 // =====================================================
@@ -35,13 +38,16 @@ function getCartProducts() {
 
 // =====================================================
 // ADD PRODUCT TO CART
+//
+// quantityText = Firebase quantity
+// Example: "Set of 5"
 // =====================================================
 
 function addProductInfo(
     id,
     name,
     price,
-    quantity = ""
+    quantityText = ""
 ) {
 
     if (cart[id]) {
@@ -53,28 +59,17 @@ function addProductInfo(
         cart[id] = {
 
             id: id,
+
             name: name,
+
             price: Number(price),
 
-            // Firebase quantity text
-            // Example: Set of 5
-            quantity: quantity || "",
+            qty: 1,
 
-            // Cart quantity
-            qty: 1
+            quantityText:
+                quantityText || ""
 
         };
-
-    }
-
-    // Update quantity text if missing
-    if (
-        !cart[id].quantity &&
-        quantity
-    ) {
-
-        cart[id].quantity =
-            quantity;
 
     }
 
@@ -93,9 +88,10 @@ function changeAccessoryQty(
     id,
     name,
     price,
-    quantity,
-    change
+    change,
+    quantityText = ""
 ) {
+
 
     // ==========================================
     // ADD
@@ -107,19 +103,33 @@ function changeAccessoryQty(
 
             cart[id].qty++;
 
+            // Update Firebase set quantity
+            // if it was missing in old cart data
+
+            if (
+                !cart[id].quantityText &&
+                quantityText
+            ) {
+
+                cart[id].quantityText =
+                    quantityText;
+
+            }
+
         } else {
 
             cart[id] = {
 
                 id: id,
+
                 name: name,
+
                 price: Number(price),
 
-                // Firebase quantity
-                quantity:
-                    quantity || "",
+                qty: 1,
 
-                qty: 1
+                quantityText:
+                    quantityText || ""
 
             };
 
@@ -138,7 +148,10 @@ function changeAccessoryQty(
 
             cart[id].qty--;
 
-            // Remove completely at 0
+
+            // Remove completely
+            // when quantity reaches zero
+
             if (cart[id].qty <= 0) {
 
                 delete cart[id];
@@ -158,7 +171,7 @@ function changeAccessoryQty(
 
 
     // ==========================================
-    // UPDATE CART + QUANTITY UI
+    // UPDATE CART
     // ==========================================
 
     renderCart();
@@ -217,21 +230,70 @@ function removeItem(id) {
 
 function getShipping(total) {
 
+    // Empty cart
+
     if (total <= 0) {
 
         return 0;
 
     }
 
-    // ₹650 or more = FREE SHIPPING
+
+    // ₹650 or more
+    // FREE SHIPPING
+
     if (total >= 650) {
 
         return 0;
 
     }
 
-    // Below ₹650 = ₹69
+
+    // Below ₹650
+    // Fixed ₹69 shipping
+
     return 69;
+
+}
+
+
+// =====================================================
+// CLOSE CART
+// =====================================================
+
+function closeCart() {
+
+    const cartBox =
+        document.getElementById(
+            "cartBox"
+        );
+
+    const cartOverlay =
+        document.getElementById(
+            "cartOverlay"
+        );
+
+
+    if (cartBox) {
+
+        cartBox.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    if (cartOverlay) {
+
+        cartOverlay.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    document.body.style.overflow =
+        "";
 
 }
 
@@ -252,6 +314,7 @@ function renderCart() {
 
     list.innerHTML = "";
 
+
     let total = 0;
 
 
@@ -259,84 +322,86 @@ function renderCart() {
     // CART ITEMS
     // =================================================
 
-    getCartProducts().forEach(item => {
-
-        const subTotal =
-            Number(item.price) *
-            Number(item.qty);
-
-        total += subTotal;
+    getCartProducts().forEach(
+        item => {
 
 
-        list.innerHTML += `
+            const subTotal =
+                Number(item.price) *
+                Number(item.qty);
 
-        <div class="cart-item">
 
-            <div class="cart-row">
+            total += subTotal;
 
-                <div class="cart-name">
 
-                    ${item.name}
+            // Firebase set quantity
+            //
+            // Example:
+            // Set of 5
+            //
+            // If old cart data does not have
+            // quantityText, simply don't show it.
+
+            const setText =
+                item.quantityText
+                    ? item.quantityText
+                    : "";
+
+
+            list.innerHTML += `
+
+            <div class="cart-item">
+
+                <div class="cart-row">
+
+
+                    <div class="cart-name">
+
+                        ${item.name}
+
+                    </div>
+
+
+                    <div class="cart-price">
+
+                        ₹${item.price}
+                        ×
+                        ${item.qty}
+                        =
+                        ₹${subTotal}
+
+                    </div>
+
 
                 </div>
 
-                <div class="cart-price">
 
-                    ₹${item.price} × ${item.qty}
-                    = ₹${subTotal}
+                ${
+                    setText
+                        ? `
+                        <div class="cart-set-info">
+                            ${setText} × ${item.qty} qty
+                        </div>
+                        `
+                        : ""
+                }
 
-                </div>
+
+                <button
+                    class="remove-item"
+                    onclick="removeItem('${item.id}')">
+
+                    Remove
+
+                </button>
+
 
             </div>
 
-            <button
-                class="remove-item"
-                onclick="removeItem('${item.id}')">
+            `;
 
-                Remove
-
-            </button>
-
-        </div>
-
-        `;
-
-    });
-
-
-    // =================================================
-    // OFFER ELEMENTS
-    // =================================================
-
-    const offerBar =
-        document.getElementById(
-            "offerBar"
-        );
-
-    const offerCount =
-        document.getElementById(
-            "offerCount"
-        );
-
-    const offerText =
-        document.getElementById(
-            "offerText"
-        );
-
-    const offerApply =
-        document.getElementById(
-            "offerApply"
-        );
-
-    const offerApply2 =
-        document.getElementById(
-            "offerApply2"
-        );
-
-    const offerApply3 =
-        document.getElementById(
-            "offerApply3"
-        );
+        }
+    );
 
 
     // =================================================
@@ -348,18 +413,28 @@ function renderCart() {
 
 
     // =================================================
-    // NO DISCOUNT
-    // =================================================
-
-    const discount = 0;
-
-
-    // =================================================
-    // DIRECT ORDER TOTAL
+    // FINAL ORDER TOTAL
     // =================================================
 
     const grandTotal =
         total + shipping;
+
+
+    // =================================================
+    // ITEMS TOTAL
+    // =================================================
+
+    const summaryTotal =
+        document.getElementById(
+            "summaryTotal"
+        );
+
+    if (summaryTotal) {
+
+        summaryTotal.innerText =
+            "₹" + total;
+
+    }
 
 
     // =================================================
@@ -398,7 +473,7 @@ function renderCart() {
 
 
     // =================================================
-    // DIRECT ORDER TOTAL
+    // ORDER TOTAL
     // =================================================
 
     const grandTotalElement =
@@ -414,7 +489,10 @@ function renderCart() {
     }
 
 
-    // Optional existing bottom total
+    // =================================================
+    // MAIN BOTTOM BAR TOTAL
+    // =================================================
+
     const bottomTotal =
         document.getElementById(
             "bottomTotal"
@@ -429,10 +507,34 @@ function renderCart() {
 
 
     // =================================================
-    // FREE SHIPPING PROGRESS
+    // OFFER ELEMENTS
     // =================================================
 
-    if (total < 650) {
+    const offerBar =
+        document.getElementById(
+            "offerBar"
+        );
+
+    const offerCount =
+        document.getElementById(
+            "offerCount"
+        );
+
+    const offerText =
+        document.getElementById(
+            "offerText"
+        );
+
+
+    // =================================================
+    // BELOW ₹650
+    // =================================================
+
+    if (
+        total > 0 &&
+        total < 650
+    ) {
+
 
         const remaining =
             650 - total;
@@ -454,31 +556,6 @@ function renderCart() {
         }
 
 
-        // No discount offer
-        if (offerApply) {
-
-            offerApply.innerText =
-                "";
-
-        }
-
-
-        if (offerApply2) {
-
-            offerApply2.innerText =
-                "";
-
-        }
-
-
-        if (offerApply3) {
-
-            offerApply3.innerText =
-                "₹69 Delivery";
-
-        }
-
-
         if (offerBar) {
 
             offerBar.style.width =
@@ -494,10 +571,14 @@ function renderCart() {
 
     // =================================================
     // ₹650+
-    // FREE SHIPPING UNLOCKED
+    // FREE SHIPPING
+    // NO OTHER OFFER
     // =================================================
 
-    else {
+    else if (
+        total >= 650
+    ) {
+
 
         if (offerCount) {
 
@@ -511,30 +592,6 @@ function renderCart() {
 
             offerText.innerText =
                 "🎉 FREE SHIPPING UNLOCKED";
-
-        }
-
-
-        if (offerApply) {
-
-            offerApply.innerText =
-                "";
-
-        }
-
-
-        if (offerApply2) {
-
-            offerApply2.innerText =
-                "FREE SHIPPING";
-
-        }
-
-
-        if (offerApply3) {
-
-            offerApply3.innerText =
-                "FREE";
 
         }
 
@@ -553,30 +610,7 @@ function renderCart() {
     // EMPTY CART
     // =================================================
 
-    if (total === 0) {
-
-        if (shippingPrice) {
-
-            shippingPrice.innerText =
-                "₹0";
-
-        }
-
-
-        if (grandTotalElement) {
-
-            grandTotalElement.innerText =
-                "₹0";
-
-        }
-
-
-        if (bottomTotal) {
-
-            bottomTotal.innerText =
-                "₹0";
-
-        }
+    else {
 
 
         if (offerCount) {
@@ -595,30 +629,6 @@ function renderCart() {
         }
 
 
-        if (offerApply) {
-
-            offerApply.innerText =
-                "";
-
-        }
-
-
-        if (offerApply2) {
-
-            offerApply2.innerText =
-                "";
-
-        }
-
-
-        if (offerApply3) {
-
-            offerApply3.innerText =
-                "₹0";
-
-        }
-
-
         if (offerBar) {
 
             offerBar.style.width =
@@ -627,43 +637,13 @@ function renderCart() {
         }
 
 
-        const cartBox =
-            document.getElementById(
-                "cartBox"
-            );
+        closeCart();
 
-        const cartOverlay =
-            document.getElementById(
-                "cartOverlay"
-            );
 
         const cartHeader =
             document.getElementById(
                 "cartHeader"
             );
-
-
-        if (cartBox) {
-
-            cartBox.classList.remove(
-                "open"
-            );
-
-        }
-
-
-        if (cartOverlay) {
-
-            cartOverlay.classList.remove(
-                "show"
-            );
-
-        }
-
-
-        document.body.style.overflow =
-            "";
-
 
         if (cartHeader) {
 
@@ -674,7 +654,12 @@ function renderCart() {
 
     }
 
-    else {
+
+    // =================================================
+    // SHOW CART HEADER
+    // =================================================
+
+    if (total > 0) {
 
         const cartHeader =
             document.getElementById(
@@ -697,20 +682,24 @@ function renderCart() {
 
     document
         .querySelectorAll(".qty")
-        .forEach(qtyElement => {
+        .forEach(
+            qtyElement => {
 
-            const id =
-                qtyElement.id.replace(
-                    "qty-",
-                    ""
-                );
 
-            qtyElement.innerText =
-                cart[id]
-                    ? cart[id].qty
-                    : 0;
+                const id =
+                    qtyElement.id.replace(
+                        "qty-",
+                        ""
+                    );
 
-        });
+
+                qtyElement.innerText =
+                    cart[id]
+                        ? cart[id].qty
+                        : 0;
+
+            }
+        );
 
 }
 
@@ -725,7 +714,13 @@ function checkoutCart() {
         getCartProducts();
 
 
-    if (products.length === 0) {
+    // =================================================
+    // EMPTY CART
+    // =================================================
+
+    if (
+        products.length === 0
+    ) {
 
         showToast(
             "No products in cart"
@@ -739,6 +734,10 @@ function checkoutCart() {
     let total = 0;
 
 
+    // =================================================
+    // WHATSAPP MESSAGE
+    // =================================================
+
     let message =
         "🛒 *Accessories Order - Diecast.scape*%0A%0A";
 
@@ -747,35 +746,59 @@ function checkoutCart() {
     // PRODUCTS
     // =================================================
 
-    products.forEach(item => {
-
-        const subTotal =
-            Number(item.price) *
-            Number(item.qty);
+    products.forEach(
+        item => {
 
 
-        total += subTotal;
+            const subTotal =
+                Number(item.price) *
+                Number(item.qty);
 
 
-        // Product name
-        message +=
-            `• ${item.name}%0A`;
+            total += subTotal;
 
 
-        // Firebase quantity × cart quantity
-        //
-        // Example:
-        // Set of 5 × 3 qty
-        //
-        message +=
-            `${item.quantity || "Set"} × ${item.qty} qty%0A`;
+            // ==========================================
+            // PRODUCT NAME
+            // ==========================================
+
+            message +=
+                `• ${item.name}%0A`;
 
 
-        // Price calculation
-        message +=
-            `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
+            // ==========================================
+            // FIREBASE SET QUANTITY × CART QUANTITY
+            //
+            // Example:
+            // Set of 5 × 3 qty
+            // ==========================================
 
-    });
+            if (
+                item.quantityText
+            ) {
+
+                message +=
+                    `${item.quantityText} × ${item.qty} qty%0A`;
+
+            }
+
+            else {
+
+                message +=
+                    `Qty : ${item.qty}%0A`;
+
+            }
+
+
+            // ==========================================
+            // PRICE
+            // ==========================================
+
+            message +=
+                `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
+
+        }
+    );
 
 
     // =================================================
@@ -798,26 +821,26 @@ function checkoutCart() {
     // OFFER TEXT
     // =================================================
 
-    let offerText = "";
+    let offerText;
 
 
-    if (total < 650) {
-
-        offerText =
-            `Add ₹${650 - total} more to unlock FREE SHIPPING`;
-
-    }
-
-    else {
+    if (total >= 650) {
 
         offerText =
             "FREE SHIPPING UNLOCKED";
 
     }
 
+    else {
+
+        offerText =
+            `Add ₹${650 - total} more to unlock FREE SHIPPING`;
+
+    }
+
 
     // =================================================
-    // WHATSAPP ORDER SUMMARY
+    // WHATSAPP SUMMARY
     // =================================================
 
     message +=
@@ -828,7 +851,9 @@ function checkoutCart() {
         `Product Total : ₹${total}%0A`;
 
 
-    if (total >= 650) {
+    // Shipping
+
+    if (shipping === 0) {
 
         message +=
             "Shipping : FREE%0A";
@@ -843,9 +868,7 @@ function checkoutCart() {
     }
 
 
-    // Keep Discount out of the WhatsApp message
-    // because there is currently no discount system.
-
+    // Offer
 
     message +=
         `Offer : ${offerText}%0A`;
@@ -855,8 +878,10 @@ function checkoutCart() {
         "━━━━━━━━━━━━━━%0A";
 
 
+    // Final amount
+
     message +=
-        `*Grand Total : ₹${grandTotal}*%0A%0A`;
+        `*Order Total : ₹${grandTotal}*%0A%0A`;
 
 
     message +=
@@ -930,25 +955,30 @@ window.addEventListener(
     "DOMContentLoaded",
     () => {
 
+
         const cartBox =
             document.getElementById(
                 "cartBox"
             );
+
 
         const cartHeader =
             document.getElementById(
                 "cartHeader"
             );
 
+
         const cartOverlay =
             document.getElementById(
                 "cartOverlay"
             );
 
+
         const checkoutBtn =
             document.getElementById(
                 "checkoutBtn"
             );
+
 
         const clearCartBtn =
             document.getElementById(
@@ -956,22 +986,26 @@ window.addEventListener(
             );
 
 
-        // =================================================
+        // ===============================================
         // RENDER SAVED CART
-        // =================================================
+        // ===============================================
 
         renderCart();
 
 
-        // =================================================
+        // ===============================================
         // CART HEADER
-        // =================================================
+        // ===============================================
 
         if (cartHeader) {
 
             cartHeader.addEventListener(
                 "click",
                 () => {
+
+
+                    if (!cartBox) return;
+
 
                     cartBox.classList.toggle(
                         "open"
@@ -984,9 +1018,15 @@ window.addEventListener(
                         )
                     ) {
 
-                        cartOverlay.classList.add(
-                            "show"
-                        );
+
+                        if (cartOverlay) {
+
+                            cartOverlay.classList.add(
+                                "show"
+                            );
+
+                        }
+
 
                         document.body.style.overflow =
                             "hidden";
@@ -995,12 +1035,7 @@ window.addEventListener(
 
                     else {
 
-                        cartOverlay.classList.remove(
-                            "show"
-                        );
-
-                        document.body.style.overflow =
-                            "";
+                        closeCart();
 
                     }
 
@@ -1010,9 +1045,9 @@ window.addEventListener(
         }
 
 
-        // =================================================
+        // ===============================================
         // CHECKOUT
-        // =================================================
+        // ===============================================
 
         if (checkoutBtn) {
 
@@ -1024,15 +1059,16 @@ window.addEventListener(
         }
 
 
-        // =================================================
+        // ===============================================
         // CLEAR CART
-        // =================================================
+        // ===============================================
 
         if (clearCartBtn) {
 
             clearCartBtn.addEventListener(
                 "click",
                 () => {
+
 
                     if (
                         !Object.keys(cart).length
@@ -1053,9 +1089,12 @@ window.addEventListener(
                         )
                     ) {
 
+
                         cart = {};
 
+
                         saveCart();
+
 
                         renderCart();
 
