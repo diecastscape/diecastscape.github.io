@@ -37,7 +37,12 @@ function getCartProducts() {
 // ADD PRODUCT TO CART
 // =====================================================
 
-function addProductInfo(id, name, price) {
+function addProductInfo(
+    id,
+    name,
+    price,
+    quantity = ""
+) {
 
     if (cart[id]) {
 
@@ -50,9 +55,26 @@ function addProductInfo(id, name, price) {
             id: id,
             name: name,
             price: Number(price),
+
+            // Firebase quantity text
+            // Example: Set of 5
+            quantity: quantity || "",
+
+            // Cart quantity
             qty: 1
 
         };
+
+    }
+
+    // Update quantity text if missing
+    if (
+        !cart[id].quantity &&
+        quantity
+    ) {
+
+        cart[id].quantity =
+            quantity;
 
     }
 
@@ -67,7 +89,13 @@ function addProductInfo(id, name, price) {
 // CHANGE ACCESSORY QUANTITY
 // =====================================================
 
-function changeAccessoryQty(id, name, price, change) {
+function changeAccessoryQty(
+    id,
+    name,
+    price,
+    quantity,
+    change
+) {
 
     // ==========================================
     // ADD
@@ -86,6 +114,11 @@ function changeAccessoryQty(id, name, price, change) {
                 id: id,
                 name: name,
                 price: Number(price),
+
+                // Firebase quantity
+                quantity:
+                    quantity || "",
+
                 qty: 1
 
             };
@@ -105,6 +138,7 @@ function changeAccessoryQty(id, name, price, change) {
 
             cart[id].qty--;
 
+            // Remove completely at 0
             if (cart[id].qty <= 0) {
 
                 delete cart[id];
@@ -141,7 +175,9 @@ function changeAccessoryQty(id, name, price, change) {
 function updateAccessoryQuantity(id) {
 
     const qtyElement =
-        document.getElementById(`qty-${id}`);
+        document.getElementById(
+            `qty-${id}`
+        );
 
     if (!qtyElement) return;
 
@@ -194,7 +230,7 @@ function getShipping(total) {
 
     }
 
-    // Below ₹650 = ₹69 shipping
+    // Below ₹650 = ₹69
     return 69;
 
 }
@@ -207,7 +243,9 @@ function getShipping(total) {
 function renderCart() {
 
     const list =
-        document.getElementById("cartItems");
+        document.getElementById(
+            "cartItems"
+        );
 
     if (!list) return;
 
@@ -271,22 +309,34 @@ function renderCart() {
     // =================================================
 
     const offerBar =
-        document.getElementById("offerBar");
+        document.getElementById(
+            "offerBar"
+        );
 
     const offerCount =
-        document.getElementById("offerCount");
+        document.getElementById(
+            "offerCount"
+        );
 
     const offerText =
-        document.getElementById("offerText");
+        document.getElementById(
+            "offerText"
+        );
 
     const offerApply =
-        document.getElementById("offerApply");
+        document.getElementById(
+            "offerApply"
+        );
 
     const offerApply2 =
-        document.getElementById("offerApply2");
+        document.getElementById(
+            "offerApply2"
+        );
 
     const offerApply3 =
-        document.getElementById("offerApply3");
+        document.getElementById(
+            "offerApply3"
+        );
 
 
     // =================================================
@@ -298,36 +348,18 @@ function renderCart() {
 
 
     // =================================================
-    // NO DISCOUNT FOR NOW
+    // NO DISCOUNT
     // =================================================
 
     const discount = 0;
 
 
     // =================================================
-    // TOTAL CALCULATION
+    // DIRECT ORDER TOTAL
     // =================================================
-
-    const finalPrice =
-        total + shipping;
 
     const grandTotal =
-        finalPrice - discount;
-
-
-    // =================================================
-    // CART SUMMARY
-    // =================================================
-
-    const summaryTotal =
-        document.getElementById("summaryTotal");
-
-    if (summaryTotal) {
-
-        summaryTotal.innerText =
-            "₹" + total;
-
-    }
+        total + shipping;
 
 
     // =================================================
@@ -335,7 +367,9 @@ function renderCart() {
     // =================================================
 
     const shippingPrice =
-        document.getElementById("shippingPrice");
+        document.getElementById(
+            "shippingPrice"
+        );
 
     if (shippingPrice) {
 
@@ -344,12 +378,16 @@ function renderCart() {
             shippingPrice.innerText =
                 "FREE";
 
-        } else if (total > 0) {
+        }
+
+        else if (total > 0) {
 
             shippingPrice.innerText =
                 "₹69";
 
-        } else {
+        }
+
+        else {
 
             shippingPrice.innerText =
                 "₹0";
@@ -360,41 +398,13 @@ function renderCart() {
 
 
     // =================================================
-    // TOTAL BEFORE DISCOUNT
-    // =================================================
-
-    const bottomTotal =
-        document.getElementById("bottomTotal");
-
-    if (bottomTotal) {
-
-        bottomTotal.innerText =
-            "₹" + finalPrice;
-
-    }
-
-
-    // =================================================
-    // DISCOUNT
-    // =================================================
-
-    const offerSave =
-        document.getElementById("offerSave");
-
-    if (offerSave) {
-
-        offerSave.innerText =
-            "-₹0";
-
-    }
-
-
-    // =================================================
-    // FINAL ORDER TOTAL
+    // DIRECT ORDER TOTAL
     // =================================================
 
     const grandTotalElement =
-        document.getElementById("grandTotal");
+        document.getElementById(
+            "grandTotal"
+        );
 
     if (grandTotalElement) {
 
@@ -404,12 +414,15 @@ function renderCart() {
     }
 
 
-    const grandTotal1 =
-        document.getElementById("grandTotal1");
+    // Optional existing bottom total
+    const bottomTotal =
+        document.getElementById(
+            "bottomTotal"
+        );
 
-    if (grandTotal1) {
+    if (bottomTotal) {
 
-        grandTotal1.innerText =
+        bottomTotal.innerText =
             "₹" + grandTotal;
 
     }
@@ -441,6 +454,7 @@ function renderCart() {
         }
 
 
+        // No discount offer
         if (offerApply) {
 
             offerApply.innerText =
@@ -481,7 +495,6 @@ function renderCart() {
     // =================================================
     // ₹650+
     // FREE SHIPPING UNLOCKED
-    // NO MORE OFFER
     // =================================================
 
     else {
@@ -550,25 +563,9 @@ function renderCart() {
         }
 
 
-        if (offerSave) {
-
-            offerSave.innerText =
-                "-₹0";
-
-        }
-
-
         if (grandTotalElement) {
 
             grandTotalElement.innerText =
-                "₹0";
-
-        }
-
-
-        if (grandTotal1) {
-
-            grandTotal1.innerText =
                 "₹0";
 
         }
@@ -631,30 +628,41 @@ function renderCart() {
 
 
         const cartBox =
-            document.getElementById("cartBox");
+            document.getElementById(
+                "cartBox"
+            );
 
         const cartOverlay =
-            document.getElementById("cartOverlay");
+            document.getElementById(
+                "cartOverlay"
+            );
 
         const cartHeader =
-            document.getElementById("cartHeader");
+            document.getElementById(
+                "cartHeader"
+            );
 
 
         if (cartBox) {
 
-            cartBox.classList.remove("open");
+            cartBox.classList.remove(
+                "open"
+            );
 
         }
 
 
         if (cartOverlay) {
 
-            cartOverlay.classList.remove("show");
+            cartOverlay.classList.remove(
+                "show"
+            );
 
         }
 
 
-        document.body.style.overflow = "";
+        document.body.style.overflow =
+            "";
 
 
         if (cartHeader) {
@@ -669,7 +677,9 @@ function renderCart() {
     else {
 
         const cartHeader =
-            document.getElementById("cartHeader");
+            document.getElementById(
+                "cartHeader"
+            );
 
         if (cartHeader) {
 
@@ -747,12 +757,21 @@ function checkoutCart() {
         total += subTotal;
 
 
+        // Product name
         message +=
             `• ${item.name}%0A`;
 
-        message +=
-            `Qty : ${item.qty}%0A`;
 
+        // Firebase quantity × cart quantity
+        //
+        // Example:
+        // Set of 5 × 3 qty
+        //
+        message +=
+            `${item.quantity || "Set"} × ${item.qty} qty%0A`;
+
+
+        // Price calculation
         message +=
             `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
 
@@ -768,20 +787,11 @@ function checkoutCart() {
 
 
     // =================================================
-    // NO DISCOUNT
-    // =================================================
-
-    const discount = 0;
-
-
-    // =================================================
     // GRAND TOTAL
     // =================================================
 
     const grandTotal =
-        total +
-        shipping -
-        discount;
+        total + shipping;
 
 
     // =================================================
@@ -833,8 +843,8 @@ function checkoutCart() {
     }
 
 
-    message +=
-        "Discount : -₹0%0A";
+    // Keep Discount out of the WhatsApp message
+    // because there is currently no discount system.
 
 
     message +=
@@ -876,7 +886,9 @@ function checkoutCart() {
 function showToast(message) {
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
 
     if (!toast) return;
 
@@ -885,7 +897,9 @@ function showToast(message) {
         message;
 
 
-    toast.classList.add("show");
+    toast.classList.add(
+        "show"
+    );
 
 
     clearTimeout(
