@@ -139,42 +139,44 @@ function buildSaleHTML(p) {
 
       <!-- QUANTITY CONTROLS -->
 
-      <div class="cart-controls">
+<div class="cart-controls">
 
-        <button
-          class="maines-cart-btn"
-          onclick="changeAccessoryQty(
-            '${p.id}',
-            '${String(p.name).replace(/'/g, "\\'")}',
-            ${Number(p.price)},
-            -1
-          )"
-        >
-          −
-        </button>
-
-
-        <span
-          class="qty"
-          id="qty-${p.id}"
-        >
-          0
-        </span>
+  <button
+    class="maines-cart-btn"
+    onclick="changeAccessoryQty(
+      '${p.id}',
+      '${String(p.name).replace(/'/g, "\\'")}',
+      ${Number(p.price)},
+      '${String(p.quantity || "").replace(/'/g, "\\'")}',
+      -1
+    )"
+  >
+    −
+  </button>
 
 
-        <button
-          class="add-cart-btn"
-          onclick="changeAccessoryQty(
-            '${p.id}',
-            '${String(p.name).replace(/'/g, "\\'")}',
-            ${Number(p.price)},
-            1
-          )"
-        >
-          Add
-        </button>
+  <span
+    class="qty"
+    id="qty-${p.id}"
+  >
+    0
+  </span>
 
-      </div>
+
+  <button
+    class="add-cart-btn"
+    onclick="changeAccessoryQty(
+      '${p.id}',
+      '${String(p.name).replace(/'/g, "\\'")}',
+      ${Number(p.price)},
+      '${String(p.quantity || "").replace(/'/g, "\\'")}',
+      1
+    )"
+  >
+    Add
+  </button>
+
+</div>
 
 
     </div>
