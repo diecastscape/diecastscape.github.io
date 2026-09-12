@@ -54,6 +54,17 @@ function addProductInfo(
 
         cart[id].qty++;
 
+        // Save Firebase quantity if missing
+        if (
+            !cart[id].quantityText &&
+            quantityText
+        ) {
+
+            cart[id].quantityText =
+                quantityText;
+
+        }
+
     } else {
 
         cart[id] = {
@@ -82,6 +93,12 @@ function addProductInfo(
 
 // =====================================================
 // CHANGE ACCESSORY QUANTITY
+//
+// IMPORTANT:
+// change comes BEFORE quantityText
+//
+// change = -1 / +1
+// quantityText = "Set of 5"
 // =====================================================
 
 function changeAccessoryQty(
@@ -91,7 +108,6 @@ function changeAccessoryQty(
     change,
     quantityText = ""
 ) {
-
 
     // ==========================================
     // ADD
@@ -103,8 +119,8 @@ function changeAccessoryQty(
 
             cart[id].qty++;
 
-            // Update Firebase set quantity
-            // if it was missing in old cart data
+            // Update Firebase quantity
+            // if old cart data was missing it
 
             if (
                 !cart[id].quantityText &&
@@ -148,9 +164,6 @@ function changeAccessoryQty(
 
             cart[id].qty--;
 
-
-            // Remove completely
-            // when quantity reaches zero
 
             if (cart[id].qty <= 0) {
 
@@ -230,8 +243,6 @@ function removeItem(id) {
 
 function getShipping(total) {
 
-    // Empty cart
-
     if (total <= 0) {
 
         return 0;
@@ -239,8 +250,7 @@ function getShipping(total) {
     }
 
 
-    // ₹650 or more
-    // FREE SHIPPING
+    // ₹650 or more = FREE SHIPPING
 
     if (total >= 650) {
 
@@ -249,8 +259,7 @@ function getShipping(total) {
     }
 
 
-    // Below ₹650
-    // Fixed ₹69 shipping
+    // Below ₹650 = ₹69
 
     return 69;
 
@@ -325,7 +334,6 @@ function renderCart() {
     getCartProducts().forEach(
         item => {
 
-
             const subTotal =
                 Number(item.price) *
                 Number(item.qty);
@@ -334,13 +342,8 @@ function renderCart() {
             total += subTotal;
 
 
-            // Firebase set quantity
-            //
-            // Example:
-            // Set of 5
-            //
-            // If old cart data does not have
-            // quantityText, simply don't show it.
+            // Firebase quantity
+            // Example: Set of 5
 
             const setText =
                 item.quantityText
@@ -354,13 +357,11 @@ function renderCart() {
 
                 <div class="cart-row">
 
-
                     <div class="cart-name">
 
                         ${item.name}
 
                     </div>
-
 
                     <div class="cart-price">
 
@@ -371,7 +372,6 @@ function renderCart() {
                         ₹${subTotal}
 
                     </div>
-
 
                 </div>
 
@@ -413,10 +413,10 @@ function renderCart() {
 
 
     // =================================================
-    // FINAL ORDER TOTAL
+    // ORDER TOTAL
     // =================================================
 
-    const grandTotal =
+    const orderTotal =
         total + shipping;
 
 
@@ -484,13 +484,13 @@ function renderCart() {
     if (grandTotalElement) {
 
         grandTotalElement.innerText =
-            "₹" + grandTotal;
+            "₹" + orderTotal;
 
     }
 
 
     // =================================================
-    // MAIN BOTTOM BAR TOTAL
+    // MAIN BOTTOM BAR
     // =================================================
 
     const bottomTotal =
@@ -501,7 +501,7 @@ function renderCart() {
     if (bottomTotal) {
 
         bottomTotal.innerText =
-            "₹" + grandTotal;
+            "₹" + orderTotal;
 
     }
 
@@ -534,7 +534,6 @@ function renderCart() {
         total > 0 &&
         total < 650
     ) {
-
 
         const remaining =
             650 - total;
@@ -572,13 +571,11 @@ function renderCart() {
     // =================================================
     // ₹650+
     // FREE SHIPPING
-    // NO OTHER OFFER
     // =================================================
 
     else if (
         total >= 650
     ) {
-
 
         if (offerCount) {
 
@@ -611,7 +608,6 @@ function renderCart() {
     // =================================================
 
     else {
-
 
         if (offerCount) {
 
@@ -677,14 +673,13 @@ function renderCart() {
 
 
     // =================================================
-    // UPDATE ALL ACCESSORY QUANTITY COUNTERS
+    // UPDATE ALL PRODUCT QUANTITY COUNTERS
     // =================================================
 
     document
         .querySelectorAll(".qty")
         .forEach(
             qtyElement => {
-
 
                 const id =
                     qtyElement.id.replace(
@@ -749,7 +744,6 @@ function checkoutCart() {
     products.forEach(
         item => {
 
-
             const subTotal =
                 Number(item.price) *
                 Number(item.qty);
@@ -767,7 +761,7 @@ function checkoutCart() {
 
 
             // ==========================================
-            // FIREBASE SET QUANTITY × CART QUANTITY
+            // FIREBASE SET × CART QUANTITY
             //
             // Example:
             // Set of 5 × 3 qty
@@ -810,10 +804,10 @@ function checkoutCart() {
 
 
     // =================================================
-    // GRAND TOTAL
+    // ORDER TOTAL
     // =================================================
 
-    const grandTotal =
+    const orderTotal =
         total + shipping;
 
 
@@ -851,7 +845,9 @@ function checkoutCart() {
         `Product Total : ₹${total}%0A`;
 
 
-    // Shipping
+    // =================================================
+    // SHIPPING
+    // =================================================
 
     if (shipping === 0) {
 
@@ -868,7 +864,9 @@ function checkoutCart() {
     }
 
 
-    // Offer
+    // =================================================
+    // OFFER
+    // =================================================
 
     message +=
         `Offer : ${offerText}%0A`;
@@ -878,10 +876,12 @@ function checkoutCart() {
         "━━━━━━━━━━━━━━%0A";
 
 
-    // Final amount
+    // =================================================
+    // FINAL ORDER TOTAL
+    // =================================================
 
     message +=
-        `*Order Total : ₹${grandTotal}*%0A%0A`;
+        `*Order Total : ₹${orderTotal}*%0A%0A`;
 
 
     message +=
@@ -889,7 +889,7 @@ function checkoutCart() {
 
 
     // =================================================
-    // WHATSAPP
+    // OPEN WHATSAPP
     // =================================================
 
     window.open(
@@ -955,7 +955,6 @@ window.addEventListener(
     "DOMContentLoaded",
     () => {
 
-
         const cartBox =
             document.getElementById(
                 "cartBox"
@@ -1003,7 +1002,6 @@ window.addEventListener(
                 "click",
                 () => {
 
-
                     if (!cartBox) return;
 
 
@@ -1017,7 +1015,6 @@ window.addEventListener(
                             "open"
                         )
                     ) {
-
 
                         if (cartOverlay) {
 
@@ -1069,7 +1066,6 @@ window.addEventListener(
                 "click",
                 () => {
 
-
                     if (
                         !Object.keys(cart).length
                     ) {
@@ -1089,12 +1085,9 @@ window.addEventListener(
                         )
                     ) {
 
-
                         cart = {};
 
-
                         saveCart();
-
 
                         renderCart();
 
