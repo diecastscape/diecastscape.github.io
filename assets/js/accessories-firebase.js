@@ -16,6 +16,7 @@ function buildSaleHTML(p) {
 
   let imgs = "";
 
+
   // ==========================================
   // PRODUCT IMAGES
   // ==========================================
@@ -31,7 +32,7 @@ function buildSaleHTML(p) {
 
           <img
             src="/images/frame/${im}.webp"
-            alt="${p.name}"
+            alt="${p.name || ""}"
             loading="lazy"
             onload="
               this.previousElementSibling.remove();
@@ -58,7 +59,7 @@ function buildSaleHTML(p) {
 
 
   // ==========================================
-  // QUANTITY TEXT
+  // FIREBASE QUANTITY
   // Example: Set of 5
   // ==========================================
 
@@ -68,7 +69,6 @@ function buildSaleHTML(p) {
 
   // ==========================================
   // SUBTITLE
-  // Example: 3D Printed | Miniature
   // ==========================================
 
   const subtitleText =
@@ -91,7 +91,7 @@ function buildSaleHTML(p) {
       </div>
 
 
-      <!-- QUANTITY -->
+      <!-- FIREBASE QUANTITY -->
 
       ${
         quantityText
@@ -137,46 +137,56 @@ function buildSaleHTML(p) {
       </div>
 
 
-      <!-- QUANTITY CONTROLS -->
+      <!-- ======================================
+           CART CONTROLS
+      ======================================= -->
 
-<div class="cart-controls">
-
-  <button
-    class="maines-cart-btn"
-    onclick="changeAccessoryQty(
-      '${p.id}',
-      '${String(p.name).replace(/'/g, "\\'")}',
-      ${Number(p.price)},
-      '${String(p.quantity || "").replace(/'/g, "\\'")}',
-      -1
-    )"
-  >
-    −
-  </button>
+      <div class="cart-controls">
 
 
-  <span
-    class="qty"
-    id="qty-${p.id}"
-  >
-    0
-  </span>
+        <!-- MINUS -->
+
+        <button
+          class="maines-cart-btn"
+          onclick="changeAccessoryQty(
+            '${String(p.id).replace(/'/g, "\\'")}',
+            '${String(p.name || "").replace(/'/g, "\\'")}',
+            ${Number(p.price)},
+            -1,
+            '${String(p.quantity || "").replace(/'/g, "\\'")}'
+          )"
+        >
+          −
+        </button>
 
 
-  <button
-    class="add-cart-btn"
-    onclick="changeAccessoryQty(
-      '${p.id}',
-      '${String(p.name).replace(/'/g, "\\'")}',
-      ${Number(p.price)},
-      '${String(p.quantity || "").replace(/'/g, "\\'")}',
-      1
-    )"
-  >
-    Add
-  </button>
+        <!-- QUANTITY -->
 
-</div>
+        <span
+          class="qty"
+          id="qty-${p.id}"
+        >
+          0
+        </span>
+
+
+        <!-- ADD -->
+
+        <button
+          class="add-cart-btn"
+          onclick="changeAccessoryQty(
+            '${String(p.id).replace(/'/g, "\\'")}',
+            '${String(p.name || "").replace(/'/g, "\\'")}',
+            ${Number(p.price)},
+            1,
+            '${String(p.quantity || "").replace(/'/g, "\\'")}'
+          )"
+        >
+          Add
+        </button>
+
+
+      </div>
 
 
     </div>
@@ -193,10 +203,14 @@ function buildSaleHTML(p) {
 async function loadSaleProducts() {
 
   const container =
-    document.getElementById("sale-main");
+    document.getElementById(
+      "sale-main"
+    );
 
   const loader =
-    document.getElementById("productsLoader");
+    document.getElementById(
+      "productsLoader"
+    );
 
 
   // ==========================================
@@ -204,7 +218,13 @@ async function loadSaleProducts() {
   // ==========================================
 
   if (!container) {
+
+    console.error(
+      "Accessories container #sale-main not found."
+    );
+
     return;
+
   }
 
 
@@ -251,22 +271,21 @@ async function loadSaleProducts() {
         doc.data();
 
 
-      // Add Firebase document ID
+      // Firebase document ID
 
       p.id =
         doc.id;
 
 
-      // Only show active products
+      // Only active products
 
-      if (p.active === true) {
+      if (
+        p.active === true
+      ) {
 
         container.insertAdjacentHTML(
-
           "beforeend",
-
           buildSaleHTML(p)
-
         );
 
         count++;
@@ -291,20 +310,29 @@ async function loadSaleProducts() {
     });
 
 
-if (
-  typeof restoreCart === "function"
-) {
+    // ==========================================
+    // RESTORE CART COUNTERS
+    //
+    // Not required because renderCart()
+    // already updates .qty elements.
+    // ==========================================
 
-  restoreCart();
+    if (
+      typeof renderCart === "function"
+    ) {
 
-}
+      renderCart();
+
+    }
 
 
     // ==========================================
     // EMPTY PRODUCT STATE
     // ==========================================
 
-    if (count === 0) {
+    if (
+      count === 0
+    ) {
 
       container.innerHTML = `
 
@@ -325,12 +353,9 @@ if (
     }
 
 
-  } catch (error) {
+  }
 
-
-    // ==========================================
-    // ERROR
-    // ==========================================
+  catch (error) {
 
     console.error(
       "Error loading accessories:",
@@ -374,10 +399,6 @@ if (
 // ==========================================
 
 window.addEventListener(
-
   "DOMContentLoaded",
-
   loadSaleProducts
-
 );
-    
