@@ -70,166 +70,242 @@ class="search-bar">
   </div>
 </div>
   </div>
-<!-- ===========================
-SMART CART
-=========================== -->
+
+    <!-- =====================================================
+     CART OVERLAY
+===================================================== -->
+
+<div
+  id="cartOverlay"
+  class="cart-overlay"
+  onclick="closeCart()">
+</div>
+
+
+<!-- =====================================================
+     ACCESSORIES CART
+===================================================== -->
 
 <div id="cartBox" class="cart-box">
 
-    <!-- Cart Header -->
-    <div id="cartHeader" class="cart-header">
 
-        <div class="cart-grip"></div>
+  <!-- ===================================================
+       CART HEADER
+  ==================================================== -->
 
-        <div class="cart-title">
-            View Cart
-        </div>
+  <div
+    id="cartHeader"
+    class="cart-header"
+    style="display:none;">
+
+    <div class="cart-header-handle"></div>
+
+    <div class="cart-header-title">
+      View Cart
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================
+       CART CONTENT
+  ==================================================== -->
+
+  <div class="cart-content">
+
+
+    <!-- =================================================
+         CART ITEMS
+    ================================================== -->
+
+    <div
+      id="cartItems"
+      class="cart-items">
+    </div>
+
+
+    <!-- =================================================
+         CLEAR CART
+    ================================================== -->
+
+    <button
+      id="clearCartBtn"
+      class="clear-cart-btn">
+
+      Clear Cart
+
+    </button>
+
+
+    <!-- =================================================
+         ORDER SUMMARY
+         
+         ONLY:
+         Items
+         Delivery
+         Order Total
+    ================================================== -->
+
+    <div class="cart-summary">
+
+
+      <!-- ITEMS -->
+
+      <div class="summary-row">
+
+        <span>
+          Items
+        </span>
+
+        <span id="summaryTotal">
+          ₹0
+        </span>
+
+      </div>
+
+
+      <!-- DELIVERY -->
+
+      <div class="summary-row">
+
+        <span>
+          Delivery
+        </span>
+
+        <span id="shippingPrice">
+          ₹0
+        </span>
+
+      </div>
+
+
+      <!-- ORDER TOTAL -->
+
+      <div class="summary-row summary-final">
+
+        <span>
+          Order Total
+        </span>
+
+        <span id="grandTotal">
+          ₹0
+        </span>
+
+      </div>
+
 
     </div>
 
 
-    <!-- Expandable Cart Content -->
-    <div id="cartContent" class="cart-content">
+    <!-- =================================================
+         OFFER / FREE SHIPPING
+    ================================================== -->
 
-        <div id="cartItems" class="cart-items">
+    <div class="offer-section">
+
+
+      <!-- OFFER TITLE -->
+
+      <div
+        class="offer-title"
+        id="offerTitle">
+
+        🚚 Unlock FREE Shipping
+
+      </div>
+
+
+      <!-- PROGRESS BAR -->
+
+      <div class="offer-progress">
+
+        <div
+          id="offerBar"
+          class="offer-progress-fill">
         </div>
 
-
-        <button
-            id="clearCartBtn"
-            class="clear-cart">
-
-            Clear Cart
-
-        </button>
+      </div>
 
 
-        <!-- Cart Summary -->
-        <div class="cart-summary">
+      <!-- PROGRESS AMOUNT -->
 
-            
+      <div
+        id="offerCount"
+        class="offer-count">
 
-            <div class="summary-row">
+        ₹0 / ₹650
 
-                <span>Delivery</span>
-
-                <span id="offerApply3"
-                      class="offer-apply">
-                </span>
-
-                <span id="shippingPrice">
-                </span>
-
-            </div>
+      </div>
 
 
-            
+      <!-- OFFER MESSAGE -->
 
+      <div
+        id="offerText"
+        class="offer-text">
 
-            
+        Add ₹650 to unlock FREE SHIPPING
 
+      </div>
 
-            <div class="summary-row cart-border">
-
-                <span>Total</span>
-
-                <span id="grandTotal">
-                </span>
-
-            </div>
-
-        </div>
 
     </div>
 
 
-    <!-- Cart Footer -->
-    <div class="cart-footer">
-
-        <div>
-
-            <div class="offer-title">
-
-                🔥 Add More, Save More
-
-            </div>
+  </div>
 
 
-            <!-- Progressive Offer Bar -->
-            <div class="offer-progress">
+  <!-- ===================================================
+       MAIN CART BAR
+  ==================================================== -->
 
-                <div
-                    id="offerBar"
-                    class="offer-progress-fill">
-                </div>
-
-            </div>
+  <div class="cart-bottom-bar">
 
 
-            <div class="footer-bottom">
+    <!-- ORDER TOTAL -->
 
-                <div>
+    <div class="cart-bottom-total">
 
-                    <div
-                        class="offer-count"
-                        id="offerCount">
-                    </div>
+      <div class="cart-bottom-label">
+        Order Total
+      </div>
 
+      <div
+        id="bottomTotal"
+        class="cart-bottom-price">
 
-                    <div
-                        class="offer-text"
-                        id="offerText">
-                    </div>
+        ₹0
 
-
-                    <div class="price-row">
-
-                        <div
-                            id="grandTotal1"
-                            class="footer-price">
-                        </div>
-
-
-                        <div
-                            id="offerApply2"
-                            class="offer-apply">
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    id="checkoutBtn"
-                    class="checkout-btn">
-
-                    Checkout
-
-                </button>
-
-            </div>
-
-        </div>
+      </div>
 
     </div>
 
+
+    <!-- CHECKOUT -->
+
+    <button
+      id="checkoutBtn"
+      class="checkout-btn">
+
+      Checkout
+
+    </button>
+
+
+  </div>
+
+
 </div>
 
 
-<!-- Cart Overlay -->
+<!-- =====================================================
+     TOAST
+===================================================== -->
 
-<div id="cartOverlay"
-     class="cart-overlay">
+<div
+  id="toast"
+  class="toast">
 </div>
-
-
-<!-- Toast -->
-
-<div id="toast"
-     class="toast">
-</div>
-    
 
 
   <footer class="footer">
