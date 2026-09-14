@@ -530,7 +530,7 @@ body {
 @media (max-width: 700px) {
   body {
     padding-top: 55px;
-    padding-bottom: 70px;
+   
   }
   .home-header {
     height: 55px;
