@@ -1,135 +1,5 @@
 
 /* =====================================================
-   HEADER
-===================================================== */
-.home-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
-  z-index: 900;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid #e1e8f0;
-}
-.home-header-inner {
-  height: 100%;
-  max-width: 1200px;
-  margin: auto;
-  padding: 0 28px;
-  display: flex;
-  align-items: center;
-}
-.home-logo-link {
-  display: flex;
-  align-items: center;
-}
-.home-logo {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-}
-.home-brand {
-  margin-left: 8px;
-}
-.home-brand-name {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -.5px;
-  color: #142744;
-}
-.home-brand-name span {
-  color: #19b6c4;
-}
-.home-brand-tagline {
-  font-size: 7px;
-  letter-spacing: 2px;
-  font-weight: 700;
-  color: #6b7d99;
-}
-.home-actions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.home-icon-btn,
-.home-menu-btn {
-  position: relative;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: #142744;
-}
-.home-icon-btn svg {
-  width: 30px;
-  height: 30px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-}
-.home-cart-count {
-  position: absolute;
-  top: -7px;
-  right: -8px;
-  min-width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background: #13b3c2;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-}
-.home-menu-btn {
-  font-size: 29px;
-  line-height: 1;
-}
-/* =====================================================
-   SEARCH
-===================================================== */
-.home-search {
-  position: fixed;
-  top: 70px;
-  left: 0;
-  right: 0;
-  z-index: 899;
-  padding: 12px 18px;
-  background: rgba(255,255,255,.96);
-  backdrop-filter: blur(15px);
-  transform: translateY(-120%);
-  transition: transform .3s ease;
-}
-.home-search.show {
-  transform: translateY(0);
-}
-.home-search-inner {
-  max-width: 800px;
-  margin: auto;
-  display: flex;
-  gap: 8px;
-}
-.home-search input {
-  flex: 1;
-  box-sizing: border-box;
-  padding: 13px 16px;
-  border: 1px solid #d6e0eb;
-  border-radius: 12px;
-  outline: none;
-  background: #f5f8fb;
-  color: #102344;
-}
-.home-search button {
-  width: 45px;
-  border: none;
-  border-radius: 12px;
-  background: #102344;
-  color: white;
-}
-/* =====================================================
    HERO
 ===================================================== */
 .home-hero {
@@ -518,38 +388,12 @@
 ===================================================== */
 @media (max-width: 700px) {
   
-  .home-header {
-    height: 55px;
-  }
-  .home-header-inner {
-    padding: 0 14px;
-  }
-  .home-logo {
-    width: 44px;
-    height: 44px;
-  }
-  .home-brand-name {
-    font-size: 18px;
-  }
-  .home-actions {
-    gap: 10px;
-  }
-  .home-icon-btn svg {
-    width: 25px;
-    height: 25px;
-  }
-  .home-menu-btn {
-    font-size: 25px;
-  }
+
   .home-hero {
     margin-top: 12px;
     padding: 0 12px;
   }
-  .hero-slider {
-    aspect-ratio: 1 / 1;
-    min-height: 0;
-    border-radius: 18px;
-  }
+  
   .hero-slide > img {
     object-position: right center;
   }
