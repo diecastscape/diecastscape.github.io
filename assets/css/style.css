@@ -39,15 +39,7 @@ body {
   display: flex;
   align-items: center;
 }
-.home-logo-link {
-  display: flex;
-  align-items: center;
-}
-.home-logo {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-}
+
 .home-brand {
   margin-left: 8px;
 }
@@ -87,66 +79,12 @@ body {
   stroke: currentColor;
   stroke-width: 1.8;
 }
-.home-cart-count {
-  position: absolute;
-  top: -7px;
-  right: -8px;
-  min-width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background: #13b3c2;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-}
+
 .home-menu-btn {
   font-size: 29px;
   line-height: 1;
 }
-/* =====================================================
-   SEARCH
-===================================================== */
-.home-search {
-  position: fixed;
-  top: 70px;
-  left: 0;
-  right: 0;
-  z-index: 899;
-  padding: 12px 18px;
-  background: rgba(255,255,255,.96);
-  backdrop-filter: blur(15px);
-  transform: translateY(-120%);
-  transition: transform .3s ease;
-}
-.home-search.show {
-  transform: translateY(0);
-}
-.home-search-inner {
-  max-width: 800px;
-  margin: auto;
-  display: flex;
-  gap: 8px;
-}
-.home-search input {
-  flex: 1;
-  box-sizing: border-box;
-  padding: 13px 16px;
-  border: 1px solid #d6e0eb;
-  border-radius: 12px;
-  outline: none;
-  background: #f5f8fb;
-  color: #102344;
-}
-.home-search button {
-  width: 45px;
-  border: none;
-  border-radius: 12px;
-  background: #102344;
-  color: white;
-}
+
 @media (max-width: 700px) {
     .home-header {
     height: 55px;
