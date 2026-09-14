@@ -10,8 +10,7 @@
 }
 .hero-slider {
   position: relative;
-  aspect-ratio: 16 / 7;
-  
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 22px;
   border: 1px solid #dce5ef;
