@@ -90,12 +90,6 @@ body {
   line-height: 1;
 }
 
-/* RUNNING OFFER */
-
-.running-offer-bar {
-  top: 65px !important;
-}
-
 /* COMING SOON */
 
 .coming-soon {
@@ -642,9 +636,6 @@ body.menu-open .menu-secondary a:nth-child(6) {
 
 @media (min-width: 650px) {
 
-  .running-offer-bar {
-    top: 65px !important;
-  }
 
   .breadcrumb-current {
     font-size: 19px;
@@ -670,35 +661,9 @@ body.menu-open .menu-secondary a:nth-child(6) {
     font-size: 25px;
   }
 
-  .close-btn {
-    font-size: 22px;
-  }
 
-  .side-menu a {
-    font-size: 17px;
-  }
-
-  .theme-toggle {
-    font-size: 18px;
-  }
 }
 
 /* SMALL MOBILE */
 
-@media (max-width: 425px) {
-  .running-offer-bar {
-    top: 45px !important;
-  }
-}
 
-@media (max-width: 380px) {
-
-  .side-menu {
-    max-width: 86vw;
-    padding: 18px 15px;
-  }
-
-  .menu-links a {
-    min-height: 45px;
-  }
-}
