@@ -10,7 +10,7 @@
 }
 .hero-slider {
   position: relative;
-  aspect-ratio: 1 / 1;  
+  aspect-ratio: 6 / 5;  
   overflow: hidden;
   border-radius: 22px;
   border: 1px solid #dce5ef;
@@ -114,8 +114,8 @@
   gap: 9px;
 }
 .hero-dot {
-  width: 1px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   border: none;
   background: #c6d0dc;
