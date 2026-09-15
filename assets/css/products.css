@@ -3,10 +3,15 @@
 ===================================================== */
 
 .hero {
+  min-height: calc(100vh - 70px);
   max-width: 1200px;
-  margin: 35px auto 30px;
+  margin: 0 auto;
   padding: 0 24px;
   box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 
@@ -14,7 +19,7 @@
   width: 100%;
   max-width: 850px;
   margin: 0 auto;
-  padding: 10px 0;
+  padding: 20px 0;
 }
 
 .hero .hero-small-title {
@@ -52,13 +57,13 @@
 @media (max-width: 700px) {
 
   .hero {
-    margin: 22px auto 24px;
+    min-height: calc(100vh - 60px);
     padding: 0 14px;
   }
 
   .hero .hero-content {
     max-width: 100%;
-    padding: 6px 0;
+    padding: 10px 0;
   }
 
   .hero .hero-small-title {
