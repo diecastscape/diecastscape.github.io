@@ -108,7 +108,7 @@
   position: absolute;
   z-index: 5;
   bottom: 18px;
-  left: 60%;
+  left: 100%;
   transform: translateX(-50%);
   display: flex;
   gap: 9px;
@@ -116,7 +116,7 @@
 .hero-dot {
   width: 9px;
   height: 9px;
-  border-radius: 999px;
+  border-radius: 50%;
   border: none;
   background: #c6d0dc;
   cursor: pointer;
