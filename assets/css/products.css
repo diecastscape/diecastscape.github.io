@@ -56,9 +56,7 @@
 ===================================================== */
 
 @media (max-width: 700px) {
-.running-offer-bar {
-top: 55px;
-}
+
   .hero {
     min-height: calc(100vh - 200px);
     padding: 0 14px;
@@ -87,7 +85,34 @@ top: 55px;
     font-size: 11px;
     line-height: 1.45;
   }
+.running-offer-bar {
+    top: 55px;
+    height: 30px;
+  }
 
+  .running-offer-content {
+    gap: 32px;
+    padding-right: 32px;
+  }
+
+  .running-offer-content span {
+    font-size: 9px;
+  }
+
+  .running-offer-content span::before {
+    width: 4px;
+    height: 4px;
+    margin-right: 6px;
+  }
+
+  .search-bar {
+    width: calc(100% - 20px);
+    margin: 10px auto 18px;
+    padding: 11px 14px;
+
+    border-radius: 11px;
+    font-size: 12px;
+  }
 }
 
 /* =====================================================
@@ -193,29 +218,7 @@ max-height: 60%;
 }
 }
 
-.search-bar {
-width: 90%;
-max-width: 1000px;
-display: block;
-margin: 10px auto 20px;
-padding: 14px 18px;
-background: #e4e4e2;
-color: #0d0d0d;
-border-radius: 10px;
-font-size: 14px;
-outline: none;
-box-sizing: border-box;
-box-shadow: 0 10px 25px rgba(0,0,0,.25);
-transition: background .3s ease,color .3s ease,border .3s ease;
-}
 
-.search-bar::placeholder {
-color: #333;
-}
-
-.search-bar:focus {
-border-color: #0aa1a7;
-}
 
 .no-products-message {
 text-align: center;
@@ -1213,53 +1216,147 @@ gap: 12px;
 flex: 1;
 min-width: 0;
 }
-
 /* =====================================================
-RUNNING OFFER BAR
+   RUNNING OFFER BAR — LIGHT PREMIUM
 ===================================================== */
 
 .running-offer-bar {
-position: fixed;
-top: 55px;
-left: 0;
-width: 100%;
-height: 30px;
-display: flex;
-align-items: center;
-background: #111;
-color: #fff;
-overflow: hidden;
-white-space: nowrap;
-z-index: 900;
+  position: fixed;
+  top: 55px;
+  left: 0;
+  width: 100%;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.94);
+  color: #142744;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  border-bottom: 1px solid #DDE8EC;
+  box-shadow: 0 3px 12px rgba(16, 35, 68, 0.07);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  z-index: 900;
 }
 
 .running-offer-track {
-display: flex;
-width: max-content;
-animation: runningOffer 14s linear infinite;
-will-change: transform;
+  display: flex;
+  width: max-content;
+
+  animation: runningOffer 16s linear infinite;
+  will-change: transform;
 }
 
 .running-offer-content {
-display: flex;
-align-items: center;
-gap: 60px;
-padding-right: 60px;
-flex-shrink: 0;
+  display: flex;
+  align-items: center;
+
+  gap: 42px;
+  padding-right: 42px;
+
+  flex-shrink: 0;
 }
 
 .running-offer-content span {
-font-size: 13px;
-font-weight: 600;
-white-space: nowrap;
+  position: relative;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .35px;
+
+  color: #334766;
+
+  white-space: nowrap;
+}
+
+/* Teal accent before each offer */
+
+.running-offer-content span::before {
+  content: "";
+  display: inline-block;
+
+  width: 5px;
+  height: 5px;
+
+  margin-right: 7px;
+
+  border-radius: 50%;
+  background: #19B6C4;
+
+  vertical-align: middle;
+}
+
+/* Sale text */
+
+.running-offer-content span:nth-child(2),
+.running-offer-content span:nth-child(4) {
+  color: #0AA1A7;
+  font-weight: 800;
 }
 
 @keyframes runningOffer {
-from {
-transform: translateX(0);
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-to {
-transform: translateX(-50%);
+
+/* =====================================================
+   SEARCH BAR — PREMIUM LIGHT STYLE
+===================================================== */
+
+.search-bar {
+  width: calc(100% - 28px);
+  max-width: 1000px;
+
+  display: block;
+
+  margin: 10px auto 20px;
+  padding: 12px 16px;
+
+  box-sizing: border-box;
+
+  background: #FFFFFF;
+  color: #142744;
+
+  border: 1px solid #DDE6EC;
+  border-radius: 12px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+
+  outline: none;
+
+  box-shadow:
+    0 3px 12px rgba(16, 35, 68, 0.06);
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
 }
+
+.search-bar::placeholder {
+  color: #8290A3;
 }
+
+.search-bar:focus {
+  background: #FFFFFF;
+  border-color: #19B6C4;
+
+  box-shadow:
+    0 0 0 3px rgba(25, 182, 196, 0.10),
+    0 5px 18px rgba(16, 35, 68, 0.07);
+}
+
