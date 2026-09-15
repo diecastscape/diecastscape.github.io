@@ -15,6 +15,7 @@ body {
   color: #0B132B;
 }
 
+}
 /* HEADER */
 
 .home-header {
@@ -254,21 +255,13 @@ input {
   color: #FFFFFF;
 }
 
-/* HAMBURGER */
-
-.hamburger {
-  position: absolute;
-  right: 16px;
-  font-size: 26px;
-  cursor: pointer;
-  color: #FFFFFF;
-  user-select: none;
-}
 
 /* BREADCRUMB */
-
+body:has(.running-offer-bar) .breadcrumb-wrap {
+    margin-top: 40px;
+}
 .breadcrumb-wrap {
-  margin: 0px 14px 0;
+  margin: 0 14px 2;
   display: inline-flex;
   align-items: center;
   gap: 8px;
