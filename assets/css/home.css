@@ -271,6 +271,12 @@
   font-weight: 600;
   color: #142744;
 }
+.popular-info h5 {
+  margin: 0 0 8px;
+  font-size: 10px;
+  font-weight: 400;
+  color: #3d506d;
+}
 .popular-price {
   font-size: 18px;
   font-weight: 800;
