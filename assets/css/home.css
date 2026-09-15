@@ -108,7 +108,7 @@
   position: absolute;
   z-index: 5;
   bottom: 18px;
-  left: 50%;
+  left: 60%;
   transform: translateX(-50%);
   display: flex;
   gap: 9px;
