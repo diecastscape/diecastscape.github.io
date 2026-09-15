@@ -196,6 +196,11 @@ async function loadPopularProducts() {
                 p.name || "Diorama"
               )}
             </h3>
+              <h5>
+              ${escapeHTML(
+                p.subtitle || "Diorama"
+              )}
+            </h5>
 
 
             <div class="popular-price">
