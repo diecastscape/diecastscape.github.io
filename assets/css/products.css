@@ -1218,10 +1218,10 @@ RUNNING OFFER BAR
 
 .running-offer-bar {
 position: fixed;
-top: 54px;
+top: 70px;
 left: 0;
 width: 100%;
-height: 34px;
+height: 30px;
 display: flex;
 align-items: center;
 background: #111;
@@ -1247,7 +1247,7 @@ flex-shrink: 0;
 }
 
 .running-offer-content span {
-font-size: 12px;
+font-size: 9px;
 font-weight: 600;
 white-space: nowrap;
 }
