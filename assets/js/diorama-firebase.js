@@ -12,13 +12,15 @@ function buildProductHTML(p){
 const imgs = p.images.map(im => `
   <div class="img-box">
   <div class="img-loader"></div>
-
-  <img 
-    src="/images/products/${im.full}.webp"
-	loading="lazy"
-    onload="this.previousElementSibling.remove(); this.style.opacity=1"
-    style="opacity:0"
-    onclick="openLightbox(this.src)">
+<img
+  src="/images/products/${im.full}.webp"
+  alt="${p.name}"
+  loading="lazy"
+  decoding="async"
+  onload="this.previousElementSibling.remove()"
+  onclick="openLightbox(this.src)"
+>
+  
 </div>
 `).join("");
 
