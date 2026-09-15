@@ -1,41 +1,78 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 600 600"
-     fill="none">
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     version="1.1"
+     width="50"
+     height="50"
+     viewBox="0 0 256 256"
+     xml:space="preserve">
 
-  <!-- Outer Photo Frame -->
-  <rect x="65"
-        y="65"
-        width="470"
-        height="470"
-        rx="5"
-        stroke="#000"
-        stroke-width="10"/>
+  <g id="icon"
+     style="stroke: none;
+            stroke-width: 0;
+            stroke-dasharray: none;
+            stroke-linecap: butt;
+            stroke-linejoin: miter;
+            stroke-miterlimit: 10;
+            fill: none;
+            fill-rule: nonzero;
+            opacity: 1;"
+     transform="translate(1.4065934065934016 1.4065934065934016) scale(0.42 0.42)">
 
-  <!-- Sun -->
-  <circle cx="175"
-          cy="205"
-          r="22"
-          stroke="#000"
-          stroke-width="10"/>
+    <!-- Outer Photo Frame -->
+    <rect x="65"
+          y="65"
+          width="470"
+          height="470"
+          rx="5"
+          style="stroke: currentColor;
+                 stroke-width: 10;
+                 stroke-dasharray: none;
+                 stroke-linecap: round;
+                 stroke-linejoin: round;
+                 fill: none;
+                 fill-rule: nonzero;
+                 opacity: 1;"/>
 
-  <!-- Mountain Mark -->
-  <path d="M145 405
-           L250 275
-           L315 350
-           L390 255
-           L475 405"
-        stroke="#000"
-        stroke-width="15"
-        stroke-linecap="round"
-        stroke-linejoin="round"/>
+    <!-- Sun -->
+    <circle cx="175"
+            cy="205"
+            r="22"
+            style="stroke: currentColor;
+                   stroke-width: 10;
+                   stroke-dasharray: none;
+                   stroke-linecap: round;
+                   stroke-linejoin: round;
+                   fill: none;
+                   fill-rule: nonzero;
+                   opacity: 1;"/>
 
-  <!-- Mountain Facet -->
-  <path d="M250 275
-           L282 318
-           L315 350"
-        stroke="#000"
-        stroke-width="9"
-        stroke-linecap="round"
-        stroke-linejoin="round"/>
+    <!-- Mountain Mark -->
+    <path d="M145 405
+             L250 275
+             L315 350
+             L390 255
+             L475 405"
+          style="stroke: currentColor;
+                 stroke-width: 15;
+                 stroke-dasharray: none;
+                 stroke-linecap: round;
+                 stroke-linejoin: round;
+                 fill: none;
+                 fill-rule: nonzero;
+                 opacity: 1;"/>
 
+    <!-- Mountain Facet -->
+    <path d="M250 275
+             L282 318
+             L315 350"
+          style="stroke: currentColor;
+                 stroke-width: 9;
+                 stroke-dasharray: none;
+                 stroke-linecap: round;
+                 stroke-linejoin: round;
+                 fill: none;
+                 fill-rule: nonzero;
+                 opacity: 1;"/>
+
+  </g>
 </svg>
