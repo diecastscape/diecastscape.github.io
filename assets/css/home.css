@@ -193,10 +193,23 @@
   transform: scale(1.04);
 }
 .category-icon {
-  margin-top: 14px;
-  font-size: 25px;
-  color: #102344;
+  width: 42px;
+  height: 42px;
+  margin: 14px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.category-icon .icon {
+  width: 30px;
+  height: 30px;
+  background-color: #102344;
+  -webkit-mask: var(--svg) center / contain no-repeat;
+  mask: var(--svg) center / contain no-repeat;
+  flex-shrink: 0;
+}
+
 .category-card h3 {
   margin: 8px 10px 4px;
   font-size: 19px;
@@ -454,11 +467,17 @@
   .category-card {
     border-radius: 12px;
   }
-  
   .category-icon {
-    font-size: 20px;
-    margin-top: 8px;
-  }
+  width: 34px;
+  height: 34px;
+  margin-top: 8px;
+}
+
+.category-icon .icon {
+  width: 23px;
+  height: 23px;
+}
+
   .category-card h3 {
     font-size: 13px;
     margin: 5px 3px;
