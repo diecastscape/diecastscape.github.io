@@ -20,6 +20,7 @@
   max-width: 850px;
   margin: 0 auto;
   padding: 20px 0;
+  transform: translateY(-45px);
 }
 
 .hero .hero-small-title {
@@ -64,6 +65,7 @@
   .hero .hero-content {
     max-width: 100%;
     padding: 10px 0;
+    transform: translateY(-35px);
   }
 
   .hero .hero-small-title {
