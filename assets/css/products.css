@@ -227,7 +227,6 @@ font-size: 16px;
 font-weight: 600;
 color: #777;
 }
-
 .section {
 text-align: left;
 margin: 18px 12px;
@@ -238,12 +237,11 @@ border-radius: 18px;
 box-shadow: 0 4px 16px rgba(0,0,0,.08);
 box-sizing: border-box;
 overflow: hidden;
+
 content-visibility: auto;
 contain-intrinsic-size: 300px;
-opacity: 0;
-transform: translateY(8px);
-animation: fadeProduct .4s ease forwards;
 }
+
 
 @media (min-width: 768px) {
 .products-container {
@@ -272,12 +270,6 @@ margin: 18px 8px;
 }
 }
 
-@keyframes fadeProduct {
-to {
-opacity: 1;
-transform: none;
-}
-}
 
 /* =====================================================
 SHOP CARD
