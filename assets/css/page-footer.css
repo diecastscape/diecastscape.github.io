@@ -1,181 +1,125 @@
+
 /* =====================================================
    FOOTER — DIECAST.SCAPE
    Matches Home Page Design
 ===================================================== */
-
 .footer {
   width: 100%;
   box-sizing: border-box;
-
   margin-top: 55px;
   padding: 45px 24px 28px;
-
   background: #f7f9fc;
-
   border-top: 1px solid #dce5ef;
-
   font-family: Arial, sans-serif;
-
   color: #102344;
 }
-
 
 /* =====================================================
    FOOTER INNER WIDTH
 ===================================================== */
-
 .footer > * {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
 
-
 /* =====================================================
    FOOTER TITLE
 ===================================================== */
-
 .footer-title {
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 14px;
-
   margin-bottom: 28px;
 }
 
 .footer-title span {
   width: 45px;
   height: 1px;
-
   background: #19b6c4;
-
   opacity: .7;
 }
 
 .footer-title h3 {
   margin: 0;
-
   font-size: 13px;
   font-weight: 800;
-
   letter-spacing: 3px;
   text-transform: uppercase;
-
   color: #102344;
 }
-
 
 /* =====================================================
    FOOTER LINKS
 ===================================================== */
-
 .footer-links {
   max-width: 650px !important;
-
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-
   gap: 10px 12px;
-
   margin-bottom: 30px;
 }
 
 .footer-links a {
   display: flex;
   align-items: center;
-
   min-height: 40px;
-
   padding: 0 14px;
-
   box-sizing: border-box;
-
   text-decoration: none;
-
   color: #52637c;
-
   background: rgba(255,255,255,.75);
-
   border: 1px solid #dbe4ee;
-
   border-radius: 10px;
-
   font-size: 12px;
   font-weight: 600;
-
-  transition:
-    color .2s ease,
-    background .2s ease,
-    border-color .2s ease,
-    transform .2s ease;
+  transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease;
 }
 
 .footer-links a:hover {
   color: #0daabb;
-
   background: #ffffff;
-
   border-color: #b9e7eb;
-
   transform: translateY(-2px);
 }
-
 
 /* =====================================================
    DIVIDER
 ===================================================== */
-
 .footer-line {
   max-width: 1200px !important;
-
   height: 1px;
-
   margin-top: 0;
   margin-bottom: 28px;
-
   background: #dce5ef;
 }
-
 
 /* =====================================================
    FOOTER INFORMATION
 ===================================================== */
-
 .footer-info {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
   gap: 35px;
 }
-
 
 /* =====================================================
    LEFT SIDE
 ===================================================== */
-
 .footer-left {
   flex: 1;
-
   min-width: 0;
 }
 
-
 /* Brand */
-
 .footer-left .home-brand-name {
   display: inline-block;
-
   margin-bottom: 10px;
-
   font-size: 22px;
   font-weight: 800;
-
   letter-spacing: -.5px;
-
   color: #142744;
 }
 
@@ -183,77 +127,48 @@
   color: #19b6c4;
 }
 
-
 /* Description */
-
 .footer-left p {
   max-width: 520px;
-
   margin: 0 0 13px;
-
   color: #70809a;
-
   font-size: 12px;
-
   line-height: 1.6;
 }
 
-
 /* Copyright */
-
 .footer-left .copyright {
   margin-bottom: 0;
-
   color: #8b99aa;
-
   font-size: 10px;
-
   line-height: 1.55;
 }
-
 
 /* =====================================================
    SOCIAL BUTTONS
 ===================================================== */
-
 .footer-right {
   width: 175px;
-
   display: flex;
   flex-direction: column;
-
   gap: 10px;
-
   flex-shrink: 0;
 }
 
-
 /* Common button */
-
 .footer-btn {
   width: 100%;
-
   min-height: 40px;
-
   box-sizing: border-box;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 22px;
-
   font-size: 12px;
   font-weight: 700;
-
   text-decoration: none;
-
   color: #ffffff;
-
-  transition:
-    transform .2s ease,
-    box-shadow .2s ease,
-    opacity .2s ease;
+  transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
 }
 
 .footer-btn:hover {
@@ -264,79 +179,48 @@
   transform: scale(.97);
 }
 
-
 /* =====================================================
    INSTAGRAM
 ===================================================== */
-
 .footer-instagram {
-  background: linear-gradient(
-    135deg,
-    #f58529,
-    #dd2a7b,
-    #8134af
-  );
-
-  box-shadow:
-    0 6px 16px rgba(221,42,123,.18);
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+  box-shadow: 0 6px 16px rgba(221,42,123,.18);
 }
-
 
 /* =====================================================
    WHATSAPP
 ===================================================== */
-
 .footer-whatsapp {
-  background: linear-gradient(
-    135deg,
-    #25d366,
-    #128c7e
-  );
-
-  box-shadow:
-    0 6px 16px rgba(37,211,102,.18);
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  box-shadow: 0 6px 16px rgba(37,211,102,.18);
 }
-
 
 /* =====================================================
    OPTIONAL FEATURE ROW
    Works if .footer-features exists
 ===================================================== */
-
 .footer-features {
   max-width: 1200px !important;
-
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-
   margin-top: 32px;
-
   padding: 15px 0;
-
   border-top: 1px solid #dce5ef;
   border-bottom: 1px solid #dce5ef;
 }
 
 .feature-item {
   min-height: 38px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 7px;
-
   padding: 5px 10px;
-
   box-sizing: border-box;
-
   color: #667892;
-
   border-right: 1px solid #dce5ef;
-
   font-size: 10px;
   font-weight: 600;
-
   text-align: center;
 }
 
@@ -348,72 +232,43 @@
   color: #667892;
 }
 
-
 /* =====================================================
    ICON MASK
 ===================================================== */
-
 .icon2 {
   width: 19px;
   height: 19px;
-
   margin-top: 0;
-
   background-color: #102344;
-
-  -webkit-mask:
-    var(--svg) center / contain no-repeat;
-
-  mask:
-    var(--svg) center / contain no-repeat;
-
+  -webkit-mask: var(--svg) center / contain no-repeat;
+  mask: var(--svg) center / contain no-repeat;
   flex-shrink: 0;
 }
-
 
 /* =====================================================
    OLD FOOTER1 SUPPORT
 ===================================================== */
-
 .footer1 {
   margin-top: 40px;
-
   padding: 18px 16px 0;
-
   margin-bottom: 138px;
-
   border-top: 1px solid #dce5ef;
-
   font-family: Arial, sans-serif;
 }
-
 
 /* =====================================================
    MOBILE FOOTER
 ===================================================== */
-
 @media (max-width: 700px) {
-
   .footer {
     margin-top: 35px;
-
-    padding:
-      35px
-      14px
-      22px;
-
-    border-top:
-      1px solid #dce5ef;
+    padding: 35px 14px 22px;
+    border-top: 1px solid #dce5ef;
   }
 
-
-  /* -------------------------
-     TITLE
-  ------------------------- */
-
+  /* TITLE */
   .footer-title {
     gap: 10px;
-
     margin-bottom: 20px;
   }
 
@@ -423,129 +278,76 @@
 
   .footer-title h3 {
     font-size: 10px;
-
     letter-spacing: 2.5px;
   }
 
-
-  /* -------------------------
-     LINKS
-  ------------------------- */
-
+  /* LINKS */
   .footer-links {
     grid-template-columns: 1fr 1fr;
-
     gap: 8px;
-
     margin-bottom: 22px;
   }
 
   .footer-links a {
     min-height: 36px;
-
-    padding:
-      0 10px;
-
+    padding: 0 10px;
     border-radius: 9px;
-
     font-size: 10px;
   }
 
-
-  /* -------------------------
-     DIVIDER
-  ------------------------- */
-
+  /* DIVIDER */
   .footer-line {
     margin-bottom: 22px;
   }
 
-
-  /* -------------------------
-     INFO
-  ------------------------- */
-
+  /* INFO */
   .footer-info {
     align-items: flex-start;
-
     gap: 20px;
   }
 
-
-  /* -------------------------
-     BRAND
-  ------------------------- */
-
+  /* BRAND */
   .footer-left .home-brand-name {
     font-size: 18px;
-
     margin-bottom: 8px;
   }
 
-
-  /* -------------------------
-     DESCRIPTION
-  ------------------------- */
-
+  /* DESCRIPTION */
   .footer-left p {
     font-size: 9px;
-
     line-height: 1.5;
-
     margin-bottom: 10px;
   }
 
-
-  /* -------------------------
-     COPYRIGHT
-  ------------------------- */
-
+  /* COPYRIGHT */
   .footer-left .copyright {
     font-size: 8px;
-
     line-height: 1.5;
   }
 
-
-  /* -------------------------
-     BUTTONS
-  ------------------------- */
-
+  /* BUTTONS */
   .footer-right {
     width: 105px;
-
     gap: 8px;
   }
 
   .footer-btn {
     min-height: 34px;
-
     border-radius: 20px;
-
     font-size: 9px;
   }
 
-
-  /* -------------------------
-     FEATURES
-  ------------------------- */
-
+  /* FEATURES */
   .footer-features {
     grid-template-columns: repeat(4, 1fr);
-
     margin-top: 25px;
-
     padding: 10px 0;
   }
 
   .feature-item {
     min-height: 35px;
-
-    padding:
-      3px 2px;
-
+    padding: 3px 2px;
     gap: 3px;
-
     font-size: 7px;
   }
 
@@ -555,13 +357,10 @@
   }
 }
 
-
 /* =====================================================
    VERY SMALL PHONES
 ===================================================== */
-
 @media (max-width: 380px) {
-
   .footer-info {
     gap: 12px;
   }
@@ -584,7 +383,6 @@
 
   .footer-btn {
     min-height: 32px;
-
     font-size: 8px;
   }
 
