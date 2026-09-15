@@ -116,7 +116,7 @@
 .hero-dot {
   width: 9px;
   height: 9px;
-  border-radius: 50%;
+  border-radius: 50px;
   border: none;
   background: #c6d0dc;
   cursor: pointer;
