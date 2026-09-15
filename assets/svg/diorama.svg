@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     version="1.1"
+     width="50"
+     height="50"
+     viewBox="0 0 256 256"
+     xml:space="preserve">
+
+  <g id="icon"
+     style="stroke: none;
+            stroke-width: 0;
+            stroke-dasharray: none;
+            stroke-linecap: butt;
+            stroke-linejoin: miter;
+            stroke-miterlimit: 10;
+            fill: none;
+            fill-rule: nonzero;
+            opacity: 1;"
+     transform="translate(1.4065934065934016 1.4065934065934016) scale(0.42 0.42)">
+
+    <!-- TOP -->
+    <path d="M105 125
+             L410 75
+             L515 130
+             L205 180
+             Z"
+          style="stroke: currentColor;
+                 stroke-width: 12;
+                 stroke-dasharray: none;
+                 stroke-linecap: round;
+                 stroke-linejoin: round;
+                 stroke-miterlimit: 10;
+                 fill: none;
+                 fill-rule: nonzero;
+                 opacity: 1;"/>
+
+    <!-- LEFT SIDE -->
+    <path d="M105 125
+             L205 180
+             L205 405
+             L105 350
+             Z"
+          style="stroke: currentColor;
+                 stroke-width: 12;
+                 stroke-dasharray: none;
+                 stroke-linecap: round;
+                 stroke-linejoin: round;
+                 stroke-miterlimit: 10;
+                 fill: none;
+                 fill-rule: nonzero;
+                 opacity: 1;"/>
+
+    <!-- FRONT -->
+    <path d="M205 180
+             L515 130
+             L515 350
+             L205 405
+             Z"
+          style="stroke: currentColor;
+                 stroke-width: 12;
+                 stroke-dasharray: none;
+                 stroke-linecap: round;
+                 stroke-linejoin: round;
+                 stroke-miterlimit: 10;
+                 fill: none;
+                 fill-rule: nonzero;
+                 opacity: 1;"/>
+
+    <!-- FRONT INNER BORDER -->
+    <path d="M225 198
+             L495 155
+             L495 330
+             L225 378
+             Z"
+          style="stroke: currentColor;
+                 stroke-width: 7;
+                 stroke-dasharray: none;
+                 stroke-linecap: round;
+                 stroke-linejoin: round;
+                 stroke-miterlimit: 10;
+                 fill: none;
+                 fill-rule: nonzero;
+                 opacity: 1;"/>
+
+    <!-- BOTTOM -->
+    <path d="M105 350
+             L205 405
+             L515 350"
+          style="stroke: currentColor;
+                 stroke-width: 12;
+                 stroke-dasharray: none;
+                 stroke-linecap: round;
+                 stroke-linejoin: round;
+                 stroke-miterlimit: 10;
+                 fill: none;
+                 fill-rule: nonzero;
+                 opacity: 1;"/>
+
+  </g>
+</svg>
