@@ -252,10 +252,10 @@ input {
 
 /* BREADCRUMB */
 body:has(.running-offer-bar) .breadcrumb-wrap {
-    margin-top: 30px;
+    margin-top: 42px;
 }
 .breadcrumb-wrap {
-  margin: 0 14px 0;
+  margin: 12px 14px 0;
   display: inline-flex;
   align-items: center;
   gap: 8px;
