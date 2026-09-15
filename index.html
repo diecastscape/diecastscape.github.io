@@ -12,12 +12,6 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-(function(){
-  const savedTheme = localStorage.getItem("theme") || "light";
-  document.documentElement.classList.add(savedTheme);
-})();
-  </script>
 <title>DIECAST.SCAPE</title>
 <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> 
 <script src="/assets/js/core.js"></script>
@@ -715,28 +709,108 @@
 
     </footer>
 
-  <!-- Overlay -->
+  <!-- =====================================================
+     SIDE MENU
+===================================================== -->
+
 <div class="menu-overlay" onclick="closeMenu()"></div>
-  
-<!-- Slide Menu -->
-<nav class="side-menu">
+
+<nav class="side-menu" id="sideMenu">
+
   <div class="menu-header">
-    <span>Menu</span>
-    <span class="close-btn" onclick="closeMenu()">✕</span>
+
+    <div>
+      <div class="menu-label">
+        DIECAST.SCAPE
+      </div>
+
+      <div class="menu-title">
+        Menu
+      </div>
+    </div>
+
+    <button
+      class="menu-close"
+      onclick="closeMenu()"
+      aria-label="Close menu">
+      ×
+    </button>
+
   </div>
-  <!-- Theme Toggle (UI only) -->
-<div class="theme-toggle">
-  <span>Theme</span>
-  <div class="toggle-switch" onclick="toggleThemeButton()">
-    <div class="toggle-circle"></div>
+
+
+  <div class="menu-divider"></div>
+
+
+  <div class="menu-links">
+
+    <a href="/products/">
+      <span>Shop</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/diorama/">
+      <span>Dioramas</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/accessories/">
+      <span>Accessories</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/frames/">
+      <span>Frames</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
   </div>
-</div>
-  <a href="/policy's/about/">About Us</a>
-  <a href="/policy's/privacy/">Privacy Policy</a>
-  <a href="/policy's/shipping/">Shipping Policy</a>
-  <a href="/policy's/return/">Return & Cancellation</a>
-  <a href="/policy's/terms/">Terms of Service</a>
-  <a href="/policy's/faq/">FAQ</a>
+
+
+  <div class="menu-divider"></div>
+
+
+  <div class="menu-secondary">
+
+    <a href="/policy's/about/">
+      About Us
+    </a>
+
+    <a href="/policy's/faq/">
+      FAQ
+    </a>
+
+    <a href="/policy's/shipping/">
+      Shipping Policy
+    </a>
+
+    <a href="/policy's/return/">
+      Return & Cancellation
+    </a>
+
+    <a href="/policy's/privacy/">
+      Privacy Policy
+    </a>
+
+    <a href="/policy's/terms/">
+      Terms of Service
+    </a>
+
+  </div>
+
+
+  <div class="menu-bottom">
+
+    <div class="menu-bottom-brand">
+      Diecast<span>.scape</span>
+    </div>
+
+    <div class="menu-bottom-text">
+      BUILT IN SCALE. CRAFTED WITH SOUL.
+    </div>
+
+  </div>
+
 </nav>
 
 <script type="module" src="/assets/js/firebase-init.js"></script>
