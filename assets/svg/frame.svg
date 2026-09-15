@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 600 600"
+     fill="none">
+
+  <!-- Outer Photo Frame -->
+  <rect x="65"
+        y="65"
+        width="470"
+        height="470"
+        rx="5"
+        stroke="#000"
+        stroke-width="10"/>
+
+  <!-- Sun -->
+  <circle cx="175"
+          cy="205"
+          r="22"
+          stroke="#000"
+          stroke-width="10"/>
+
+  <!-- Mountain Mark -->
+  <path d="M145 405
+           L250 275
+           L315 350
+           L390 255
+           L475 405"
+        stroke="#000"
+        stroke-width="15"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Mountain Facet -->
+  <path d="M250 275
+           L282 318
+           L315 350"
+        stroke="#000"
+        stroke-width="9"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+</svg>
