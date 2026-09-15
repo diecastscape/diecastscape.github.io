@@ -180,7 +180,7 @@
   box-shadow: 0 5px 18px rgba(20,50,80,.05);
 }
 .category-image {
-  aspect-ratio: 1.35 / 1;
+  aspect-ratio: 1 / 1.1;
   overflow: hidden;
 }
 .category-image img {
@@ -454,9 +454,7 @@
   .category-card {
     border-radius: 12px;
   }
-  .category-image {
-    aspect-ratio: 3 / 2;
-  }
+  
   .category-icon {
     font-size: 20px;
     margin-top: 8px;
