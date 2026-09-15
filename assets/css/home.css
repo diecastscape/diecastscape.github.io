@@ -108,10 +108,10 @@
   position: absolute;
   z-index: 5;
   bottom: 18px;
-  left: 100%;
+  left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 9px;
+  gap: 8px;
 }
 .hero-dot {
   width: 9px;
