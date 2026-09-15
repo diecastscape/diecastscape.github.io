@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     version="1.1"
+     width="50"
+     height="50"
+     viewBox="0 0 256 256"
+     xml:space="preserve">
+
+  <g id="icon"
+     style="stroke: none;
+            stroke-width: 0;
+            stroke-dasharray: none;
+            stroke-linecap: butt;
+            stroke-linejoin: miter;
+            stroke-miterlimit: 10;
+            fill: none;
+            fill-rule: nonzero;
+            opacity: 1;"
+     transform="translate(1.4065934065934016 1.4065934065934016) scale(0.505 0.505)">
+
+    <!-- Gear -->
+    <path d="
+      M218 55
+      H282
+      L292 92
+      C310 96 327 103 342 113
+      L374 93
+      L419 138
+      L399 170
+      C409 185 416 202 420 220
+      L457 230
+      V294
+      L420 304
+      C416 322 409 339 399 354
+      L419 386
+      L374 431
+      L342 411
+      C327 421 310 428 292 432
+      L282 469
+      H218
+      L208 432
+      C190 428 173 421 158 411
+      L126 431
+      L81 386
+      L101 354
+      C91 339 84 322 80 304
+      L43 294
+      V230
+      L80 220
+      C84 202 91 185 101 170
+      L81 138
+      L126 93
+      L158 113
+      C173 103 190 96 208 92
+      Z"
+      style="stroke: currentColor;
+             stroke-width: 12;
+             stroke-dasharray: none;
+             stroke-linecap: round;
+             stroke-linejoin: round;
+             fill: none;
+             fill-rule: nonzero;
+             opacity: 1;"/>
+
+    <!-- Inner Opening -->
+    <circle cx="250"
+            cy="262"
+            r="125"
+            style="stroke: currentColor;
+                   stroke-width: 10;
+                   stroke-dasharray: none;
+                   stroke-linecap: round;
+                   stroke-linejoin: round;
+                   fill: none;
+                   fill-rule: nonzero;
+                   opacity: 1;"/>
+
+  </g>
+</svg>
