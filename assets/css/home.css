@@ -455,7 +455,7 @@
     border-radius: 12px;
   }
   .category-image {
-    aspect-ratio: 1 / .9;
+    aspect-ratio: 6 / 5;
   }
   .category-icon {
     font-size: 20px;
