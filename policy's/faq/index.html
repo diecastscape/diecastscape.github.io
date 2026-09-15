@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,37 +14,52 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-(function(){
-  const savedTheme = localStorage.getItem("theme") || "light";
-  document.documentElement.classList.add(savedTheme);
-})();
-  </script>
+
 <title>FAQ | Diecast.scape</title>
-  <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> 
-<script src="/assets/js/core.js"></script>
+
+<link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon/favicon-96x96.png" sizes="96x96" type="image/png">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<link rel="manifest" href="/favicon/site.webmanifest">
+
 <link rel="stylesheet" href="/assets/css/style.css">
-  <link rel="stylesheet" href="/assets/css/page-footer.css">
+<link rel="stylesheet" href="/assets/css/page-footer.css">
 </head>
+
 <body>
 
 <!-- HEADER -->
-<header class="site-header">
-  <div class="header-inner">
-    <img src="/images/logo.png" class="header-logo" alt="Diecast Scape Logo">
+<header class="home-header">
+  <div class="home-header-inner">
 
-    <div class="header-title">DIECAST.SCAPE</div>
+    <div class="home-brand">
+      <div class="home-brand-name">
+        Diecast<span>.scape</span>
+      </div>
 
-    <!-- Hamburger -->
-    <div class="hamburger" onclick="openMenu()">☰</div>
+      <div class="home-brand-tagline">
+        BUILT IN SCALE. CRAFTED WITH SOUL.
+      </div>
+    </div>
+
+    <div class="home-actions">
+      <button class="home-menu-btn" onclick="openMenu()" aria-label="Menu">
+        ☰
+      </button>
+    </div>
+
   </div>
 </header>
+
+
 <!-- Breadcrumb -->
 <nav class="breadcrumb-wrap">
   <a href="/" class="breadcrumb-link">Home</a>
   <span class="breadcrumb-sep">›</span>
   <span class="breadcrumb-current">FAQ</span>
 </nav>
+
 
 <div class="page">
 
@@ -119,7 +134,8 @@ Depends on your location and courier service.
 You will receive tracking details once shipped.</p>
     </div>
   </div>
-<div class="faq-item">
+
+  <div class="faq-item">
     <button class="faq-question">Do you deliver all over India?</button>
     <div class="faq-answer">
      <p>Yes. 🚚</p>
@@ -161,8 +177,10 @@ You will receive tracking details once shipped.</p>
 <p>📸 Instagram DM: For previews & updates</p>
     </div>
   </div>
+
 </div>
-  <div class="faq-contact">
+
+<div class="faq-contact">
   <h3>Still have questions?</h3>
 
   <p class="faq-help-text">
@@ -174,7 +192,7 @@ You will receive tracking details once shipped.</p>
   </p>
 </div>
 
-  
+
 <footer class="footer">
 
   <div class="footer-title">
@@ -202,7 +220,9 @@ You will receive tracking details once shipped.</p>
 
     <div class="footer-left">
 
-      <h2>DIECAST.SCAPE</h2>
+      <div class="home-brand-name">
+        Diecast<span>.scape</span>
+      </div>
 
       <p>
         This is a small independent business.<br>
@@ -218,72 +238,97 @@ You will receive tracking details once shipped.</p>
 
     <div class="footer-right">
 
-            <a href="https://instagram.com/diecast.scape" target="_blank" class="footer-btn footer-instagram">
-    Instagram
-  </a>
-  <a href="https://wa.me/918792744018" target="_blank" class="footer-btn footer-whatsapp">
-    WhatsApp
-  </a>
+      <a href="https://instagram.com/diecast.scape" target="_blank" class="footer-btn footer-instagram">
+        Instagram
+      </a>
+
+      <a href="https://wa.me/918792744018" target="_blank" class="footer-btn footer-whatsapp">
+        WhatsApp
+      </a>
 
     </div>
 
   </div>
-<div class="footer-features">
 
-  <div class="feature-item">
-    <span class="feature-icon"><div class="icon2"
-       style="--svg:url('/assets/svg/packed.svg')">
-    </div></span>
-    <span class="feature-text">Secure Packaging</span>
-  </div>
-
-  <div class="feature-item">
-    <span class="feature-icon"><div class="icon2"
-       style="--svg:url('/assets/svg/heart.svg')">
-    </div></span>
-    <span class="feature-text">Safe payment</span>
-  </div>
-
-  <div class="feature-item">
-    <span class="feature-icon"><div class="icon2"
-       style="--svg:url('/assets/svg/support.svg')">
-    </div></span>
-    <span class="feature-text">Customer support</span>
-  </div>
-
-  <div class="feature-item">
-    <span class="feature-icon"><div class="icon2"
-       style="--svg:url('/assets/svg/diamond.svg')">
-    </div></span>
-    <span class="feature-text">Quality Product</span>
-  </div>
-
-</div>
 </footer>
-    <!-- Overlay -->
+
+
+<!-- Overlay -->
 <div class="menu-overlay" onclick="closeMenu()"></div>
 
+
 <!-- Slide Menu -->
-<nav class="side-menu">
+<nav class="side-menu" id="sideMenu">
+
   <div class="menu-header">
-    <span>Menu</span>
-    <span class="close-btn" onclick="closeMenu()">✕</span>
+
+    <div>
+      <div class="menu-label">
+        DIECAST.SCAPE
+      </div>
+
+      <div class="menu-title">
+        Menu
+      </div>
+    </div>
+
+    <button class="menu-close" onclick="closeMenu()" aria-label="Close menu">
+      ×
+    </button>
+
   </div>
 
-  <!-- Theme Toggle (UI only) -->
-<div class="theme-toggle">
-  <span>Theme</span>
-  <div class="toggle-switch" onclick="toggleThemeButton()">
-    <div class="toggle-circle"></div>
+  <div class="menu-divider"></div>
+
+  <div class="menu-links">
+
+    <a href="/products/diorama/">
+      <span>Dioramas</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/accessories/">
+      <span>Accessories</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/frames/">
+      <span>Frames</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
   </div>
-</div>
- <a href="/index.html" class="menu-sale">HOME</a>
-  <a href="/policy's/about/">About Us</a>
-  <a href="/policy's/privacy/">Privacy Policy</a>
-  <a href="/policy's/shipping/">Shipping Policy</a>
-  <a href="/policy's/return/">Return & Cancellation</a>
-  <a href="/policy's/terms/">Terms of Service</a>
-  <a href="/policy's/faq/">FAQ</a>
+
+  <div class="menu-divider"></div>
+
+  <div class="menu-secondary">
+
+    <a href="/policy's/about/">About Us</a>
+    <a href="/policy's/faq/">FAQ</a>
+    <a href="/policy's/shipping/">Shipping Policy</a>
+    <a href="/policy's/return/">Return & Cancellation</a>
+    <a href="/policy's/privacy/">Privacy Policy</a>
+    <a href="/policy's/terms/">Terms of Service</a>
+
+  </div>
+
+  <div class="menu-bottom">
+
+    <div class="menu-bottom-brand">
+      Diecast<span>.scape</span>
+    </div>
+
+    <div class="menu-bottom-text">
+      BUILT IN SCALE. CRAFTED WITH SOUL.
+    </div>
+
+  </div>
+
 </nav>
+
+
+<script src="/assets/js/core.js"></script>
+
 </body>
 </html>
+```
