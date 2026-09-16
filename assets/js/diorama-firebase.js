@@ -19,6 +19,9 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   const offerRibbon =
     p.offerText && String(p.offerText).trim() !== ""
       ? `
+	  <div class="product-offer-ribbon1">
+          <span>${p.offerClime}</span>
+        </div>
         <div class="product-offer-ribbon">
           <span>${p.offerText}</span>
         </div>
