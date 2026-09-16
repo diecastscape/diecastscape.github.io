@@ -28,9 +28,8 @@ body {
   right: 0;
   height: 70px;
   z-index: 900;
-
-  /* Removed backdrop-filter blur for performance */
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
 
   border-bottom: 1px solid #E1E8F0;
 }
