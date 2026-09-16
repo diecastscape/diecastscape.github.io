@@ -1011,12 +1011,12 @@ font-weight: 700;
   height: 32px;
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,.94);
+  background: #fff;
   color: #142744;
   overflow: hidden;
   white-space: nowrap;
   border-bottom: 1px solid #DDE8EC;
-  box-shadow: 0 3px 12px rgba(16,35,68,.07);
+
   z-index: 900;
 }
 
