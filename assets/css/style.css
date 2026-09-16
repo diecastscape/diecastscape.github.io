@@ -1,3 +1,4 @@
+
 html,
 body {
   min-height: 100%;
@@ -10,13 +11,15 @@ html {
 body {
   margin: 0;
   padding-top: 70px;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   background: #F5F7FA;
   color: #0B132B;
 }
 
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .home-header {
   position: fixed;
@@ -25,16 +28,19 @@ body {
   right: 0;
   height: 70px;
   z-index: 900;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(14px);
+
+  /* Removed backdrop-filter blur for performance */
+  background: #FFFFFF;
+
   border-bottom: 1px solid #E1E8F0;
 }
 
 .home-header-inner {
   height: 100%;
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
   padding: 0 28px;
+
   display: flex;
   align-items: center;
 }
@@ -90,11 +96,15 @@ body {
   line-height: 1;
 }
 
-/* COMING SOON */
+
+/* =========================
+   COMING SOON
+========================= */
 
 .coming-soon {
   margin: 28px auto 18px;
   text-align: center;
+
   font-size: 15px;
   font-weight: 450;
   letter-spacing: 0.6px;
@@ -107,7 +117,10 @@ body {
   font-weight: 600;
 }
 
-/* PAGE */
+
+/* =========================
+   PAGE
+========================= */
 
 .page {
   max-width: 800px;
@@ -134,7 +147,10 @@ body {
   text-decoration: none;
 }
 
-/* FAQ */
+
+/* =========================
+   FAQ
+========================= */
 
 .faq-item {
   border-bottom: 1px solid #5BC0BE;
@@ -145,11 +161,14 @@ body {
   width: 100%;
   background: none;
   border: none;
+
   color: #2B2B2B;
   text-align: left;
   font-size: 14px;
   padding: 11px 0;
+
   cursor: pointer;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -168,7 +187,9 @@ body {
 .faq-answer {
   max-height: 0;
   overflow: hidden;
+
   transition: max-height 0.35s ease;
+
   line-height: 1.6;
   padding-right: 10px;
 }
@@ -196,15 +217,23 @@ body {
 
 .faq-whatsapp-btn {
   display: inline-block;
+
   margin: 0 6px;
   padding: 6px 14px;
+
   border-radius: 20px;
+
   background: linear-gradient(135deg, #25D366, #128C7E);
   color: #FFFFFF;
+
   font-weight: 600;
   text-decoration: none;
+
   box-shadow: 0 0 10px rgba(37, 211, 102, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .faq-whatsapp-btn:active {
@@ -215,20 +244,28 @@ body {
   box-shadow: 0 0 16px rgba(37, 211, 102, 0.6);
 }
 
-/* WHATSAPP FLOAT */
+
+/* =========================
+   WHATSAPP FLOAT
+========================= */
 
 .wa-float {
   position: fixed;
   bottom: 55px;
   right: 22px;
+
   width: 56px;
   height: 56px;
+
   background: #25D366;
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+
   z-index: 999;
 }
 
@@ -236,26 +273,36 @@ body {
   width: 28px;
 }
 
-/* INPUT */
+
+/* =========================
+   INPUT
+========================= */
 
 input {
   width: 100%;
   padding: 12px;
   margin-bottom: 12px;
+
   border-radius: 6px;
   border: none;
   outline: none;
+
   background: rgba(255, 255, 255, 0.15);
   color: #FFFFFF;
 }
 
 
-/* BREADCRUMB */
+/* =========================
+   BREADCRUMB
+========================= */
+
 body:has(.running-offer-bar) .breadcrumb-wrap {
-    margin-top: 42px;
+  margin-top: 42px;
 }
+
 .breadcrumb-wrap {
   margin: 12px 14px 0;
+
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -264,6 +311,7 @@ body:has(.running-offer-bar) .breadcrumb-wrap {
 .breadcrumb-link {
   color: #5BC0BE;
   text-decoration: none;
+
   font-size: 10px;
   font-weight: 600;
 }
@@ -279,49 +327,32 @@ body:has(.running-offer-bar) .breadcrumb-wrap {
 
 .breadcrumb-current {
   color: #2B2B2B;
+
   font-size: 9.5px;
   font-weight: 600;
 }
 
-/* SIDE MENU OVERLAY */
+
+/* =========================
+   SIDE MENU OVERLAY
+========================= */
 
 .menu-overlay {
   position: fixed;
   inset: 0;
   z-index: 998;
+
   background: rgba(10, 25, 45, 0.32);
+
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  backdrop-filter: blur(2px);
-}
 
-/* SIDE MENU */
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 
-.side-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 330px;
-  max-width: 88vw;
-  height: 100dvh;
-  box-sizing: border-box;
-  padding: 24px 22px;
-  background: #FFFFFF;
-  border-left: 1px solid #E2E9F0;
-  box-shadow: -12px 0 40px rgba(16, 35, 68, 0.12);
-  transform: translateX(105%);
-  transition: transform 0.38s cubic-bezier(0.22, 0.61, 0.36, 1);
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-body.menu-open .side-menu {
-  transform: translateX(0);
+  /* Removed backdrop-filter: blur(2px) */
 }
 
 body.menu-open .menu-overlay {
@@ -330,25 +361,73 @@ body.menu-open .menu-overlay {
   pointer-events: auto;
 }
 
-/* MENU HEADER */
+
+/* =========================
+   SIDE MENU
+========================= */
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  width: 330px;
+  max-width: 88vw;
+  height: 100dvh;
+
+  box-sizing: border-box;
+
+  padding: 24px 22px;
+
+  background: #FFFFFF;
+  border-left: 1px solid #E2E9F0;
+
+  box-shadow: -12px 0 40px rgba(16, 35, 68, 0.12);
+
+  transform: translateX(105%);
+
+  transition:
+    transform 0.38s cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  z-index: 999;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+body.menu-open .side-menu {
+  transform: translateX(0);
+}
+
+
+/* =========================
+   MENU HEADER
+========================= */
 
 .menu-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 4px 2px 18px;
 }
 
 .menu-label {
   color: #11AEBC;
+
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 2.5px;
+
   margin-bottom: 4px;
 }
 
 .menu-title {
   color: #102344;
+
   font-size: 25px;
   line-height: 1;
   font-weight: 750;
@@ -358,18 +437,27 @@ body.menu-open .menu-overlay {
 .menu-close {
   width: 40px;
   height: 40px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border: 1px solid #DCE5ED;
   border-radius: 50%;
+
   background: #F6F8FA;
   color: #102344;
+
   font-size: 25px;
   font-weight: 300;
   line-height: 1;
+
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .menu-close:hover {
@@ -381,16 +469,24 @@ body.menu-open .menu-overlay {
   transform: scale(0.92);
 }
 
-/* MENU DIVIDER */
+
+/* =========================
+   MENU DIVIDER
+========================= */
 
 .menu-divider {
   width: 100%;
   height: 1px;
+
   background: #E5EBF1;
+
   margin: 2px 0 14px;
 }
 
-/* MAIN MENU */
+
+/* =========================
+   MAIN MENU
+========================= */
 
 .menu-links {
   display: flex;
@@ -400,18 +496,28 @@ body.menu-open .menu-overlay {
 
 .menu-links a {
   position: relative;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   min-height: 50px;
   padding: 0 13px;
+
   box-sizing: border-box;
+
   border-radius: 10px;
+
   color: #102344;
   text-decoration: none;
+
   font-size: 14px;
   font-weight: 650;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .menu-links a:hover {
@@ -426,8 +532,10 @@ body.menu-open .menu-overlay {
 
 .menu-arrow {
   color: #13B1C1;
+
   font-size: 18px;
   font-weight: 500;
+
   transition: transform 0.2s ease;
 }
 
@@ -435,23 +543,33 @@ body.menu-open .menu-overlay {
   transform: translateX(4px);
 }
 
-/* SECONDARY MENU */
+
+/* =========================
+   SECONDARY MENU
+========================= */
 
 .menu-secondary {
   display: flex;
   flex-direction: column;
   gap: 2px;
+
   padding-bottom: 20px;
 }
 
 .menu-secondary a {
   display: block;
+
   padding: 9px 4px;
+
   color: #667790;
   text-decoration: none;
+
   font-size: 12px;
   font-weight: 550;
-  transition: color 0.2s ease, padding-left 0.2s ease;
+
+  transition:
+    color 0.2s ease,
+    padding-left 0.2s ease;
 }
 
 .menu-secondary a:hover {
@@ -459,16 +577,22 @@ body.menu-open .menu-overlay {
   padding-left: 8px;
 }
 
-/* MENU BOTTOM */
+
+/* =========================
+   MENU BOTTOM
+========================= */
 
 .menu-bottom {
   margin-top: auto;
+
   padding: 18px 4px 5px;
+
   border-top: 1px solid #E5EBF1;
 }
 
 .menu-bottom-brand {
   color: #142744;
+
   font-size: 17px;
   font-weight: 800;
   letter-spacing: -0.3px;
@@ -480,13 +604,19 @@ body.menu-open .menu-overlay {
 
 .menu-bottom-text {
   margin-top: 4px;
+
   color: #8A98AA;
+
   font-size: 7px;
   font-weight: 750;
   letter-spacing: 1.8px;
 }
 
-/* MENU ANIMATION */
+
+/* =========================
+   MENU ANIMATION
+   KEPT UNCHANGED
+========================= */
 
 .menu-links a,
 .menu-secondary a {
@@ -558,7 +688,10 @@ body.menu-open .menu-secondary a:nth-child(6) {
   }
 }
 
-/* MOBILE */
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 700px) {
 
@@ -632,10 +765,12 @@ body.menu-open .menu-secondary a:nth-child(6) {
   }
 }
 
-/* TABLET / DESKTOP */
+
+/* =========================
+   TABLET / DESKTOP
+========================= */
 
 @media (min-width: 650px) {
-
 
   .breadcrumb-current {
     font-size: 19px;
@@ -660,10 +795,6 @@ body.menu-open .menu-secondary a:nth-child(6) {
   .faq-help-text {
     font-size: 25px;
   }
-
-
 }
-
-/* SMALL MOBILE */
 
 
