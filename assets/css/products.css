@@ -1,3 +1,73 @@
+/* =========================================
+   PRODUCT CARD
+========================================= */
+
+.section {
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* =========================================
+   OFFER RIBBON
+   TOP-RIGHT CORNER OF CARD
+========================================= */
+
+.product-offer-ribbon {
+
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  width: 125px;
+  height: 125px;
+
+  overflow: hidden;
+
+  z-index: 20;
+
+  pointer-events: none;
+}
+
+
+/* Diagonal ribbon */
+
+.product-offer-ribbon span {
+
+  position: absolute;
+
+  top: 22px;
+  right: -36px;
+
+  width: 150px;
+
+  padding: 7px 5px;
+
+  background: #e53935;
+
+  color: #ffffff;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  line-height: 1.15;
+
+  text-align: center;
+
+  text-transform: uppercase;
+
+  letter-spacing: .2px;
+
+  transform: rotate(45deg);
+
+  box-shadow: 0 3px 8px rgba(0,0,0,.18);
+
+  white-space: normal;
+
+  box-sizing: border-box;
+}
 /* =====================================================
    PRODUCT PAGE HERO
 ===================================================== */
