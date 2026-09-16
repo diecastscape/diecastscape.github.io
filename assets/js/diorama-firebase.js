@@ -40,7 +40,7 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         alt="${p.name}"
         loading="lazy"
         decoding="async"
-        onload="this.parentElement.classList.add('img-loaded')"
+		onload="this.previousElementSibling.remove()"
         onerror="this.parentElement.classList.add('img-error')"
         onclick="openLightbox(this.src)"
       >
