@@ -31,7 +31,7 @@ function buildSaleHTML(p) {
           <div class="acc-img-loader"></div>
 
           <img
-            src="/images/frame/${im}.webp"
+            src="/images/accessories/${im}.webp"
             alt="${p.name || ""}"
             loading="lazy"
             onload="
