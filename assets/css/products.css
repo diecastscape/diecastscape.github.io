@@ -54,7 +54,7 @@
   right: -80px;
   width: 280px;
   padding: 6px 80px ;
-  min-height:25px;
+  min-height:30px;
   background: #13adbd;
   color: #fff;
 
@@ -63,7 +63,9 @@
   line-height: 1;
   text-align: center;
   text-transform: uppercase;
+display: flex;
 
+justify-content: center;
   transform: rotate(20deg);
   box-sizing: border-box;
   white-space: normal;
