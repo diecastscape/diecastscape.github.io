@@ -19,7 +19,7 @@
 .product-offer-ribbon1 span {
   display: block;
   padding: 7px 12px;
-min-height:36px;
+
   background: #e53935;
   color: #fff;
 
@@ -53,8 +53,8 @@ min-height:36px;
   top: 16px;
   right: -80px;
   width: 280px;
-  padding: 6px 80px 1px;
-
+  padding: 6px 80px ;
+  min-height:25px;
   background: #13adbd;
   color: #fff;
 
