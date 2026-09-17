@@ -1,365 +1,611 @@
+/* =========================================
+   ADMIN THEME
+========================================= */
+
+:root {
+  --bg: #F5F7FA;
+  --surface: #FFFFFF;
+  --surface-soft: #F8FAFC;
+
+  --text: #0B132B;
+  --text-secondary: #5F6B7A;
+  --text-muted: #7A8491;
+
+  --border: #E2E8F0;
+  --border-hover: #5BC0BE;
+
+  --primary: #0AA1A7;
+  --primary-light: #5BC0BE;
+  --primary-soft: #E8F8F8;
+
+  --danger: #E74C3C;
+  --danger-soft: #FDECEC;
+
+  --input-bg: #FFFFFF;
+  --input-border: #D7DEE7;
+
+  --shadow-sm: 0 2px 8px rgba(11, 19, 43, 0.06);
+  --shadow-md: 0 6px 20px rgba(11, 19, 43, 0.08);
+
+  --radius: 12px;
+}
+
+
+/* =========================================
+   PAGE
+========================================= */
+
 html {
   scroll-behavior: smooth;
 }
-html, body {
+
+html,
+body {
   min-height: 100%;
 }
+
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: radial-gradient(1200px 600px at 10% -10%, #13224a, transparent),
-              radial-gradient(1200px 600px at 110% 10%, #0a7cff33, transparent),
-              #0a0f1f;
-  color: #ffffff;
-  transition: background 0.3s ease, color 0.3s ease, opacity .2s ease;;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    opacity 0.2s ease;
 }
+
+
+/* =========================================
+   AUTH LOADING
+========================================= */
+
 .auth-loading {
   opacity: 0;
+  visibility: hidden;
 }
 
-.header{
-  background:#15181b;
-  padding:14px 20px;
-  border-bottom:1px solid #5BC0BE33;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header {
+  background: rgba(255, 255, 255, 0.94);
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
 }
 
-.container{
-  padding:15px;
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.container {
+  padding: 15px;
 }
-.center{
-  min-height:100vh;
-  display:flex;
+
+
+/* =========================================
+   CENTER
+========================================= */
+
+.center {
+  min-height: 100vh;
+  display: flex;
   flex-direction: column;
-  align-items:center;
-  justify-content:center;
+  align-items: center;
+  justify-content: center;
 }
 
-.center-head{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.forgot{
-text-align:right;
-margin-top:6px;
-font-size:13px;
-}
-
-.forgot a{
-color:#5BC0BE;
-text-decoration:none;
-}
-  .card{
-  width:65%;
-  background:#15181b;
-  padding:30px;
-  border-radius:14px;
-  max-width:320px;
-  text-align:center;
-  border:1px solid #5BC0BE33;
-}
-
-input{
-  width:100%;
-  margin:8px 0;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #2b3136;
-  background:#0f1113;
-  color:#fff;
-  box-sizing:border-box;
-}
-.primary-btn{
-  width:100%;
-}
-
-button{
-  min-width:80px;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:#5BC0BE;
-  color:#fff;
-  font-weight:600;
-  margin:8px 0;
-  cursor:pointer;
-  box-sizing:border-box;
-}
-
-  input, button{
-  box-sizing:border-box;
-}
-.secondary-btn{
-  background:#e74c3c;
-}
-.cancel-btn{
-  background:#e74c3c !important;
-  color:#fff !important;
-}
-  .loader{
-  width:22px;
-  height:22px;
-  border:3px solid rgba(91,192,190,0.2);
-  border-top:3px solid #5BC0BE;
-  border-radius:50%;
-  margin:10px auto 0;
-  animation:spin 0.8s linear infinite;
-  display:none;
-}
-
-.loader.show{
-  display:block;
-}
-
-  @keyframes spin{
-  from{ transform:rotate(0deg); }
-  to{ transform:rotate(360deg); }
+.center-head {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 
-.loader-bar{
-  width:100%;
-  height:3px;
-  background:#1f2a2c;
-  border-radius:2px;
-  overflow:hidden;
-  margin-top:0px;
-  display:none;
+/* =========================================
+   FORGOT PASSWORD
+========================================= */
+
+.forgot {
+  text-align: right;
+  margin-top: 6px;
+  font-size: 13px;
 }
 
-.loader-bar::after{
-  content:"";
-  display:block;
-  width:40%;
-  height:100%;
-  background:#5BC0BE;
-  animation:barMove 1s linear infinite;
+.forgot a {
+  color: var(--primary);
+  text-decoration: none;
 }
 
-.loader-bar.show{
-  display:block;
-}
-@keyframes barMove{
-  from{ transform:translateX(-100%) }
-  to{ transform:translateX(250%) }
+.forgot a:hover {
+  text-decoration: underline;
 }
 
-  .price-row{
-  display:flex;
-  gap:8px;
+
+/* =========================================
+   LOGIN / FORM CARD
+========================================= */
+
+.card {
+  width: 65%;
+  max-width: 320px;
+  padding: 30px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
 }
 
-textarea{
-  width:100%;
-  height:140px;
-  margin:8px 0;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #2b3136;
-  background:#0f1113;
-  color:#fff;
-  box-sizing:border-box;
+
+/* =========================================
+   INPUTS
+========================================= */
+
+input,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  outline: none;
 }
 
-#imagesList input{
-  width:100%;
-  margin:6px 0;
-}
-.center-msg{
-  text-align:center;
-  width:100%;
-  display:block;
-  margin-top:8px;
-}
-.auth-loading{
-  visibility:hidden;
+input {
+  margin: 8px 0;
+  padding: 10px;
 }
 
-.dash-card{
-  display:block;
-  background:#15181b;
-  border:1px solid #5BC0BE33;
-  border-radius:12px;
-  padding:16px;
+textarea {
+  height: 140px;
+  margin: 8px 0;
+  padding: 10px;
+  resize: vertical;
 }
 
-.section-panel{
-  display:none;
-  margin-top:18px;
-  background:#15181b;
-  border:1px solid #5BC0BE33;
-  border-radius:12px;
-  padding:16px;
-}
-.section-panel:hover{
-  border-color:#5BC0BE;
+input:focus,
+textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(10, 161, 167, 0.10);
 }
 
-.dash-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+#imagesList input {
+  width: 100%;
+  margin: 6px 0;
 }
 
-.section-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
+
+/* =========================================
+   PRICE ROW
+========================================= */
+
+.price-row {
+  display: flex;
+  gap: 8px;
 }
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+button {
+  min-width: 80px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #FFFFFF;
+  font-weight: 600;
+  margin: 8px 0;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+button:hover {
+  background: #078D93;
+  box-shadow: 0 3px 10px rgba(10, 161, 167, 0.18);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+.primary-btn {
+  width: 100%;
+}
+
+.secondary-btn,
+.cancel-btn {
+  background: var(--danger);
+  color: #FFFFFF;
+}
+
+.secondary-btn:hover,
+.cancel-btn:hover {
+  background: #D63D2F;
+}
+
+
+/* =========================================
+   LOADER
+========================================= */
+
+.loader {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(10, 161, 167, 0.15);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 10px auto 0;
+  animation: spin 0.8s linear infinite;
+  display: none;
+}
+
+.loader.show {
+  display: block;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================
+   LOADER BAR
+========================================= */
+
+.loader-bar {
+  width: 100%;
+  height: 3px;
+  background: #E8EDF2;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 0;
+  display: none;
+}
+
+.loader-bar::after {
+  content: "";
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: var(--primary);
+  animation: barMove 1s linear infinite;
+}
+
+.loader-bar.show {
+  display: block;
+}
+
+@keyframes barMove {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(250%);
+  }
+}
+
+
+/* =========================================
+   CENTER MESSAGE
+========================================= */
+
+.center-msg {
+  text-align: center;
+  width: 100%;
+  display: block;
+  margin-top: 8px;
+}
+
+
+/* =========================================
+   DASHBOARD CARD
+========================================= */
+
+.dash-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* =========================================
+   SECTION PANEL
+========================================= */
+
+.section-panel {
+  display: none;
+  margin-top: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-panel:hover {
+  border-color: var(--border-hover);
+}
+
+
+/* =========================================
+   TOP ROWS
+========================================= */
+
+.dash-top,
+.section-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-top {
+  margin-bottom: 12px;
+}
+
+
+/* =========================================
+   HEADINGS
+========================================= */
 
 h5 {
   margin-top: 16px;
   margin-bottom: 4px;
-}
-.add-wrap{
-  display:none;
-  margin-bottom:16px;
-}
-.border-top{
-  border-top: 1px solid #5BC0BE;
-}
-.toggle-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  max-width:320px;
+  color: var(--text);
 }
 
-.toggle-switch{
-  position:relative;
-  display:inline-block;
-  width:36px;
-  height:20px;
+
+/* =========================================
+   ADD PRODUCT AREA
+========================================= */
+
+.add-wrap {
+  display: none;
+  margin-bottom: 16px;
 }
 
-.toggle-switch input{
-  opacity:0;
-  width:0;
-  height:0;
+.border-top {
+  border-top: 1px solid var(--border);
 }
 
-.toggle-slider{
-  position:absolute;
-  cursor:pointer;
-  inset:0;
-  background:#ccc;
-  border-radius:26px;
-  transition:.25s;
+
+/* =========================================
+   TOGGLE
+========================================= */
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 320px;
 }
 
-.toggle-slider::before{
-  content:"";
-  position:absolute;
-  height:16px;
-  width:16px;
-  left:2px;
-  top:2px;
-  background:white;
-  border-radius:50%;
-  transition:.25s;
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
 }
 
-.toggle-switch input:checked + .toggle-slider{
-  background:#5BC0BE; /* green */
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-.toggle-switch input:checked + .toggle-slider::before{
-  transform:translateX(16px);
-}
-.admin-product{
-  border:1px solid #ddd;
-  padding:10px;
-  margin:10px 0;
-  border-radius:8px;
-  background:#fff;
-  animation:fadeIn .25s ease;
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background: #CBD5E1;
+  border-radius: 26px;
+  transition: 0.25s;
 }
 
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(6px)}
-  to{opacity:1; transform:translateY(0)}
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  top: 2px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  transition: 0.25s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
-.admin-title{
-  color:#444;
-  font-weight:600;
+
+.toggle-switch input:checked + .toggle-slider {
+  background: var(--primary);
 }
-.price-stack{
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(16px);
+}
+
+
+/* =========================================
+   ADMIN PRODUCT
+========================================= */
+
+.admin-product {
+  border: 1px solid var(--border);
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   PRODUCT TEXT
+========================================= */
+
+.admin-title {
+  color: var(--text);
+  font-weight: 600;
+}
+
+
+/* =========================================
+   PRICE
+========================================= */
+
+.price-stack {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.admin-old-price{
+.admin-old-price {
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
   text-decoration: line-through;
 }
 
-.admin-price{
+.admin-price {
   font-size: 16px;
   font-weight: 700;
-  color: #111;
+  color: var(--text);
 }
 
-.admin-shipping{
+.admin-shipping {
   font-size: 12px;
-  color: #777;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 
-.admin-actions button{
-  background:#e74c3c;
-  color:#fff;
-  border:none;
-  padding:6px 10px;
-  border-radius:4px;
-}
-.product-list-loading{
-  min-height: 700px; /* keeps page height stable */
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#888;
-  font-size:14px;
-}
-.admin-price-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin:6px 0;
+
+/* =========================================
+   ADMIN ACTIONS
+========================================= */
+
+.admin-actions button {
+  background: var(--danger);
+  color: #FFFFFF;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
 }
 
-.sold-toggle{
-  display:flex;
-  align-items:center;
-  gap:8px;
+.admin-actions button:hover {
+  background: #D63D2F;
 }
 
-.sold-text{
-  font-size:13px;
-  color:#666;
+
+/* =========================================
+   PRODUCT LOADING
+========================================= */
+
+.product-list-loading {
+  min-height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 14px;
 }
-.edit-mode-bar{
+
+
+/* =========================================
+   ADMIN PRICE ROW
+========================================= */
+
+.admin-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 6px 0;
+}
+
+
+/* =========================================
+   SOLD TOGGLE
+========================================= */
+
+.sold-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sold-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+
+/* =========================================
+   EDIT MODE
+========================================= */
+
+.edit-mode-bar {
   text-align: center;
 }
-@media (min-width: 768px){
+
+
+/* =========================================
+   PRODUCT GRID
+========================================= */
+
+@media (min-width: 768px) {
 
   #mainProducts,
-  #specialProducts{
-    display:grid !important;
+  #specialProducts {
+    display: grid !important;
     grid-template-columns: repeat(2, 1fr);
-    gap:12px;
-    align-items:start;
+    gap: 12px;
+    align-items: start;
   }
 
-  .admin-product{
-    margin:0;
+  .admin-product {
+    margin: 0;
   }
 }
+
+
+/* =========================================
+   SPECIFICATION INPUT GRID
+========================================= */
+
 .spec-input-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -376,7 +622,7 @@ h5 {
 .spec-input label {
   font-size: 13px;
   font-weight: 600;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .spec-input input {
@@ -384,8 +630,15 @@ h5 {
   box-sizing: border-box;
 }
 
+
+/* =========================================
+   MOBILE
+========================================= */
+
 @media (max-width: 600px) {
+
   .spec-input-grid {
     grid-template-columns: 1fr;
   }
+
 }
