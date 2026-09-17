@@ -379,7 +379,7 @@ function renderCart() {
                 ${
                     setText
                         ? `
-                        <div class="cart-set-info">
+                        <div class="cart-price">
                             ${setText} × ${item.qty} qty
                         </div>
                         `
