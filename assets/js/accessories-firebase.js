@@ -243,9 +243,9 @@ async function loadSaleProducts() {
       ),
 
       orderBy(
-        "created",
-        "desc"
-      )
+  "created",
+  "asc"
+)
 
     );
 
