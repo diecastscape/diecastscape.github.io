@@ -12,14 +12,14 @@
   position: absolute;
   top: 5px;
   right: 120px;
-  z-index: 99;
+  z-index: 200;
   pointer-events: none;
 }
 
 .product-offer-ribbon1 span {
   display: block;
   padding: 7px 12px;
-
+min-height:36px;
   background: #e53935;
   color: #fff;
 
@@ -40,7 +40,7 @@
   height: 125px;
   overflow: hidden;
   pointer-events: none;
-  z-index: 99;
+  z-index: 100;
 }
 
 
