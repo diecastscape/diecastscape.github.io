@@ -1157,7 +1157,7 @@ font-weight: 700;
    CART HEADER
 ===================================================== */
 .cart-header {
-  min-height: 38px;
+  
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -1177,11 +1177,7 @@ font-weight: 700;
   font-weight: 800;
   letter-spacing: .3px;
 }
-.cart-title::after {
-  content: "  ↑";
-  color: #10afbd;
-  font-size: 13px;
-}
+
 
 /* =====================================================
    CART CONTENT
