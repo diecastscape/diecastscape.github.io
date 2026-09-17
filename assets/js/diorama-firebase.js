@@ -72,7 +72,7 @@ Kindly let me know the payment details.`;
   return `
   <div class="section">
 
-    ${offerRibbon}
+    
 
     <div class="diorama-title">
       ${p.name}
