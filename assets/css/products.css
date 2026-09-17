@@ -1162,7 +1162,7 @@ font-weight: 700;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 2px 16px;
+  padding: 4px 16px;
   cursor: pointer;
   user-select: none;
   background: #ffffff;
@@ -1471,11 +1471,7 @@ font-weight: 700;
     box-shadow:
       0 10px 28px rgba(16,35,68,.15),
       0 2px 8px rgba(16,35,68,.06);
-  }
-  .cart-header {
-    min-height: 34px;
-    padding: 7px 12px;
-  }
+
   .cart-title {
     font-size: 11px;
   }
