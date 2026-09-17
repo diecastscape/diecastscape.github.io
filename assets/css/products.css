@@ -24,7 +24,7 @@
   color: #fff;
 
   border-radius: 4px;
-
+transform: rotate(10deg);
   font-size: 10px;
   font-weight: 800;
   line-height: 1;
@@ -63,8 +63,8 @@
   line-height: 1;
   text-align: center;
   text-transform: uppercase;
-display: flex;
-
+ display: flex;
+align-items: center;
 justify-content: center;
   transform: rotate(20deg);
   box-sizing: border-box;
