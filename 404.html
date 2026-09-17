@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>404 | Page Not Found — Diecast.scape</title>
+
+  <meta
+    name="description"
+    content="The page you're looking for could not be found. Return to Diecast.scape and explore our 1:64 scale dioramas, accessories and automotive frames."
+  >
+
+  <meta name="robots" content="noindex, follow">
+
+  <meta
+    name="theme-color"
+    content="#F5F7FA"
+  >
+
+  <link
+    rel="icon"
+    href="/images/favicon.png"
+  >
+
+  <link
+    rel="stylesheet"
+    href="/assets/css/style.css"
+  >
+
+  <style>
+
+    /* =========================
+       404 PAGE
+    ========================= */
+
+    .error-page {
+      min-height: calc(100vh - 70px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .error-content {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .error-code {
+      margin: 0;
+      font-size: clamp(90px, 22vw, 180px);
+      line-height: .85;
+      font-weight: 900;
+      letter-spacing: -8px;
+      color: #0B132B;
+    }
+
+    .error-title {
+      margin: 25px 0 10px;
+      font-size: clamp(24px, 5vw, 38px);
+      line-height: 1.1;
+      font-weight: 800;
+      color: #0B132B;
+    }
+
+    .error-title span {
+      color: #0AA1A7;
+    }
+
+    .error-text {
+      max-width: 500px;
+      margin: 0 auto;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #667085;
+    }
+
+    .error-road {
+      margin: 30px auto;
+      width: min(420px, 90%);
+      height: 5px;
+      background: #DDE6EC;
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .error-road::after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 0;
+      width: 55px;
+      height: 3px;
+      background: #0AA1A7;
+      border-radius: 10px;
+      animation: roadMove 1.5s linear infinite;
+    }
+
+    @keyframes roadMove {
+      from {
+        transform: translateX(-70px);
+      }
+
+      to {
+        transform: translateX(440px);
+      }
+    }
+
+    .error-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 170px;
+      padding: 13px 22px;
+      margin-top: 5px;
+      background: #0B132B;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      transition:
+        transform .2s ease,
+        background .2s ease;
+    }
+
+    .error-button:hover {
+      background: #0AA1A7;
+      transform: translateY(-2px);
+    }
+
+    .error-small {
+      margin-top: 28px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #98A2B3;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 700px) {
+
+      .error-page {
+        min-height: calc(100vh - 55px);
+        padding: 25px 16px;
+      }
+
+      .error-code {
+        letter-spacing: -5px;
+      }
+
+      .error-title {
+        margin-top: 20px;
+      }
+
+      .error-text {
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .error-road {
+        margin: 25px auto;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header class="home-header">
+
+    <a
+      href="/"
+      class="logo"
+      aria-label="Diecast.scape Home"
+    >
+      Diecast<span>.scape</span>
+    </a>
+
+    <button
+      class="menu-btn"
+      type="button"
+      aria-label="Open menu"
+    >
+      ☰
+    </button>
+
+  </header>
+
+
+  <!-- =========================
+       404 CONTENT
+  ========================= -->
+
+  <main class="error-page">
+
+    <div class="error-content">
+
+      <div
+        class="error-code"
+        aria-hidden="true"
+      >
+        404
+      </div>
+
+      <h1 class="error-title">
+        ROAD <span>BLOCK!</span> 🚧
+      </h1>
+
+      <p class="error-text">
+        Looks like you've taken a wrong turn.
+        The page you're looking for doesn't exist,
+        may have been moved, or the link may be incorrect.
+      </p>
+
+      <div
+        class="error-road"
+        aria-hidden="true"
+      ></div>
+
+      <a
+        href="/"
+        class="error-button"
+      >
+        ← BACK TO HOME
+      </a>
+
+      <div class="error-small">
+        BUILT IN SCALE. CRAFTED WITH SOUL.
+      </div>
+
+    </div>
+
+  </main>
+
+
+</body>
+
+</html>
