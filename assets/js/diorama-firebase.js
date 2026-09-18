@@ -83,6 +83,12 @@ Kindly let me know the payment details.`;
         ${p.subtitle}
       </div>
     ` : ''}
+<div class="slider-wrap">
+
+  <div class="offer-badge">
+    📸 Real Product Images
+  </div>
+
 <div class="slider">
   ${imgs}
 </div>
@@ -99,6 +105,7 @@ ${
     : ""
 }
 
+</div>
     <div class="qs-box">
 
       <div class="qs-title">
