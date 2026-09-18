@@ -87,15 +87,27 @@ Kindly let me know the payment details.`;
 
     <div class="slider-wrap">
 
-      <div class="offer-badge">
-        📸 Real Product Images
-      </div>
+  <div class="offer-badge">
+    📸 Real Product Images
+  </div>
 
-      <div class="slider">
-        ${imgs}
-      </div>
+  <div class="slider">
+    ${imgs}
+  </div>
 
-    </div>
+  ${
+    (p.images || []).length > 1
+      ? `
+        <div class="image-dots">
+          ${(p.images || []).map((_, i) => `
+            <span class="image-dot ${i === 0 ? "active" : ""}"></span>
+          `).join("")}
+        </div>
+      `
+      : ""
+  }
+
+</div>
 
 
     <div class="qs-box">
@@ -256,6 +268,41 @@ Kindly let me know the payment details.`;
   </div>
   `;
 	  }
+function initImageDots() {
+
+  document.querySelectorAll(".slider-wrap").forEach(wrap => {
+
+    const slider = wrap.querySelector(".slider");
+    const dots = wrap.querySelectorAll(".image-dot");
+
+    if (!slider || dots.length <= 1) return;
+
+    slider.addEventListener(
+      "scroll",
+      () => {
+
+        const slideWidth = slider.clientWidth;
+
+        if (!slideWidth) return;
+
+        const index = Math.round(
+          slider.scrollLeft / slideWidth
+        );
+
+        dots.forEach((dot, i) => {
+          dot.classList.toggle(
+            "active",
+            i === index
+          );
+        });
+
+      },
+      { passive: true }
+    );
+
+  });
+
+}
 async function loadProducts(){
 
   const container = document.getElementById("productsContainer");
@@ -282,11 +329,15 @@ async function loadProducts(){
       count++;
     }
   });
+// Remove loader and initialize image dots
+requestAnimationFrame(() => {
 
-  // ✅ remove loader AFTER DOM updated
-  requestAnimationFrame(()=>{
-    if(loader) loader.remove();
-  });
+  if (loader) loader.remove();
+
+  initImageDots();
+
+});
+
 
   // fallback: if no products
   if(count === 0 && loader){
