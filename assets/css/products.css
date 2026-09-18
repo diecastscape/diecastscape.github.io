@@ -1138,7 +1138,7 @@ font-weight: 700;
   overflow: hidden;
   white-space: nowrap;
   border-bottom: 1px solid #DDE8EC;
-
+  border-top: 1px solid #DDE8EC;
   z-index: 900;
 }
 
