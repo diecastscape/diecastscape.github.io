@@ -210,7 +210,60 @@ function buildSaleHTML(p) {
   `;
 
 }
+// ==========================================
+// UPDATE ACCESSORY IMAGE DOTS
+// ==========================================
 
+function initAccessoryImageDots() {
+
+  document
+    .querySelectorAll(".acc-image-wrapper")
+    .forEach(wrapper => {
+
+      const slider =
+        wrapper.querySelector(".acc-image-area");
+
+      const dots =
+        wrapper.querySelectorAll(".acc-image-dot");
+
+      if (!slider || dots.length <= 1) {
+        return;
+      }
+
+      slider.addEventListener(
+        "scroll",
+        () => {
+
+          const slideWidth =
+            slider.clientWidth;
+
+          if (!slideWidth) {
+            return;
+          }
+
+          const index =
+            Math.round(
+              slider.scrollLeft / slideWidth
+            );
+
+          dots.forEach((dot, i) => {
+
+            dot.classList.toggle(
+              "active",
+              i === index
+            );
+
+          });
+
+        },
+        {
+          passive: true
+        }
+      );
+
+    });
+
+}
 
 // ==========================================
 // LOAD ACCESSORIES FROM FIREBASE
@@ -334,14 +387,14 @@ async function loadSaleProducts() {
     // ==========================================
 
     if (
-      typeof renderCart === "function"
-    ) {
+  typeof renderCart === "function"
+) {
 
-      renderCart();
+  renderCart();
 
-    }
+}
 
-
+initAccessoryImageDots();
     // ==========================================
     // EMPTY PRODUCT STATE
     // ==========================================
