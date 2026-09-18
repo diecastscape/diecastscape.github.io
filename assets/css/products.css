@@ -452,12 +452,30 @@ PRODUCT IMAGE SLIDER
   background: #5BC0BE;
 }
 .slider {
-display: flex;
-gap: 10px;
-overflow-x: auto;
-scroll-snap-type: x mandatory;
--webkit-overflow-scrolling: touch;
+  width: 100%;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+
+.slider::-webkit-scrollbar {
+  display: none;
+}
+
+.img-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  overflow: hidden;
+}
+
 .slider img {
 width: 240px;
 height: 240px;
@@ -468,15 +486,7 @@ background: #000;
 flex-shrink: 0;
 display: block;
 }
-.img-box {
-position: relative;
-width: 240px;
-aspect-ratio: 1 / 1;
-border-radius: 12px;
-overflow: hidden;
-background: #0b132b;
-flex-shrink: 0;
-}
+
 .img-box img {
   width: 100%;
   height: 100%;
