@@ -751,7 +751,17 @@ window.saveProduct = async function () {
   const lighting =
     document.getElementById("p-lighting")
       .value.trim();
+const lightingAdapter =
+  document.getElementById("p-lightingAdapter")
+    .value.trim();
 
+const offerClime =
+  document.getElementById("p-offerClime")
+    .value.trim();
+
+const offerText =
+  document.getElementById("p-offerText")
+    .value.trim();
   const cover =
     document.getElementById("p-cover")
       .value.trim();
@@ -855,15 +865,17 @@ window.saveProduct = async function () {
           images,
 
           dimensions,
-          flore,
-          suitableScale,
-          capacity,
-          accessories,
-          rotating,
-          lighting,
-          cover,
-          build
-
+flore,
+suitableScale,
+capacity,
+accessories,
+rotating,
+lighting,
+lightingAdapter,
+cover,
+build,
+offerClime,
+offerText
         }
       );
 
@@ -885,22 +897,24 @@ window.saveProduct = async function () {
           detailsHTML,
           shippingText,
           images,
-
           dimensions,
-          flore,
-          suitableScale,
-          capacity,
-          accessories,
-          rotating,
-          lighting,
-          cover,
-          build,
+flore,
+suitableScale,
+capacity,
+accessories,
+rotating,
+lighting,
+lightingAdapter,
+cover,
+build,
+offerClime,
+offerText,
 
-          active: true,
+active: true,
 
-          created:
-            Date.now()
-
+created:
+  Date.now()
+          
         }
       );
 
@@ -2840,7 +2854,10 @@ window.editProduct =
         "p-lighting"
       ).value =
         data.lighting || "";
-
+document.getElementById(
+  "p-lightingAdapter"
+).value =
+  data.lightingAdapter || "";
 
       document.getElementById(
         "p-cover"
@@ -2852,7 +2869,15 @@ window.editProduct =
         "p-build"
       ).value =
         data.build || "";
+document.getElementById(
+  "p-offerClime"
+).value =
+  data.offerClime || "";
 
+document.getElementById(
+  "p-offerText"
+).value =
+  data.offerText || "";
 
       const list =
         document.getElementById(
@@ -3077,22 +3102,24 @@ window.cancelEdit =
 function resetMainForm() {
 
   const ids = [
-    "p-name",
-    "p-subtitle",
-    "p-old",
-    "p-new",
-    "p-shipping",
-    "p-dimensions",
-    "p-flore",
-    "p-suitableScale",
-    "p-capacity",
-    "p-accessories",
-    "p-rotating",
-    "p-lighting",
-    "p-cover",
-    "p-build"
-  ];
-
+  "p-name",
+  "p-subtitle",
+  "p-old",
+  "p-new",
+  "p-shipping",
+  "p-dimensions",
+  "p-flore",
+  "p-suitableScale",
+  "p-capacity",
+  "p-accessories",
+  "p-rotating",
+  "p-lighting",
+  "p-lightingAdapter",
+  "p-cover",
+  "p-build",
+  "p-offerClime",
+  "p-offerText"
+];
 
   ids.forEach(id => {
 
