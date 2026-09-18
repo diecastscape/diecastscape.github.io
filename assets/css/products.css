@@ -419,7 +419,7 @@ PRODUCT IMAGE SLIDER
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 8px;
+  bottom: 5px;
 
   display: flex;
   justify-content: center;
@@ -436,7 +436,7 @@ PRODUCT IMAGE SLIDER
 
   border-radius: 50%;
 
-  background: rgba(255, 255, 255, 0.6);
+  background: #fff;
 
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 
