@@ -119,11 +119,27 @@ function buildSaleHTML(p) {
 
       <!-- PRODUCT IMAGE -->
 
-      <div class="acc-image-area">
+      <div class="acc-image-wrapper">
 
-        ${imgs}
+  <div class="acc-image-area">
+    ${imgs}
+  </div>
 
-      </div>
+  ${
+    p.images.length > 1
+      ? `
+        <div class="acc-image-dots">
+          ${p.images.map((_, i) => `
+            <span
+              class="acc-image-dot ${i === 0 ? "active" : ""}"
+            ></span>
+          `).join("")}
+        </div>
+      `
+      : ""
+  }
+
+</div>
 
 
       <!-- PRICE -->
