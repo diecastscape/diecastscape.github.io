@@ -716,7 +716,70 @@ opacity: 1;
 transform: translateY(0);
 }
 }
+/* =========================================
+   ACCESSORY IMAGE SLIDER WRAPPER
+========================================= */
 
+.acc-image-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+
+/* =========================================
+   IMAGE DOTS
+========================================= */
+
+.acc-image-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  z-index: 5;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   DOT
+========================================= */
+
+.acc-image-dot {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.55);
+
+  box-shadow:
+    0 1px 4px rgba(0,0,0,.35);
+
+  transition:
+    width .2s ease,
+    background .2s ease,
+    opacity .2s ease;
+}
+
+
+/* =========================================
+   ACTIVE DOT
+========================================= */
+
+.acc-image-dot.active {
+  width: 7px;
+  height: 7px;
+
+  background: #5BC0BE;
+  opacity: 1;
+}
 .acc-name {
 width: 100%;
 padding: 2px;
