@@ -469,13 +469,19 @@ PRODUCT IMAGE SLIDER
 
 .img-box {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  flex: 0 0 100%;
-  scroll-snap-align: start;
-  overflow: hidden;
-}
 
+  width: 100%;
+  max-width: 250px;
+
+  aspect-ratio: 1 / 1;
+
+  flex: 0 0 250px;
+
+  scroll-snap-align: start;
+
+  overflow: hidden;
+  border-radius: 9px;
+}
 .slider img {
 width: 240px;
 height: 240px;
