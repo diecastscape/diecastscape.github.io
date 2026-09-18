@@ -83,32 +83,21 @@ Kindly let me know the payment details.`;
         ${p.subtitle}
       </div>
     ` : ''}
-
-
-    <div class="slider-wrap">
-
-  <div class="offer-badge">
-    📸 Real Product Images
-  </div>
-
-  <div class="slider">
-    ${imgs}
-  </div>
-
-  ${
-    (p.images || []).length > 1
-      ? `
-        <div class="image-dots">
-          ${(p.images || []).map((_, i) => `
-            <span class="image-dot ${i === 0 ? "active" : ""}"></span>
-          `).join("")}
-        </div>
-      `
-      : ""
-  }
-
+<div class="slider">
+  ${imgs}
 </div>
 
+${
+  (p.images || []).length > 1
+    ? `
+      <div class="image-dots">
+        ${(p.images || []).map((_, i) => `
+          <span class="image-dot ${i === 0 ? "active" : ""}"></span>
+        `).join("")}
+      </div>
+    `
+    : ""
+}
 
     <div class="qs-box">
 
@@ -274,31 +263,47 @@ function initImageDots() {
 
     const slider = wrap.querySelector(".slider");
     const dots = wrap.querySelectorAll(".image-dot");
+    const slides = slider?.querySelectorAll(".img-box");
 
-    if (!slider || dots.length <= 1) return;
+    if (!slider || dots.length <= 1 || !slides?.length) return;
+
+    function updateActiveDot() {
+
+      const scrollLeft = slider.scrollLeft;
+
+      let activeIndex = 0;
+      let smallestDistance = Infinity;
+
+      slides.forEach((slide, index) => {
+
+        const distance = Math.abs(
+          slide.offsetLeft - scrollLeft
+        );
+
+        if (distance < smallestDistance) {
+          smallestDistance = distance;
+          activeIndex = index;
+        }
+
+      });
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle(
+          "active",
+          index === activeIndex
+        );
+      });
+
+    }
 
     slider.addEventListener(
       "scroll",
-      () => {
-
-        const slideWidth = slider.clientWidth;
-
-        if (!slideWidth) return;
-
-        const index = Math.round(
-          slider.scrollLeft / slideWidth
-        );
-
-        dots.forEach((dot, i) => {
-          dot.classList.toggle(
-            "active",
-            i === index
-          );
-        });
-
-      },
+      updateActiveDot,
       { passive: true }
     );
+
+    // Set first dot active
+    updateActiveDot();
 
   });
 
