@@ -192,11 +192,12 @@ ${
           </div>
           ` : ''}
 
+          ${p.build ? `
           <div class="qs-feature">
             <span class="qs-dot"></span>
             ${p.lightingAdapter}
           </div>
-
+         ` : ''}
         </div>
 
       ` : ''}
