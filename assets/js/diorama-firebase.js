@@ -73,7 +73,7 @@ Kindly let me know the payment details.`;
   <div class="section">
 
     
-
+${offerRibbon}
     <div class="diorama-title">
       ${p.name}
     </div>
@@ -150,7 +150,8 @@ ${
           p.accessories ||
           p.rotating ||
           p.lighting ||
-          p.cover ||
+	      p.lightingAdapter ||
+		  p.cover ||
           p.build
         ) ? `
 
@@ -187,13 +188,13 @@ ${
           ${p.build ? `
           <div class="qs-feature">
             <span class="qs-dot"></span>
-            ${p.build}
+            
           </div>
           ` : ''}
 
           <div class="qs-feature">
             <span class="qs-dot"></span>
-            With 12v adapter for hassle-free setup
+            ${p.lightingAdapter}
           </div>
 
         </div>
