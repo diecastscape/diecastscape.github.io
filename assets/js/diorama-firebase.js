@@ -188,7 +188,7 @@ ${
           ${p.build ? `
           <div class="qs-feature">
             <span class="qs-dot"></span>
-            
+            ${p.build}
           </div>
           ` : ''}
 
