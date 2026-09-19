@@ -316,48 +316,220 @@ function initImageDots() {
   });
 
 }
-async function loadProducts(){
+// =====================================================
+// PROGRESSIVE PRODUCT LOADING
+// Loads 4 products at a time
+// =====================================================
 
-  const container = document.getElementById("productsContainer");
-  const loader = document.getElementById("productsLoader");
+const PRODUCTS_PER_BATCH = 4;
 
-  if(!container) return;
-
-  const q = query(
-    collection(db,"products"),
-    orderBy("created","desc")
-  );
-
-  const snap = await getDocs(q);
-
-  let count = 0;
-
-  snap.forEach(doc=>{
-    const p = doc.data();
-    if(p.active){
-      container.insertAdjacentHTML(
-        "beforeend",
-        buildProductHTML(p)
-      );
-      count++;
-    }
-  });
-// Remove loader and initialize image dots
-requestAnimationFrame(() => {
-
-  if (loader) loader.remove();
-
-  initImageDots();
-
-});
+let allProducts = [];
+let loadedProductIndex = 0;
+let isLoadingProducts = false;
 
 
-  // fallback: if no products
-  if(count === 0 && loader){
-    loader.innerText = "No products available";
+// =====================================================
+// LOAD NEXT 4 PRODUCTS
+// =====================================================
+
+function loadNextProducts() {
+
+  if (isLoadingProducts) return;
+
+  if (loadedProductIndex >= allProducts.length) {
+    return;
   }
+
+  isLoadingProducts = true;
+
+  const container =
+    document.getElementById("productsContainer");
+
+  if (!container) {
+    isLoadingProducts = false;
+    return;
+  }
+
+
+  const nextProducts =
+    allProducts.slice(
+      loadedProductIndex,
+      loadedProductIndex + PRODUCTS_PER_BATCH
+    );
+
+
+  nextProducts.forEach(p => {
+
+    container.insertAdjacentHTML(
+      "beforeend",
+      buildProductHTML(p)
+    );
+
+  });
+
+
+  loadedProductIndex += nextProducts.length;
+
+
+  // Initialize sliders/dots for newly added products
+  requestAnimationFrame(() => {
+
+    initImageDots();
+
+    isLoadingProducts = false;
+
+  });
+
 }
 
 
-window.addEventListener("DOMContentLoaded", loadProducts);
+// =====================================================
+// LOAD PRODUCT DATA
+// =====================================================
 
+async function loadProducts() {
+
+  const container =
+    document.getElementById("productsContainer");
+
+  const loader =
+    document.getElementById("productsLoader");
+
+  if (!container) return;
+
+
+  try {
+
+    const q = query(
+      collection(db, "products"),
+      orderBy("created", "desc")
+    );
+
+
+    const snap = await getDocs(q);
+
+
+    allProducts = [];
+
+
+    snap.forEach(doc => {
+
+      const p = doc.data();
+
+      if (p.active) {
+        allProducts.push(p);
+      }
+
+    });
+
+
+    // Remove initial loader
+    if (loader) {
+      loader.remove();
+    }
+
+
+    // No products
+    if (allProducts.length === 0) {
+
+      if (loader) {
+        loader.innerText =
+          "No products available";
+      }
+
+      return;
+    }
+
+
+    // Load FIRST 4 products only
+    loadNextProducts();
+
+
+  } catch (error) {
+
+    console.error(
+      "Error loading products:",
+      error
+    );
+
+    if (loader) {
+      loader.innerText =
+        "Unable to load products";
+    }
+
+  }
+
+}
+
+
+// =====================================================
+// LOAD NEXT BATCH WHEN USER REACHES LAST PRODUCT
+// =====================================================
+
+function initProductBatchLoading() {
+
+  const container =
+    document.getElementById(
+      "productsContainer"
+    );
+
+  if (!container) return;
+
+
+  window.addEventListener(
+    "scroll",
+    () => {
+
+      if (isLoadingProducts) return;
+
+      const products =
+        container.querySelectorAll(
+          ".section"
+        );
+
+
+      if (!products.length) return;
+
+
+      const lastProduct =
+        products[products.length - 1];
+
+
+      const rect =
+        lastProduct.getBoundingClientRect();
+
+
+      // Start loading next 4 when
+      // the last product is close to viewport
+      const nearBottom =
+        rect.bottom <=
+        window.innerHeight + 300;
+
+
+      if (nearBottom) {
+
+        loadNextProducts();
+
+      }
+
+    },
+    { passive: true }
+  );
+
+}
+
+
+// =====================================================
+// START
+// =====================================================
+
+window.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    loadProducts();
+
+    initProductBatchLoading();
+
+  }
+);
