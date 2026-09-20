@@ -16,17 +16,29 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   // Shows ONLY when Firebase has offerText
   // =========================================
 
-  const offerRibbon =
-    p.offerText && String(p.offerText).trim() !== ""
+  const offerRibbon = `
+  ${
+    p.offerClime &&
+    String(p.offerClime).trim() !== ""
       ? `
-	  <div class="product-offer-ribbon1">
+        <div class="product-offer-ribbon1">
           <span>${p.offerClime}</span>
         </div>
+      `
+      : ""
+  }
+
+  ${
+    p.offerText &&
+    String(p.offerText).trim() !== ""
+      ? `
         <div class="product-offer-ribbon">
           <span>${p.offerText}</span>
         </div>
       `
-      : "";
+      : ""
+  }
+`;
 
 
   // =========================================
