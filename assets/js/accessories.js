@@ -261,7 +261,7 @@ function getShipping(total) {
 
     // Below ₹650 = ₹69
 
-    return 69;
+    return 75;
 
 }
 
