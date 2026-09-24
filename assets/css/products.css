@@ -8,7 +8,7 @@
 }
 .product-offer-ribbon2 {
   position: absolute;
-  top: 5px;
+  top: 35px;
   right: 10px;
   z-index: 200;
   pointer-events: none;
