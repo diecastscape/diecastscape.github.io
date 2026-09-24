@@ -15,7 +15,20 @@ import {
 function buildSaleHTML(p) {
 
   let imgs = "";
+const offerRibbon = `
+  ${
+    p.stockout &&
+    String(p.stockout).trim() !== ""
+      ? `
+        <div class="product-offer-ribbon2">
+          <span>${p.stockout}</span>
+        </div>
+      `
+      : ""
+  }
 
+  
+`;
 
   // ==========================================
   // PRODUCT IMAGES
@@ -82,7 +95,7 @@ function buildSaleHTML(p) {
   return `
 
     <div class="acc-card">
-
+${offerRibbon}
 
       <!-- PRODUCT NAME -->
 
