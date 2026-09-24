@@ -458,7 +458,7 @@ function renderCart() {
         else if (total > 0) {
 
             shippingPrice.innerText =
-                "₹69";
+                "₹75";
 
         }
 
@@ -859,7 +859,7 @@ function checkoutCart() {
     else {
 
         message +=
-            "Shipping : ₹69%0A";
+            "Shipping : ₹75%0A";
 
     }
 
