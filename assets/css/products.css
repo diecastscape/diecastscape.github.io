@@ -6,7 +6,30 @@
   position: relative;
   overflow: hidden;
 }
+.product-offer-ribbon2 {
+  position: absolute;
+  top: 5px;
+  right: 120px;
+  z-index: 200;
+  pointer-events: none;
+}
 
+.product-offer-ribbon2 span {
+  display: block;
+  padding: 7px 12px;
+
+  background: #e53935;
+  color: #fff;
+
+  border-radius: 4px;
+
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+
+  box-shadow: 0 3px 8px rgba(0,0,0,.15);
+}
 
 .product-offer-ribbon1 {
   position: absolute;
