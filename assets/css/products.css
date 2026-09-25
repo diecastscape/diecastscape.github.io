@@ -66,10 +66,7 @@
 .add-cart-btn.out-of-stock-btn,
 .add-cart-btn.out-of-stock-btn:disabled {
 
-  background: #e53935;
-  color: #fff;
-
-  border-color: #000;
+  
 
   cursor: not-allowed;
 
@@ -1172,7 +1169,7 @@ font-weight: 700;
 
 .maines-cart-btn {
 min-width: 20%;
-max-height: 30px;
+height: 30px;
 margin-top: 6px;
 border: none;
 border-radius: 9px;
@@ -1197,7 +1194,7 @@ transform: scale(.98);
 
 .add-cart-btn {
 width: 100%;
-max-height: 30px;
+height: 30px;
 margin-top: 6px;
 border: none;
 border-radius: 9px;
