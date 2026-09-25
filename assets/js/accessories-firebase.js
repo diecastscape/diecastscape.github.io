@@ -228,20 +228,20 @@ function buildSaleHTML(p) {
 
 
         <!-- ADD -->
-
-        ${
-          isOutOfStock
-            ? `
-              <button
-                class="add-cart-btn out-of-stock-btn"
-                type="button"
-                disabled
-                aria-disabled="true"
-              >
-                Add
-              </button>
-            `
-            : `
+${
+  isOutOfStock
+    ? `
+      <button
+        class="add-cart-btn out-of-stock-btn"
+        type="button"
+        onclick="showToast('Can\\'t add out of stock')"
+        aria-disabled="true"
+      >
+        Add
+      </button>
+    `
+    : `
+        
               <button
                 class="add-cart-btn"
                 type="button"
