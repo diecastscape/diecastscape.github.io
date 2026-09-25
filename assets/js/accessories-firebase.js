@@ -7,7 +7,6 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
 // ==========================================
 // BUILD ACCESSORY PRODUCT CARD
 // ==========================================
@@ -15,20 +14,32 @@ import {
 function buildSaleHTML(p) {
 
   let imgs = "";
-const offerRibbon = `
-  ${
-    p.stockout &&
-    String(p.stockout).trim() !== ""
-      ? `
-        <div class="product-offer-ribbon2">
-          <span>${p.stockout}</span>
-        </div>
-      `
-      : ""
-  }
 
-  
-`;
+
+
+  // ==========================================
+  // OUT OF STOCK CHECK
+  // ==========================================
+
+  const isOutOfStock =
+    p.stockout &&
+    String(p.stockout).trim() !== "";
+
+
+
+  // ==========================================
+  // OUT OF STOCK RIBBON
+  // ==========================================
+
+  const offerRibbon = isOutOfStock
+    ? `
+      <div class="product-offer-ribbon2">
+        <span>${p.stockout}</span>
+      </div>
+    `
+    : "";
+
+
 
   // ==========================================
   // PRODUCT IMAGES
@@ -63,12 +74,14 @@ const offerRibbon = `
   }
 
 
+
   // ==========================================
   // PRODUCT NAME
   // ==========================================
 
   const productName =
     p.name || "";
+
 
 
   // ==========================================
@@ -80,12 +93,14 @@ const offerRibbon = `
     p.quantity || "";
 
 
+
   // ==========================================
   // SUBTITLE
   // ==========================================
 
   const subtitleText =
     p.subtitle || "";
+
 
 
   // ==========================================
@@ -95,13 +110,17 @@ const offerRibbon = `
   return `
 
     <div class="acc-card">
-${offerRibbon}
+
+      ${offerRibbon}
+
+
 
       <!-- PRODUCT NAME -->
 
       <div class="acc-name">
         ${productName}
       </div>
+
 
 
       <!-- FIREBASE QUANTITY -->
@@ -117,6 +136,7 @@ ${offerRibbon}
       }
 
 
+
       <!-- SUBTITLE -->
 
       ${
@@ -130,29 +150,33 @@ ${offerRibbon}
       }
 
 
+
       <!-- PRODUCT IMAGE -->
 
       <div class="acc-image-wrapper">
 
-  <div class="acc-image-area">
-    ${imgs}
-  </div>
-
-  ${
-    p.images.length > 1
-      ? `
-        <div class="acc-image-dots">
-          ${p.images.map((_, i) => `
-            <span
-              class="acc-image-dot ${i === 0 ? "active" : ""}"
-            ></span>
-          `).join("")}
+        <div class="acc-image-area">
+          ${imgs}
         </div>
-      `
-      : ""
-  }
 
-</div>
+        ${
+          p.images.length > 1
+            ? `
+              <div class="acc-image-dots">
+
+                ${p.images.map((_, i) => `
+                  <span
+                    class="acc-image-dot ${i === 0 ? "active" : ""}"
+                  ></span>
+                `).join("")}
+
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
 
 
       <!-- PRICE -->
@@ -166,11 +190,13 @@ ${offerRibbon}
       </div>
 
 
+
       <!-- ======================================
            CART CONTROLS
       ======================================= -->
 
       <div class="cart-controls">
+
 
 
         <!-- MINUS -->
@@ -189,6 +215,7 @@ ${offerRibbon}
         </button>
 
 
+
         <!-- QUANTITY -->
 
         <span
@@ -199,23 +226,42 @@ ${offerRibbon}
         </span>
 
 
+
         <!-- ADD -->
 
-        <button
-          class="add-cart-btn"
-          onclick="changeAccessoryQty(
-            '${String(p.id).replace(/'/g, "\\'")}',
-            '${String(p.name || "").replace(/'/g, "\\'")}',
-            ${Number(p.price)},
-            1,
-            '${String(p.quantity || "").replace(/'/g, "\\'")}'
-          )"
-        >
-          Add
-        </button>
+        ${
+          isOutOfStock
+            ? `
+              <button
+                class="add-cart-btn out-of-stock-btn"
+                type="button"
+                disabled
+                aria-disabled="true"
+              >
+                Out of Stock
+              </button>
+            `
+            : `
+              <button
+                class="add-cart-btn"
+                type="button"
+                onclick="changeAccessoryQty(
+                  '${String(p.id).replace(/'/g, "\\'")}',
+                  '${String(p.name || "").replace(/'/g, "\\'")}',
+                  ${Number(p.price)},
+                  1,
+                  '${String(p.quantity || "").replace(/'/g, "\\'")}'
+                )"
+              >
+                Add
+              </button>
+            `
+        }
+
 
 
       </div>
+
 
 
     </div>
@@ -223,6 +269,11 @@ ${offerRibbon}
   `;
 
 }
+
+
+
+
+
 // ==========================================
 // UPDATE ACCESSORY IMAGE DOTS
 // ==========================================
