@@ -5,11 +5,14 @@
 const CART_KEY =
     "diecastscape_accessories_cart";
 
+const FREE_SHIPPING_LIMIT = 750;
+
+const MIN_CART_VALUE = 199;
+
 let cart =
     JSON.parse(
         localStorage.getItem(CART_KEY)
     ) || {};
-
 
 // =====================================================
 // SAVE CART
@@ -241,6 +244,10 @@ function removeItem(id) {
 // ACCESSORIES SHIPPING
 // =====================================================
 
+// =====================================================
+// ACCESSORIES SHIPPING
+// =====================================================
+
 function getShipping(total) {
 
     if (total <= 0) {
@@ -250,21 +257,22 @@ function getShipping(total) {
     }
 
 
-    // ₹650 or more = FREE SHIPPING
 
-    if (total >= 650) {
+    // ₹750 or more = FREE SHIPPING
+
+    if (total >= FREE_SHIPPING_LIMIT) {
 
         return 0;
 
     }
 
 
-    // Below ₹650 = ₹69
+
+    // Below ₹750 = ₹75
 
     return 75;
 
 }
-
 
 // =====================================================
 // CLOSE CART
@@ -446,31 +454,30 @@ function renderCart() {
             "shippingPrice"
         );
 
-    if (shippingPrice) {
+    if (
+    total >= FREE_SHIPPING_LIMIT
+) {
 
-        if (total >= 650) {
+    shippingPrice.innerText =
+        "FREE";
 
-            shippingPrice.innerText =
-                "FREE";
+}
 
-        }
+else if (
+    total > 0
+) {
 
-        else if (total > 0) {
+    shippingPrice.innerText =
+        "₹75";
 
-            shippingPrice.innerText =
-                "₹75";
+}
 
-        }
+else {
 
-        else {
+    shippingPrice.innerText =
+        "₹0";
 
-            shippingPrice.innerText =
-                "₹0";
-
-        }
-
-    }
-
+}
 
     // =================================================
     // ORDER TOTAL
@@ -525,131 +532,145 @@ function renderCart() {
             "offerText"
         );
 
+// =================================================
+// FREE SHIPPING PROGRESS
+// =================================================
 
-    // =================================================
-    // BELOW ₹650
-    // =================================================
+if (
+    total > 0 &&
+    total < FREE_SHIPPING_LIMIT
+) {
 
-    if (
-        total > 0 &&
-        total < 650
-    ) {
-
-        const remaining =
-            650 - total;
-
-
-        if (offerCount) {
-
-            offerCount.innerText =
-                `₹${total} / ₹650`;
-
-        }
+    const remaining =
+        FREE_SHIPPING_LIMIT - total;
 
 
-        if (offerText) {
 
-            offerText.innerText =
-                `Add ₹${remaining} more to unlock FREE SHIPPING`;
+    if (offerCount) {
 
-        }
-
-
-        if (offerBar) {
-
-            offerBar.style.width =
-                Math.min(
-                    (total / 650) * 100,
-                    100
-                ) + "%";
-
-        }
+        offerCount.innerText =
+            `₹${total} / ₹${FREE_SHIPPING_LIMIT}`;
 
     }
 
 
-    // =================================================
-    // ₹650+
-    // FREE SHIPPING
-    // =================================================
 
-    else if (
-        total >= 650
-    ) {
+    if (offerText) {
 
-        if (offerCount) {
-
-            offerCount.innerText =
-                `₹${total} / ₹650`;
-
-        }
-
-
-        if (offerText) {
-
-            offerText.innerText =
-                "🎉 FREE SHIPPING UNLOCKED";
-
-        }
-
-
-        if (offerBar) {
-
-            offerBar.style.width =
-                "100%";
-
-        }
+        offerText.innerText =
+            `Add ₹${remaining} more to unlock FREE SHIPPING`;
 
     }
 
 
-    // =================================================
-    // EMPTY CART
-    // =================================================
 
-    else {
+    if (offerBar) {
 
-        if (offerCount) {
-
-            offerCount.innerText =
-                "₹0 / ₹650";
-
-        }
-
-
-        if (offerText) {
-
-            offerText.innerText =
-                "Add ₹650 to unlock FREE SHIPPING";
-
-        }
-
-
-        if (offerBar) {
-
-            offerBar.style.width =
-                "0%";
-
-        }
-
-
-        closeCart();
-
-
-        const cartHeader =
-            document.getElementById(
-                "cartHeader"
-            );
-
-        if (cartHeader) {
-
-            cartHeader.style.display =
-                "none";
-
-        }
+        offerBar.style.width =
+            Math.min(
+                (
+                    total /
+                    FREE_SHIPPING_LIMIT
+                ) * 100,
+                100
+            ) + "%";
 
     }
 
+}
+
+
+
+// =================================================
+// ₹750+
+// FREE SHIPPING
+// =================================================
+
+else if (
+    total >= FREE_SHIPPING_LIMIT
+) {
+
+    if (offerCount) {
+
+        offerCount.innerText =
+            `₹${total} / ₹${FREE_SHIPPING_LIMIT}`;
+
+    }
+
+
+
+    if (offerText) {
+
+        offerText.innerText =
+            "🎉 FREE SHIPPING UNLOCKED";
+
+    }
+
+
+
+    if (offerBar) {
+
+        offerBar.style.width =
+            "100%";
+
+    }
+
+}
+
+
+
+// =================================================
+// EMPTY CART
+// =================================================
+
+else {
+
+    if (offerCount) {
+
+        offerCount.innerText =
+            `₹0 / ₹${FREE_SHIPPING_LIMIT}`;
+
+    }
+
+
+
+    if (offerText) {
+
+        offerText.innerText =
+            `Add ₹${FREE_SHIPPING_LIMIT} to unlock FREE SHIPPING`;
+
+    }
+
+
+
+    if (offerBar) {
+
+        offerBar.style.width =
+            "0%";
+
+    }
+
+
+
+    closeCart();
+
+
+
+    const cartHeader =
+        document.getElementById(
+            "cartHeader"
+        );
+
+
+
+    if (cartHeader) {
+
+        cartHeader.style.display =
+            "none";
+
+    }
+
+}
 
     // =================================================
     // SHOW CART HEADER
@@ -697,8 +718,6 @@ function renderCart() {
         );
 
 }
-
-
 // =====================================================
 // CHECKOUT
 // =====================================================
@@ -707,6 +726,7 @@ function checkoutCart() {
 
     const products =
         getCartProducts();
+
 
 
     // =================================================
@@ -726,7 +746,47 @@ function checkoutCart() {
     }
 
 
+
+    // =================================================
+    // CALCULATE PRODUCT TOTAL
+    // =================================================
+
     let total = 0;
+
+
+
+    products.forEach(
+        item => {
+
+            const subTotal =
+                Number(item.price) *
+                Number(item.qty);
+
+
+
+            total += subTotal;
+
+        }
+    );
+
+
+
+    // =================================================
+    // MINIMUM CART VALUE
+    // =================================================
+
+    if (
+        total < MIN_CART_VALUE
+    ) {
+
+        showToast(
+            `Minimum cart value required is ₹${MIN_CART_VALUE}`
+        );
+
+        return;
+
+    }
+
 
 
     // =================================================
@@ -735,6 +795,7 @@ function checkoutCart() {
 
     let message =
         "🛒 *Accessories Order - Diecast.scape*%0A%0A";
+
 
 
     // =================================================
@@ -749,23 +810,15 @@ function checkoutCart() {
                 Number(item.qty);
 
 
-            total += subTotal;
 
-
-            // ==========================================
             // PRODUCT NAME
-            // ==========================================
 
             message +=
                 `• ${item.name}%0A`;
 
 
-            // ==========================================
+
             // FIREBASE SET × CART QUANTITY
-            //
-            // Example:
-            // Set of 5 × 3 qty
-            // ==========================================
 
             if (
                 item.quantityText
@@ -784,15 +837,15 @@ function checkoutCart() {
             }
 
 
-            // ==========================================
+
             // PRICE
-            // ==========================================
 
             message +=
                 `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
 
         }
     );
+
 
 
     // =================================================
@@ -803,12 +856,14 @@ function checkoutCart() {
         getShipping(total);
 
 
+
     // =================================================
     // ORDER TOTAL
     // =================================================
 
     const orderTotal =
         total + shipping;
+
 
 
     // =================================================
@@ -818,7 +873,10 @@ function checkoutCart() {
     let offerText;
 
 
-    if (total >= 650) {
+
+    if (
+        total >= FREE_SHIPPING_LIMIT
+    ) {
 
         offerText =
             "FREE SHIPPING UNLOCKED";
@@ -828,9 +886,10 @@ function checkoutCart() {
     else {
 
         offerText =
-            `Add ₹${650 - total} more to unlock FREE SHIPPING`;
+            `Add ₹${FREE_SHIPPING_LIMIT - total} more to unlock FREE SHIPPING`;
 
     }
+
 
 
     // =================================================
@@ -841,15 +900,19 @@ function checkoutCart() {
         "━━━━━━━━━━━━━━%0A";
 
 
+
     message +=
         `Product Total : ₹${total}%0A`;
+
 
 
     // =================================================
     // SHIPPING
     // =================================================
 
-    if (shipping === 0) {
+    if (
+        shipping === 0
+    ) {
 
         message +=
             "Shipping : FREE%0A";
@@ -864,6 +927,7 @@ function checkoutCart() {
     }
 
 
+
     // =================================================
     // OFFER
     // =================================================
@@ -872,8 +936,10 @@ function checkoutCart() {
         `Offer : ${offerText}%0A`;
 
 
+
     message +=
         "━━━━━━━━━━━━━━%0A";
+
 
 
     // =================================================
@@ -884,8 +950,10 @@ function checkoutCart() {
         `*Order Total : ₹${orderTotal}*%0A%0A`;
 
 
+
     message +=
         "Share me your payment option.";
+
 
 
     // =================================================
@@ -902,6 +970,7 @@ function checkoutCart() {
     );
 
 }
+
 
 
 // =====================================================
