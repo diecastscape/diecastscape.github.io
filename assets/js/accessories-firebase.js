@@ -234,7 +234,7 @@ ${
       <button
         class="add-cart-btn out-of-stock-btn"
         type="button"
-        onclick="showToast('Can\\'t add out of stock')"
+        onclick="showToast('Can\\'t add-out of stock')"
         aria-disabled="true"
       >
         Add
