@@ -238,7 +238,7 @@ function buildSaleHTML(p) {
                 disabled
                 aria-disabled="true"
               >
-                Out of Stock
+                Add
               </button>
             `
             : `
