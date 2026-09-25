@@ -5,7 +5,7 @@
 const CART_KEY =
     "diecastscape_accessories_cart";
 
-const FREE_SHIPPING_LIMIT = 750;
+const FREE_SHIPPING_LIMIT = 900;
 
 const MIN_CART_VALUE = 199;
 
@@ -258,7 +258,7 @@ function getShipping(total) {
 
 
 
-    // ₹750 or more = FREE SHIPPING
+    // ₹900 or more = FREE SHIPPING
 
     if (total >= FREE_SHIPPING_LIMIT) {
 
@@ -268,7 +268,7 @@ function getShipping(total) {
 
 
 
-    // Below ₹750 = ₹75
+    // Below ₹900 = ₹75
 
     return 75;
 
@@ -974,26 +974,33 @@ function checkoutCart() {
 
 
 // =====================================================
-// TOAST
+// TOAST MESSAGE
 // =====================================================
 
 function showToast(message) {
 
     const toast =
-        document.getElementById(
-            "toast"
+        document.getElementById("toast");
+
+    if (!toast) {
+
+        console.error(
+            "Toast element #toast not found."
         );
 
-    if (!toast) return;
+        return;
+
+    }
+
 
 
     toast.innerText =
         message;
 
 
-    toast.classList.add(
-        "show"
-    );
+
+    toast.classList.add("show");
+
 
 
     clearTimeout(
@@ -1001,21 +1008,20 @@ function showToast(message) {
     );
 
 
+
     window.toastTimer =
         setTimeout(
-            function () {
+            () => {
 
                 toast.classList.remove(
                     "show"
                 );
 
             },
-            2000
+            2500
         );
 
 }
-
-
 // =====================================================
 // DOM READY
 // =====================================================
