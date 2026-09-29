@@ -1,4 +1,446 @@
 /* =====================================================
+   ORDER POPUP
+===================================================== */
+
+body.order-popup-open {
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   POPUP BACKDROP
+===================================================== */
+
+.order-popup {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  background: rgba(8, 20, 38, .58);
+
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  z-index: 99999;
+
+  transition:
+    opacity .25s ease,
+    visibility .25s ease;
+}
+
+
+.order-popup.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+
+/* =====================================================
+   POPUP BOX
+===================================================== */
+
+.order-popup-box {
+  width: 100%;
+  max-width: 470px;
+
+  max-height: calc(100vh - 36px);
+
+  overflow-y: auto;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e1e8ed;
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 25px 70px rgba(8, 25, 45, .25),
+    0 5px 20px rgba(8, 25, 45, .12);
+
+  transform: translateY(20px) scale(.97);
+
+  transition:
+    transform .25s ease;
+
+  scrollbar-width: none;
+}
+
+.order-popup-box::-webkit-scrollbar {
+  display: none;
+}
+
+
+.order-popup.show .order-popup-box {
+  transform: translateY(0) scale(1);
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.order-popup-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 20px 20px 16px;
+
+  border-bottom: 1px solid #edf1f4;
+}
+
+
+.order-popup-label {
+  margin-bottom: 5px;
+
+  color: #13adbd;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+
+.order-popup-title {
+  color: #102344;
+
+  font-size: 20px;
+  font-weight: 800;
+
+  line-height: 1.15;
+}
+
+
+.order-popup-close {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #f1f5f7;
+
+  color: #31445d;
+
+  font-size: 23px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background .15s ease,
+    transform .15s ease;
+}
+
+
+.order-popup-close:hover {
+  background: #e6edf1;
+}
+
+
+.order-popup-close:active {
+  transform: scale(.92);
+}
+
+
+/* =====================================================
+   PRODUCT
+===================================================== */
+
+.order-popup-product {
+  padding: 17px 20px 13px;
+}
+
+
+.order-popup-product-name {
+  color: #111;
+
+  font-size: 16px;
+  font-weight: 750;
+
+  line-height: 1.25;
+}
+
+
+.order-popup-product-subtitle {
+  margin-top: 4px;
+
+  color: #707b88;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  line-height: 1.35;
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+.order-popup-summary {
+  margin: 0 20px;
+
+  padding: 15px;
+
+  box-sizing: border-box;
+
+  background: #f7faf9;
+
+  border: 1px solid #e3eeeb;
+
+  border-radius: 14px;
+}
+
+
+.order-summary-row {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  color: #5d6975;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+.order-summary-row + .order-summary-row {
+  margin-top: 11px;
+}
+
+
+.order-summary-row strong {
+  color: #17283d;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+.order-summary-divider {
+  height: 1px;
+
+  margin: 14px 0 11px;
+
+  background: #dce6e4;
+}
+
+
+.total-row span {
+  color: #102344;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+.total-row strong {
+  color: #009f78;
+
+  font-size: 19px;
+}
+
+
+/* =====================================================
+   POLICY
+===================================================== */
+
+.order-policy {
+  margin: 15px 20px 0;
+
+  padding: 13px 14px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5ebef;
+
+  border-radius: 13px;
+}
+
+
+.order-policy-title {
+  margin-bottom: 6px;
+
+  color: #102344;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+.order-policy p {
+  margin: 0;
+
+  color: #687687;
+
+  font-size: 9.5px;
+  font-weight: 500;
+
+  line-height: 1.55;
+}
+
+
+/* =====================================================
+   ACTION
+===================================================== */
+
+.order-popup-action {
+  padding: 16px 20px 20px;
+}
+
+
+.proceed-order-btn {
+  width: 100%;
+  min-height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #009f78;
+
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 16px rgba(0, 159, 120, .18);
+
+  transition:
+    transform .15s ease,
+    background .15s ease,
+    box-shadow .15s ease;
+}
+
+
+.proceed-order-btn:hover {
+  background: #008d6b;
+
+  box-shadow:
+    0 8px 20px rgba(0, 159, 120, .24);
+}
+
+
+.proceed-order-btn:active {
+  transform: scale(.98);
+}
+
+
+.order-whatsapp-note {
+  margin-top: 8px;
+
+  text-align: center;
+
+  color: #8a96a3;
+
+  font-size: 9px;
+  font-weight: 500;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .order-popup {
+    align-items: flex-end;
+
+    padding: 0;
+  }
+
+
+  .order-popup-box {
+    max-width: none;
+
+    max-height: 92vh;
+
+    border-radius:
+      22px 22px 0 0;
+
+    transform:
+      translateY(100%);
+  }
+
+
+  .order-popup.show .order-popup-box {
+    transform:
+      translateY(0);
+  }
+
+
+  .order-popup-header {
+    padding: 18px 17px 15px;
+  }
+
+
+  .order-popup-title {
+    font-size: 18px;
+  }
+
+
+  .order-popup-product {
+    padding: 15px 17px 12px;
+  }
+
+
+  .order-popup-summary {
+    margin: 0 17px;
+  }
+
+
+  .order-policy {
+    margin-left: 17px;
+    margin-right: 17px;
+  }
+
+
+  .order-popup-action {
+    padding:
+      15px 17px
+      18px;
+  }
+
+}
+/* =====================================================
    TOAST
 ===================================================== */
 
