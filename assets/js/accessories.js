@@ -269,42 +269,33 @@ function getShipping(total) {
 // =====================================================
 // CLOSE CART
 // =====================================================
-
 function closeCart() {
 
     const cartBox =
-        document.getElementById(
-            "cartBox"
-        );
+        document.getElementById("cartBox");
 
     const cartOverlay =
-        document.getElementById(
-            "cartOverlay"
-        );
+        document.getElementById("cartOverlay");
 
 
     if (cartBox) {
 
-        cartBox.classList.remove(
-            "open"
-        );
+        cartBox.classList.remove("open");
 
     }
 
 
     if (cartOverlay) {
 
-        cartOverlay.classList.remove(
-            "show"
-        );
+        cartOverlay.classList.remove("show");
 
     }
 
 
-    document.body.style.overflow =
-        "";
+    document.body.classList.remove("cart-open");
 
 }
+
 
 
 // =====================================================
