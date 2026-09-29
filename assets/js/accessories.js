@@ -355,7 +355,7 @@ function updateCartHandleText() {
         if (totalItems > 0) {
 
             textElement.innerText =
-                `View Cart (${totalItems})`;
+                `View Cart`;
 
         }
 
