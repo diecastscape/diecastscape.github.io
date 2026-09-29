@@ -718,6 +718,9 @@ else {
         );
 
 }
+
+
+
 // =====================================================
 // CHECKOUT
 // =====================================================
@@ -726,7 +729,6 @@ function checkoutCart() {
 
     const products =
         getCartProducts();
-
 
 
     // =================================================
@@ -746,13 +748,11 @@ function checkoutCart() {
     }
 
 
-
     // =================================================
     // CALCULATE PRODUCT TOTAL
     // =================================================
 
     let total = 0;
-
 
 
     products.forEach(
@@ -762,13 +762,10 @@ function checkoutCart() {
                 Number(item.price) *
                 Number(item.qty);
 
-
-
             total += subTotal;
 
         }
     );
-
 
 
     // =================================================
@@ -788,14 +785,12 @@ function checkoutCart() {
     }
 
 
-
     // =================================================
     // WHATSAPP MESSAGE
     // =================================================
 
     let message =
         "🛒 *Accessories Order - Diecast.scape*%0A%0A";
-
 
 
     // =================================================
@@ -810,12 +805,10 @@ function checkoutCart() {
                 Number(item.qty);
 
 
-
             // PRODUCT NAME
 
             message +=
                 `• ${item.name}%0A`;
-
 
 
             // FIREBASE SET × CART QUANTITY
@@ -837,7 +830,6 @@ function checkoutCart() {
             }
 
 
-
             // PRICE
 
             message +=
@@ -845,7 +837,6 @@ function checkoutCart() {
 
         }
     );
-
 
 
     // =================================================
@@ -856,7 +847,6 @@ function checkoutCart() {
         getShipping(total);
 
 
-
     // =================================================
     // ORDER TOTAL
     // =================================================
@@ -865,13 +855,11 @@ function checkoutCart() {
         total + shipping;
 
 
-
     // =================================================
     // OFFER TEXT
     // =================================================
 
     let offerText;
-
 
 
     if (
@@ -891,7 +879,6 @@ function checkoutCart() {
     }
 
 
-
     // =================================================
     // WHATSAPP SUMMARY
     // =================================================
@@ -900,10 +887,8 @@ function checkoutCart() {
         "━━━━━━━━━━━━━━%0A";
 
 
-
     message +=
         `Product Total : ₹${total}%0A`;
-
 
 
     // =================================================
@@ -927,7 +912,6 @@ function checkoutCart() {
     }
 
 
-
     // =================================================
     // OFFER
     // =================================================
@@ -936,10 +920,8 @@ function checkoutCart() {
         `Offer : ${offerText}%0A`;
 
 
-
     message +=
         "━━━━━━━━━━━━━━%0A";
-
 
 
     // =================================================
@@ -950,27 +932,189 @@ function checkoutCart() {
         `*Order Total : ₹${orderTotal}*%0A%0A`;
 
 
-
     message +=
         "Share me your payment option.";
 
 
+    // =================================================
+    // SHOW WHATSAPP REDIRECT POPUP
+    // =================================================
+
+    showWhatsAppPopup(
+        message
+    );
+
+}// =====================================================
+// WHATSAPP REDIRECT POPUP
+// =====================================================
+
+function showWhatsAppPopup(message) {
+
+    // Remove existing popup if already present
+
+    const oldPopup =
+        document.getElementById(
+            "whatsappRedirectPopup"
+        );
+
+    if (oldPopup) {
+
+        oldPopup.remove();
+
+    }
+
 
     // =================================================
-    // OPEN WHATSAPP
+    // POPUP
     // =================================================
 
-    window.open(
+    const popup =
+        document.createElement("div");
 
-        "https://wa.me/918792744018?text=" +
-        message,
+    popup.id =
+        "whatsappRedirectPopup";
 
-        "_blank"
+    popup.className =
+        "whatsapp-redirect-overlay";
 
+
+    popup.innerHTML = `
+
+        <div class="whatsapp-redirect-box">
+
+            <div class="whatsapp-redirect-icon">
+                💬
+            </div>
+
+            <h3>
+                Continue Your Order
+            </h3>
+
+            <p>
+                You are being redirected to WhatsApp
+                to proceed with your order.
+            </p>
+
+            <div class="whatsapp-redirect-actions">
+
+                <button
+                    type="button"
+                    class="whatsapp-cancel-btn"
+                    id="whatsappCancelBtn">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="button"
+                    class="whatsapp-continue-btn"
+                    id="whatsappContinueBtn">
+
+                    Continue
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        popup
+    );
+
+
+    // Prevent background scrolling
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    // =================================================
+    // CANCEL
+    // =================================================
+
+    const cancelBtn =
+        document.getElementById(
+            "whatsappCancelBtn"
+        );
+
+    if (cancelBtn) {
+
+        cancelBtn.addEventListener(
+            "click",
+            () => {
+
+                popup.remove();
+
+                document.body.style.overflow =
+                    "";
+
+            }
+        );
+
+    }
+
+
+    // =================================================
+    // CONTINUE TO WHATSAPP
+    // =================================================
+
+    const continueBtn =
+        document.getElementById(
+            "whatsappContinueBtn"
+        );
+
+    if (continueBtn) {
+
+        continueBtn.addEventListener(
+            "click",
+            () => {
+
+                window.open(
+                    "https://wa.me/918792744018?text=" +
+                    message,
+                    "_blank"
+                );
+
+
+                popup.remove();
+
+                document.body.style.overflow =
+                    "";
+
+            }
+        );
+
+    }
+
+
+    // =================================================
+    // CLICK OUTSIDE POPUP
+    // =================================================
+
+    popup.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === popup
+            ) {
+
+                popup.remove();
+
+                document.body.style.overflow =
+                    "";
+
+            }
+
+        }
     );
 
 }
-
 
 
 // =====================================================
