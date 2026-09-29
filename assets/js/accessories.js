@@ -313,7 +313,7 @@ function updateCartHandleText() {
 
     let textElement =
         cartHeader.querySelector(
-            ".cart-handle-text"
+            ".cart-title"
         );
 
 
@@ -327,7 +327,7 @@ function updateCartHandleText() {
             document.createElement("span");
 
         textElement.className =
-            "cart-handle-text";
+            "cart-title";
 
 
 
