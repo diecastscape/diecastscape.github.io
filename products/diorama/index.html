@@ -417,6 +417,117 @@ class="search-bar">
   </div>
 
 </div>
+  <!-- =====================================================
+     CUSTOMIZE POPUP
+===================================================== -->
+
+<div
+  id="customizePopup"
+  class="order-popup customize-popup"
+  onclick="customizePopupBackdrop(event)"
+>
+
+  <div class="order-popup-box customize-popup-box">
+
+
+    <!-- HEADER -->
+
+    <div class="order-popup-header">
+
+      <div>
+
+        <div class="order-popup-label">
+          CUSTOMIZE REQUEST
+        </div>
+
+        <div class="order-popup-title">
+          Make It Yours
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="order-popup-close"
+        onclick="closeCustomizePopup()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+
+    <!-- PRODUCT -->
+
+    <div class="order-popup-product">
+
+      <div
+        id="customizePopupName"
+        class="order-popup-product-name"
+      >
+      </div>
+
+
+      <div
+        id="customizePopupSubtitle"
+        class="order-popup-product-subtitle"
+      >
+      </div>
+
+    </div>
+
+
+
+    <!-- REQUEST -->
+
+    <div class="customize-request-area">
+
+      <div class="customize-request-title">
+        What can we customize for you?
+      </div>
+
+
+      <textarea
+        id="customizeRequest"
+        class="customize-request-input"
+        rows="5"
+        placeholder="Tell us what you would like to customize..."
+      ></textarea>
+
+
+      <div class="customize-request-hint">
+        Example: colour, size, lighting, layout, background, accessories, name plate, etc.
+      </div>
+
+    </div>
+
+
+
+    <!-- ACTION -->
+
+    <div class="order-popup-action">
+
+      <button
+        type="button"
+        class="proceed-order-btn customize-submit-btn"
+        onclick="submitCustomizeRequest()"
+      >
+        Get Customized
+      </button>
+
+
+      <div class="order-whatsapp-note">
+        Your request will be sent to us on WhatsApp.
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>
 <script type="module" src="/assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/diorama-firebase.js"></script>
 <script src="/assets/js/products.js"></script>
