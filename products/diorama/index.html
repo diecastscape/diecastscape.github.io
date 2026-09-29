@@ -279,7 +279,144 @@ class="search-bar">
 
 </nav>
 
+<!-- =====================================================
+     ORDER POPUP
+===================================================== -->
 
+<div
+  id="orderPopup"
+  class="order-popup"
+  onclick="orderPopupBackdrop(event)"
+>
+
+  <div class="order-popup-box">
+
+    <div class="order-popup-header">
+
+      <div>
+        <div class="order-popup-label">
+          ORDER SUMMARY
+        </div>
+
+        <div class="order-popup-title">
+          Review your order
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="order-popup-close"
+        onclick="closeOrderPopup()"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="order-popup-product">
+
+      <div
+        id="orderPopupName"
+        class="order-popup-product-name"
+      ></div>
+
+      <div
+        id="orderPopupSubtitle"
+        class="order-popup-product-subtitle"
+      ></div>
+
+    </div>
+
+
+    <div class="order-popup-summary">
+
+      <div class="order-summary-row">
+
+        <span>
+          Product price
+        </span>
+
+        <strong id="orderPopupPrice">
+          ₹0
+        </strong>
+
+      </div>
+
+
+      <div class="order-summary-row">
+
+        <span>
+          Shipping
+        </span>
+
+        <strong id="orderPopupShipping">
+          ₹0
+        </strong>
+
+      </div>
+
+
+      <div class="order-summary-divider"></div>
+
+
+      <div class="order-summary-row total-row">
+
+        <span>
+          Total
+        </span>
+
+        <strong id="orderPopupTotal">
+          ₹0
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="order-policy">
+
+      <div class="order-policy-title">
+        Custom handcrafted & made to order
+      </div>
+
+      <p>
+        Our products are custom handcrafted and made to order.
+        Production begins only after your order is confirmed
+        and a 50% advance payment has been received.
+        The remaining 50% payment is due after the product is completed.
+        Production typically takes 4–6 days after order confirmation.
+        Once the final payment is received, your completed product
+        will be carefully packed with safe and secure packaging
+        and dispatched via India Post.
+        Delivery time may vary depending on the destination
+        and India Post service.
+      </p>
+
+    </div>
+
+
+    <div class="order-popup-action">
+
+      <button
+        type="button"
+        class="proceed-order-btn"
+        onclick="proceedOrderWhatsApp()"
+      >
+        Proceed to order
+      </button>
+
+      <div class="order-whatsapp-note">
+        Order securely through WhatsApp
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 <script type="module" src="/assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/diorama-firebase.js"></script>
 <script src="/assets/js/products.js"></script>
