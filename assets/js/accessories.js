@@ -45,9 +45,6 @@ function getCartProducts() {
 
 // =====================================================
 // ADD PRODUCT TO CART
-//
-// quantityText = Firebase quantity
-// Example: "Set of 5"
 // =====================================================
 
 function addProductInfo(
@@ -60,8 +57,6 @@ function addProductInfo(
     if (cart[id]) {
 
         cart[id].qty++;
-
-        // Save Firebase quantity if missing
 
         if (
             !cart[id].quantityText &&
@@ -102,9 +97,6 @@ function addProductInfo(
 
 // =====================================================
 // CHANGE ACCESSORY QUANTITY
-//
-// change = -1 / +1
-// quantityText = "Set of 5"
 // =====================================================
 
 function changeAccessoryQty(
@@ -282,6 +274,170 @@ function getShipping(total) {
 
 
 // =====================================================
+// UPDATE CART HANDLE TEXT
+// =====================================================
+
+function updateCartHandleText() {
+
+    const cartHeader =
+        document.getElementById(
+            "cartHeader"
+        );
+
+
+
+    if (!cartHeader) return;
+
+
+
+    const totalItems =
+        getCartProducts().reduce(
+            (sum, item) =>
+                sum + Number(item.qty || 0),
+            0
+        );
+
+
+
+    const cartIsOpen =
+        document
+            .getElementById("cartBox")
+            ?.classList
+            .contains("open");
+
+
+
+    // -----------------------------------------
+    // FIND TEXT ELEMENT
+    // -----------------------------------------
+
+    let textElement =
+        cartHeader.querySelector(
+            ".cart-handle-text"
+        );
+
+
+
+    // If no separate text element exists,
+    // create one.
+
+    if (!textElement) {
+
+        textElement =
+            document.createElement("span");
+
+        textElement.className =
+            "cart-handle-text";
+
+
+
+        cartHeader.appendChild(
+            textElement
+        );
+
+    }
+
+
+
+    // -----------------------------------------
+    // SET TEXT
+    // -----------------------------------------
+
+    if (cartIsOpen) {
+
+        textElement.innerText =
+            "Close Cart";
+
+    }
+
+    else {
+
+        if (totalItems > 0) {
+
+            textElement.innerText =
+                `View Cart (${totalItems})`;
+
+        }
+
+        else {
+
+            textElement.innerText =
+                "View Cart";
+
+        }
+
+    }
+
+}
+
+
+
+// =====================================================
+// OPEN CART
+// =====================================================
+
+function openCart() {
+
+    const cartBox =
+        document.getElementById(
+            "cartBox"
+        );
+
+    const cartOverlay =
+        document.getElementById(
+            "cartOverlay"
+        );
+
+
+
+    if (!cartBox) return;
+
+
+
+    // -----------------------------------------
+    // OPEN CART
+    // -----------------------------------------
+
+    cartBox.classList.add(
+        "open"
+    );
+
+
+
+    // -----------------------------------------
+    // SHOW OVERLAY
+    // -----------------------------------------
+
+    if (cartOverlay) {
+
+        cartOverlay.classList.add(
+            "show"
+        );
+
+    }
+
+
+
+    // -----------------------------------------
+    // LOCK BACKGROUND SCROLL
+    // -----------------------------------------
+
+    document.body.style.overflow =
+        "hidden";
+
+
+
+    // -----------------------------------------
+    // UPDATE HANDLE TEXT
+    // -----------------------------------------
+
+    updateCartHandleText();
+
+}
+
+
+
+// =====================================================
 // CLOSE CART
 // =====================================================
 
@@ -299,9 +455,9 @@ function closeCart() {
 
 
 
-    // ==========================================
+    // -----------------------------------------
     // CLOSE CART BOX
-    // ==========================================
+    // -----------------------------------------
 
     if (cartBox) {
 
@@ -313,9 +469,9 @@ function closeCart() {
 
 
 
-    // ==========================================
-    // COMPLETELY DISABLE CART OVERLAY
-    // ==========================================
+    // -----------------------------------------
+    // REMOVE OVERLAY
+    // -----------------------------------------
 
     if (cartOverlay) {
 
@@ -323,11 +479,10 @@ function closeCart() {
             "show"
         );
 
-        // Make sure invisible overlay
-        // cannot block page clicks
 
-        cartOverlay.style.display =
-            "none";
+
+        // Make absolutely sure the overlay
+        // cannot block the page.
 
         cartOverlay.style.pointerEvents =
             "none";
@@ -336,16 +491,26 @@ function closeCart() {
 
 
 
-    // ==========================================
-    // RESTORE BODY
-    // ==========================================
+    // -----------------------------------------
+    // RESTORE BACKGROUND
+    // -----------------------------------------
+
+    document.body.style.overflow =
+        "";
+
+
 
     document.body.classList.remove(
         "cart-open"
     );
 
-    document.body.style.overflow =
-        "";
+
+
+    // -----------------------------------------
+    // UPDATE HANDLE TEXT
+    // -----------------------------------------
+
+    updateCartHandleText();
 
 }
 
@@ -390,9 +555,6 @@ function renderCart() {
             total += subTotal;
 
 
-
-            // Firebase quantity
-            // Example: Set of 5
 
             const setText =
                 item.quantityText
@@ -535,7 +697,7 @@ function renderCart() {
 
 
     // =================================================
-    // ORDER TOTAL
+    // GRAND TOTAL
     // =================================================
 
     const grandTotalElement =
@@ -710,6 +872,8 @@ function renderCart() {
 
 
 
+        // Close cart if it becomes empty.
+
         closeCart();
 
 
@@ -778,6 +942,14 @@ function renderCart() {
 
             }
         );
+
+
+
+    // =================================================
+    // UPDATE VIEW / CLOSE CART TEXT
+    // =================================================
+
+    updateCartHandleText();
 
 }
 
@@ -875,8 +1047,6 @@ function checkoutCart() {
                 Number(item.qty);
 
 
-
-            // PRODUCT NAME
 
             message +=
                 `• ${item.name}%0A`;
@@ -1055,7 +1225,9 @@ function showWhatsAppPopup(message) {
 
 
     const popup =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
 
@@ -1241,7 +1413,9 @@ function showClearCartPopup() {
 
 
     const popup =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
 
@@ -1505,6 +1679,25 @@ window.addEventListener(
 
 
         // ===============================================
+        // INITIAL OVERLAY STATE
+        // ===============================================
+
+        if (cartOverlay) {
+
+            cartOverlay.classList.remove(
+                "show"
+            );
+
+
+
+            cartOverlay.style.pointerEvents =
+                "none";
+
+        }
+
+
+
+        // ===============================================
         // RENDER SAVED CART
         // ===============================================
 
@@ -1513,58 +1706,51 @@ window.addEventListener(
 
 
         // ===============================================
-        // CART HEADER
+        // CART HANDLE
         // ===============================================
 
         if (cartHeader) {
 
             cartHeader.addEventListener(
                 "click",
-                () => {
+                event => {
+
+                    event.stopPropagation();
+
+
 
                     if (!cartBox) return;
 
 
 
-                    cartBox.classList.toggle(
-                        "open"
-                    );
-
-
-
-                    if (
+                    const isOpen =
                         cartBox.classList.contains(
                             "open"
-                        )
-                    ) {
-
-                        if (cartOverlay) {
-
-                            // Re-enable overlay
-                            // when cart opens
-
-                            cartOverlay.style.display =
-                                "block";
-
-                            cartOverlay.style.pointerEvents =
-                                "auto";
-
-                            cartOverlay.classList.add(
-                                "show"
-                            );
-
-                        }
+                        );
 
 
 
-                        document.body.style.overflow =
-                            "hidden";
+                    if (isOpen) {
+
+                        closeCart();
 
                     }
 
                     else {
 
-                        closeCart();
+                        // Enable overlay interaction
+                        // only while cart is open.
+
+                        if (cartOverlay) {
+
+                            cartOverlay.style.pointerEvents =
+                                "auto";
+
+                        }
+
+
+
+                        openCart();
 
                     }
 
@@ -1576,16 +1762,26 @@ window.addEventListener(
 
 
         // ===============================================
-        // CLICK CART OVERLAY TO CLOSE
+        // OVERLAY CLICK
         // ===============================================
 
         if (cartOverlay) {
 
             cartOverlay.addEventListener(
                 "click",
-                () => {
+                event => {
 
-                    closeCart();
+                    // Only close when the actual
+                    // overlay is clicked.
+
+                    if (
+                        event.target ===
+                        cartOverlay
+                    ) {
+
+                        closeCart();
+
+                    }
 
                 }
             );
@@ -1633,14 +1829,20 @@ window.addEventListener(
 
 
 
-                    // CUSTOM CLEAR CART POPUP
-
                     showClearCartPopup();
 
                 }
             );
 
         }
+
+
+
+        // ===============================================
+        // INITIAL HANDLE TEXT
+        // ===============================================
+
+        updateCartHandleText();
 
     }
 );
