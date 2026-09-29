@@ -32,22 +32,6 @@ function buildProductHTML(p) {
 
 
   /* ===================================================
-     WHATSAPP MESSAGE
-  =================================================== */
-
-  const message =
-`Hi Diecast.scape,
-
-I would like to place an order for the ${p.name || ""}${p.subtitle ? ` - ${p.subtitle}` : ""}.
-
-Product price: ₹${priceNew}
-
-Kindly let me know the payment details.`;
-
-  const whatsappText = encodeURIComponent(message);
-
-
-  /* ===================================================
      OFFER RIBBON
   =================================================== */
 
@@ -135,6 +119,7 @@ Kindly let me know the payment details.`;
         ${imgs}
       </div>
 
+
       ${
         (p.images || []).length > 1
           ? `
@@ -175,6 +160,7 @@ Kindly let me know the payment details.`;
             : ""
         }
 
+
         ${
           p.flore
             ? `
@@ -186,6 +172,7 @@ Kindly let me know the payment details.`;
             : ""
         }
 
+
         ${
           p.suitableScale
             ? `
@@ -196,6 +183,7 @@ Kindly let me know the payment details.`;
             `
             : ""
         }
+
 
         ${
           p.capacity
@@ -234,6 +222,7 @@ Kindly let me know the payment details.`;
                   : ""
               }
 
+
               ${
                 p.rotating
                   ? `
@@ -244,6 +233,7 @@ Kindly let me know the payment details.`;
                   `
                   : ""
               }
+
 
               ${
                 p.cover
@@ -256,6 +246,7 @@ Kindly let me know the payment details.`;
                   : ""
               }
 
+
               ${
                 p.lighting
                   ? `
@@ -267,6 +258,7 @@ Kindly let me know the payment details.`;
                   : ""
               }
 
+
               ${
                 p.build
                   ? `
@@ -277,6 +269,7 @@ Kindly let me know the payment details.`;
                   `
                   : ""
               }
+
 
               ${
                 p.lightingAdapter
@@ -312,6 +305,7 @@ Kindly let me know the payment details.`;
         </span>
 
       </div>
+
 
       <div class="discount-box">
 
@@ -367,32 +361,27 @@ Kindly let me know the payment details.`;
     </div>
 
 
-    <!-- ORDER AREA -->
+    <!-- BUTTONS -->
 
-    <div class="order-area">
+    <div class="customize-row">
 
-      <div class="customize-prompt">
+      <button
+        class="buy-btn"
+        type="button"
+        onclick='openOrderPopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
+      >
+        Order on WhatsApp
+      </button>
 
-        <span>Want to customize?</span>
-
-        <a
-          class="customize-link"
-          href="https://wa.me/918792744018?text=${encodeURIComponent(
-            `Hi, I want to customize the "${p.name || ""}${p.subtitle ? ` - ${p.subtitle}` : ""}".`
-          )}"
-          target="_blank"
-        >
-          Customize
-        </a>
-
-      </div>
 
       <a
-        class="buy-btn"
-        href="https://wa.me/918792744018?text=${whatsappText}"
+        class="customize-btn"
+        href="https://wa.me/918792744018?text=${encodeURIComponent(
+          `Hi, I want to customize the "${p.name || ""} - ${p.subtitle || ""}".`
+        )}"
         target="_blank"
       >
-        Proceed to order
+        Customize This
       </a>
 
     </div>
@@ -410,18 +399,21 @@ window.openOrderPopup = function(product) {
 
   currentOrderProduct = product;
 
-  const price =
-    Number(product.priceNew || 0);
+  const price = Number(product.priceNew || 0);
 
-  const shipping =
-    Number(product.shippingPrice || 0);
+  /*
+   * Firebase field:
+   * shippingPrice
+   *
+   * Number only.
+   */
 
-  const total =
-    price + shipping;
+  const shipping = Number(product.shippingPrice || 0);
+
+  const total = price + shipping;
 
 
-  const popup =
-    document.getElementById("orderPopup");
+  const popup = document.getElementById("orderPopup");
 
   if (!popup) {
     console.error("Order popup element not found.");
@@ -464,8 +456,15 @@ window.openOrderPopup = function(product) {
 
 
   if (shippingElement) {
-    shippingElement.textContent =
-      `₹${shipping}`;
+
+    if (shipping === 0) {
+      shippingElement.textContent =
+        "₹0";
+    } else {
+      shippingElement.textContent =
+        `₹${shipping}`;
+    }
+
   }
 
 
@@ -477,9 +476,7 @@ window.openOrderPopup = function(product) {
 
   popup.classList.add("show");
 
-  document.body.classList.add(
-    "order-popup-open"
-  );
+  document.body.classList.add("order-popup-open");
 
 };
 
@@ -497,9 +494,7 @@ window.closeOrderPopup = function() {
 
   popup.classList.remove("show");
 
-  document.body.classList.remove(
-    "order-popup-open"
-  );
+  document.body.classList.remove("order-popup-open");
 
   currentOrderProduct = null;
 
@@ -533,17 +528,22 @@ window.proceedOrderWhatsApp = function() {
   const product =
     currentOrderProduct;
 
+
   const productName =
     product.name || "";
+
 
   const subtitle =
     product.subtitle || "";
 
+
   const price =
     Number(product.priceNew || 0);
 
+
   const shipping =
     Number(product.shippingPrice || 0);
+
 
   const total =
     price + shipping;
@@ -610,6 +610,7 @@ function initImageDots() {
       const scrollLeft =
         slider.scrollLeft;
 
+
       let activeIndex = 0;
 
       let smallestDistance =
@@ -654,9 +655,7 @@ function initImageDots() {
     slider.addEventListener(
       "scroll",
       updateActiveDot,
-      {
-        passive: true
-      }
+      { passive: true }
     );
 
 
@@ -817,9 +816,7 @@ async function loadProducts() {
     ) {
 
       const message =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
       message.className =
         "no-products-message";
