@@ -14,6 +14,7 @@ let cart =
         localStorage.getItem(CART_KEY)
     ) || {};
 
+
 // =====================================================
 // SAVE CART
 // =====================================================
@@ -58,6 +59,7 @@ function addProductInfo(
         cart[id].qty++;
 
         // Save Firebase quantity if missing
+
         if (
             !cart[id].quantityText &&
             quantityText
@@ -97,9 +99,6 @@ function addProductInfo(
 // =====================================================
 // CHANGE ACCESSORY QUANTITY
 //
-// IMPORTANT:
-// change comes BEFORE quantityText
-//
 // change = -1 / +1
 // quantityText = "Set of 5"
 // =====================================================
@@ -121,9 +120,6 @@ function changeAccessoryQty(
         if (cart[id]) {
 
             cart[id].qty++;
-
-            // Update Firebase quantity
-            // if old cart data was missing it
 
             if (
                 !cart[id].quantityText &&
@@ -166,7 +162,6 @@ function changeAccessoryQty(
         if (cart[id]) {
 
             cart[id].qty--;
-
 
             if (cart[id].qty <= 0) {
 
@@ -244,10 +239,6 @@ function removeItem(id) {
 // ACCESSORIES SHIPPING
 // =====================================================
 
-// =====================================================
-// ACCESSORIES SHIPPING
-// =====================================================
-
 function getShipping(total) {
 
     if (total <= 0) {
@@ -257,15 +248,15 @@ function getShipping(total) {
     }
 
 
-
     // ₹900 or more = FREE SHIPPING
 
-    if (total >= FREE_SHIPPING_LIMIT) {
+    if (
+        total >= FREE_SHIPPING_LIMIT
+    ) {
 
         return 0;
 
     }
-
 
 
     // Below ₹900 = ₹75
@@ -273,6 +264,7 @@ function getShipping(total) {
     return 75;
 
 }
+
 
 // =====================================================
 // CLOSE CART
@@ -455,29 +447,30 @@ function renderCart() {
         );
 
     if (
-    total >= FREE_SHIPPING_LIMIT
-) {
+        total >= FREE_SHIPPING_LIMIT
+    ) {
 
-    shippingPrice.innerText =
-        "FREE";
+        shippingPrice.innerText =
+            "FREE";
 
-}
+    }
 
-else if (
-    total > 0
-) {
+    else if (
+        total > 0
+    ) {
 
-    shippingPrice.innerText =
-        "₹75";
+        shippingPrice.innerText =
+            "₹75";
 
-}
+    }
 
-else {
+    else {
 
-    shippingPrice.innerText =
-        "₹0";
+        shippingPrice.innerText =
+            "₹0";
 
-}
+    }
+
 
     // =================================================
     // ORDER TOTAL
@@ -532,145 +525,134 @@ else {
             "offerText"
         );
 
-// =================================================
-// FREE SHIPPING PROGRESS
-// =================================================
 
-if (
-    total > 0 &&
-    total < FREE_SHIPPING_LIMIT
-) {
+    // =================================================
+    // FREE SHIPPING PROGRESS
+    // =================================================
 
-    const remaining =
-        FREE_SHIPPING_LIMIT - total;
+    if (
+        total > 0 &&
+        total < FREE_SHIPPING_LIMIT
+    ) {
 
-
-
-    if (offerCount) {
-
-        offerCount.innerText =
-            `₹${total} / ₹${FREE_SHIPPING_LIMIT}`;
-
-    }
+        const remaining =
+            FREE_SHIPPING_LIMIT - total;
 
 
+        if (offerCount) {
 
-    if (offerText) {
+            offerCount.innerText =
+                `₹${total} / ₹${FREE_SHIPPING_LIMIT}`;
 
-        offerText.innerText =
-            `Add ₹${remaining} more to unlock FREE SHIPPING`;
-
-    }
-
+        }
 
 
-    if (offerBar) {
+        if (offerText) {
 
-        offerBar.style.width =
-            Math.min(
-                (
-                    total /
-                    FREE_SHIPPING_LIMIT
-                ) * 100,
-                100
-            ) + "%";
+            offerText.innerText =
+                `Add ₹${remaining} more to unlock FREE SHIPPING`;
 
-    }
-
-}
+        }
 
 
+        if (offerBar) {
 
-// =================================================
-// ₹750+
-// FREE SHIPPING
-// =================================================
+            offerBar.style.width =
+                Math.min(
+                    (
+                        total /
+                        FREE_SHIPPING_LIMIT
+                    ) * 100,
+                    100
+                ) + "%";
 
-else if (
-    total >= FREE_SHIPPING_LIMIT
-) {
-
-    if (offerCount) {
-
-        offerCount.innerText =
-            `₹${total} / ₹${FREE_SHIPPING_LIMIT}`;
+        }
 
     }
 
 
+    // =================================================
+    // FREE SHIPPING
+    // =================================================
 
-    if (offerText) {
+    else if (
+        total >= FREE_SHIPPING_LIMIT
+    ) {
 
-        offerText.innerText =
-            "🎉 FREE SHIPPING UNLOCKED";
+        if (offerCount) {
 
-    }
+            offerCount.innerText =
+                `₹${total} / ₹${FREE_SHIPPING_LIMIT}`;
 
-
-
-    if (offerBar) {
-
-        offerBar.style.width =
-            "100%";
-
-    }
-
-}
+        }
 
 
+        if (offerText) {
 
-// =================================================
-// EMPTY CART
-// =================================================
+            offerText.innerText =
+                "🎉 FREE SHIPPING UNLOCKED";
 
-else {
-
-    if (offerCount) {
-
-        offerCount.innerText =
-            `₹0 / ₹${FREE_SHIPPING_LIMIT}`;
-
-    }
+        }
 
 
+        if (offerBar) {
 
-    if (offerText) {
+            offerBar.style.width =
+                "100%";
 
-        offerText.innerText =
-            `Add ₹${FREE_SHIPPING_LIMIT} to unlock FREE SHIPPING`;
+        }
 
     }
 
 
+    // =================================================
+    // EMPTY CART
+    // =================================================
 
-    if (offerBar) {
+    else {
 
-        offerBar.style.width =
-            "0%";
+        if (offerCount) {
+
+            offerCount.innerText =
+                `₹0 / ₹${FREE_SHIPPING_LIMIT}`;
+
+        }
+
+
+        if (offerText) {
+
+            offerText.innerText =
+                `Add ₹${FREE_SHIPPING_LIMIT} to unlock FREE SHIPPING`;
+
+        }
+
+
+        if (offerBar) {
+
+            offerBar.style.width =
+                "0%";
+
+        }
+
+
+        closeCart();
+
+
+        const cartHeader =
+            document.getElementById(
+                "cartHeader"
+            );
+
+
+        if (cartHeader) {
+
+            cartHeader.style.display =
+                "none";
+
+        }
 
     }
 
-
-
-    closeCart();
-
-
-
-    const cartHeader =
-        document.getElementById(
-            "cartHeader"
-        );
-
-
-
-    if (cartHeader) {
-
-        cartHeader.style.display =
-            "none";
-
-    }
-
-}
 
     // =================================================
     // SHOW CART HEADER
@@ -720,7 +702,6 @@ else {
 }
 
 
-
 // =====================================================
 // CHECKOUT
 // =====================================================
@@ -761,6 +742,7 @@ function checkoutCart() {
             const subTotal =
                 Number(item.price) *
                 Number(item.qty);
+
 
             total += subTotal;
 
@@ -944,18 +926,20 @@ function checkoutCart() {
         message
     );
 
-}// =====================================================
+}
+
+
+// =====================================================
 // WHATSAPP REDIRECT POPUP
 // =====================================================
 
 function showWhatsAppPopup(message) {
 
-    // Remove existing popup if already present
-
     const oldPopup =
         document.getElementById(
             "whatsappRedirectPopup"
         );
+
 
     if (oldPopup) {
 
@@ -964,15 +948,13 @@ function showWhatsAppPopup(message) {
     }
 
 
-    // =================================================
-    // POPUP
-    // =================================================
-
     const popup =
         document.createElement("div");
 
+
     popup.id =
         "whatsappRedirectPopup";
+
 
     popup.className =
         "whatsapp-redirect-overlay";
@@ -1042,6 +1024,7 @@ function showWhatsAppPopup(message) {
             "whatsappCancelBtn"
         );
 
+
     if (cancelBtn) {
 
         cancelBtn.addEventListener(
@@ -1067,6 +1050,7 @@ function showWhatsAppPopup(message) {
         document.getElementById(
             "whatsappContinueBtn"
         );
+
 
     if (continueBtn) {
 
@@ -1118,13 +1102,187 @@ function showWhatsAppPopup(message) {
 
 
 // =====================================================
+// CLEAR CART POPUP
+// =====================================================
+
+function showClearCartPopup() {
+
+    const oldPopup =
+        document.getElementById(
+            "clearCartPopup"
+        );
+
+
+    if (oldPopup) {
+
+        oldPopup.remove();
+
+    }
+
+
+    const popup =
+        document.createElement("div");
+
+
+    popup.id =
+        "clearCartPopup";
+
+
+    popup.className =
+        "whatsapp-redirect-overlay";
+
+
+    popup.innerHTML = `
+
+        <div class="whatsapp-redirect-box">
+
+            <div class="whatsapp-redirect-icon">
+                🛒
+            </div>
+
+            <h3>
+                Clear Cart?
+            </h3>
+
+            <p>
+                Are you sure you want to remove
+                all items from your cart?
+            </p>
+
+            <div class="whatsapp-redirect-actions">
+
+                <button
+                    type="button"
+                    class="whatsapp-cancel-btn"
+                    id="clearCartCancelBtn">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="button"
+                    class="whatsapp-continue-btn"
+                    id="clearCartConfirmBtn">
+
+                    Clear Cart
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        popup
+    );
+
+
+    // Prevent background scrolling
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    // =================================================
+    // CANCEL
+    // =================================================
+
+    const cancelBtn =
+        document.getElementById(
+            "clearCartCancelBtn"
+        );
+
+
+    if (cancelBtn) {
+
+        cancelBtn.addEventListener(
+            "click",
+            () => {
+
+                popup.remove();
+
+                document.body.style.overflow =
+                    "";
+
+            }
+        );
+
+    }
+
+
+    // =================================================
+    // CONFIRM CLEAR
+    // =================================================
+
+    const confirmBtn =
+        document.getElementById(
+            "clearCartConfirmBtn"
+        );
+
+
+    if (confirmBtn) {
+
+        confirmBtn.addEventListener(
+            "click",
+            () => {
+
+                cart = {};
+
+                saveCart();
+
+                renderCart();
+
+                popup.remove();
+
+                document.body.style.overflow =
+                    "";
+
+            }
+        );
+
+    }
+
+
+    // =================================================
+    // CLICK OUTSIDE POPUP
+    // =================================================
+
+    popup.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === popup
+            ) {
+
+                popup.remove();
+
+                document.body.style.overflow =
+                    "";
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
 // TOAST MESSAGE
 // =====================================================
 
 function showToast(message) {
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
+
 
     if (!toast) {
 
@@ -1137,20 +1295,18 @@ function showToast(message) {
     }
 
 
-
     toast.innerText =
         message;
 
 
-
-    toast.classList.add("show");
-
+    toast.classList.add(
+        "show"
+    );
 
 
     clearTimeout(
         window.toastTimer
     );
-
 
 
     window.toastTimer =
@@ -1166,6 +1322,8 @@ function showToast(message) {
         );
 
 }
+
+
 // =====================================================
 // DOM READY
 // =====================================================
@@ -1298,19 +1456,9 @@ window.addEventListener(
                     }
 
 
-                    if (
-                        confirm(
-                            "Remove all items?"
-                        )
-                    ) {
+                    // CUSTOM CLEAR CART POPUP
 
-                        cart = {};
-
-                        saveCart();
-
-                        renderCart();
-
-                    }
+                    showClearCartPopup();
 
                 }
             );
