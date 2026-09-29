@@ -1,49 +1,68 @@
 import { db } from "./firebase-init.js";
-import { collection, query, orderBy, getDocs } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      function buildProductHTML(p) {
-
-  const discount = Math.round(
-    ((p.priceOld - p.priceNew) / p.priceOld) * 100
-  );
-
-  const save = p.priceOld - p.priceNew;
+import {
+  collection,
+  query,
+  orderBy,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-  // =========================================
-  // OFFER RIBBON
-  // Shows ONLY when Firebase has offerText
-  // =========================================
+/* =====================================================
+   ORDER POPUP
+===================================================== */
+
+let currentOrderProduct = null;
+
+
+/* =====================================================
+   BUILD PRODUCT HTML
+===================================================== */
+
+function buildProductHTML(p) {
+
+  const priceOld = Number(p.priceOld || 0);
+  const priceNew = Number(p.priceNew || 0);
+
+  const discount = priceOld > 0
+    ? Math.round(((priceOld - priceNew) / priceOld) * 100)
+    : 0;
+
+  const save = priceOld - priceNew;
+
+
+  /* ===================================================
+     OFFER RIBBON
+  =================================================== */
 
   const offerRibbon = `
-  ${
-    p.offerClime &&
-    String(p.offerClime).trim() !== ""
-      ? `
-        <div class="product-offer-ribbon1">
-          <span>${p.offerClime}</span>
-        </div>
-      `
-      : ""
-  }
+    ${
+      p.offerClime &&
+      String(p.offerClime).trim() !== ""
+        ? `
+          <div class="product-offer-ribbon1">
+            <span>${p.offerClime}</span>
+          </div>
+        `
+        : ""
+    }
 
-  ${
-    p.offerText &&
-    String(p.offerText).trim() !== ""
-      ? `
-        <div class="product-offer-ribbon">
-          <span>${p.offerText}</span>
-        </div>
-      `
-      : ""
-  }
-`;
+    ${
+      p.offerText &&
+      String(p.offerText).trim() !== ""
+        ? `
+          <div class="product-offer-ribbon">
+            <span>${p.offerText}</span>
+          </div>
+        `
+        : ""
+    }
+  `;
 
 
-  // =========================================
-  // IMAGES
-  // =========================================
+  /* ===================================================
+     IMAGES
+  =================================================== */
 
   const imgs = (p.images || []).map(im => `
     <div class="img-box">
@@ -52,10 +71,10 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
       <img
         src="/images/products/${im.full}.webp"
-        alt="${p.name}"
+        alt="${p.name || ""}"
         loading="lazy"
         decoding="async"
-		onload="this.previousElementSibling.remove()"
+        onload="this.previousElementSibling.remove()"
         onerror="this.parentElement.classList.add('img-error')"
         onclick="openLightbox(this.src)"
       >
@@ -64,60 +83,64 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   `).join("");
 
 
-  // =========================================
-  // WHATSAPP
-  // =========================================
-
-  const message =
-`Hi Diecast.scape,
-I would like to place an order for the ${p.name} - ${p.subtitle},
-priced at ₹${p.priceNew} (${discount}% discount).
-Kindly let me know the payment details.`;
-
-  const whatsappText = encodeURIComponent(message);
-
-
-  // =========================================
-  // PRODUCT CARD
-  // =========================================
+  /* ===================================================
+     PRODUCT CARD
+  =================================================== */
 
   return `
   <div class="section">
 
-    
-${offerRibbon}
+    ${offerRibbon}
+
     <div class="diorama-title">
-      ${p.name}
+      ${p.name || ""}
     </div>
 
-    ${p.subtitle ? `
-      <div class="diorama-subtitle">
-        ${p.subtitle}
+    ${
+      p.subtitle
+        ? `
+          <div class="diorama-subtitle">
+            ${p.subtitle}
+          </div>
+        `
+        : ""
+    }
+
+
+    <!-- IMAGE SLIDER -->
+
+    <div class="slider-wrap">
+
+      <div class="offer-badge">
+        📸 Real Product Images
       </div>
-    ` : ''}
-<div class="slider-wrap">
 
-  <div class="offer-badge">
-    📸 Real Product Images
-  </div>
-
-<div class="slider">
-  ${imgs}
-</div>
-
-${
-  (p.images || []).length > 1
-    ? `
-      <div class="image-dots">
-        ${(p.images || []).map((_, i) => `
-          <span class="image-dot ${i === 0 ? "active" : ""}"></span>
-        `).join("")}
+      <div class="slider">
+        ${imgs}
       </div>
-    `
-    : ""
-}
 
-</div>
+
+      ${
+        (p.images || []).length > 1
+          ? `
+            <div class="image-dots">
+
+              ${(p.images || []).map((_, i) => `
+                <span
+                  class="image-dot ${i === 0 ? "active" : ""}">
+                </span>
+              `).join("")}
+
+            </div>
+          `
+          : ""
+      }
+
+    </div>
+
+
+    <!-- QUICK SPECS -->
+
     <div class="qs-box">
 
       <div class="qs-title">
@@ -126,33 +149,52 @@ ${
 
       <div class="qs-grid">
 
-        ${p.dimensions ? `
-        <div class="qs-item">
-          <div class="qs-name">Dimensions</div>
-          <div class="qs-value">${p.dimensions}</div>
-        </div>
-        ` : ''}
+        ${
+          p.dimensions
+            ? `
+              <div class="qs-item">
+                <div class="qs-name">Dimensions</div>
+                <div class="qs-value">${p.dimensions}</div>
+              </div>
+            `
+            : ""
+        }
 
-        ${p.flore ? `
-        <div class="qs-item">
-          <div class="qs-name">Floor Type</div>
-          <div class="qs-value">${p.flore}</div>
-        </div>
-        ` : ''}
 
-        ${p.suitableScale ? `
-        <div class="qs-item">
-          <div class="qs-name">Perfect Scale Model For</div>
-          <div class="qs-value">${p.suitableScale}</div>
-        </div>
-        ` : ''}
+        ${
+          p.flore
+            ? `
+              <div class="qs-item">
+                <div class="qs-name">Floor Type</div>
+                <div class="qs-value">${p.flore}</div>
+              </div>
+            `
+            : ""
+        }
 
-        ${p.capacity ? `
-        <div class="qs-item">
-          <div class="qs-name">Capacity</div>
-          <div class="qs-value">${p.capacity}</div>
-        </div>
-        ` : ''}
+
+        ${
+          p.suitableScale
+            ? `
+              <div class="qs-item">
+                <div class="qs-name">Perfect Scale Model For</div>
+                <div class="qs-value">${p.suitableScale}</div>
+              </div>
+            `
+            : ""
+        }
+
+
+        ${
+          p.capacity
+            ? `
+              <div class="qs-item">
+                <div class="qs-name">Capacity</div>
+                <div class="qs-value">${p.capacity}</div>
+              </div>
+            `
+            : ""
+        }
 
       </div>
 
@@ -162,69 +204,111 @@ ${
           p.accessories ||
           p.rotating ||
           p.lighting ||
-	      p.lightingAdapter ||
-		  p.cover ||
+          p.lightingAdapter ||
+          p.cover ||
           p.build
-        ) ? `
+        )
+          ? `
+            <div class="qs-features">
 
-        <div class="qs-features">
+              ${
+                p.accessories
+                  ? `
+                    <div class="qs-feature">
+                      <span class="qs-dot"></span>
+                      ${p.accessories}
+                    </div>
+                  `
+                  : ""
+              }
 
-          ${p.accessories ? `
-          <div class="qs-feature">
-            <span class="qs-dot"></span>
-            ${p.accessories}
-          </div>
-          ` : ''}
 
-          ${p.rotating ? `
-          <div class="qs-feature">
-            <span class="qs-dot"></span>
-            ${p.rotating}
-          </div>
-          ` : ''}
+              ${
+                p.rotating
+                  ? `
+                    <div class="qs-feature">
+                      <span class="qs-dot"></span>
+                      ${p.rotating}
+                    </div>
+                  `
+                  : ""
+              }
 
-          ${p.cover ? `
-          <div class="qs-feature">
-            <span class="qs-dot"></span>
-            ${p.cover}
-          </div>
-          ` : ''}
 
-          ${p.lighting ? `
-          <div class="qs-feature">
-            <span class="qs-dot"></span>
-            ${p.lighting}
-          </div>
-          ` : ''}
+              ${
+                p.cover
+                  ? `
+                    <div class="qs-feature">
+                      <span class="qs-dot"></span>
+                      ${p.cover}
+                    </div>
+                  `
+                  : ""
+              }
 
-          ${p.build ? `
-          <div class="qs-feature">
-            <span class="qs-dot"></span>
-            ${p.build}
-          </div>
-          ` : ''}
 
-          ${p.build ? `
-          <div class="qs-feature">
-            <span class="qs-dot"></span>
-            ${p.lightingAdapter}
-          </div>
-         ` : ''}
-        </div>
+              ${
+                p.lighting
+                  ? `
+                    <div class="qs-feature">
+                      <span class="qs-dot"></span>
+                      ${p.lighting}
+                    </div>
+                  `
+                  : ""
+              }
 
-      ` : ''}
+
+              ${
+                p.build
+                  ? `
+                    <div class="qs-feature">
+                      <span class="qs-dot"></span>
+                      ${p.build}
+                    </div>
+                  `
+                  : ""
+              }
+
+
+              ${
+                p.lightingAdapter
+                  ? `
+                    <div class="qs-feature">
+                      <span class="qs-dot"></span>
+                      ${p.lightingAdapter}
+                    </div>
+                  `
+                  : ""
+              }
+
+            </div>
+          `
+          : ""
+      }
 
     </div>
 
 
+    <!-- PRICE -->
+
     <div class="price-card">
 
       <div class="price-main">
-        <span class="old">₹${p.priceOld}</span>
-        <span class="new">₹${p.priceNew}</span>
+
+        <span class="old">
+          ₹${priceOld}
+        </span>
+
+        <span class="new">
+          ₹${priceNew}
+        </span>
+
       </div>
 
+
       <div class="discount-box">
+
         <div class="discount">
           ${discount}% OFF
         </div>
@@ -232,41 +316,68 @@ ${
         <div class="save">
           Save ₹${save}
         </div>
+
       </div>
 
     </div>
 
 
+    <!-- SHIPPING -->
+
     <div class="ship">
 
       <svg width="18" height="18" viewBox="0 0 256 256">
-        <g transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
-          <polygon points="28.55,28.74 45,35.39 45,89 2.44,71.81 2.44,38.43 2.44,18.19 18.89,24.84 18.89,24.84 18.89,47.27 28.55,51.18" fill="rgb(226,174,131)"/>
-          <polygon points="87.56,18.19 45,35.39 28.55,28.74 71.11,11.55" fill="rgb(226,174,131)"/>
-          <polygon points="61.45,7.64 18.89,24.84 2.44,18.19 45,1" fill="rgb(226,174,131)"/>
-          <polyline points="45,35.39 45,89 87.56,71.81 87.56,38.43 87.56,18.19 45,35.39" fill="rgb(196,141,105)"/>
+
+        <g
+          transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"
+        >
+
+          <polygon
+            points="28.55,28.74 45,35.39 45,89 2.44,71.81 2.44,38.43 2.44,18.19 18.89,24.84 18.89,24.84 18.89,47.27 28.55,51.18"
+            fill="rgb(226,174,131)"
+          />
+
+          <polygon
+            points="87.56,18.19 45,35.39 28.55,28.74 71.11,11.55"
+            fill="rgb(226,174,131)"
+          />
+
+          <polygon
+            points="61.45,7.64 18.89,24.84 2.44,18.19 45,1"
+            fill="rgb(226,174,131)"
+          />
+
+          <polyline
+            points="45,35.39 45,89 87.56,71.81 87.56,38.43 87.56,18.19 45,35.39"
+            fill="rgb(196,141,105)"
+          />
+
         </g>
+
       </svg>
 
-      ${p.shippingText || "Shipping charges applicable"}
+      Shipping charges applicable
 
     </div>
 
 
+    <!-- BUTTONS -->
+
     <div class="customize-row">
 
-      <a
+      <button
         class="buy-btn"
-        href="https://wa.me/918792744018?text=${whatsappText}"
-        target="_blank"
+        type="button"
+        onclick='openOrderPopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
       >
         Order on WhatsApp
-      </a>
+      </button>
+
 
       <a
         class="customize-btn"
         href="https://wa.me/918792744018?text=${encodeURIComponent(
-          `Hi, I want to customize the "${p.name} - ${p.subtitle}".`
+          `Hi, I want to customize the "${p.name || ""} - ${p.subtitle || ""}".`
         )}"
         target="_blank"
       >
@@ -277,45 +388,269 @@ ${
 
   </div>
   `;
-	  }
+}
+
+
+/* =====================================================
+   OPEN ORDER POPUP
+===================================================== */
+
+window.openOrderPopup = function(product) {
+
+  currentOrderProduct = product;
+
+  const price = Number(product.priceNew || 0);
+
+  /*
+   * Firebase field:
+   * shippingPrice
+   *
+   * Number only.
+   */
+
+  const shipping = Number(product.shippingPrice || 0);
+
+  const total = price + shipping;
+
+
+  const popup = document.getElementById("orderPopup");
+
+  if (!popup) {
+    console.error("Order popup element not found.");
+    return;
+  }
+
+
+  const nameElement =
+    document.getElementById("orderPopupName");
+
+  const subtitleElement =
+    document.getElementById("orderPopupSubtitle");
+
+  const priceElement =
+    document.getElementById("orderPopupPrice");
+
+  const shippingElement =
+    document.getElementById("orderPopupShipping");
+
+  const totalElement =
+    document.getElementById("orderPopupTotal");
+
+
+  if (nameElement) {
+    nameElement.textContent =
+      product.name || "";
+  }
+
+
+  if (subtitleElement) {
+    subtitleElement.textContent =
+      product.subtitle || "";
+  }
+
+
+  if (priceElement) {
+    priceElement.textContent =
+      `₹${price}`;
+  }
+
+
+  if (shippingElement) {
+
+    if (shipping === 0) {
+      shippingElement.textContent =
+        "₹0";
+    } else {
+      shippingElement.textContent =
+        `₹${shipping}`;
+    }
+
+  }
+
+
+  if (totalElement) {
+    totalElement.textContent =
+      `₹${total}`;
+  }
+
+
+  popup.classList.add("show");
+
+  document.body.classList.add("order-popup-open");
+
+};
+
+
+/* =====================================================
+   CLOSE ORDER POPUP
+===================================================== */
+
+window.closeOrderPopup = function() {
+
+  const popup =
+    document.getElementById("orderPopup");
+
+  if (!popup) return;
+
+  popup.classList.remove("show");
+
+  document.body.classList.remove("order-popup-open");
+
+  currentOrderProduct = null;
+
+};
+
+
+/* =====================================================
+   CLOSE WHEN CLICKING BACKDROP
+===================================================== */
+
+window.orderPopupBackdrop = function(event) {
+
+  if (
+    event.target === event.currentTarget
+  ) {
+    closeOrderPopup();
+  }
+
+};
+
+
+/* =====================================================
+   PROCEED TO WHATSAPP
+===================================================== */
+
+window.proceedOrderWhatsApp = function() {
+
+  if (!currentOrderProduct) return;
+
+
+  const product =
+    currentOrderProduct;
+
+
+  const productName =
+    product.name || "";
+
+
+  const subtitle =
+    product.subtitle || "";
+
+
+  const price =
+    Number(product.priceNew || 0);
+
+
+  const shipping =
+    Number(product.shippingPrice || 0);
+
+
+  const total =
+    price + shipping;
+
+
+  const message =
+`Hi Diecast.scape,
+
+I would like to place an order for:
+
+${productName}${subtitle ? ` - ${subtitle}` : ""}
+
+Product price: ₹${price}
+Shipping: ₹${shipping}
+Total: ₹${total}
+
+I understand that a 50% advance payment is required to begin production.`;
+
+
+  const whatsappURL =
+    `https://wa.me/918792744018?text=${encodeURIComponent(message)}`;
+
+
+  window.open(
+    whatsappURL,
+    "_blank"
+  );
+
+
+  closeOrderPopup();
+
+};
+
+
+/* =====================================================
+   IMAGE DOTS
+===================================================== */
+
 function initImageDots() {
 
   document.querySelectorAll(".slider-wrap").forEach(wrap => {
 
-    const slider = wrap.querySelector(".slider");
-    const dots = wrap.querySelectorAll(".image-dot");
-    const slides = slider?.querySelectorAll(".img-box");
+    const slider =
+      wrap.querySelector(".slider");
 
-    if (!slider || dots.length <= 1 || !slides?.length) return;
+    const dots =
+      wrap.querySelectorAll(".image-dot");
+
+    const slides =
+      slider?.querySelectorAll(".img-box");
+
+
+    if (
+      !slider ||
+      dots.length <= 1 ||
+      !slides?.length
+    ) {
+      return;
+    }
+
 
     function updateActiveDot() {
 
-      const scrollLeft = slider.scrollLeft;
+      const scrollLeft =
+        slider.scrollLeft;
+
 
       let activeIndex = 0;
-      let smallestDistance = Infinity;
+
+      let smallestDistance =
+        Infinity;
+
 
       slides.forEach((slide, index) => {
 
-        const distance = Math.abs(
-          slide.offsetLeft - scrollLeft
-        );
+        const distance =
+          Math.abs(
+            slide.offsetLeft - scrollLeft
+          );
 
-        if (distance < smallestDistance) {
-          smallestDistance = distance;
-          activeIndex = index;
+
+        if (
+          distance < smallestDistance
+        ) {
+
+          smallestDistance =
+            distance;
+
+          activeIndex =
+            index;
+
         }
 
       });
 
+
       dots.forEach((dot, index) => {
+
         dot.classList.toggle(
           "active",
           index === activeIndex
         );
+
       });
 
     }
+
 
     slider.addEventListener(
       "scroll",
@@ -323,68 +658,83 @@ function initImageDots() {
       { passive: true }
     );
 
-    // Set first dot active
+
     updateActiveDot();
 
   });
 
 }
-// =====================================================
-// PROGRESSIVE PRODUCT LOADING
-// Loads 4 products at a time
-// =====================================================
+
+
+/* =====================================================
+   PROGRESSIVE PRODUCT LOADING
+===================================================== */
 
 const PRODUCTS_PER_BATCH = 4;
 
 let allProducts = [];
+
 let loadedProductIndex = 0;
+
 let isLoadingProducts = false;
 
 
-// =====================================================
-// LOAD NEXT 4 PRODUCTS
-// =====================================================
+/* =====================================================
+   LOAD NEXT PRODUCTS
+===================================================== */
 
 function loadNextProducts() {
 
   if (isLoadingProducts) return;
 
-  if (loadedProductIndex >= allProducts.length) {
+  if (
+    loadedProductIndex >=
+    allProducts.length
+  ) {
     return;
   }
 
+
   isLoadingProducts = true;
 
+
   const container =
-    document.getElementById("productsContainer");
+    document.getElementById(
+      "productsContainer"
+    );
+
 
   if (!container) {
+
     isLoadingProducts = false;
+
     return;
+
   }
 
 
   const nextProducts =
     allProducts.slice(
       loadedProductIndex,
-      loadedProductIndex + PRODUCTS_PER_BATCH
+      loadedProductIndex +
+        PRODUCTS_PER_BATCH
     );
 
 
-  nextProducts.forEach(p => {
+  nextProducts.forEach(product => {
 
     container.insertAdjacentHTML(
       "beforeend",
-      buildProductHTML(p)
+      buildProductHTML(product)
     );
 
   });
 
 
-  loadedProductIndex += nextProducts.length;
+  loadedProductIndex +=
+    nextProducts.length;
 
 
-  // Initialize sliders/dots for newly added products
   requestAnimationFrame(() => {
 
     initImageDots();
@@ -396,30 +746,44 @@ function loadNextProducts() {
 }
 
 
-// =====================================================
-// LOAD PRODUCT DATA
-// =====================================================
+/* =====================================================
+   LOAD PRODUCT DATA
+===================================================== */
 
 async function loadProducts() {
 
   const container =
-    document.getElementById("productsContainer");
+    document.getElementById(
+      "productsContainer"
+    );
+
 
   const loader =
-    document.getElementById("productsLoader");
+    document.getElementById(
+      "productsLoader"
+    );
+
 
   if (!container) return;
 
 
   try {
 
-    const q = query(
-      collection(db, "products"),
-      orderBy("created", "desc")
-    );
+    const q =
+      query(
+        collection(
+          db,
+          "products"
+        ),
+        orderBy(
+          "created",
+          "desc"
+        )
+      );
 
 
-    const snap = await getDocs(q);
+    const snap =
+      await getDocs(q);
 
 
     allProducts = [];
@@ -427,34 +791,48 @@ async function loadProducts() {
 
     snap.forEach(doc => {
 
-      const p = doc.data();
+      const p =
+        doc.data();
+
 
       if (p.active) {
+
         allProducts.push(p);
+
       }
 
     });
 
 
-    // Remove initial loader
     if (loader) {
+
       loader.remove();
+
     }
 
 
-    // No products
-    if (allProducts.length === 0) {
+    if (
+      allProducts.length === 0
+    ) {
 
-      if (loader) {
-        loader.innerText =
-          "No products available";
-      }
+      const message =
+        document.createElement("div");
+
+      message.className =
+        "no-products-message";
+
+      message.textContent =
+        "No products available";
+
+      container.appendChild(
+        message
+      );
 
       return;
+
     }
 
 
-    // Load FIRST 4 products only
     loadNextProducts();
 
 
@@ -465,9 +843,12 @@ async function loadProducts() {
       error
     );
 
+
     if (loader) {
+
       loader.innerText =
         "Unable to load products";
+
     }
 
   }
@@ -475,9 +856,9 @@ async function loadProducts() {
 }
 
 
-// =====================================================
-// LOAD NEXT BATCH WHEN USER REACHES LAST PRODUCT
-// =====================================================
+/* =====================================================
+   LOAD NEXT BATCH ON SCROLL
+===================================================== */
 
 function initProductBatchLoading() {
 
@@ -486,6 +867,7 @@ function initProductBatchLoading() {
       "productsContainer"
     );
 
+
   if (!container) return;
 
 
@@ -493,7 +875,10 @@ function initProductBatchLoading() {
     "scroll",
     () => {
 
-      if (isLoadingProducts) return;
+      if (isLoadingProducts) {
+        return;
+      }
+
 
       const products =
         container.querySelectorAll(
@@ -501,19 +886,21 @@ function initProductBatchLoading() {
         );
 
 
-      if (!products.length) return;
+      if (!products.length) {
+        return;
+      }
 
 
       const lastProduct =
-        products[products.length - 1];
+        products[
+          products.length - 1
+        ];
 
 
       const rect =
         lastProduct.getBoundingClientRect();
 
 
-      // Start loading next 4 when
-      // the last product is close to viewport
       const nearBottom =
         rect.bottom <=
         window.innerHeight + 300;
@@ -526,15 +913,17 @@ function initProductBatchLoading() {
       }
 
     },
-    { passive: true }
+    {
+      passive: true
+    }
   );
 
 }
 
 
-// =====================================================
-// START
-// =====================================================
+/* =====================================================
+   START
+===================================================== */
 
 window.addEventListener(
   "DOMContentLoaded",
