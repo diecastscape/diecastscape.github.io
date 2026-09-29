@@ -362,18 +362,16 @@ function buildProductHTML(p) {
 <div class="order-area">
 
   <div class="customize-prompt">
-    <span>Want to customize?</span>
+  <span>Want to customize?</span>
 
-    <a
-      class="customize-link"
-      href="https://wa.me/918792744018?text=${encodeURIComponent(
-        `Hi, I want to customize the "${p.name} - ${p.subtitle}".`
-      )}"
-      target="_blank"
-    >
-      Customize
-    </a>
-  </div>
+  <a
+    class="customize-link"
+    href="javascript:void(0)"
+    onclick='openCustomizePopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
+  >
+    Customize
+  </a>
+</div>
 
 
   <a
@@ -577,7 +575,190 @@ I understand that a 50% advance payment is required to begin production.`;
   closeOrderPopup();
 
 };
+/* =====================================================
+   CUSTOMIZE POPUP
+===================================================== */
 
+let currentCustomizeProduct = null;
+
+
+/* =====================================================
+   OPEN CUSTOMIZE POPUP
+===================================================== */
+
+window.openCustomizePopup = function(product) {
+
+  currentCustomizeProduct = product;
+
+  const popup =
+    document.getElementById("customizePopup");
+
+  if (!popup) {
+    console.error("Customize popup element not found.");
+    return;
+  }
+
+
+  const nameElement =
+    document.getElementById("customizePopupName");
+
+  const subtitleElement =
+    document.getElementById("customizePopupSubtitle");
+
+  const requestElement =
+    document.getElementById("customizeRequest");
+
+
+  if (nameElement) {
+
+    nameElement.textContent =
+      product.name || "";
+
+  }
+
+
+  if (subtitleElement) {
+
+    subtitleElement.textContent =
+      product.subtitle || "";
+
+  }
+
+
+  if (requestElement) {
+
+    requestElement.value = "";
+
+  }
+
+
+  popup.classList.add("show");
+
+  document.body.classList.add(
+    "order-popup-open"
+  );
+
+
+  setTimeout(() => {
+
+    if (requestElement) {
+      requestElement.focus();
+    }
+
+  }, 250);
+
+};
+
+
+/* =====================================================
+   CLOSE CUSTOMIZE POPUP
+===================================================== */
+
+window.closeCustomizePopup = function() {
+
+  const popup =
+    document.getElementById("customizePopup");
+
+  if (!popup) return;
+
+
+  popup.classList.remove("show");
+
+  document.body.classList.remove(
+    "order-popup-open"
+  );
+
+  currentCustomizeProduct = null;
+
+};
+
+
+/* =====================================================
+   CLOSE CUSTOMIZE POPUP BACKDROP
+===================================================== */
+
+window.customizePopupBackdrop = function(event) {
+
+  if (
+    event.target === event.currentTarget
+  ) {
+
+    closeCustomizePopup();
+
+  }
+
+};
+
+
+/* =====================================================
+   SEND CUSTOMIZATION REQUEST
+===================================================== */
+
+window.submitCustomizeRequest = function() {
+
+  if (!currentCustomizeProduct) {
+    return;
+  }
+
+
+  const requestElement =
+    document.getElementById("customizeRequest");
+
+
+  const request =
+    requestElement
+      ? requestElement.value.trim()
+      : "";
+
+
+  if (!request) {
+
+    requestElement?.focus();
+
+    return;
+
+  }
+
+
+  const product =
+    currentCustomizeProduct;
+
+
+  const productName =
+    product.name || "";
+
+
+  const subtitle =
+    product.subtitle || "";
+
+
+  const message =
+`Hi Diecast.scape,
+
+I would like to request a customization for:
+
+${productName}${subtitle ? ` - ${subtitle}` : ""}
+
+What I would like to customize:
+
+${request}
+
+Please let me know if this customization is possible and the additional cost, if any.`;
+
+
+  const whatsappURL =
+    `https://wa.me/918792744018?text=${encodeURIComponent(message)}`;
+
+
+  window.open(
+    whatsappURL,
+    "_blank"
+  );
+
+
+  closeCustomizePopup();
+
+};
 
 /* =====================================================
    IMAGE DOTS
