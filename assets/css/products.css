@@ -1,4 +1,90 @@
 /* =====================================================
+   WHATSAPP REDIRECT POPUP
+===================================================== */
+
+.whatsapp-redirect-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 99999;
+}
+
+.whatsapp-redirect-box {
+  width: 100%;
+  max-width: 360px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 26px 22px 22px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: whatsappPopupIn 0.2s ease;
+}
+
+.whatsapp-redirect-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.whatsapp-redirect-box h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  color: #111111;
+}
+
+.whatsapp-redirect-box p {
+  margin: 0 auto 22px;
+  max-width: 290px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555555;
+}
+
+.whatsapp-redirect-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.whatsapp-redirect-actions button {
+  flex: 1;
+  min-height: 44px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.whatsapp-cancel-btn {
+  background: #f1f1f1;
+  border: 1px solid #dddddd;
+  color: #222222;
+}
+
+.whatsapp-continue-btn {
+  background: #111111;
+  border: 1px solid #111111;
+  color: #ffffff;
+}
+
+.whatsapp-redirect-actions button:active {
+  transform: scale(0.98);
+}
+
+@keyframes whatsappPopupIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* =====================================================
    CUSTOMIZE REQUEST POPUP
 ===================================================== */
 
