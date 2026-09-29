@@ -43,9 +43,7 @@ function addProductInfo(id, name, price) {
 
         cart[id].qty++;
 
-    }
-
-    else {
+    } else {
 
         cart[id] = {
 
@@ -72,16 +70,12 @@ function addProductInfo(id, name, price) {
 function getShipping(count) {
 
     if (count === 0) {
-
         return 0;
-
     }
 
     // Up to 2 frames = ₹75 shipping
     if (count <= 2) {
-
         return 75;
-
     }
 
     // 3 or more frames = FREE shipping
@@ -115,13 +109,12 @@ window.updateFrameAddedStatus = function () {
 
             if (!price) return;
 
-            const onclick =
-                button.getAttribute("onclick") || "";
-
             const match =
-                onclick.match(
-                    /addProductInfo\s*\(\s*['"]([^'"]+)['"]/
-                );
+                button
+                    .getAttribute("onclick")
+                    ?.match(
+                        /addProductInfo\(\s*['"]([^'"]+)['"]/
+                    );
 
             if (!match) return;
 
@@ -153,9 +146,7 @@ window.updateFrameAddedStatus = function () {
             else {
 
                 if (addedText) {
-
                     addedText.remove();
-
                 }
 
             }
@@ -176,17 +167,19 @@ function updateCartHandleText() {
             "cartHeader"
         );
 
+    if (!cartHeader) return;
+
+
     const cartBox =
         document.getElementById(
             "cartBox"
         );
 
-    if (!cartHeader) return;
 
+    const isOpen =
+        cartBox &&
+        cartBox.classList.contains("open");
 
-    // -----------------------------------------
-    // FIND / CREATE TEXT ELEMENT
-    // -----------------------------------------
 
     let textElement =
         cartHeader.querySelector(
@@ -194,6 +187,7 @@ function updateCartHandleText() {
         );
 
 
+    // Create text element if it does not exist
     if (!textElement) {
 
         textElement =
@@ -209,14 +203,8 @@ function updateCartHandleText() {
     }
 
 
-    // -----------------------------------------
-    // CART OPEN
-    // -----------------------------------------
-
-    if (
-        cartBox &&
-        cartBox.classList.contains("open")
-    ) {
+    // OPEN = CLOSE CART
+    if (isOpen) {
 
         textElement.innerText =
             "Close Cart";
@@ -224,16 +212,105 @@ function updateCartHandleText() {
     }
 
 
-    // -----------------------------------------
-    // CART CLOSED
-    // -----------------------------------------
-
+    // CLOSED = VIEW CART
     else {
 
         textElement.innerText =
             "View Cart";
 
     }
+
+}
+
+
+// =====================================================
+// OPEN CART
+// =====================================================
+
+function openCart() {
+
+    const cartBox =
+        document.getElementById(
+            "cartBox"
+        );
+
+    const cartOverlay =
+        document.getElementById(
+            "cartOverlay"
+        );
+
+    if (!cartBox) return;
+
+
+    cartBox.classList.add(
+        "open"
+    );
+
+
+    if (cartOverlay) {
+
+        cartOverlay.classList.add(
+            "show"
+        );
+
+        cartOverlay.style.pointerEvents =
+            "auto";
+
+    }
+
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    updateCartHandleText();
+
+}
+
+
+// =====================================================
+// CLOSE CART
+// =====================================================
+
+function closeCart() {
+
+    const cartBox =
+        document.getElementById(
+            "cartBox"
+        );
+
+    const cartOverlay =
+        document.getElementById(
+            "cartOverlay"
+        );
+
+
+    if (cartBox) {
+
+        cartBox.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    if (cartOverlay) {
+
+        cartOverlay.classList.remove(
+            "show"
+        );
+
+        cartOverlay.style.pointerEvents =
+            "none";
+
+    }
+
+
+    document.body.style.overflow =
+        "";
+
+
+    updateCartHandleText();
 
 }
 
@@ -251,9 +328,12 @@ function renderCart() {
 
     if (!list) return;
 
+
     list.innerHTML = "";
 
+
     let total = 0;
+
     let count = 0;
 
 
@@ -261,48 +341,46 @@ function renderCart() {
     // CART ITEMS
     // =================================================
 
-    getCartProducts().forEach(
-        item => {
+    getCartProducts().forEach(item => {
 
-            const subTotal =
-                item.price * item.qty;
+        const subTotal =
+            item.price * item.qty;
 
-            total += subTotal;
+        total += subTotal;
 
-            count += item.qty;
+        count += item.qty;
 
 
-            list.innerHTML += `
+        list.innerHTML += `
 
-            <div class="cart-item">
+        <div class="cart-item">
 
-                <div class="cart-row">
+            <div class="cart-row">
 
-                    <div class="cart-name">
-                        ${item.name}
-                    </div>
-
-                    <div class="cart-price">
-                        ${item.price} × ${item.qty} = ₹${subTotal}
-                    </div>
-
+                <div class="cart-name">
+                    ${item.name}
                 </div>
 
-
-                <button
-                    class="remove-item"
-                    onclick="removeItem('${item.id}')">
-
-                    Remove
-
-                </button>
+                <div class="cart-price">
+                    ${item.price} × ${item.qty} = ₹${subTotal}
+                </div>
 
             </div>
 
-            `;
 
-        }
-    );
+            <button
+                class="remove-item"
+                onclick="removeItem('${item.id}')">
+
+                Remove
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
 
 
     // =================================================
@@ -481,90 +559,172 @@ function renderCart() {
     // PROGRESSIVE OFFER BAR
     // =================================================
 
-
-    // =================================================
-    // 0–2 FRAMES
-    // =================================================
+    // -------------------------
+    // 0–3 FRAME
+    // -------------------------
 
     if (count < 3) {
 
         const remaining =
             3 - count;
 
-        offerCount.innerText =
-            `${count} / 3 Frames`;
 
-        offerText.innerText =
-            `Add ${remaining} frame${remaining > 1 ? "s" : ""} to unlock FREE SHIPPING`;
+        if (offerCount) {
 
-        offerApply.innerText =
-            "";
+            offerCount.innerText =
+                `${count} / 3 Frames`;
 
-        offerApply2.innerText =
-            "";
+        }
 
-        offerApply3.innerText =
-            "";
 
-        offerBar.style.width =
-            (count / 3 * 100) + "%";
+        if (offerText) {
+
+            offerText.innerText =
+                `Add ${remaining} frame${remaining > 1 ? "s" : ""} to unlock FREE SHIPPING`;
+
+        }
+
+
+        if (offerApply) {
+
+            offerApply.innerText =
+                "";
+
+        }
+
+
+        if (offerApply2) {
+
+            offerApply2.innerText =
+                "";
+
+        }
+
+
+        if (offerBar) {
+
+            offerBar.style.width =
+                (count / 3 * 100) + "%";
+
+        }
 
     }
 
 
-    // =================================================
-    // 3–5 FRAMES
-    // =================================================
+    // -------------------------
+    // 4–5 FRAMES
+    // FREE SHIPPING
+    // -------------------------
 
     else if (count < 6) {
 
         const remaining =
             6 - count;
 
-        offerCount.innerText =
-            `${count} / 6 Frames`;
 
-        offerText.innerText =
-            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
+        if (offerCount) {
 
-        offerApply.innerText =
-            "";
+            offerCount.innerText =
+                `${count} / 6 Frames`;
 
-        offerApply2.innerText =
-            "Offer applyd ";
+        }
 
-        offerApply3.innerText =
-            "Free delivery";
 
-        offerBar.style.width =
-            (count / 6 * 100) + "%";
+        if (offerText) {
+
+            offerText.innerText =
+                `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
+
+        }
+
+
+        if (offerApply) {
+
+            offerApply.innerText =
+                "";
+
+        }
+
+
+        if (offerApply2) {
+
+            offerApply2.innerText =
+                "Offer applyd ";
+
+        }
+
+
+        if (offerApply3) {
+
+            offerApply3.innerText =
+                "Free delivery";
+
+        }
+
+
+        if (offerBar) {
+
+            offerBar.style.width =
+                (count / 6 * 100) + "%";
+
+        }
 
     }
 
 
-    // =================================================
+    // -------------------------
     // 6+ FRAMES
-    // =================================================
+    // 20% OFF + FREE SHIPPING
+    // -------------------------
 
     else {
 
-        offerCount.innerText =
-            `${count} Frames`;
+        if (offerCount) {
 
-        offerText.innerText =
-            `🎉 20% Off + Free delivery Unlocked`;
+            offerCount.innerText =
+                `${count} Frames`;
 
-        offerApply.innerText =
-            "20% off";
+        }
 
-        offerApply2.innerText =
-            "Offer applyd ";
 
-        offerApply3.innerText =
-            "Free delivery";
+        if (offerText) {
 
-        offerBar.style.width =
-            "100%";
+            offerText.innerText =
+                "🎉 20% Off + Free delivery Unlocked";
+
+        }
+
+
+        if (offerApply) {
+
+            offerApply.innerText =
+                "20% off";
+
+        }
+
+
+        if (offerApply2) {
+
+            offerApply2.innerText =
+                "Offer applyd ";
+
+        }
+
+
+        if (offerApply3) {
+
+            offerApply3.innerText =
+                "Free delivery";
+
+        }
+
+
+        if (offerBar) {
+
+            offerBar.style.width =
+                "100%";
+
+        }
 
     }
 
@@ -582,12 +742,14 @@ function renderCart() {
 
         }
 
+
         if (offerSave) {
 
             offerSave.innerText =
                 "-₹0";
 
         }
+
 
         if (grandTotalElement) {
 
@@ -596,12 +758,14 @@ function renderCart() {
 
         }
 
+
         if (grandTotal1) {
 
             grandTotal1.innerText =
                 "₹0";
 
         }
+
 
         if (bottomTotal) {
 
@@ -610,63 +774,62 @@ function renderCart() {
 
         }
 
-        offerCount.innerText =
-            "0 / 3 Frames";
 
-        offerText.innerText =
-            "Add 3 frames to unlock FREE SHIPPING";
+        if (offerCount) {
 
-        offerApply.innerText =
-            "";
+            offerCount.innerText =
+                "0 / 3 Frames";
 
-        offerApply2.innerText =
-            "";
-
-        offerApply3.innerText =
-            "";
-
-        offerBar.style.width =
-            "0%";
+        }
 
 
-        const cartBox =
-            document.getElementById(
-                "cartBox"
-            );
+        if (offerText) {
 
-        const cartOverlay =
-            document.getElementById(
-                "cartOverlay"
-            );
+            offerText.innerText =
+                "Add 3 frames to unlock FREE SHIPPING";
+
+        }
+
+
+        if (offerApply) {
+
+            offerApply.innerText =
+                "";
+
+        }
+
+
+        if (offerApply2) {
+
+            offerApply2.innerText =
+                "";
+
+        }
+
+
+        if (offerApply3) {
+
+            offerApply3.innerText =
+                "";
+
+        }
+
+
+        if (offerBar) {
+
+            offerBar.style.width =
+                "0%";
+
+        }
+
+
+        closeCart();
+
 
         const cartHeader =
             document.getElementById(
                 "cartHeader"
             );
-
-
-        if (cartBox) {
-
-            cartBox.classList.remove(
-                "open"
-            );
-
-        }
-
-        if (cartOverlay) {
-
-            cartOverlay.classList.remove(
-                "show"
-            );
-
-            cartOverlay.style.pointerEvents =
-                "none";
-
-        }
-
-        document.body.style.overflow =
-            "";
-
 
         if (cartHeader) {
 
@@ -695,31 +858,23 @@ function renderCart() {
 
 
     // =================================================
-    // UPDATE PRODUCT STATUS
+    // UPDATE ADDED STATUS
     // =================================================
 
-    if (
-        typeof window.updateFrameAddedStatus ===
-        "function"
-    ) {
-
-        window.updateFrameAddedStatus();
-
-    }
+    updateFrameAddedStatus();
 
 
     if (
-        typeof window.updateAccessoryAddedStatus ===
-        "function"
+        window.updateAccessoryAddedStatus
     ) {
 
-        window.updateAccessoryAddedStatus();
+        updateAccessoryAddedStatus();
 
     }
 
 
     // =================================================
-    // UPDATE VIEW / CLOSE CART TEXT
+    // UPDATE VIEW CART TEXT
     // =================================================
 
     updateCartHandleText();
@@ -740,6 +895,7 @@ function removeItem(id) {
     renderCart();
 
     updateFrameAddedStatus();
+
 
     if (
         window.updateAccessoryAddedStatus
@@ -765,16 +921,20 @@ function showToast(message) {
 
     if (!toast) return;
 
+
     toast.innerText =
         message;
+
 
     toast.classList.add(
         "show"
     );
 
+
     clearTimeout(
         window.toastTimer
     );
+
 
     window.toastTimer =
         setTimeout(
@@ -801,13 +961,7 @@ function checkoutCart() {
         getCartProducts();
 
 
-    // =================================================
-    // EMPTY CART
-    // =================================================
-
-    if (
-        products.length === 0
-    ) {
+    if (products.length === 0) {
 
         showToast(
             "No products in cart"
@@ -819,6 +973,7 @@ function checkoutCart() {
 
 
     let total = 0;
+
     let count = 0;
 
     let message =
@@ -829,24 +984,23 @@ function checkoutCart() {
     // PRODUCTS
     // =================================================
 
-    products.forEach(
-        item => {
+    products.forEach(item => {
 
-            const subTotal =
-                item.price * item.qty;
+        const subTotal =
+            item.price * item.qty;
 
-            total += subTotal;
+        total += subTotal;
 
-            count += item.qty;
+        count += item.qty;
 
-            message +=
-                `• ${item.name}%0A`;
 
-            message +=
-                `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
+        message +=
+            `• ${item.name}%0A`;
 
-        }
-    );
+        message +=
+            `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
+
+    });
 
 
     // =================================================
@@ -891,6 +1045,7 @@ function checkoutCart() {
     message +=
         "━━━━━━━━━━━━━━%0A";
 
+
     message +=
         `Total Frames : ${count}%0A`;
 
@@ -917,18 +1072,21 @@ function checkoutCart() {
     message +=
         `Discount : - ₹${discount}%0A`;
 
+
     message +=
         "━━━━━━━━━━━━━━%0A";
 
+
     message +=
         `*Grand Total : ₹${grandTotal}*%0A%0A`;
+
 
     message +=
         "Share me payment details.";
 
 
     // =================================================
-    // SHOW WHATSAPP POPUP
+    // SHOW CHECKOUT POPUP
     // =================================================
 
     showWhatsAppPopup(
@@ -939,7 +1097,7 @@ function checkoutCart() {
 
 
 // =====================================================
-// WHATSAPP REDIRECT POPUP
+// WHATSAPP CHECKOUT POPUP
 // =====================================================
 
 function showWhatsAppPopup(message) {
@@ -965,6 +1123,7 @@ function showWhatsAppPopup(message) {
 
     popup.id =
         "whatsappRedirectPopup";
+
 
     popup.className =
         "whatsapp-redirect-overlay";
@@ -1019,9 +1178,7 @@ function showWhatsAppPopup(message) {
     );
 
 
-    // =================================================
-    // PREVENT BACKGROUND SCROLL
-    // =================================================
+    // Prevent background scrolling
 
     document.body.style.overflow =
         "hidden";
@@ -1045,8 +1202,28 @@ function showWhatsAppPopup(message) {
 
                 popup.remove();
 
-                document.body.style.overflow =
-                    "";
+                // Keep cart open
+                const cartBox =
+                    document.getElementById(
+                        "cartBox"
+                    );
+
+                if (
+                    cartBox &&
+                    cartBox.classList.contains("open")
+                ) {
+
+                    document.body.style.overflow =
+                        "hidden";
+
+                }
+
+                else {
+
+                    document.body.style.overflow =
+                        "";
+
+                }
 
             }
         );
@@ -1079,8 +1256,29 @@ function showWhatsAppPopup(message) {
 
                 popup.remove();
 
-                document.body.style.overflow =
-                    "";
+
+                const cartBox =
+                    document.getElementById(
+                        "cartBox"
+                    );
+
+
+                if (
+                    cartBox &&
+                    cartBox.classList.contains("open")
+                ) {
+
+                    document.body.style.overflow =
+                        "hidden";
+
+                }
+
+                else {
+
+                    document.body.style.overflow =
+                        "";
+
+                }
 
             }
         );
@@ -1102,8 +1300,29 @@ function showWhatsAppPopup(message) {
 
                 popup.remove();
 
-                document.body.style.overflow =
-                    "";
+
+                const cartBox =
+                    document.getElementById(
+                        "cartBox"
+                    );
+
+
+                if (
+                    cartBox &&
+                    cartBox.classList.contains("open")
+                ) {
+
+                    document.body.style.overflow =
+                        "hidden";
+
+                }
+
+                else {
+
+                    document.body.style.overflow =
+                        "";
+
+                }
 
             }
 
@@ -1140,6 +1359,7 @@ function showClearCartPopup() {
 
     popup.id =
         "clearCartPopup";
+
 
     popup.className =
         "whatsapp-redirect-overlay";
@@ -1194,9 +1414,7 @@ function showClearCartPopup() {
     );
 
 
-    // =================================================
-    // PREVENT BACKGROUND SCROLL
-    // =================================================
+    // Prevent background scrolling
 
     document.body.style.overflow =
         "hidden";
@@ -1220,8 +1438,29 @@ function showClearCartPopup() {
 
                 popup.remove();
 
-                document.body.style.overflow =
-                    "";
+
+                const cartBox =
+                    document.getElementById(
+                        "cartBox"
+                    );
+
+
+                if (
+                    cartBox &&
+                    cartBox.classList.contains("open")
+                ) {
+
+                    document.body.style.overflow =
+                        "hidden";
+
+                }
+
+                else {
+
+                    document.body.style.overflow =
+                        "";
+
+                }
 
             }
         );
@@ -1258,6 +1497,7 @@ function showClearCartPopup() {
 
                 updateFrameAddedStatus();
 
+
                 if (
                     window.updateAccessoryAddedStatus
                 ) {
@@ -1286,8 +1526,29 @@ function showClearCartPopup() {
 
                 popup.remove();
 
-                document.body.style.overflow =
-                    "";
+
+                const cartBox =
+                    document.getElementById(
+                        "cartBox"
+                    );
+
+
+                if (
+                    cartBox &&
+                    cartBox.classList.contains("open")
+                ) {
+
+                    document.body.style.overflow =
+                        "hidden";
+
+                }
+
+                else {
+
+                    document.body.style.overflow =
+                        "";
+
+                }
 
             }
 
@@ -1355,7 +1616,7 @@ window.addEventListener(
 
 
         // =================================================
-        // CART HANDLE / VIEW CART BUTTON
+        // CART HEADER / VIEW CART BUTTON
         // =================================================
 
         if (cartHeader) {
@@ -1366,6 +1627,7 @@ window.addEventListener(
 
                     event.stopPropagation();
 
+
                     if (!cartBox) return;
 
 
@@ -1375,29 +1637,13 @@ window.addEventListener(
                         );
 
 
-                    // -----------------------------------------
-                    // CLOSE CART
-                    // -----------------------------------------
-
                     if (isOpen) {
 
                         closeCart();
 
                     }
 
-
-                    // -----------------------------------------
-                    // OPEN CART
-                    // -----------------------------------------
-
                     else {
-
-                        if (cartOverlay) {
-
-                            cartOverlay.style.pointerEvents =
-                                "auto";
-
-                        }
 
                         openCart();
 
@@ -1410,7 +1656,7 @@ window.addEventListener(
 
 
         // =================================================
-        // OVERLAY CLICK
+        // CART OVERLAY
         // =================================================
 
         if (cartOverlay) {
@@ -1487,101 +1733,3 @@ window.addEventListener(
 
     }
 );
-
-
-// =====================================================
-// OPEN CART
-// =====================================================
-
-function openCart() {
-
-    const cartBox =
-        document.getElementById(
-            "cartBox"
-        );
-
-    const cartOverlay =
-        document.getElementById(
-            "cartOverlay"
-        );
-
-
-    if (!cartBox) return;
-
-
-    cartBox.classList.add(
-        "open"
-    );
-
-
-    if (cartOverlay) {
-
-        cartOverlay.classList.add(
-            "show"
-        );
-
-        cartOverlay.style.pointerEvents =
-            "auto";
-
-    }
-
-
-    document.body.style.overflow =
-        "hidden";
-
-
-    updateCartHandleText();
-
-}
-
-
-// =====================================================
-// CLOSE CART
-// =====================================================
-
-function closeCart() {
-
-    const cartBox =
-        document.getElementById(
-            "cartBox"
-        );
-
-    const cartOverlay =
-        document.getElementById(
-            "cartOverlay"
-        );
-
-
-    if (cartBox) {
-
-        cartBox.classList.remove(
-            "open"
-        );
-
-    }
-
-
-    if (cartOverlay) {
-
-        cartOverlay.classList.remove(
-            "show"
-        );
-
-        cartOverlay.style.pointerEvents =
-            "none";
-
-    }
-
-
-    document.body.style.overflow =
-        "";
-
-
-    document.body.classList.remove(
-        "cart-open"
-    );
-
-
-    updateCartHandleText();
-
-}
