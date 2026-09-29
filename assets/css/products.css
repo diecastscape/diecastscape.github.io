@@ -1,4 +1,145 @@
 /* =====================================================
+   CUSTOMIZE REQUEST POPUP
+===================================================== */
+
+.customize-request-area {
+  margin: 0 20px;
+  box-sizing: border-box;
+}
+
+
+/* =====================================================
+   REQUEST TITLE
+===================================================== */
+
+.customize-request-title {
+  margin-bottom: 8px;
+
+  color: #102344;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  line-height: 1.3;
+}
+
+
+/* =====================================================
+   REQUEST INPUT
+===================================================== */
+
+.customize-request-input {
+  width: 100%;
+  min-height: 115px;
+
+  display: block;
+
+  padding: 12px 13px;
+
+  box-sizing: border-box;
+
+  resize: vertical;
+
+  background: #fff;
+
+  border: 1px solid #dce5ea;
+  border-radius: 12px;
+
+  outline: none;
+
+  color: #17283d;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 1.5;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+
+.customize-request-input::placeholder {
+  color: #9aa6b2;
+}
+
+
+.customize-request-input:focus {
+  background: #fff;
+
+  border-color: #13adbd;
+
+  box-shadow:
+    0 0 0 3px rgba(19,173,189,.10);
+}
+
+
+/* =====================================================
+   REQUEST HINT
+===================================================== */
+
+.customize-request-hint {
+  margin-top: 6px;
+
+  color: #8995a2;
+
+  font-size: 9px;
+  font-weight: 500;
+
+  line-height: 1.45;
+}
+
+
+/* =====================================================
+   CUSTOMIZE BUTTON
+===================================================== */
+
+.customize-submit-btn {
+  background: #009f78;
+}
+
+
+.customize-submit-btn:hover {
+  background: #008d6b;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .customize-request-area {
+    margin-left: 17px;
+    margin-right: 17px;
+  }
+
+
+  .customize-request-input {
+    min-height: 105px;
+
+    font-size: 11px;
+
+    padding: 11px 12px;
+  }
+
+
+  .customize-request-title {
+    font-size: 11px;
+  }
+
+
+  .customize-request-hint {
+    font-size: 8.5px;
+  }
+
+}
+/* =====================================================
    ORDER POPUP
 ===================================================== */
 
