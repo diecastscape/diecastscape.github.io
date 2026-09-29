@@ -361,30 +361,31 @@ function buildProductHTML(p) {
     </div>
 
 
-    <!-- BUTTONS -->
+<div class="order-area">
 
-    <div class="customize-row">
+  <div class="customize-prompt">
+    <span>Want to customize?</span>
 
-      <button
-        class="buy-btn"
-        type="button"
-        onclick='openOrderPopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
-      >
-        Order on WhatsApp
-      </button>
+    <a
+      class="customize-link"
+      href="https://wa.me/918792744018?text=${encodeURIComponent(
+        `Hi, I want to customize the "${p.name} - ${p.subtitle}".`
+      )}"
+      target="_blank"
+    >
+      Customize
+    </a>
+  </div>
 
+  <a
+    class="buy-btn"
+    href="https://wa.me/918792744018?text=${whatsappText}"
+    target="_blank"
+  >
+   Proceed to order
+  </a>
 
-      <a
-        class="customize-btn"
-        href="https://wa.me/918792744018?text=${encodeURIComponent(
-          `Hi, I want to customize the "${p.name || ""} - ${p.subtitle || ""}".`
-        )}"
-        target="_blank"
-      >
-        Customize This
-      </a>
-
-    </div>
+</div>
 
   </div>
   `;
