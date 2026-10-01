@@ -15,7 +15,7 @@ import {
   showEditMode,
   hideEditMode,
   loadAdminProducts
-} from "/assets/js/dashbord/dashboard.js";
+} from "/assets/js/dashboard/dashboard.js";
 
 
 // ======================================================
