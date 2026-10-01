@@ -15,7 +15,7 @@ import {
   showEditMode,
   hideEditMode,
   loadAdminProducts
-} from "/assets/js/dashboard/dashboard.js";
+} from "/assets/js/dashbord/dashboard.js";
 
 
 // ======================================================
@@ -123,18 +123,19 @@ window.saveProduct = async function () {
       document.getElementById("p-new").value
     );
 
-  const shippingText =
-    document.getElementById("p-shipping")
-      .value.trim();
+  const shippingPrice =
+    Number(
+      document.getElementById("p-shippingPrice").value
+    );
 
   const detailsHTML =
     document.getElementById("p-details")
       .value.trim();
 
 
-  // ====================================================
+  // ==========================================
   // QUICK SPECIFICATIONS
-  // ====================================================
+  // ==========================================
 
   const dimensions =
     document.getElementById("p-dimensions")
@@ -190,14 +191,16 @@ window.saveProduct = async function () {
   }
 
 
-  // ====================================================
+  // ==========================================
   // VALIDATION
-  // ====================================================
+  // ==========================================
 
   if (!name) {
 
-    msg.innerText =
-      "Enter product title";
+    if (msg) {
+      msg.innerText =
+        "Enter product title";
+    }
 
     return;
 
@@ -206,17 +209,34 @@ window.saveProduct = async function () {
 
   if (!priceOld || !priceNew) {
 
-    msg.innerText =
-      "Enter prices";
+    if (msg) {
+      msg.innerText =
+        "Enter prices";
+    }
 
     return;
 
   }
 
 
-  // ====================================================
+  if (
+    !Number.isFinite(shippingPrice) ||
+    shippingPrice < 0
+  ) {
+
+    if (msg) {
+      msg.innerText =
+        "Enter a valid shipping price";
+    }
+
+    return;
+
+  }
+
+
+  // ==========================================
   // IMAGES
-  // ====================================================
+  // ==========================================
 
   const fulls =
     document.querySelectorAll(".img-full");
@@ -240,13 +260,19 @@ window.saveProduct = async function () {
 
   if (images.length === 0) {
 
-    msg.innerText =
-      "Add at least 1 image";
+    if (msg) {
+      msg.innerText =
+        "Add at least 1 image";
+    }
 
     return;
 
   }
 
+
+  // ==========================================
+  // LOADER
+  // ==========================================
 
   if (loader) {
     loader.classList.add("show");
@@ -257,9 +283,9 @@ window.saveProduct = async function () {
 
   try {
 
-    // ==================================================
-    // UPDATE
-    // ==================================================
+    // ========================================
+    // UPDATE EXISTING PRODUCT
+    // ========================================
 
     if (
       adminState.editingId &&
@@ -279,7 +305,7 @@ window.saveProduct = async function () {
           priceOld,
           priceNew,
           detailsHTML,
-          shippingText,
+          shippingPrice,
           images,
 
           dimensions,
@@ -301,9 +327,9 @@ window.saveProduct = async function () {
     }
 
 
-    // ==================================================
-    // ADD
-    // ==================================================
+    // ========================================
+    // ADD NEW PRODUCT
+    // ========================================
 
     else {
 
@@ -319,7 +345,7 @@ window.saveProduct = async function () {
           priceOld,
           priceNew,
           detailsHTML,
-          shippingText,
+          shippingPrice,
           images,
 
           dimensions,
@@ -346,6 +372,10 @@ window.saveProduct = async function () {
     }
 
 
+    // ========================================
+    // SUCCESS
+    // ========================================
+
     if (loader) {
       loader.classList.remove("show");
     }
@@ -353,8 +383,10 @@ window.saveProduct = async function () {
     btn.disabled = false;
 
 
-    msg.innerText =
-      "Saved successfully ✔";
+    if (msg) {
+      msg.innerText =
+        "Saved successfully ✔";
+    }
 
 
     adminState.editingId = null;
@@ -373,7 +405,9 @@ window.saveProduct = async function () {
 
     setTimeout(() => {
 
-      msg.innerText = "";
+      if (msg) {
+        msg.innerText = "";
+      }
 
     }, 3000);
 
@@ -398,8 +432,10 @@ window.saveProduct = async function () {
     btn.disabled = false;
 
 
-    msg.innerText =
-      "Error saving product";
+    if (msg) {
+      msg.innerText =
+        "Error saving product";
+    }
 
   }
 
@@ -449,9 +485,13 @@ window.editProduct =
         "main";
 
 
-      toggleAdd(
-        "main"
-      );
+      if (typeof window.toggleAdd === "function") {
+
+        window.toggleAdd(
+          "main"
+        );
+
+      }
 
 
       showEditMode(
@@ -477,6 +517,10 @@ window.editProduct =
 
       }
 
+
+      // ==========================================
+      // BASIC PRODUCT DATA
+      // ==========================================
 
       document.getElementById(
         "p-name"
@@ -509,11 +553,19 @@ window.editProduct =
         defaultDetails;
 
 
-      document.getElementById(
-        "p-shipping"
-      ).value =
-        data.shippingText || "";
+      // ==========================================
+      // SHIPPING PRICE
+      // ==========================================
 
+      document.getElementById(
+        "p-shippingPrice"
+      ).value =
+        data.shippingPrice ?? "";
+
+
+      // ==========================================
+      // QUICK SPECIFICATIONS
+      // ==========================================
 
       document.getElementById(
         "p-dimensions"
@@ -587,14 +639,22 @@ window.editProduct =
         data.offerText || "";
 
 
+      // ==========================================
+      // LOAD IMAGES
+      // ==========================================
+
       const list =
         document.getElementById(
           "imagesList"
         );
 
 
-      list.innerHTML =
-        "";
+      if (list) {
+
+        list.innerHTML =
+          "";
+
+      }
 
 
       if (
@@ -620,9 +680,13 @@ window.editProduct =
             `;
 
 
-            list.appendChild(
-              div
-            );
+            if (list) {
+
+              list.appendChild(
+                div
+              );
+
+            }
 
           }
         );
@@ -706,87 +770,94 @@ window.deleteProduct =
 // RESET MAIN FORM
 // ======================================================
 
-window.resetMainForm = function () {
+window.resetMainForm =
+  function resetMainForm() {
 
-  const ids = [
-    "p-name",
-    "p-subtitle",
-    "p-old",
-    "p-new",
-    "p-shipping",
-    "p-dimensions",
-    "p-flore",
-    "p-suitableScale",
-    "p-capacity",
-    "p-accessories",
-    "p-rotating",
-    "p-lighting",
-    "p-lightingAdapter",
-    "p-cover",
-    "p-build",
-    "p-offerClime",
-    "p-offerText"
-  ];
+    const ids = [
 
+      "p-name",
+      "p-subtitle",
+      "p-old",
+      "p-new",
+      "p-shippingPrice",
+      "p-dimensions",
+      "p-flore",
+      "p-suitableScale",
+      "p-capacity",
+      "p-accessories",
+      "p-rotating",
+      "p-lighting",
+      "p-lightingAdapter",
+      "p-cover",
+      "p-build",
+      "p-offerClime",
+      "p-offerText"
 
-  ids.forEach(id => {
-
-    const el =
-      document.getElementById(id);
-
-    if (el) {
-      el.value = "";
-    }
-
-  });
+    ];
 
 
-  const details =
-    document.getElementById(
-      "p-details"
-    );
+    ids.forEach(id => {
+
+      const el =
+        document.getElementById(id);
+
+      if (el) {
+        el.value = "";
+      }
+
+    });
 
 
-  if (details) {
-    details.value =
-      defaultDetails;
-  }
+    const details =
+      document.getElementById(
+        "p-details"
+      );
 
 
-  const btn =
-    document.getElementById(
-      "saveBtn"
-    );
+    if (details) {
 
-
-  if (btn) {
-    btn.innerText =
-      "Save Product";
-  }
-
-
-  const list =
-    document.getElementById(
-      "imagesList"
-    );
-
-
-  if (list) {
-
-    list.innerHTML =
-      "";
-
-
-    for (
-      let i = 0;
-      i < 4;
-      i++
-    ) {
-
-      addImageField();
+      details.value =
+        defaultDetails;
 
     }
 
-  }
 
-};
+    const btn =
+      document.getElementById(
+        "saveBtn"
+      );
+
+
+    if (btn) {
+
+      btn.innerText =
+        "Save Product";
+
+    }
+
+
+    const list =
+      document.getElementById(
+        "imagesList"
+      );
+
+
+    if (list) {
+
+      list.innerHTML =
+        "";
+
+
+      for (
+        let i = 0;
+        i < 4;
+        i++
+      ) {
+
+        addImageField();
+
+      }
+
+    }
+
+  };
