@@ -952,7 +952,406 @@ function renderCart() {
     updateCartHandleText();
 
 }
+// =====================================================
+// ACCESSORIES VIEW CART POPUP
+// =====================================================
 
+function openAccessoriesViewCartPopup() {
+
+    let popup =
+        document.getElementById(
+            "accessoriesViewCartPopup"
+        );
+
+    if (!popup) {
+
+        popup = document.createElement("div");
+
+        popup.id =
+            "accessoriesViewCartPopup";
+
+        popup.className =
+            "accessories-view-cart-overlay";
+
+        popup.innerHTML = `
+
+            <div class="accessories-view-cart-box">
+
+                <div class="accessories-view-cart-header">
+
+                    <div>
+                        <div class="accessories-view-cart-title">
+                            Your Cart
+                        </div>
+
+                        <div class="accessories-view-cart-subtitle">
+                            Review your items
+                        </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="accessories-view-cart-close"
+                        onclick="closeAccessoriesViewCartPopup()">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="accessoriesViewCartItems"
+                    class="accessories-view-cart-items">
+                </div>
+
+
+                <div class="accessories-view-cart-actions">
+
+                    <button
+                        type="button"
+                        id="accessoriesViewCartClearBtn"
+                        class="accessories-view-cart-clear">
+
+                        Clear Cart
+
+                    </button>
+
+                </div>
+
+
+                <div class="accessories-view-cart-summary">
+
+                    <div class="accessories-view-cart-summary-row">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <span id="accessoriesViewCartSubtotal">
+                            ₹0
+                        </span>
+
+                    </div>
+
+
+                    <div class="accessories-view-cart-summary-row">
+
+                        <span>
+                            Shipping
+                        </span>
+
+                        <span id="accessoriesViewCartShipping">
+                            ₹0
+                        </span>
+
+                    </div>
+
+
+                    <div class="accessories-view-cart-total-row">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong id="accessoriesViewCartTotal">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="accessoriesViewCartCheckoutBtn"
+                    class="accessories-view-cart-checkout">
+
+                    CHECKOUT
+
+                </button>
+
+            </div>
+
+        `;
+
+        document.body.appendChild(popup);
+
+
+        // ==========================================
+        // CLEAR CART
+        // ==========================================
+
+        const clearButton =
+            document.getElementById(
+                "accessoriesViewCartClearBtn"
+            );
+
+        if (clearButton) {
+
+            clearButton.addEventListener(
+                "click",
+                () => {
+
+                    if (
+                        !Object.keys(cart).length
+                    ) {
+
+                        showToast(
+                            "Cart is already empty"
+                        );
+
+                        return;
+
+                    }
+
+                    showClearCartPopup();
+
+                }
+            );
+
+        }
+
+
+        // ==========================================
+        // CHECKOUT
+        // ==========================================
+
+        const checkoutButton =
+            document.getElementById(
+                "accessoriesViewCartCheckoutBtn"
+            );
+
+        if (checkoutButton) {
+
+            checkoutButton.addEventListener(
+                "click",
+                () => {
+
+                    checkoutCart();
+
+                }
+            );
+
+        }
+
+    }
+
+
+    renderAccessoriesViewCartPopup();
+
+    popup.classList.add("show");
+
+    document.body.style.overflow = "hidden";
+
+}
+
+
+
+// =====================================================
+// CLOSE VIEW CART POPUP
+// =====================================================
+
+function closeAccessoriesViewCartPopup() {
+
+    const popup =
+        document.getElementById(
+            "accessoriesViewCartPopup"
+        );
+
+    if (!popup) return;
+
+    popup.classList.remove("show");
+
+    document.body.style.overflow = "";
+
+}
+
+
+
+// =====================================================
+// RENDER VIEW CART POPUP
+// =====================================================
+
+function renderAccessoriesViewCartPopup() {
+
+    const list =
+        document.getElementById(
+            "accessoriesViewCartItems"
+        );
+
+    if (!list) return;
+
+
+    list.innerHTML = "";
+
+
+    let total = 0;
+
+
+    getCartProducts().forEach(
+        item => {
+
+            const price =
+                Number(item.price);
+
+            const qty =
+                Number(item.qty);
+
+            const itemTotal =
+                price * qty;
+
+            total += itemTotal;
+
+
+            const setText =
+                item.quantityText
+                    ? item.quantityText
+                    : "";
+
+
+            list.innerHTML += `
+
+                <div
+                    class="accessories-view-cart-item"
+                    data-cart-id="${item.id}">
+
+                    <div class="accessories-view-cart-item-info">
+
+                        <div class="accessories-view-cart-item-name">
+                            ${item.name}
+                        </div>
+
+                        ${
+                            setText
+                                ? `
+                                <div class="accessories-view-cart-item-set">
+                                    ${setText}
+                                </div>
+                                `
+                                : ""
+                        }
+
+                        <div class="accessories-view-cart-item-price">
+                            ₹${price} × ${qty}
+                        </div>
+
+                    </div>
+
+
+                    <div class="accessories-view-cart-item-controls">
+
+                        <button
+                            type="button"
+                            onclick="changeAccessoryQty(
+                                '${item.id}',
+                                '${String(item.name).replace(/'/g, "\\'")}',
+                                ${price},
+                                -1,
+                                '${String(setText).replace(/'/g, "\\'")}'
+                            )">
+
+                            −
+
+                        </button>
+
+
+                        <span>
+                            ${qty}
+                        </span>
+
+
+                        <button
+                            type="button"
+                            onclick="changeAccessoryQty(
+                                '${item.id}',
+                                '${String(item.name).replace(/'/g, "\\'")}',
+                                ${price},
+                                1,
+                                '${String(setText).replace(/'/g, "\\'")}'
+                            )">
+
+                            +
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="accessories-view-cart-item-total">
+
+                        ₹${itemTotal}
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="accessories-view-cart-item-remove"
+                        onclick="removeItem('${item.id}')">
+
+                        Remove
+
+                    </button>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    const shipping =
+        getShipping(total);
+
+    const grandTotal =
+        total + shipping;
+
+
+    const subtotalElement =
+        document.getElementById(
+            "accessoriesViewCartSubtotal"
+        );
+
+    if (subtotalElement) {
+
+        subtotalElement.innerText =
+            "₹" + total;
+
+    }
+
+
+    const shippingElement =
+        document.getElementById(
+            "accessoriesViewCartShipping"
+        );
+
+    if (shippingElement) {
+
+        shippingElement.innerText =
+            shipping === 0 && total > 0
+                ? "FREE"
+                : "₹" + shipping;
+
+    }
+
+
+    const totalElement =
+        document.getElementById(
+            "accessoriesViewCartTotal"
+        );
+
+    if (totalElement) {
+
+        totalElement.innerText =
+            "₹" + grandTotal;
+
+    }
+
+}
 // =====================================================
 // CHECKOUT
 // =====================================================
@@ -2331,21 +2730,20 @@ window.addEventListener(
 
         }
 
+// ===============================================
+// VIEW CART
+// ===============================================
 
+if (checkoutBtn) {
 
-        // ===============================================
-        // CHECKOUT
-        // ===============================================
+    checkoutBtn.addEventListener(
+        "click",
+        openAccessoriesViewCartPopup
+    );
 
-        if (checkoutBtn) {
+}
 
-            checkoutBtn.addEventListener(
-                "click",
-                checkoutCart
-            );
-
-        }
-
+        
 
 
         // ===============================================
