@@ -186,8 +186,9 @@ function changeAccessoryQty(
 
     renderCart();
 
-    updateAccessoryQuantity(id);
+updateAccessoryQuantity(id);
 
+renderAccessoriesViewCartPopup();
 }
 
 
@@ -235,8 +236,9 @@ function removeItem(id) {
 
     updateAccessoryQuantity(id);
 
-}
+    renderAccessoriesViewCartPopup();
 
+}
 
 
 // =====================================================
@@ -1177,13 +1179,20 @@ function closeAccessoriesViewCartPopup() {
 
 function renderAccessoriesViewCartPopup() {
 
-    const list =
-        document.getElementById(
-            "accessoriesViewCartItems"
-        );
+    const popup =
+    document.getElementById(
+        "accessoriesViewCartPopup"
+    );
 
-    if (!list) return;
+if (!popup) return;
 
+
+const list =
+    document.getElementById(
+        "accessoriesViewCartItems"
+    );
+
+if (!list) return;
 
     list.innerHTML = "";
 
