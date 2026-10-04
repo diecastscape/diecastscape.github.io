@@ -953,7 +953,1165 @@ function renderCart() {
 
 }
 
+// =====================================================
+// CHECKOUT
+// =====================================================
 
+function checkoutCart() {
+
+    const products =
+        getCartProducts();
+
+
+
+    // =================================================
+    // EMPTY CART
+    // =================================================
+
+    if (
+        products.length === 0
+    ) {
+
+        showToast(
+            "No products in cart"
+        );
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // CALCULATE PRODUCT TOTAL
+    // =================================================
+
+    let total = 0;
+
+
+
+    products.forEach(
+        item => {
+
+            total +=
+                Number(item.price) *
+                Number(item.qty);
+
+        }
+    );
+
+
+
+    // =================================================
+    // MINIMUM CART VALUE
+    // =================================================
+
+    if (
+        total < MIN_CART_VALUE
+    ) {
+
+        showToast(
+            `Minimum cart value required is ₹${MIN_CART_VALUE}`
+        );
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // OPEN CHECKOUT POPUP
+    // =================================================
+
+    openAccessoriesCheckoutPopup();
+
+}
+
+
+
+// =====================================================
+// ACCESSORIES CHECKOUT POPUP
+// =====================================================
+
+function escapeCheckoutHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+
+// =====================================================
+// OPEN ACCESSORIES CHECKOUT POPUP
+// =====================================================
+
+function openAccessoriesCheckoutPopup() {
+
+    const oldPopup =
+        document.getElementById(
+            "accessoriesCheckoutPopup"
+        );
+
+
+
+    if (oldPopup) {
+
+        oldPopup.remove();
+
+    }
+
+
+
+    const products =
+        getCartProducts();
+
+
+
+    if (!products.length) {
+
+        showToast(
+            "No products in cart"
+        );
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // CALCULATE TOTALS
+    // =================================================
+
+    let total = 0;
+
+
+
+    products.forEach(
+        item => {
+
+            total +=
+                Number(item.price) *
+                Number(item.qty);
+
+        }
+    );
+
+
+
+    if (
+        total < MIN_CART_VALUE
+    ) {
+
+        showToast(
+            `Minimum cart value required is ₹${MIN_CART_VALUE}`
+        );
+
+        return;
+
+    }
+
+
+
+    const shipping =
+        getShipping(total);
+
+
+
+    const orderTotal =
+        total + shipping;
+
+
+
+    // =================================================
+    // CREATE POPUP
+    // =================================================
+
+    const popup =
+        document.createElement("div");
+
+
+
+    popup.id =
+        "accessoriesCheckoutPopup";
+
+
+
+    popup.className =
+        "accessories-checkout-overlay";
+
+
+
+    popup.innerHTML = `
+
+        <div class="accessories-checkout-box">
+
+
+            <!-- =================================================
+                 HEADER
+            ================================================= -->
+
+            <div class="accessories-checkout-header">
+
+                <div>
+
+                    <div class="accessories-checkout-label">
+                        ORDER SUMMARY
+                    </div>
+
+                    <div class="accessories-checkout-title">
+                        Review your order
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="accessories-checkout-close"
+                    id="accessoriesCheckoutClose"
+                    aria-label="Close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CART PRODUCTS
+            ================================================= -->
+
+            <div class="accessories-checkout-cart-card">
+
+                <div class="accessories-checkout-cart-title">
+                    Your cart
+                </div>
+
+
+                <div
+                    id="accessoriesCheckoutItems"
+                    class="accessories-checkout-items"
+                ></div>
+
+
+                <button
+                    type="button"
+                    class="accessories-checkout-clear"
+                    id="accessoriesCheckoutClear"
+                >
+                    Clear Cart
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ORDER SUMMARY
+            ================================================= -->
+
+            <div class="accessories-checkout-summary">
+
+                <div class="order-summary-row">
+
+                    <span>
+                        Product price
+                    </span>
+
+                    <strong id="accessoriesCheckoutProductTotal">
+                        ₹${total}
+                    </strong>
+
+                </div>
+
+
+
+                <div class="order-summary-row">
+
+                    <span>
+                        Shipping
+                    </span>
+
+                    <strong id="accessoriesCheckoutShipping">
+
+                        ${
+                            shipping === 0
+                                ? "FREE"
+                                : `₹${shipping}`
+                        }
+
+                    </strong>
+
+                </div>
+
+
+
+                <div class="order-summary-divider"></div>
+
+
+
+                <div class="order-summary-row total-row">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong id="accessoriesCheckoutTotal">
+                        ₹${orderTotal}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 NOTICE CARD
+            ================================================= -->
+
+            <div class="accessories-checkout-policy">
+
+                <div class="accessories-checkout-policy-title">
+                    Dispatch within 1 week
+                </div>
+
+
+                <p>
+                    Your accessories order is prepared after confirmation.
+                    Orders are carefully packed and dispatched within 1 week.
+                    Delivery time may vary depending on the destination and
+                    shipping service.
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 DELIVERY DETAILS
+            ================================================= -->
+
+            <div class="accessories-checkout-form">
+
+                <div class="accessories-checkout-form-title">
+                    Delivery details
+                </div>
+
+
+
+                <!-- ADDRESS -->
+
+                <label class="accessories-checkout-field">
+
+                    <span>
+                        Address
+                    </span>
+
+                    <textarea
+                        id="accessoriesCheckoutAddress"
+                        rows="3"
+                        maxlength="300"
+                        autocomplete="street-address"
+                        placeholder="Enter your complete delivery address"
+                    ></textarea>
+
+                </label>
+
+
+
+                <!-- PINCODE -->
+
+                <label class="accessories-checkout-field">
+
+                    <span>
+                        Pincode
+                    </span>
+
+                    <input
+                        id="accessoriesCheckoutPincode"
+                        type="text"
+                        inputmode="numeric"
+                        maxlength="6"
+                        autocomplete="postal-code"
+                        placeholder="6-digit pincode"
+                    >
+
+                </label>
+
+
+
+                <!-- PHONE -->
+
+                <label class="accessories-checkout-field">
+
+                    <span>
+                        Phone number
+                    </span>
+
+                    <input
+                        id="accessoriesCheckoutPhone"
+                        type="tel"
+                        inputmode="numeric"
+                        maxlength="10"
+                        autocomplete="tel"
+                        placeholder="10-digit phone number"
+                    >
+
+                </label>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FINAL CHECKOUT
+            ================================================= -->
+
+            <div class="accessories-checkout-action">
+
+                <div class="accessories-checkout-whatsapp-note">
+                    You will be redirected to WhatsApp to continue your order.
+                </div>
+
+
+                <button
+                    type="button"
+                    class="accessories-checkout-btn"
+                    id="accessoriesCheckoutFinalBtn"
+                >
+                    Continue to WhatsApp
+                </button>
+
+            </div>
+
+
+        </div>
+
+    `;
+
+
+
+    document.body.appendChild(
+        popup
+    );
+
+
+
+    // =================================================
+    // RENDER CART PRODUCTS
+    // =================================================
+
+    renderAccessoriesCheckoutItems();
+
+
+
+    // =================================================
+    // LOCK BACKGROUND SCROLL
+    // =================================================
+
+    document.body.style.overflow =
+        "hidden";
+
+
+
+    // =================================================
+    // CLOSE BUTTON
+    // =================================================
+
+    const closeBtn =
+        document.getElementById(
+            "accessoriesCheckoutClose"
+        );
+
+
+
+    if (closeBtn) {
+
+        closeBtn.addEventListener(
+            "click",
+            closeAccessoriesCheckoutPopup
+        );
+
+    }
+
+
+
+    // =================================================
+    // CLEAR CART
+    // =================================================
+
+    const clearBtn =
+        document.getElementById(
+            "accessoriesCheckoutClear"
+        );
+
+
+
+    if (clearBtn) {
+
+        clearBtn.addEventListener(
+            "click",
+            () => {
+
+                closeAccessoriesCheckoutPopup();
+
+                showClearCartPopup();
+
+            }
+        );
+
+    }
+
+
+
+    // =================================================
+    // FINAL CHECKOUT
+    // =================================================
+
+    const finalBtn =
+        document.getElementById(
+            "accessoriesCheckoutFinalBtn"
+        );
+
+
+
+    if (finalBtn) {
+
+        finalBtn.addEventListener(
+            "click",
+            submitAccessoriesCheckout
+        );
+
+    }
+
+
+
+    // =================================================
+    // INPUT ELEMENTS
+    // =================================================
+
+    const addressInput =
+        document.getElementById(
+            "accessoriesCheckoutAddress"
+        );
+
+
+
+    const pincodeInput =
+        document.getElementById(
+            "accessoriesCheckoutPincode"
+        );
+
+
+
+    const phoneInput =
+        document.getElementById(
+            "accessoriesCheckoutPhone"
+        );
+
+
+
+    // =================================================
+    // PINCODE ONLY NUMBERS
+    // =================================================
+
+    if (pincodeInput) {
+
+        pincodeInput.addEventListener(
+            "input",
+            () => {
+
+                pincodeInput.value =
+                    pincodeInput.value
+                        .replace(/\D/g, "")
+                        .slice(0, 6);
+
+            }
+        );
+
+    }
+
+
+
+    // =================================================
+    // PHONE ONLY NUMBERS
+    // =================================================
+
+    if (phoneInput) {
+
+        phoneInput.addEventListener(
+            "input",
+            () => {
+
+                phoneInput.value =
+                    phoneInput.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
+
+            }
+        );
+
+    }
+
+
+
+    // =================================================
+    // CLICK OUTSIDE
+    // =================================================
+
+    popup.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === popup
+            ) {
+
+                closeAccessoriesCheckoutPopup();
+
+            }
+
+        }
+    );
+
+
+
+    // =================================================
+    // AUTO FOCUS ADDRESS
+    // =================================================
+
+    if (addressInput) {
+
+        setTimeout(
+            () => {
+
+                addressInput.focus();
+
+            },
+            200
+        );
+
+    }
+
+}
+
+
+
+// =====================================================
+// RENDER CHECKOUT CART ITEMS
+// =====================================================
+
+function renderAccessoriesCheckoutItems() {
+
+    const list =
+        document.getElementById(
+            "accessoriesCheckoutItems"
+        );
+
+
+
+    if (!list) return;
+
+
+
+    list.innerHTML = "";
+
+
+
+    getCartProducts().forEach(
+        item => {
+
+            const subTotal =
+                Number(item.price) *
+                Number(item.qty);
+
+
+
+            const setText =
+                item.quantityText
+                    ? item.quantityText
+                    : "";
+
+
+
+            list.innerHTML += `
+
+                <div class="cart-item checkout-cart-item">
+
+                    <div class="cart-row">
+
+                        <div class="cart-name">
+
+                            ${escapeCheckoutHTML(item.name)}
+
+                        </div>
+
+
+                        <div class="cart-price">
+
+                            ₹${Number(item.price)}
+                            ×
+                            ${Number(item.qty)}
+                            =
+                            ₹${subTotal}
+
+                        </div>
+
+                    </div>
+
+
+
+                    ${
+                        setText
+                            ? `
+                                <div class="cart-price checkout-set-text">
+                                    ${escapeCheckoutHTML(setText)}
+                                    ×
+                                    ${Number(item.qty)}
+                                    qty
+                                </div>
+                            `
+                            : ""
+                    }
+
+                </div>
+
+            `;
+
+        }
+    );
+
+}
+
+
+
+// =====================================================
+// CLOSE ACCESSORIES CHECKOUT POPUP
+// =====================================================
+
+function closeAccessoriesCheckoutPopup() {
+
+    const popup =
+        document.getElementById(
+            "accessoriesCheckoutPopup"
+        );
+
+
+
+    if (popup) {
+
+        popup.remove();
+
+    }
+
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+
+// =====================================================
+// SUBMIT ACCESSORIES CHECKOUT
+// =====================================================
+
+function submitAccessoriesCheckout() {
+
+    const products =
+        getCartProducts();
+
+
+
+    if (!products.length) {
+
+        closeAccessoriesCheckoutPopup();
+
+        showToast(
+            "No products in cart"
+        );
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // CALCULATE TOTAL
+    // =================================================
+
+    let total = 0;
+
+
+
+    products.forEach(
+        item => {
+
+            total +=
+                Number(item.price) *
+                Number(item.qty);
+
+        }
+    );
+
+
+
+    // =================================================
+    // MINIMUM CART VALUE
+    // =================================================
+
+    if (
+        total < MIN_CART_VALUE
+    ) {
+
+        closeAccessoriesCheckoutPopup();
+
+        showToast(
+            `Minimum cart value required is ₹${MIN_CART_VALUE}`
+        );
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // GET FORM VALUES
+    // =================================================
+
+    const addressElement =
+        document.getElementById(
+            "accessoriesCheckoutAddress"
+        );
+
+
+
+    const pincodeElement =
+        document.getElementById(
+            "accessoriesCheckoutPincode"
+        );
+
+
+
+    const phoneElement =
+        document.getElementById(
+            "accessoriesCheckoutPhone"
+        );
+
+
+
+    const address =
+        addressElement
+            ? addressElement.value.trim()
+            : "";
+
+
+
+    const pincode =
+        pincodeElement
+            ? pincodeElement.value.trim()
+            : "";
+
+
+
+    const phone =
+        phoneElement
+            ? phoneElement.value.trim()
+            : "";
+
+
+
+    // =================================================
+    // VALIDATE ADDRESS
+    // =================================================
+
+    if (!address) {
+
+        showCheckoutFieldError(
+            addressElement,
+            "Please enter your delivery address"
+        );
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // VALIDATE PINCODE
+    // =================================================
+
+    if (
+        !/^\d{6}$/.test(pincode)
+    ) {
+
+        showCheckoutFieldError(
+            pincodeElement,
+            "Please enter a valid 6-digit pincode"
+        );
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // VALIDATE PHONE
+    // =================================================
+
+    if (
+        !/^\d{10}$/.test(phone)
+    ) {
+
+        showCheckoutFieldError(
+            phoneElement,
+            "Please enter a valid 10-digit phone number"
+        );
+
+        return;
+
+    }
+
+
+
+    // =================================================
+    // SHIPPING
+    // =================================================
+
+    const shipping =
+        getShipping(total);
+
+
+
+    const orderTotal =
+        total + shipping;
+
+
+
+    // =================================================
+    // BUILD WHATSAPP MESSAGE
+    // =================================================
+
+    let message =
+        "🛒 *Accessories Order - Diecast.scape*\n\n";
+
+
+
+    // =================================================
+    // PRODUCTS
+    // =================================================
+
+    products.forEach(
+        item => {
+
+            const subTotal =
+                Number(item.price) *
+                Number(item.qty);
+
+
+
+            message +=
+                `• ${item.name}\n`;
+
+
+
+            if (
+                item.quantityText
+            ) {
+
+                message +=
+                    `${item.quantityText} × ${item.qty} qty\n`;
+
+            }
+
+            else {
+
+                message +=
+                    `Qty : ${item.qty}\n`;
+
+            }
+
+
+
+            message +=
+                `₹${item.price} × ${item.qty} = ₹${subTotal}\n\n`;
+
+        }
+    );
+
+
+
+    // =================================================
+    // ORDER SUMMARY
+    // =================================================
+
+    message +=
+        "━━━━━━━━━━━━━━\n";
+
+
+
+    message +=
+        `Product Total : ₹${total}\n`;
+
+
+
+    if (
+        shipping === 0
+    ) {
+
+        message +=
+            "Shipping : FREE\n";
+
+    }
+
+    else {
+
+        message +=
+            `Shipping : ₹${shipping}\n`;
+
+    }
+
+
+
+    if (
+        total >= FREE_SHIPPING_LIMIT
+    ) {
+
+        message +=
+            "Offer : FREE SHIPPING UNLOCKED\n";
+
+    }
+
+    else {
+
+        message +=
+            `Offer : Add ₹${FREE_SHIPPING_LIMIT - total} more to unlock FREE SHIPPING\n`;
+
+    }
+
+
+
+    message +=
+        "━━━━━━━━━━━━━━\n";
+
+
+
+    message +=
+        `*Order Total : ₹${orderTotal}*\n\n`;
+
+
+
+    // =================================================
+    // DELIVERY DETAILS
+    // =================================================
+
+    message +=
+        "*Delivery Details*\n";
+
+
+
+    message +=
+        `Address : ${address}\n`;
+
+
+
+    message +=
+        `Pincode : ${pincode}\n`;
+
+
+
+    message +=
+        `Phone : ${phone}\n\n`;
+
+
+
+    message +=
+        "Dispatch within 1 week.";
+
+
+
+    // =================================================
+    // WHATSAPP
+    // =================================================
+
+    const whatsappURL =
+        "https://wa.me/918792744018?text=" +
+        encodeURIComponent(message);
+
+
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+
+
+    // =================================================
+    // CLOSE POPUP
+    // =================================================
+
+    closeAccessoriesCheckoutPopup();
+
+}
+
+
+
+// =====================================================
+// CHECKOUT FIELD ERROR
+// =====================================================
+
+function showCheckoutFieldError(
+    element,
+    message
+) {
+
+    showToast(
+        message
+    );
+
+
+
+    if (element) {
+
+        element.focus();
+
+
+
+        element.classList.add(
+            "checkout-field-error"
+        );
+
+
+
+        setTimeout(
+            () => {
+
+                element.classList.remove(
+                    "checkout-field-error"
+                );
+
+            },
+            1400
+        );
+
+    }
+
+                    }
 
 // =====================================================
 // CHECKOUT
