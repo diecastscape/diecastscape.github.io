@@ -720,46 +720,28 @@ window.customizePopupBackdrop = function(event) {
 /* =====================================================
    SEND CUSTOMIZATION REQUEST
 ===================================================== */
-
 window.submitCustomizeRequest = function() {
 
   if (!currentCustomizeProduct) {
-
     return;
-
   }
-
 
   const requestElement =
     document.getElementById("customizeRequest");
-
 
   const request =
     requestElement
       ? requestElement.value.trim()
       : "";
 
-
-  if (!request) {
-
-    requestElement?.focus();
-
-    return;
-
-  }
-
-
   const product =
     currentCustomizeProduct;
-
 
   const productName =
     product.name || "";
 
-
   const subtitle =
     product.subtitle || "";
-
 
   const message =
 `Hi Diecast.scape,
@@ -774,16 +756,13 @@ ${request}
 
 Please let me know if this customization is possible and the additional cost, if any.`;
 
-
   const whatsappURL =
     `https://wa.me/918792744018?text=${encodeURIComponent(message)}`;
-
 
   window.open(
     whatsappURL,
     "_blank"
   );
-
 
   closeCustomizePopup();
 
