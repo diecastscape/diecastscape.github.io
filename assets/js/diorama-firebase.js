@@ -359,30 +359,34 @@ function buildProductHTML(p) {
       Shipping charges applicable
 
     </div>
-<div class="order-area">
-
-  <div class="customize-prompt">
-  <span>Want to customize?</span>
-
-  <a
-    class="customize-link"
-    href="javascript:void(0)"
-    onclick='openCustomizePopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
-  >
-    Customize
-  </a>
-</div>
 
 
-  <a
-    class="buy-btn"
+    <div class="order-area">
+
+      <div class="customize-prompt">
+
+        <span>Want to customize?</span>
+
+        <a
+          class="customize-link"
+          href="javascript:void(0)"
+          onclick='openCustomizePopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
+        >
+          Customize
+        </a>
+
+      </div>
+
+
+      <a
+        class="buy-btn"
         type="button"
         onclick='openOrderPopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
       >
         Order on WhatsApp
-  </a>
+      </a>
 
-</div>
+    </div>
 
 
   </div>
@@ -437,39 +441,51 @@ window.openOrderPopup = function(product) {
 
 
   if (nameElement) {
+
     nameElement.textContent =
       product.name || "";
+
   }
 
 
   if (subtitleElement) {
+
     subtitleElement.textContent =
       product.subtitle || "";
+
   }
 
 
   if (priceElement) {
+
     priceElement.textContent =
       `₹${price}`;
+
   }
 
 
   if (shippingElement) {
 
     if (shipping === 0) {
+
       shippingElement.textContent =
         "₹0";
+
     } else {
+
       shippingElement.textContent =
         `₹${shipping}`;
+
     }
 
   }
 
 
   if (totalElement) {
+
     totalElement.textContent =
       `₹${total}`;
+
   }
 
 
@@ -509,7 +525,9 @@ window.orderPopupBackdrop = function(event) {
   if (
     event.target === event.currentTarget
   ) {
+
     closeOrderPopup();
+
   }
 
 };
@@ -575,6 +593,8 @@ I understand that a 50% advance payment is required to begin production.`;
   closeOrderPopup();
 
 };
+
+
 /* =====================================================
    CUSTOMIZE POPUP
 ===================================================== */
@@ -590,12 +610,16 @@ window.openCustomizePopup = function(product) {
 
   currentCustomizeProduct = product;
 
+
   const popup =
     document.getElementById("customizePopup");
 
   if (!popup) {
+
     console.error("Customize popup element not found.");
+
     return;
+
   }
 
 
@@ -642,7 +666,9 @@ window.openCustomizePopup = function(product) {
   setTimeout(() => {
 
     if (requestElement) {
+
       requestElement.focus();
+
     }
 
   }, 250);
@@ -667,6 +693,7 @@ window.closeCustomizePopup = function() {
   document.body.classList.remove(
     "order-popup-open"
   );
+
 
   currentCustomizeProduct = null;
 
@@ -697,7 +724,9 @@ window.customizePopupBackdrop = function(event) {
 window.submitCustomizeRequest = function() {
 
   if (!currentCustomizeProduct) {
+
     return;
+
   }
 
 
@@ -760,6 +789,7 @@ Please let me know if this customization is possible and the additional cost, if
 
 };
 
+
 /* =====================================================
    IMAGE DOTS
 ===================================================== */
@@ -783,7 +813,9 @@ function initImageDots() {
       dots.length <= 1 ||
       !slides?.length
     ) {
+
       return;
+
     }
 
 
@@ -849,61 +881,30 @@ function initImageDots() {
 
 
 /* =====================================================
-   PROGRESSIVE PRODUCT LOADING
+   PRODUCT LOADING
 ===================================================== */
-
-const PRODUCTS_PER_BATCH = 4;
 
 let allProducts = [];
 
-let loadedProductIndex = 0;
-
-let isLoadingProducts = false;
-
 
 /* =====================================================
-   LOAD NEXT PRODUCTS
+   LOAD ALL PRODUCTS
 ===================================================== */
 
 function loadNextProducts() {
-
-  if (isLoadingProducts) return;
-
-  if (
-    loadedProductIndex >=
-    allProducts.length
-  ) {
-    return;
-  }
-
-
-  isLoadingProducts = true;
-
 
   const container =
     document.getElementById(
       "productsContainer"
     );
 
-
-  if (!container) {
-
-    isLoadingProducts = false;
-
-    return;
-
-  }
+  if (!container) return;
 
 
-  const nextProducts =
-    allProducts.slice(
-      loadedProductIndex,
-      loadedProductIndex +
-        PRODUCTS_PER_BATCH
-    );
+  container.innerHTML = "";
 
 
-  nextProducts.forEach(product => {
+  allProducts.forEach(product => {
 
     container.insertAdjacentHTML(
       "beforeend",
@@ -913,15 +914,9 @@ function loadNextProducts() {
   });
 
 
-  loadedProductIndex +=
-    nextProducts.length;
-
-
   requestAnimationFrame(() => {
 
     initImageDots();
-
-    isLoadingProducts = false;
 
   });
 
@@ -1039,71 +1034,6 @@ async function loadProducts() {
 
 
 /* =====================================================
-   LOAD NEXT BATCH ON SCROLL
-===================================================== */
-
-function initProductBatchLoading() {
-
-  const container =
-    document.getElementById(
-      "productsContainer"
-    );
-
-
-  if (!container) return;
-
-
-  window.addEventListener(
-    "scroll",
-    () => {
-
-      if (isLoadingProducts) {
-        return;
-      }
-
-
-      const products =
-        container.querySelectorAll(
-          ".section"
-        );
-
-
-      if (!products.length) {
-        return;
-      }
-
-
-      const lastProduct =
-        products[
-          products.length - 1
-        ];
-
-
-      const rect =
-        lastProduct.getBoundingClientRect();
-
-
-      const nearBottom =
-        rect.bottom <=
-        window.innerHeight + 300;
-
-
-      if (nearBottom) {
-
-        loadNextProducts();
-
-      }
-
-    },
-    {
-      passive: true
-    }
-  );
-
-}
-
-
-/* =====================================================
    START
 ===================================================== */
 
@@ -1112,8 +1042,6 @@ window.addEventListener(
   () => {
 
     loadProducts();
-
-    initProductBatchLoading();
 
   }
 );
