@@ -1,57 +1,44 @@
-/* =====================================================
+/* =========================================
    ACCESSORIES CART
-===================================================== */
+========================================= */
 
-const CART_KEY =
-  "diecastscape_accessories_cart";
+const CART_KEY = "diecastscape_accessories_cart";
 
-const FREE_SHIPPING_LIMIT =
-  900;
+const FREE_SHIPPING_LIMIT = 900;
+const SHIPPING_CHARGE = 75;
+const MIN_CART_VALUE = 199;
 
-const SHIPPING_CHARGE =
-  75;
+const WHATSAPP_NUMBER = "918792744018";
 
-const MIN_CART_VALUE =
-  199;
-
-const WHATSAPP_NUMBER =
-  "918792744018";
+let cart = JSON.parse(
+  localStorage.getItem(CART_KEY)
+) || {};
 
 
-let cart =
-  JSON.parse(
-    localStorage.getItem(CART_KEY)
-  ) || {};
-
-
-/* =====================================================
+/* =========================================
    SAVE CART
-===================================================== */
+========================================= */
 
 function saveCart() {
-
   localStorage.setItem(
     CART_KEY,
     JSON.stringify(cart)
   );
-
 }
 
 
-/* =====================================================
+/* =========================================
    GET CART PRODUCTS
-===================================================== */
+========================================= */
 
 function getCartProducts() {
-
   return Object.values(cart);
-
 }
 
 
-/* =====================================================
-   ADD PRODUCT
-===================================================== */
+/* =========================================
+   ADD PRODUCT INFO
+========================================= */
 
 function addProductInfo(
   id,
@@ -60,46 +47,37 @@ function addProductInfo(
   quantityText = ""
 ) {
 
-  if (cart[id]) {
+  if (!cart[id]) {
 
-    cart[id].qty += 1;
+    cart[id] = {
+      id: id,
+      name: name,
+      price: Number(price) || 0,
+      qty: 1,
+      quantityText: quantityText || ""
+    };
 
   } else {
 
-    cart[id] = {
+    cart[id].qty += 1;
 
-      id: id,
-
-      name: name,
-
-      price: Number(price),
-
-      qty: 1,
-
-      quantityText:
-        quantityText || ""
-
-    };
+    if (quantityText) {
+      cart[id].quantityText = quantityText;
+    }
 
   }
-
 
   saveCart();
 
   renderCart();
 
-  updateAccessoryQuantity(id);
-
-  showToast(
-    `${name} added to cart`
-  );
-
+  showToast("Added to cart");
 }
 
 
-/* =====================================================
-   CHANGE QUANTITY
-===================================================== */
+/* =========================================
+   CHANGE ACCESSORY QUANTITY
+========================================= */
 
 function changeAccessoryQty(
   id,
@@ -112,135 +90,148 @@ function changeAccessoryQty(
   if (!cart[id]) {
 
     if (change > 0) {
-
-      cart[id] = {
-
-        id: id,
-
-        name: name,
-
-        price: Number(price),
-
-        qty: 1,
-
-        quantityText:
-          quantityText || ""
-
-      };
-
+      addProductInfo(
+        id,
+        name,
+        price,
+        quantityText
+      );
     }
 
-  } else {
-
-    cart[id].qty += change;
-
-
-    if (cart[id].qty <= 0) {
-
-      delete cart[id];
-
-    }
-
+    return;
   }
 
+  cart[id].qty += change;
+
+  if (quantityText) {
+    cart[id].quantityText = quantityText;
+  }
+
+  if (cart[id].qty <= 0) {
+    delete cart[id];
+  }
 
   saveCart();
 
   renderCart();
-
-  updateAccessoryQuantity(id);
-
 }
 
 
-/* =====================================================
-   UPDATE PRODUCT CARD QUANTITY
-===================================================== */
+/* =========================================
+   UPDATE ACCESSORY QUANTITY
+========================================= */
 
 function updateAccessoryQuantity(id) {
 
-  const qtyElement =
-    document.getElementById(
-      `qty-${id}`
-    );
+  if (!cart[id]) return;
 
+  const qty = Number(cart[id].qty);
 
-  if (!qtyElement) {
-    return;
+  if (!Number.isFinite(qty) || qty <= 0) {
+    delete cart[id];
+  } else {
+    cart[id].qty = Math.floor(qty);
   }
 
+  saveCart();
 
-  qtyElement.textContent =
-    cart[id]
-      ? cart[id].qty
-      : 0;
-
+  renderCart();
 }
 
 
-/* =====================================================
+/* =========================================
    REMOVE ITEM
-===================================================== */
+========================================= */
 
 function removeItem(id) {
 
-  if (!cart[id]) {
-    return;
-  }
-
-
-  const productName =
-    cart[id].name || "Item";
-
+  if (!cart[id]) return;
 
   delete cart[id];
-
 
   saveCart();
 
   renderCart();
 
-  updateAccessoryQuantity(id);
-
-
-  showToast(
-    `${productName} removed from cart`
-  );
-
+  showToast("Item removed");
 }
 
 
-/* =====================================================
+/* =========================================
+   PRODUCT TOTAL
+========================================= */
+
+function getCartProductTotal() {
+
+  return getCartProducts().reduce(
+    (total, item) => {
+
+      const price = Number(item.price) || 0;
+      const qty = Number(item.qty) || 0;
+
+      return total + (price * qty);
+
+    },
+    0
+  );
+}
+
+
+/* =========================================
+   TOTAL ITEMS
+========================================= */
+
+function getCartItemCount() {
+
+  return getCartProducts().reduce(
+    (total, item) => {
+
+      return total + (
+        Number(item.qty) || 0
+      );
+
+    },
+    0
+  );
+}
+
+
+/* =========================================
    SHIPPING
-===================================================== */
+========================================= */
 
 function getShipping(total) {
 
   if (total <= 0) {
-
     return 0;
-
   }
 
-
-  if (
-    total >=
-    FREE_SHIPPING_LIMIT
-  ) {
-
+  if (total >= FREE_SHIPPING_LIMIT) {
     return 0;
-
   }
-
 
   return SHIPPING_CHARGE;
-
 }
 
 
-/* =====================================================
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeCartHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+/* =========================================
    UPDATE BOTTOM CART BAR
-===================================================== */
+========================================= */
 
 function updateBottomCartBar(
   total,
@@ -250,387 +241,215 @@ function updateBottomCartBar(
 ) {
 
   const bottomTotal =
-    document.getElementById(
-      "bottomTotal"
-    );
+    document.getElementById("bottomTotal");
 
+  const shippingPrice =
+    document.getElementById("shippingPrice");
+
+  const offerApply3 =
+    document.getElementById("offerApply3");
+
+  const grandTotal =
+    document.getElementById("grandTotal");
 
   const offerCount =
-    document.getElementById(
-      "offerCount"
-    );
-
+    document.getElementById("offerCount");
 
   const offerText =
-    document.getElementById(
-      "offerText"
-    );
-
-
-  const offerApply =
-    document.getElementById(
-      "offerApply3"
-    );
-
+    document.getElementById("offerText");
 
   const progressFill =
-    document.getElementById(
-      "offerProgressFill"
-    );
-
-
-  const checkoutBtn =
-    document.getElementById(
-      "checkoutBtn"
-    );
+    document.getElementById("offerProgressFill");
 
 
   if (bottomTotal) {
-
     bottomTotal.textContent =
+      `₹${total}`;
+  }
+
+
+  if (grandTotal) {
+    grandTotal.textContent =
       `₹${orderTotal}`;
-
   }
 
 
-  if (totalItems === 0) {
+  if (shipping === 0 && total > 0) {
 
-    if (offerCount) {
-
-      offerCount.textContent =
-        "Your cart is empty";
-
-    }
-
-
-    if (offerText) {
-
-      offerText.textContent =
-        `Free shipping on orders above ₹${FREE_SHIPPING_LIMIT}`;
-
-    }
-
-
-    if (offerApply) {
-
-      offerApply.textContent = "";
-
-    }
-
-
-    if (progressFill) {
-
-      progressFill.style.width =
-        "0%";
-
-    }
-
-
-    if (checkoutBtn) {
-
-      checkoutBtn.disabled =
-        true;
-
-    }
-
-
-    return;
-
-  }
-
-
-  if (checkoutBtn) {
-
-    checkoutBtn.disabled =
-      false;
-
-  }
-
-
-  if (
-    total >=
-    FREE_SHIPPING_LIMIT
-  ) {
-
-    if (offerCount) {
-
-      offerCount.textContent =
-        "🎉 Free shipping unlocked";
-
-    }
-
-
-    if (offerText) {
-
-      offerText.textContent =
-        "You have unlocked free shipping";
-
-    }
-
-
-    if (offerApply) {
-
-      offerApply.textContent =
+    if (offerApply3) {
+      offerApply3.textContent =
         "FREE SHIPPING";
-
     }
 
+    if (shippingPrice) {
+      shippingPrice.textContent = "";
+    }
 
-    if (progressFill) {
+  } else if (total > 0) {
 
-      progressFill.style.width =
-        "100%";
+    if (offerApply3) {
+      offerApply3.textContent = "";
+    }
 
+    if (shippingPrice) {
+      shippingPrice.textContent =
+        `Shipping ₹${shipping}`;
     }
 
   } else {
 
-    const remaining =
-      FREE_SHIPPING_LIMIT -
-      total;
+    if (offerApply3) {
+      offerApply3.textContent = "";
+    }
 
+    if (shippingPrice) {
+      shippingPrice.textContent = "";
+    }
+
+  }
+
+
+  if (offerCount) {
+
+    if (totalItems <= 0) {
+
+      offerCount.textContent =
+        "Add products to your cart";
+
+    } else {
+
+      offerCount.textContent =
+        `${totalItems} item${totalItems === 1 ? "" : "s"} in cart`;
+
+    }
+
+  }
+
+
+  if (offerText) {
+
+    if (total <= 0) {
+
+      offerText.textContent =
+        "Add more to unlock free shipping";
+
+    } else if (total >= FREE_SHIPPING_LIMIT) {
+
+      offerText.textContent =
+        "🎉 Free shipping unlocked";
+
+    } else {
+
+      const remaining =
+        FREE_SHIPPING_LIMIT - total;
+
+      offerText.textContent =
+        `Add ₹${remaining} more for free shipping`;
+
+    }
+
+  }
+
+
+  if (progressFill) {
 
     const percentage =
       Math.min(
-        (total /
-          FREE_SHIPPING_LIMIT) *
-          100,
+        (total / FREE_SHIPPING_LIMIT) * 100,
         100
       );
 
-
-    if (offerCount) {
-
-      offerCount.textContent =
-        `₹${remaining} more for free shipping`;
-
-    }
-
-
-    if (offerText) {
-
-      offerText.textContent =
-        `Free shipping above ₹${FREE_SHIPPING_LIMIT}`;
-
-    }
-
-
-    if (offerApply) {
-
-      offerApply.textContent =
-        `₹${remaining} to FREE`;
-
-    }
-
-
-    if (progressFill) {
-
-      progressFill.style.width =
-        `${percentage}%`;
-
-    }
+    progressFill.style.width =
+      `${percentage}%`;
 
   }
 
 }
 
 
-/* =====================================================
-   UPDATE CART POPUP
-===================================================== */
+/* =========================================
+   RENDER CART POPUP PRODUCTS
+========================================= */
 
 function renderCartPopup() {
 
   const itemsContainer =
-    document.getElementById(
-      "cartPopupItems"
-    );
+    document.getElementById("cartPopupItems");
 
-
-  if (!itemsContainer) {
-    return;
-  }
-
-
-  itemsContainer.innerHTML =
-    "";
+  if (!itemsContainer) return;
 
 
   const products =
     getCartProducts();
 
 
-  let productTotal =
-    0;
-
-
-  if (
-    products.length === 0
-  ) {
-
-    itemsContainer.innerHTML = `
-
-      <div class="cart-popup-empty">
-
-        Your cart is empty.
-
-      </div>
-
-    `;
-
-  }
+  itemsContainer.innerHTML = "";
 
 
   products.forEach(item => {
 
     const price =
-      Number(item.price || 0);
+      Number(item.price) || 0;
 
     const qty =
-      Number(item.qty || 0);
+      Number(item.qty) || 0;
 
     const subtotal =
       price * qty;
 
 
-    productTotal +=
-      subtotal;
-
-
     const quantityText =
-      item.quantityText
-        ? item.quantityText
-        : "Qty";
+      item.quantityText ||
+      "Quantity";
 
 
-    const itemElement =
-      document.createElement(
-        "div"
-      );
+    const itemHTML = document.createElement("div");
 
-
-    itemElement.className =
+    itemHTML.className =
       "cart-popup-item";
 
 
-    itemElement.innerHTML = `
+    itemHTML.innerHTML = `
 
       <div class="cart-popup-item-row">
 
         <div class="cart-popup-item-info">
 
           <div class="cart-popup-item-name">
-
-            ${escapeCartHTML(
-              item.name || ""
-            )}
-
+            ${escapeCartHTML(item.name)}
           </div>
-
 
           <div class="cart-popup-item-quantity">
-
-            ${escapeCartHTML(
-              quantityText
-            )}
-            × ${qty}
-
+            ${escapeCartHTML(quantityText)}
+            × ${qty} qty
           </div>
 
-
-          <button
-            type="button"
-            class="cart-popup-remove"
-            data-remove-id="${escapeCartHTML(
-              String(item.id)
-            )}">
-
-            Remove
-
-          </button>
+          <div class="cart-popup-item-price">
+            ₹${price} × ${qty} = ₹${subtotal}
+          </div>
 
         </div>
 
-
-        <div class="cart-popup-item-price">
-
-          ₹${subtotal}
-
-        </div>
+        <button
+          type="button"
+          class="cart-popup-remove"
+          data-remove-id="${escapeCartHTML(item.id)}"
+        >
+          Remove
+        </button>
 
       </div>
 
     `;
 
 
-    itemsContainer.appendChild(
-      itemElement
-    );
+    itemsContainer.appendChild(itemHTML);
 
   });
 
 
-  const shipping =
-    getShipping(productTotal);
-
-
-  const orderTotal =
-    productTotal +
-    shipping;
-
-
-  const productTotalElement =
-    document.getElementById(
-      "cartPopupProductTotal"
-    );
-
-
-  const shippingElement =
-    document.getElementById(
-      "cartPopupShipping"
-    );
-
-
-  const grandTotalElement =
-    document.getElementById(
-      "cartPopupGrandTotal"
-    );
-
-
-  if (productTotalElement) {
-
-    productTotalElement.textContent =
-      `₹${productTotal}`;
-
-  }
-
-
-  if (shippingElement) {
-
-    shippingElement.textContent =
-      shipping === 0
-        ? "₹0"
-        : `₹${shipping}`;
-
-  }
-
-
-  if (grandTotalElement) {
-
-    grandTotalElement.textContent =
-      `₹${orderTotal}`;
-
-  }
-
-
-  /*
-   * Attach remove buttons
-   */
-
   itemsContainer
-    .querySelectorAll(
-      "[data-remove-id]"
-    )
+    .querySelectorAll("[data-remove-id]")
     .forEach(button => {
 
       button.addEventListener(
@@ -638,7 +457,9 @@ function renderCartPopup() {
         () => {
 
           const id =
-            button.dataset.removeId;
+            button.getAttribute(
+              "data-remove-id"
+            );
 
           removeItem(id);
 
@@ -650,84 +471,30 @@ function renderCartPopup() {
 }
 
 
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeCartHTML(value) {
-
-  return String(value)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* =====================================================
+/* =========================================
    RENDER CART
-===================================================== */
+========================================= */
 
 function renderCart() {
 
   const products =
     getCartProducts();
 
-
-  let productTotal =
-    0;
-
-  let totalItems =
-    0;
-
-
-  products.forEach(item => {
-
-    const price =
-      Number(item.price || 0);
-
-    const qty =
-      Number(item.qty || 0);
-
-
-    productTotal +=
-      price * qty;
-
-
-    totalItems +=
-      qty;
-
-  });
-
+  const total =
+    getCartProductTotal();
 
   const shipping =
-    getShipping(productTotal);
-
+    getShipping(total);
 
   const orderTotal =
-    productTotal +
-    shipping;
+    total + shipping;
+
+  const totalItems =
+    getCartItemCount();
 
 
   updateBottomCartBar(
-    productTotal,
+    total,
     shipping,
     orderTotal,
     totalItems
@@ -737,34 +504,131 @@ function renderCart() {
   renderCartPopup();
 
 
-  /*
-   * Update every visible
-   * quantity on product cards.
-   */
+  const productTotalElement =
+    document.getElementById(
+      "cartPopupProductTotal"
+    );
 
-  Object.keys(cart)
-    .forEach(id => {
+  const shippingElement =
+    document.getElementById(
+      "cartPopupShipping"
+    );
 
-      updateAccessoryQuantity(
-        id
-      );
+  const grandTotalElement =
+    document.getElementById(
+      "cartPopupGrandTotal"
+    );
 
-    });
+
+  if (productTotalElement) {
+    productTotalElement.textContent =
+      `₹${total}`;
+  }
+
+
+  if (shippingElement) {
+
+    shippingElement.textContent =
+      shipping === 0
+        ? "FREE"
+        : `₹${shipping}`;
+
+  }
+
+
+  if (grandTotalElement) {
+    grandTotalElement.textContent =
+      `₹${orderTotal}`;
+  }
+
+
+  const emptyBox =
+    document.getElementById(
+      "cartPopupEmpty"
+    );
+
+  const normalActions =
+    document.getElementById(
+      "cartNormalActions"
+    );
+
+  const checkoutSection =
+    document.getElementById(
+      "cartCheckoutSection"
+    );
+
+
+  if (products.length === 0) {
+
+    if (emptyBox) {
+      emptyBox.hidden = false;
+    }
+
+    if (normalActions) {
+      normalActions.style.display =
+        "none";
+    }
+
+    if (checkoutSection) {
+      checkoutSection.hidden = true;
+    }
+
+  } else {
+
+    if (emptyBox) {
+      emptyBox.hidden = true;
+    }
+
+    /*
+      Only show normal actions when
+      checkout mode is NOT active.
+    */
+
+    if (normalActions) {
+
+      const popup =
+        document.getElementById(
+          "cartPopup"
+        );
+
+      const checkoutMode =
+        popup &&
+        popup.dataset.checkoutMode === "true";
+
+      normalActions.style.display =
+        checkoutMode
+          ? "none"
+          : "flex";
+
+    }
+
+  }
 
 }
 
 
-/* =====================================================
+/* =========================================
    OPEN CART POPUP
-===================================================== */
+========================================= */
 
 function openCartPopup() {
+
+  const products =
+    getCartProducts();
+
+
+  if (products.length === 0) {
+
+    showToast("Your cart is empty");
+
+    return;
+  }
+
 
   const popup =
     document.getElementById(
       "cartPopup"
     );
-
 
   const overlay =
     document.getElementById(
@@ -772,57 +636,73 @@ function openCartPopup() {
     );
 
 
-  if (!popup) {
-    return;
-  }
+  if (!popup) return;
 
 
-  if (
-    getCartProducts().length === 0
-  ) {
+  /*
+    Always open in normal View Cart mode.
+  */
 
-    showToast(
-      "Your cart is empty"
+  popup.dataset.checkoutMode =
+    "false";
+
+
+  const title =
+    document.getElementById(
+      "cartPopupTitle"
     );
 
-    return;
-
+  if (title) {
+    title.textContent =
+      "Your Cart";
   }
 
 
-  renderCartPopup();
+  const normalActions =
+    document.getElementById(
+      "cartNormalActions"
+    );
+
+  if (normalActions) {
+    normalActions.style.display =
+      "flex";
+  }
 
 
-  popup.classList.add(
-    "show"
-  );
+  const checkoutSection =
+    document.getElementById(
+      "cartCheckoutSection"
+    );
 
+  if (checkoutSection) {
+    checkoutSection.hidden = true;
+  }
+
+
+  popup.classList.add("show");
 
   if (overlay) {
-
-    overlay.classList.add(
-      "show"
-    );
-
+    overlay.classList.add("show");
   }
-
 
   popup.setAttribute(
     "aria-hidden",
     "false"
   );
 
-
   document.body.classList.add(
     "cart-popup-open"
   );
 
+
+  renderCart();
+
 }
 
 
-/* =====================================================
+/* =========================================
    CLOSE CART POPUP
-===================================================== */
+========================================= */
 
 function closeCartPopup() {
 
@@ -830,7 +710,6 @@ function closeCartPopup() {
     document.getElementById(
       "cartPopup"
     );
-
 
   const overlay =
     document.getElementById(
@@ -840,25 +719,21 @@ function closeCartPopup() {
 
   if (popup) {
 
-    popup.classList.remove(
-      "show"
-    );
-
+    popup.classList.remove("show");
 
     popup.setAttribute(
       "aria-hidden",
       "true"
     );
 
+    popup.dataset.checkoutMode =
+      "false";
+
   }
 
 
   if (overlay) {
-
-    overlay.classList.remove(
-      "show"
-    );
-
+    overlay.classList.remove("show");
   }
 
 
@@ -869,134 +744,406 @@ function closeCartPopup() {
 }
 
 
-/* =====================================================
-   CHECKOUT DIRECTLY TO WHATSAPP
-===================================================== */
+/* =========================================
+   ENTER CHECKOUT MODE
+========================================= */
 
 function checkoutCart() {
 
   const products =
     getCartProducts();
 
+  const total =
+    getCartProductTotal();
 
-  if (
-    products.length === 0
-  ) {
+
+  if (products.length === 0) {
+
+    showToast("Your cart is empty");
+
+    return;
+  }
+
+
+  /*
+    Minimum order validation.
+  */
+
+  if (total < MIN_CART_VALUE) {
+
+    showToast(
+      `Minimum order value is ₹${MIN_CART_VALUE}`
+    );
+
+    return;
+  }
+
+
+  const popup =
+    document.getElementById(
+      "cartPopup"
+    );
+
+  const title =
+    document.getElementById(
+      "cartPopupTitle"
+    );
+
+  const normalActions =
+    document.getElementById(
+      "cartNormalActions"
+    );
+
+  const checkoutSection =
+    document.getElementById(
+      "cartCheckoutSection"
+    );
+
+
+  if (!popup) return;
+
+
+  /*
+    SAME POPUP.
+    No second popup is created.
+  */
+
+  popup.dataset.checkoutMode =
+    "true";
+
+
+  if (title) {
+    title.textContent =
+      "Checkout";
+  }
+
+
+  /*
+    Hide Remove/Clear/Checkout
+    normal cart actions.
+  */
+
+  if (normalActions) {
+    normalActions.style.display =
+      "none";
+  }
+
+
+  /*
+    Show final checkout section.
+  */
+
+  if (checkoutSection) {
+    checkoutSection.hidden = false;
+  }
+
+
+  /*
+    Re-render products without
+    creating a new popup.
+  */
+
+  renderCheckoutProducts();
+
+
+  /*
+    Scroll popup to top.
+  */
+
+  const popupBox =
+    popup.querySelector(
+      ".cart-popup-box"
+    );
+
+  if (popupBox) {
+    popupBox.scrollTop = 0;
+  }
+
+}
+
+
+/* =========================================
+   RENDER PRODUCTS IN CHECKOUT MODE
+========================================= */
+
+function renderCheckoutProducts() {
+
+  const itemsContainer =
+    document.getElementById(
+      "cartPopupItems"
+    );
+
+  if (!itemsContainer) return;
+
+
+  const products =
+    getCartProducts();
+
+
+  itemsContainer.innerHTML = "";
+
+
+  products.forEach(item => {
+
+    const price =
+      Number(item.price) || 0;
+
+    const qty =
+      Number(item.qty) || 0;
+
+    const subtotal =
+      price * qty;
+
+    const quantityText =
+      item.quantityText ||
+      "Quantity";
+
+
+    const itemHTML =
+      document.createElement("div");
+
+
+    itemHTML.className =
+      "cart-popup-item";
+
+
+    /*
+      IMPORTANT:
+      No Remove button in checkout mode.
+    */
+
+    itemHTML.innerHTML = `
+
+      <div class="cart-popup-item-row">
+
+        <div class="cart-popup-item-info">
+
+          <div class="cart-popup-item-name">
+            ${escapeCartHTML(item.name)}
+          </div>
+
+          <div class="cart-popup-item-quantity">
+            ${escapeCartHTML(quantityText)}
+            × ${qty} qty
+          </div>
+
+          <div class="cart-popup-item-price">
+            ₹${price} × ${qty} = ₹${subtotal}
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    itemsContainer.appendChild(
+      itemHTML
+    );
+
+  });
+
+}
+
+
+/* =========================================
+   FINAL WHATSAPP ORDER
+========================================= */
+
+function proceedOrderWhatsApp() {
+
+  const products =
+    getCartProducts();
+
+  const total =
+    getCartProductTotal();
+
+  const shipping =
+    getShipping(total);
+
+  const orderTotal =
+    total + shipping;
+
+
+  /*
+    Minimum order check.
+  */
+
+  if (products.length === 0) {
 
     showToast(
       "Your cart is empty"
     );
 
     return;
-
   }
 
 
-  let productTotal =
-    0;
-
-
-  products.forEach(item => {
-
-    productTotal +=
-      Number(item.price || 0) *
-      Number(item.qty || 0);
-
-  });
-
-
-  /*
-   * Minimum cart value
-   */
-
-  if (
-    productTotal <
-    MIN_CART_VALUE
-  ) {
+  if (total < MIN_CART_VALUE) {
 
     showToast(
-      `Minimum cart value required is ₹${MIN_CART_VALUE}`
+      `Minimum order value is ₹${MIN_CART_VALUE}`
     );
 
     return;
-
   }
 
 
-  const shipping =
-    getShipping(productTotal);
+  /*
+    GET DELIVERY DETAILS
+  */
+
+  const addressInput =
+    document.getElementById(
+      "checkoutAddress"
+    );
+
+  const pincodeInput =
+    document.getElementById(
+      "checkoutPincode"
+    );
+
+  const phoneInput =
+    document.getElementById(
+      "checkoutPhone"
+    );
 
 
-  const orderTotal =
-    productTotal +
-    shipping;
+  const address =
+    addressInput
+      ? addressInput.value.trim()
+      : "";
 
+  const pincode =
+    pincodeInput
+      ? pincodeInput.value.trim()
+      : "";
+
+  const phone =
+    phoneInput
+      ? phoneInput.value.trim()
+      : "";
+
+
+  /*
+    VALIDATION
+  */
+
+  if (!address) {
+
+    showToast(
+      "Please enter your address"
+    );
+
+    if (addressInput) {
+      addressInput.focus();
+    }
+
+    return;
+  }
+
+
+  if (!/^\d{6}$/.test(pincode)) {
+
+    showToast(
+      "Please enter a valid 6-digit pincode"
+    );
+
+    if (pincodeInput) {
+      pincodeInput.focus();
+    }
+
+    return;
+  }
+
+
+  if (!/^\d{10}$/.test(phone)) {
+
+    showToast(
+      "Please enter a valid 10-digit phone number"
+    );
+
+    if (phoneInput) {
+      phoneInput.focus();
+    }
+
+    return;
+  }
+
+
+  /* =========================================
+     BUILD WHATSAPP MESSAGE
+  ========================================= */
 
   let message =
-`Hi Diecast.scape,
-
-I would like to place an order for:
-
-`;
+    "🛒 *Accessories Order - Diecast.scape*\n\n";
 
 
   products.forEach(item => {
 
     const price =
-      Number(item.price || 0);
+      Number(item.price) || 0;
 
     const qty =
-      Number(item.qty || 0);
+      Number(item.qty) || 0;
 
     const subtotal =
       price * qty;
 
-
     const quantityText =
-      item.quantityText
-        ? item.quantityText
-        : "Qty";
+      item.quantityText ||
+      "Quantity";
 
 
     message +=
-`${item.name || ""}
+      `• ${item.name}\n`;
 
-${quantityText} × ${qty}
-₹${price} × ${qty} = ₹${subtotal}
+    message +=
+      `${quantityText} × ${qty} qty\n`;
 
-`;
+    message +=
+      `₹${price} × ${qty} = ₹${subtotal}\n\n`;
 
   });
 
 
   message +=
-`Product Total: ₹${productTotal}
-Shipping: ₹${shipping}
-Total: ₹${orderTotal}
+    "━━━━━━━━━━━━━━\n";
 
-I would like to proceed with my order.
+  message +=
+    `Product Total : ₹${total}\n`;
 
-Thank you.`;
+  message +=
+    `Shipping : ${shipping === 0 ? "FREE" : `₹${shipping}`}\n`;
 
+  message +=
+    "━━━━━━━━━━━━━━\n";
+
+  message +=
+    `*Order Total : ₹${orderTotal}*\n\n`;
+
+  message +=
+    "*Delivery Details*\n";
+
+  message +=
+    `Address : ${address}\n`;
+
+  message +=
+    `Pincode : ${pincode}\n`;
+
+  message +=
+    `Phone : ${phone}`;
+
+
+  /*
+    DIRECT WHATSAPP REDIRECT.
+    No confirmation popup.
+  */
 
   const whatsappURL =
-    `https://wa.me/${WHATSAPP_NUMBER}?text=` +
-    encodeURIComponent(
-      message
-    );
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-
-  /*
-   * Close cart first.
-   */
-
-  closeCartPopup();
-
-
-  /*
-   * Direct WhatsApp redirect.
-   * No confirmation popup.
-   */
 
   window.open(
     whatsappURL,
@@ -1006,92 +1153,116 @@ Thank you.`;
 }
 
 
-/* =====================================================
+/* =========================================
    CLEAR CART CONFIRMATION
-===================================================== */
+========================================= */
 
 function showClearCartPopup() {
 
-  if (
-    getCartProducts().length === 0
-  ) {
-
-    showToast(
-      "Your cart is already empty"
-    );
-
-    return;
-
-  }
-
-
-  /*
-   * Remove an already existing
-   * confirmation popup.
-   */
-
   const existing =
     document.getElementById(
-      "clearCartConfirmPopup"
+      "clearCartConfirm"
     );
 
-
   if (existing) {
-
     existing.remove();
-
   }
 
 
   const popup =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
 
   popup.id =
-    "clearCartConfirmPopup";
+    "clearCartConfirm";
 
 
-  popup.className =
-    "whatsapp-redirect-overlay";
+  popup.style.cssText = `
+    position: fixed;
+    inset: 0;
+    z-index: 12000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0,0,0,0.55);
+  `;
 
 
   popup.innerHTML = `
 
-    <div class="whatsapp-redirect-box">
+    <div
+      style="
+        width:min(100%,380px);
+        background:#fff;
+        border-radius:16px;
+        padding:22px;
+        box-shadow:0 20px 60px rgba(0,0,0,.25);
+      "
+    >
 
-      <div class="whatsapp-redirect-icon">
-        🛒
-      </div>
-
-      <h3>
+      <h3
+        style="
+          margin:0 0 8px;
+          font-size:20px;
+          color:#111;
+        "
+      >
         Clear Cart?
       </h3>
 
-      <p>
-        Are you sure you want to remove
-        all products from your cart?
+      <p
+        style="
+          margin:0;
+          font-size:13px;
+          line-height:1.5;
+          color:#666;
+        "
+      >
+        Are you sure you want to remove all
+        products from your cart?
       </p>
 
-      <div class="whatsapp-redirect-actions">
+      <div
+        style="
+          display:flex;
+          gap:10px;
+          margin-top:20px;
+        "
+      >
 
         <button
           type="button"
-          class="whatsapp-cancel-btn"
-          id="cancelClearCartBtn">
-
+          id="cancelClearCart"
+          style="
+            flex:1;
+            min-height:44px;
+            border:1px solid #ddd;
+            border-radius:8px;
+            background:#fff;
+            color:#333;
+            font-weight:700;
+            cursor:pointer;
+          "
+        >
           Cancel
-
         </button>
 
         <button
           type="button"
-          class="whatsapp-continue-btn"
-          id="confirmClearCartBtn">
-
+          id="confirmClearCart"
+          style="
+            flex:1;
+            min-height:44px;
+            border:0;
+            border-radius:8px;
+            background:#111;
+            color:#fff;
+            font-weight:700;
+            cursor:pointer;
+          "
+        >
           Clear Cart
-
         </button>
 
       </div>
@@ -1106,38 +1277,19 @@ function showClearCartPopup() {
   );
 
 
-  document.body.classList.add(
-    "cart-popup-open"
-  );
-
-
-  const closeConfirmation =
-    () => {
-
-      popup.remove();
-
-      document.body.classList.remove(
-        "cart-popup-open"
-      );
-
-    };
-
-
   document
-    .getElementById(
-      "cancelClearCartBtn"
-    )
-    ?.addEventListener(
+    .getElementById("cancelClearCart")
+    .addEventListener(
       "click",
-      closeConfirmation
+      () => {
+        popup.remove();
+      }
     );
 
 
   document
-    .getElementById(
-      "confirmClearCartBtn"
-    )
-    ?.addEventListener(
+    .getElementById("confirmClearCart")
+    .addEventListener(
       "click",
       () => {
 
@@ -1145,9 +1297,24 @@ function showClearCartPopup() {
 
         saveCart();
 
+        /*
+          Reset checkout mode if necessary.
+        */
+
+        const cartPopup =
+          document.getElementById(
+            "cartPopup"
+          );
+
+        if (cartPopup) {
+          cartPopup.dataset.checkoutMode =
+            "false";
+        }
+
+
         renderCart();
 
-        closeConfirmation();
+        popup.remove();
 
         closeCartPopup();
 
@@ -1158,28 +1325,14 @@ function showClearCartPopup() {
       }
     );
 
-
-  popup.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target === popup
-      ) {
-
-        closeConfirmation();
-
-      }
-
-    }
-  );
-
 }
 
 
-/* =====================================================
+/* =========================================
    TOAST
-===================================================== */
+========================================= */
+
+let toastTimer = null;
 
 function showToast(message) {
 
@@ -1188,15 +1341,11 @@ function showToast(message) {
       "toast"
     );
 
-
-  if (!toast) {
-    return;
-  }
+  if (!toast) return;
 
 
   toast.textContent =
     message;
-
 
   toast.classList.add(
     "show"
@@ -1204,11 +1353,11 @@ function showToast(message) {
 
 
   clearTimeout(
-    toast._timer
+    toastTimer
   );
 
 
-  toast._timer =
+  toastTimer =
     setTimeout(
       () => {
 
@@ -1223,51 +1372,25 @@ function showToast(message) {
 }
 
 
-/* =====================================================
-   CART EVENTS
-===================================================== */
+/* =========================================
+   DOM READY
+========================================= */
 
-window.addEventListener(
+document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-    const viewCartButton =
+
+    /* Bottom View Cart */
+
+    const checkoutBtn =
       document.getElementById(
         "checkoutBtn"
       );
 
+    if (checkoutBtn) {
 
-    const popupCheckoutButton =
-      document.getElementById(
-        "cartPopupCheckoutBtn"
-      );
-
-
-    const popupCloseButton =
-      document.getElementById(
-        "cartPopupClose"
-      );
-
-
-    const overlay =
-      document.getElementById(
-        "cartOverlay"
-      );
-
-
-    const clearCartButton =
-      document.getElementById(
-        "clearCartBtn"
-      );
-
-
-    /*
-     * Bottom bar → View Cart
-     */
-
-    if (viewCartButton) {
-
-      viewCartButton.addEventListener(
+      checkoutBtn.addEventListener(
         "click",
         openCartPopup
       );
@@ -1275,13 +1398,16 @@ window.addEventListener(
     }
 
 
-    /*
-     * Popup close
-     */
+    /* Popup close */
 
-    if (popupCloseButton) {
+    const closeBtn =
+      document.getElementById(
+        "cartPopupClose"
+      );
 
-      popupCloseButton.addEventListener(
+    if (closeBtn) {
+
+      closeBtn.addEventListener(
         "click",
         closeCartPopup
       );
@@ -1289,9 +1415,12 @@ window.addEventListener(
     }
 
 
-    /*
-     * Click backdrop
-     */
+    /* Backdrop */
+
+    const overlay =
+      document.getElementById(
+        "cartOverlay"
+      );
 
     if (overlay) {
 
@@ -1303,13 +1432,16 @@ window.addEventListener(
     }
 
 
-    /*
-     * Checkout → DIRECT WhatsApp
-     */
+    /* Checkout */
 
-    if (popupCheckoutButton) {
+    const popupCheckoutBtn =
+      document.getElementById(
+        "cartPopupCheckoutBtn"
+      );
 
-      popupCheckoutButton.addEventListener(
+    if (popupCheckoutBtn) {
+
+      popupCheckoutBtn.addEventListener(
         "click",
         checkoutCart
       );
@@ -1317,13 +1449,16 @@ window.addEventListener(
     }
 
 
-    /*
-     * Clear Cart
-     */
+    /* Clear Cart */
 
-    if (clearCartButton) {
+    const clearCartBtn =
+      document.getElementById(
+        "clearCartBtn"
+      );
 
-      clearCartButton.addEventListener(
+    if (clearCartBtn) {
+
+      clearCartBtn.addEventListener(
         "click",
         showClearCartPopup
       );
@@ -1331,9 +1466,24 @@ window.addEventListener(
     }
 
 
-    /*
-     * ESC closes cart
-     */
+    /* FINAL WHATSAPP ORDER */
+
+    const finalWhatsAppBtn =
+      document.getElementById(
+        "finalWhatsAppBtn"
+      );
+
+    if (finalWhatsAppBtn) {
+
+      finalWhatsAppBtn.addEventListener(
+        "click",
+        proceedOrderWhatsApp
+      );
+
+    }
+
+
+    /* Escape key */
 
     document.addEventListener(
       "keydown",
@@ -1343,7 +1493,19 @@ window.addEventListener(
           event.key === "Escape"
         ) {
 
-          closeCartPopup();
+          const popup =
+            document.getElementById(
+              "cartPopup"
+            );
+
+          if (
+            popup &&
+            popup.classList.contains("show")
+          ) {
+
+            closeCartPopup();
+
+          }
 
         }
 
@@ -1352,8 +1514,8 @@ window.addEventListener(
 
 
     /*
-     * Initial render
-     */
+      Initial cart render.
+    */
 
     renderCart();
 
