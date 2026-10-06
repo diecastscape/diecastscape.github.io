@@ -102,11 +102,9 @@ class="search-bar">
 </div>
 
 
-
-
-    <!-- =====================================================
+<!-- =========================
      BOTTOM CART BAR
-===================================================== -->
+========================= -->
 
 <div id="cartBox" class="cart-box">
 
@@ -117,55 +115,44 @@ class="search-bar">
     </div>
 
     <div class="offer-progress">
-      <div
-        id="offerProgressFill"
-        class="offer-progress-fill">
-      </div>
+      <div class="offer-progress-fill" id="offerProgressFill"></div>
     </div>
 
-    <div
-      id="offerCount"
-      class="offer-count">
+    <div class="offer-count" id="offerCount">
       Add products to your cart
     </div>
 
-    <div
-      id="offerText"
-      class="offer-text">
-      Free shipping on orders above ₹900
+    <div class="offer-text" id="offerText">
+      Add more to unlock free shipping
+    </div>
+
+    <div class="price-row">
+
+      <div>
+        <span class="footer-price-label">Total</span>
+        <strong id="bottomTotal">₹0</strong>
+      </div>
+
+      <div class="shipping-price">
+        <span id="offerApply3"></span>
+        <span id="shippingPrice"></span>
+      </div>
+
     </div>
 
     <div class="footer-bottom">
 
-      <div>
-
-        <div class="price-row">
-
-          <span
-            id="bottomTotal"
-            class="footer-price">
-            ₹0
-          </span>
-
-          <span
-            id="offerApply3"
-            class="offer-apply">
-          </span>
-
-        </div>
-
+      <div class="grand-total">
+        <span>Order Total</span>
+        <strong id="grandTotal">₹0</strong>
       </div>
 
-
-      <!-- THIS IS NOW VIEW CART -->
-
       <button
+        type="button"
         id="checkoutBtn"
         class="checkout-btn"
-        type="button">
-
+      >
         View Cart
-
       </button>
 
     </div>
@@ -175,158 +162,262 @@ class="search-bar">
 </div>
 
 
-<!-- =====================================================
+<!-- =========================
      CART POPUP
-===================================================== -->
+========================= -->
 
 <div
   id="cartPopup"
-  class="cart-popup"
-  aria-hidden="true">
+  class="cart-popup-overlay"
+  aria-hidden="true"
+>
 
   <div
-    class="cart-popup-box"
+    class="cart-popup"
     role="dialog"
-    aria-modal="true">
+    aria-modal="true"
+    aria-labelledby="cartPopupTitle"
+  >
 
-    <!-- HEADER -->
+    <div class="cart-popup-box">
 
-    <div class="cart-popup-header">
+      <!-- HEADER -->
 
-      <div>
+      <div class="cart-popup-header">
 
-        <div class="cart-popup-label">
-          YOUR CART
+        <div>
+
+          <div class="cart-popup-label">
+            DIECAST.SCAPE
+          </div>
+
+          <h2
+            id="cartPopupTitle"
+            class="cart-popup-title"
+          >
+            Your Cart
+          </h2>
+
         </div>
 
-        <div class="cart-popup-title">
-          Review Your Order
+        <button
+          type="button"
+          id="cartPopupClose"
+          class="cart-popup-close"
+          aria-label="Close cart"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- CART CONTENT -->
+
+      <div id="cartPopupContent">
+
+        <!-- PRODUCTS -->
+
+        <div
+          id="cartPopupItems"
+          class="cart-popup-items"
+        ></div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="cart-popup-summary">
+
+          <div class="cart-popup-summary-row">
+            <span>Product Total</span>
+            <strong id="cartPopupProductTotal">
+              ₹0
+            </strong>
+          </div>
+
+          <div class="cart-popup-summary-row">
+            <span>Shipping</span>
+            <strong id="cartPopupShipping">
+              ₹0
+            </strong>
+          </div>
+
+          <div class="cart-popup-divider"></div>
+
+          <div class="cart-popup-summary-row cart-popup-total-row">
+            <span>Order Total</span>
+            <strong id="cartPopupGrandTotal">
+              ₹0
+            </strong>
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             NORMAL CART ACTIONS
+        ========================== -->
+
+        <div
+          id="cartNormalActions"
+          class="cart-popup-actions"
+        >
+
+          <button
+            type="button"
+            id="clearCartBtn"
+            class="cart-popup-clear"
+          >
+            Clear Cart
+          </button>
+
+          <button
+            type="button"
+            id="cartPopupCheckoutBtn"
+            class="cart-popup-checkout"
+          >
+            Checkout
+          </button>
+
+        </div>
+
+
+        <!-- =========================
+             FINAL CHECKOUT SECTION
+        ========================== -->
+
+        <div
+          id="cartCheckoutSection"
+          class="cart-checkout-section"
+          hidden
+        >
+
+          <!-- ORDER INFORMATION -->
+
+          <div class="cart-popup-notice">
+
+            <div class="cart-popup-notice-title">
+              Order Information
+            </div>
+
+            <div class="cart-popup-notice-text">
+              Please enter your delivery details below.
+              Your order will be sent to Diecast.scape through WhatsApp
+              for confirmation.
+            </div>
+
+          </div>
+
+
+          <!-- DELIVERY DETAILS -->
+
+          <div class="checkout-fields">
+
+            <div class="checkout-field">
+
+              <label for="checkoutAddress">
+                Address
+              </label>
+
+              <textarea
+                id="checkoutAddress"
+                rows="3"
+                placeholder="Enter your complete delivery address"
+                autocomplete="street-address"
+              ></textarea>
+
+            </div>
+
+
+            <div class="checkout-field">
+
+              <label for="checkoutPincode">
+                Pincode
+              </label>
+
+              <input
+                type="text"
+                id="checkoutPincode"
+                inputmode="numeric"
+                maxlength="6"
+                placeholder="Enter 6-digit pincode"
+                autocomplete="postal-code"
+              >
+
+            </div>
+
+
+            <div class="checkout-field">
+
+              <label for="checkoutPhone">
+                Phone Number
+              </label>
+
+              <input
+                type="tel"
+                id="checkoutPhone"
+                inputmode="numeric"
+                maxlength="10"
+                placeholder="Enter 10-digit phone number"
+                autocomplete="tel"
+              >
+
+            </div>
+
+          </div>
+
+
+          <!-- FINAL NOTICE BAR -->
+
+          <div class="checkout-whatsapp-notice">
+
+            <span class="checkout-whatsapp-notice-icon">
+              💬
+            </span>
+
+            <span>
+              Clicking this button will redirect you to WhatsApp
+              to complete your order.
+            </span>
+
+          </div>
+
+
+          <!-- FINAL ORDER BUTTON -->
+
+          <button
+            type="button"
+            id="finalWhatsAppBtn"
+            class="cart-popup-whatsapp"
+          >
+            Order on WhatsApp
+          </button>
+
+        </div>
+
+
+        <!-- EMPTY CART -->
+
+        <div
+          id="cartPopupEmpty"
+          class="cart-popup-empty"
+          hidden
+        >
+          <div class="cart-popup-empty-icon">
+            🛒
+          </div>
+
+          <h3>
+            Your cart is empty
+          </h3>
+
+          <p>
+            Add some accessories to continue.
+          </p>
+
         </div>
 
       </div>
-
-
-      <button
-        id="cartPopupClose"
-        class="cart-popup-close"
-        type="button"
-        aria-label="Close">
-
-        ×
-
-      </button>
-
-    </div>
-
-
-    <!-- PRODUCTS -->
-
-    <div
-      id="cartPopupItems"
-      class="cart-popup-items">
-    </div>
-
-
-    <!-- SUMMARY -->
-
-    <div class="cart-popup-summary">
-
-      <div class="cart-popup-summary-row">
-
-        <span>
-          Product Total
-        </span>
-
-        <strong id="cartPopupProductTotal">
-          ₹0
-        </strong>
-
-      </div>
-
-
-      <div class="cart-popup-summary-row">
-
-        <span>
-          Shipping
-        </span>
-
-        <strong id="cartPopupShipping">
-          ₹0
-        </strong>
-
-      </div>
-
-
-      <div class="cart-popup-divider">
-      </div>
-
-
-      <div class="cart-popup-summary-row cart-popup-total-row">
-
-        <span>
-          Total
-        </span>
-
-        <strong id="cartPopupGrandTotal">
-          ₹0
-        </strong>
-
-      </div>
-
-    </div>
-
-
-    <!-- NOTICE -->
-
-    <div class="cart-popup-notice">
-
-      <div class="cart-popup-notice-title">
-        Order Information
-      </div>
-
-      <div class="cart-popup-notice-text">
-        Shipping takes approximately 1 week.
-      </div>
-
-    </div>
-
-
-    <!-- ACTIONS -->
-
-    <div class="cart-popup-actions">
-
-      <!-- CLEAR CART -->
-
-      <button
-        id="clearCartBtn"
-        class="cart-popup-clear"
-        type="button">
-
-        Clear Cart
-
-      </button>
-
-
-      <!-- CHECKOUT -->
-
-      <button
-        id="cartPopupCheckoutBtn"
-        class="cart-popup-checkout"
-        type="button">
-
-        Checkout
-
-      </button>
-
-    </div>
-
-
-    <!-- WHATSAPP NOTICE -->
-
-    <div class="cart-popup-whatsapp-note">
-
-      Clicking Checkout will redirect you to WhatsApp
-      to complete your order.
 
     </div>
 
@@ -335,26 +426,24 @@ class="search-bar">
 </div>
 
 
-<!-- =====================================================
-     CART OVERLAY
-===================================================== -->
+<!-- CART BACKDROP -->
 
 <div
   id="cartOverlay"
-  class="cart-popup-overlay">
-</div>
+  class="cart-popup-backdrop"
+></div>
 
 
-<!-- =====================================================
-     TOAST
-===================================================== -->
+<!-- TOAST -->
 
 <div
   id="toast"
-  class="toast">
-</div>            
+  class="toast"
+></div>
 
+    
 
+      
                         
 
                     
