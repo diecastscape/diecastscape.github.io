@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,159 +102,262 @@ class="search-bar">
 </div>
 
 
+
+
+    <!-- =====================================================
+     BOTTOM CART BAR
+===================================================== -->
+
 <div id="cartBox" class="cart-box">
 
-    <!-- Cart Header -->
-    <div id="cartHeader" class="cart-header">
+  <div class="cart-footer">
 
-        <div class="cart-grip"></div>
+    <div class="offer-title">
+      🔥 Add More, Save More
+    </div>
 
-        <div class="cart-title">
-            View Cart
+    <div class="offer-progress">
+      <div
+        id="offerProgressFill"
+        class="offer-progress-fill">
+      </div>
+    </div>
+
+    <div
+      id="offerCount"
+      class="offer-count">
+      Add products to your cart
+    </div>
+
+    <div
+      id="offerText"
+      class="offer-text">
+      Free shipping on orders above ₹900
+    </div>
+
+    <div class="footer-bottom">
+
+      <div>
+
+        <div class="price-row">
+
+          <span
+            id="bottomTotal"
+            class="footer-price">
+            ₹0
+          </span>
+
+          <span
+            id="offerApply3"
+            class="offer-apply">
+          </span>
+
         </div>
+
+      </div>
+
+
+      <!-- THIS IS NOW VIEW CART -->
+
+      <button
+        id="checkoutBtn"
+        class="checkout-btn"
+        type="button">
+
+        View Cart
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     CART POPUP
+===================================================== -->
+
+<div
+  id="cartPopup"
+  class="cart-popup"
+  aria-hidden="true">
+
+  <div
+    class="cart-popup-box"
+    role="dialog"
+    aria-modal="true">
+
+    <!-- HEADER -->
+
+    <div class="cart-popup-header">
+
+      <div>
+
+        <div class="cart-popup-label">
+          YOUR CART
+        </div>
+
+        <div class="cart-popup-title">
+          Review Your Order
+        </div>
+
+      </div>
+
+
+      <button
+        id="cartPopupClose"
+        class="cart-popup-close"
+        type="button"
+        aria-label="Close">
+
+        ×
+
+      </button>
 
     </div>
 
 
-    <!-- Expandable Cart Content -->
-    <div id="cartContent" class="cart-content">
+    <!-- PRODUCTS -->
 
-        <div id="cartItems" class="cart-items">
-        </div>
-
-
-        <button
-            id="clearCartBtn"
-            class="clear-cart">
-
-            Clear Cart
-
-        </button>
+    <div
+      id="cartPopupItems"
+      class="cart-popup-items">
+    </div>
 
 
-        <!-- Cart Summary -->
-        <div class="cart-summary">
+    <!-- SUMMARY -->
 
-            <div class="summary-row">
+    <div class="cart-popup-summary">
 
-                <span>Items</span>
+      <div class="cart-popup-summary-row">
 
-                <span id="summaryTotal">
-                </span>
+        <span>
+          Product Total
+        </span>
 
-            </div>
+        <strong id="cartPopupProductTotal">
+          ₹0
+        </strong>
 
-
-            <div class="summary-row">
-
-                <span>Shipping</span>
-
-                <span id="offerApply3"
-                      class="offer-apply">
-                </span>
-
-                <span id="shippingPrice">
-                </span>
-
-            </div>
+      </div>
 
 
-            <div class="summary-row cart-border">
+      <div class="cart-popup-summary-row">
 
-                <span>Total</span>
+        <span>
+          Shipping
+        </span>
 
-                <span id="bottomTotal">
-                </span>
+        <strong id="cartPopupShipping">
+          ₹0
+        </strong>
 
-            </div>
+      </div>
 
-        </div>
+
+      <div class="cart-popup-divider">
+      </div>
+
+
+      <div class="cart-popup-summary-row cart-popup-total-row">
+
+        <span>
+          Total
+        </span>
+
+        <strong id="cartPopupGrandTotal">
+          ₹0
+        </strong>
+
+      </div>
 
     </div>
 
 
-    <!-- Cart Footer -->
-    <div class="cart-footer">
+    <!-- NOTICE -->
 
-        <div>
+    <div class="cart-popup-notice">
 
-            <div class="offer-title">
+      <div class="cart-popup-notice-title">
+        Order Information
+      </div>
 
-                🔥 Add More, Save More
+      <div class="cart-popup-notice-text">
+        Shipping takes approximately 1 week.
+      </div>
 
-            </div>
-
-
-            <!-- Progressive Offer Bar -->
-            <div class="offer-progress">
-
-                <div
-                    id="offerBar"
-                    class="offer-progress-fill">
-                </div>
-
-            </div>
+    </div>
 
 
-            <div class="footer-bottom">
+    <!-- ACTIONS -->
 
-                <div>
+    <div class="cart-popup-actions">
 
-                    <div
-                        class="offer-count"
-                        id="offerCount">
-                    </div>
+      <!-- CLEAR CART -->
+
+      <button
+        id="clearCartBtn"
+        class="cart-popup-clear"
+        type="button">
+
+        Clear Cart
+
+      </button>
 
 
-                    <div
-                        class="offer-text"
-                        id="offerText">
-                    </div>
+      <!-- CHECKOUT -->
+
+      <button
+        id="cartPopupCheckoutBtn"
+        class="cart-popup-checkout"
+        type="button">
+
+        Checkout
+
+      </button>
+
+    </div>
 
 
-                    <div class="price-row">
+    <!-- WHATSAPP NOTICE -->
 
-                        <div
-                            id="grandTotal"
-                            class="footer-price">
-                        </div>
+    <div class="cart-popup-whatsapp-note">
+
+      Clicking Checkout will redirect you to WhatsApp
+      to complete your order.
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     CART OVERLAY
+===================================================== -->
+
+<div
+  id="cartOverlay"
+  class="cart-popup-overlay">
+</div>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+  id="toast"
+  class="toast">
+</div>            
 
 
                         
 
-                    </div>
-
-                </div>
-
-<button
-    id="checkoutBtn"
-    class="checkout-btn">
-
-    Checkout
-
-</button>
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div id="cartOverlay"
-     class="cart-overlay">
-</div>
-
-
-<!-- Toast -->
-
-<div id="toast"
-     class="toast">
-</div>
-
+                    
 
 <footer class="footer">
 
