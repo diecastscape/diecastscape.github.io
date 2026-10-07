@@ -1170,182 +1170,29 @@ function proceedOrderWhatsApp() {
 
 }
 
+function clearCartDirectly() {
 
-/* =========================================
-   CLEAR CART CONFIRMATION
-========================================= */
+  cart = {};
 
-function showClearCartPopup() {
+  saveCart();
 
-  const existing =
-    document.getElementById(
-      "clearCartConfirm"
-    );
+  /* Reset checkout mode */
+  const cartPopup =
+    document.getElementById("cartPopup");
 
-  if (existing) {
-    existing.remove();
+  if (cartPopup) {
+    cartPopup.dataset.checkoutMode = "false";
   }
 
+  /* Update cart UI */
+  renderCart();
 
-  const popup =
-    document.createElement("div");
+  /* Close cart popup */
+  closeCartPopup();
 
-
-  popup.id =
-    "clearCartConfirm";
-
-
-  popup.style.cssText = `
-    position: fixed;
-    inset: 0;
-    z-index: 12000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: rgba(0,0,0,0.55);
-  `;
-
-
-  popup.innerHTML = `
-
-    <div
-      style="
-        width:min(100%,380px);
-        background:#fff;
-        border-radius:16px;
-        padding:22px;
-        box-shadow:0 20px 60px rgba(0,0,0,.25);
-      "
-    >
-
-      <h3
-        style="
-          margin:0 0 8px;
-          font-size:20px;
-          color:#111;
-        "
-      >
-        Clear Cart?
-      </h3>
-
-      <p
-        style="
-          margin:0;
-          font-size:13px;
-          line-height:1.5;
-          color:#666;
-        "
-      >
-        Are you sure you want to remove all
-        products from your cart?
-      </p>
-
-      <div
-        style="
-          display:flex;
-          gap:10px;
-          margin-top:20px;
-        "
-      >
-
-        <button
-          type="button"
-          id="cancelClearCart"
-          style="
-            flex:1;
-            min-height:44px;
-            border:1px solid #ddd;
-            border-radius:8px;
-            background:#fff;
-            color:#333;
-            font-weight:700;
-            cursor:pointer;
-          "
-        >
-          Cancel
-        </button>
-
-        <button
-          type="button"
-          id="confirmClearCart"
-          style="
-            flex:1;
-            min-height:44px;
-            border:0;
-            border-radius:8px;
-            background:#111;
-            color:#fff;
-            font-weight:700;
-            cursor:pointer;
-          "
-        >
-          Clear Cart
-        </button>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  document.body.appendChild(
-    popup
-  );
-
-
-  document
-    .getElementById("cancelClearCart")
-    .addEventListener(
-      "click",
-      () => {
-        popup.remove();
-      }
-    );
-
-
-  document
-    .getElementById("confirmClearCart")
-    .addEventListener(
-      "click",
-      () => {
-
-        cart = {};
-
-        saveCart();
-
-        /*
-          Reset checkout mode if necessary.
-        */
-
-        const cartPopup =
-          document.getElementById(
-            "cartPopup"
-          );
-
-        if (cartPopup) {
-          cartPopup.dataset.checkoutMode =
-            "false";
-        }
-
-
-        renderCart();
-
-        popup.remove();
-
-        closeCartPopup();
-
-        showToast(
-          "Cart cleared"
-        );
-
-      }
-    );
-
+  /* Show normal toast */
+  showToast("Cart cleared");
 }
-
-
 /* =========================================
    TOAST
 ========================================= */
@@ -1476,10 +1323,10 @@ document.addEventListener(
 
     if (clearCartBtn) {
 
-      clearCartBtn.addEventListener(
-        "click",
-        showClearCartPopup
-      );
+  clearCartBtn.addEventListener(
+    "click",
+    clearCartDirectly
+  );
 
     }
 
