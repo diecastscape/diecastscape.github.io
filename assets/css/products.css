@@ -2934,7 +2934,292 @@ ACCESSORY QUANTITY CONTROLS
   box-shadow:
     0 0 0 3px rgba(19,173,189,.10);
 }
+/* =====================================================
+   FINAL CHECKOUT
+===================================================== */
 
+.cart-checkout-section {
+  box-sizing: border-box;
+}
+
+
+/* =====================================================
+   ORDER INFORMATION
+===================================================== */
+
+.cart-checkout-section .cart-popup-notice {
+  margin: 15px 20px 0;
+  padding: 13px 14px;
+
+  box-sizing: border-box;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5ebef;
+
+  border-radius: 13px;
+}
+
+.cart-checkout-section .cart-popup-notice-title {
+  margin-bottom: 6px;
+
+  color: #102344;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  line-height: 1.3;
+}
+
+.cart-checkout-section .cart-popup-notice-text {
+  margin: 0;
+
+  color: #687687;
+
+  font-size: 9.5px;
+  font-weight: 500;
+
+  line-height: 1.55;
+}
+
+
+/* =====================================================
+   DELIVERY DETAILS
+===================================================== */
+
+.checkout-fields {
+  margin: 15px 20px 0;
+
+  box-sizing: border-box;
+}
+
+.checkout-field {
+  width: 100%;
+
+  margin-bottom: 11px;
+
+  box-sizing: border-box;
+}
+
+.checkout-field:last-child {
+  margin-bottom: 0;
+}
+
+
+/* LABEL */
+
+.checkout-field label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #102344;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  line-height: 1.3;
+}
+
+
+/* INPUT + TEXTAREA */
+
+.checkout-field input,
+.checkout-field textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 11px 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #dce5ea;
+
+  border-radius: 10px;
+
+  outline: none;
+
+  color: #17283d;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+
+/* ADDRESS */
+
+.checkout-field textarea {
+  min-height: 78px;
+
+  resize: vertical;
+
+  line-height: 1.45;
+}
+
+
+/* PLACEHOLDER */
+
+.checkout-field input::placeholder,
+.checkout-field textarea::placeholder {
+  color: #9aa6b2;
+}
+
+
+/* FOCUS */
+
+.checkout-field input:focus,
+.checkout-field textarea:focus {
+  border-color: #13adbd;
+
+  box-shadow:
+    0 0 0 3px rgba(19,173,189,.10);
+
+  background: #ffffff;
+}
+
+
+/* =====================================================
+   WHATSAPP NOTICE BAR
+===================================================== */
+
+.checkout-whatsapp-notice {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin: 14px 20px 0;
+
+  padding: 10px 12px;
+
+  box-sizing: border-box;
+
+  background: #f0faf8;
+
+  border: 1px solid #d5eee8;
+
+  border-radius: 10px;
+
+  color: #58706c;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  line-height: 1.45;
+
+  text-align: left;
+}
+
+.checkout-whatsapp-notice-icon {
+  flex-shrink: 0;
+
+  font-size: 14px;
+
+  line-height: 1;
+}
+
+
+/* =====================================================
+   FINAL WHATSAPP BUTTON
+===================================================== */
+
+.cart-popup-whatsapp {
+  width: calc(100% - 40px);
+
+  min-height: 46px;
+
+  margin: 12px 20px 20px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #009f78;
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 16px rgba(0,159,120,.18);
+
+  transition:
+    transform .15s ease,
+    background .15s ease,
+    box-shadow .15s ease;
+}
+
+
+/* HOVER */
+
+.cart-popup-whatsapp:hover {
+  background: #008d6b;
+
+  box-shadow:
+    0 8px 20px rgba(0,159,120,.24);
+}
+
+
+/* PRESS */
+
+.cart-popup-whatsapp:active {
+  transform: scale(.98);
+}
+
+
+/* =====================================================
+   FINAL CHECKOUT MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .cart-checkout-section .cart-popup-notice {
+    margin-left: 17px;
+    margin-right: 17px;
+  }
+
+
+  .checkout-fields {
+    margin-left: 17px;
+    margin-right: 17px;
+  }
+
+
+  .checkout-whatsapp-notice {
+    margin-left: 17px;
+    margin-right: 17px;
+  }
+
+
+  .cart-popup-whatsapp {
+    width: calc(100% - 34px);
+
+    margin-left: 17px;
+    margin-right: 17px;
+
+    margin-bottom: 18px;
+  }
+
+}
 /* =====================================================
    ACTIONS
 ===================================================== */
