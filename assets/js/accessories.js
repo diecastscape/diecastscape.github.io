@@ -679,7 +679,16 @@ function openCartPopup() {
   }
 
 
+    /* SHOW OUTER OVERLAY */
   popup.classList.add("show");
+
+  /* SHOW ACTUAL CART CARD */
+  const cartCard =
+    popup.querySelector(".cart-popup");
+
+  if (cartCard) {
+    cartCard.classList.add("show");
+  }
 
   if (overlay) {
     overlay.classList.add("show");
@@ -719,7 +728,16 @@ function closeCartPopup() {
 
   if (popup) {
 
+    /* HIDE OUTER OVERLAY */
     popup.classList.remove("show");
+
+    /* HIDE ACTUAL CART CARD */
+    const cartCard =
+      popup.querySelector(".cart-popup");
+
+    if (cartCard) {
+      cartCard.classList.remove("show");
+    }
 
     popup.setAttribute(
       "aria-hidden",
