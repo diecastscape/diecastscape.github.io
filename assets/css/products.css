@@ -2796,13 +2796,11 @@ ACCESSORY QUANTITY CONTROLS
   font-size: 19px;
 }
 
-
 /* =====================================================
-   NOTICE
+   FINAL CHECKOUT ORDER INFORMATION
 ===================================================== */
 
 .cart-popup-notice {
-
   margin: 15px 20px 0;
 
   padding: 13px 14px;
@@ -2812,11 +2810,12 @@ ACCESSORY QUANTITY CONTROLS
   border: 1px solid #e5ebef;
 
   border-radius: 13px;
+
+  box-sizing: border-box;
 }
 
 
 .cart-popup-notice-title {
-
   margin-bottom: 6px;
 
   color: #102344;
@@ -2828,6 +2827,7 @@ ACCESSORY QUANTITY CONTROLS
 
 
 .cart-popup-notice-text {
+  margin: 0;
 
   color: #687687;
 
@@ -2837,7 +2837,103 @@ ACCESSORY QUANTITY CONTROLS
 
   line-height: 1.55;
 }
+/* =====================================================
+   FINAL CHECKOUT DELIVERY DETAILS
+===================================================== */
 
+.cart-checkout-details {
+
+  margin: 15px 20px 0;
+
+  box-sizing: border-box;
+}
+
+
+.cart-checkout-field {
+
+  width: 100%;
+
+  margin-bottom: 11px;
+
+  box-sizing: border-box;
+}
+
+
+.cart-checkout-field:last-child {
+  margin-bottom: 0;
+}
+
+
+.cart-checkout-field label {
+
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #102344;
+
+  font-size: 10px;
+
+  font-weight: 800;
+}
+
+
+.cart-checkout-field input,
+.cart-checkout-field textarea {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 11px 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #dce5ea;
+
+  border-radius: 10px;
+
+  outline: none;
+
+  color: #17283d;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 500;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+
+.cart-checkout-field textarea {
+
+  min-height: 75px;
+
+  resize: vertical;
+
+  line-height: 1.45;
+}
+
+
+.cart-checkout-field input::placeholder,
+.cart-checkout-field textarea::placeholder {
+
+  color: #9aa6b2;
+}
+
+
+.cart-checkout-field input:focus,
+.cart-checkout-field textarea:focus {
+
+  border-color: #13adbd;
+
+  box-shadow:
+    0 0 0 3px rgba(19,173,189,.10);
+}
 
 /* =====================================================
    ACTIONS
@@ -2935,8 +3031,89 @@ ACCESSORY QUANTITY CONTROLS
 .cart-popup-checkout:active {
   transform: scale(.98);
 }
+/* =====================================================
+   FINAL WHATSAPP CHECKOUT BUTTON
+===================================================== */
+
+.cart-popup-final-checkout {
+
+  width: 100%;
+
+  min-height: 46px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #009f78;
+
+  color: #fff;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 16px rgba(0,159,120,.18);
+
+  transition:
+    transform .15s ease,
+    background .15s ease,
+    box-shadow .15s ease;
+}
 
 
+.cart-popup-final-checkout:hover {
+
+  background: #008d6b;
+
+  box-shadow:
+    0 8px 20px rgba(0,159,120,.24);
+}
+
+
+.cart-popup-final-checkout:active {
+
+  transform: scale(.98);
+}
+/* =====================================================
+   FINAL CHECKOUT WHATSAPP NOTICE BAR
+===================================================== */
+
+.cart-popup-whatsapp-notice {
+
+  margin: 14px 20px 0;
+
+  padding: 10px 12px;
+
+  box-sizing: border-box;
+
+  background: #f0faf8;
+
+  border: 1px solid #d5eee8;
+
+  border-radius: 10px;
+
+  color: #58706c;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+  line-height: 1.45;
+
+  text-align: center;
+}
+
+
+.cart-popup-whatsapp-notice strong {
+
+  color: #087b68;
+
+  font-weight: 800;
+}
 /* =====================================================
    WHATSAPP NOTICE
 ===================================================== */
@@ -3114,7 +3291,16 @@ body.cart-popup-open {
     padding:
       0 17px 18px;
   }
+   
+  .cart-checkout-details {
+    margin-left: 17px;
+    margin-right: 17px;
+  }
 
+  .cart-popup-whatsapp-notice {
+    margin-left: 17px;
+    margin-right: 17px;
+  }
 }
 
 
