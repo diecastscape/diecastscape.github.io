@@ -122,7 +122,244 @@
   </div>
 
 </div>
+<!-- ==================================================
+     BOOKED ORDERS CARD
+================================================== -->
 
+<div class="dash-card">
+
+  <div class="dash-top">
+
+    <h3>
+      Booked Orders
+    </h3>
+
+    <button
+      onclick="openSection('bookedOrders')"
+    >
+      View
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     BOOKED ORDERS SECTION
+================================================== -->
+
+<div
+  id="section-bookedOrders"
+  class="section-panel"
+>
+
+  <div class="section-top">
+
+    <h3>
+      Booked Orders
+    </h3>
+
+    <div class="btn-row">
+
+      <button
+        onclick="toggleList('bookedOrders')"
+      >
+        Refresh
+      </button>
+
+      <button
+        onclick="toggleAdd('bookedOrders')"
+        id="bookedOrdersAddBtn"
+      >
+        + Add
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="border-top"></div>
+
+
+  <!-- BOOKED ORDERS LIST -->
+
+  <div id="bookedOrdersList"></div>
+
+
+  <!-- ==================================================
+       ADD / EDIT BOOKED ORDER
+  ================================================== -->
+
+  <div
+    id="add-bookedOrders"
+    class="add-wrap"
+  >
+
+    <div id="bookedOrdersAddForm">
+
+
+      <h4
+        id="bookedOrdersEditModeBar"
+        class="edit-mode-bar"
+        style="display:none;"
+      >
+        Editing Booked Order
+      </h4>
+
+
+      <!-- ORDER ID -->
+
+      <h5>
+        Order ID
+      </h5>
+
+      <input
+        id="bo-orderId"
+        type="text"
+        placeholder="Example: DS-D1201"
+      >
+
+
+      <!-- BOOKED DATE -->
+
+      <h5>
+        Booked Date
+      </h5>
+
+      <input
+        id="bo-bookedDate"
+        type="text"
+        placeholder="Example: 07/10/2026"
+      >
+
+
+      <!-- DESIGN -->
+
+      <h5>
+        Design
+      </h5>
+
+      <input
+        id="bo-design"
+        type="text"
+        placeholder="Example: Custom"
+      >
+
+
+      <!-- PRODUCTS -->
+
+      <h5>
+        Products / Cars
+      </h5>
+
+      <textarea
+        id="bo-products"
+        placeholder="Enter one car/product per line&#10;&#10;Example:&#10;BMW M3 GTR&#10;Nissan Skyline R34&#10;Toyota Supra"
+      ></textarea>
+
+
+      <!-- SHIPPING DATE -->
+
+      <h5>
+        Estimated Shipping Date
+      </h5>
+
+      <input
+        id="bo-shippingDate"
+        type="text"
+        placeholder="Example: 12/10/2026"
+      >
+
+
+      <!-- STATUS -->
+
+      <h5>
+        Order Progress
+      </h5>
+
+      <select
+        id="bo-status"
+        style="width:100%; box-sizing:border-box; padding:10px; border:1px solid var(--input-border); border-radius:8px; background:var(--input-bg); color:var(--text);"
+      >
+
+        <option value="Pending">
+          Pending
+        </option>
+
+        <option value="Next in Work">
+          Next in Work
+        </option>
+
+        <option value="In Progress">
+          In Progress
+        </option>
+
+        <option value="Ready to Dispatch">
+          Ready to Dispatch
+        </option>
+
+        <option value="Dispatched">
+          Dispatched
+        </option>
+
+      </select>
+
+
+      <!-- DISPATCHED DATE -->
+
+      <h5>
+        Dispatched Date
+      </h5>
+
+      <input
+        id="bo-dispatchedDate"
+        type="text"
+        placeholder="Leave empty if not dispatched"
+      >
+
+
+      <!-- SAVE -->
+
+      <button
+        type="button"
+        onclick="saveBookedOrder()"
+        class="primary-btn"
+        id="bo-saveBtn"
+      >
+        Save Booked Order
+      </button>
+
+
+      <!-- CANCEL -->
+
+      <button
+        type="button"
+        onclick="cancelBookedOrderEdit()"
+        class="primary-btn secondary-btn"
+      >
+        Cancel
+      </button>
+
+
+      <div
+        id="bo-saveLoader"
+        class="loader"
+      ></div>
+
+
+      <p
+        id="bo-saveMsg"
+        class="center-msg"
+      ></p>
+
+
+    </div>
+
+  </div>
+
+</div>
 
 
 <!-- ==================================================
