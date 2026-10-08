@@ -15,7 +15,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Diorama | Diecast.scape</title>
+<title>booked-orders | Diecast.scape</title>
 
 <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml">
@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="stylesheet" href="/assets/css/products.css">
 <link rel="stylesheet" href="/assets/css/page-footer.css">
+<link rel="stylesheet" href="/assets/css/booked-orders.css">
 </head>
 
 <body>
@@ -60,7 +61,134 @@
   <span class="breadcrumb-current">Diorama</span>
 </nav>
     
-  hi
+  <!-- =========================================================
+     BOOKED ORDERS SECTION
+========================================================= -->
+
+<section class="booked-orders-section">
+
+  <div class="booked-orders-container">
+
+    <!-- INTRO -->
+
+    <div class="booked-orders-intro">
+
+      <div class="booked-orders-eyebrow">
+        BOOKED ORDER STATUS
+      </div>
+
+      <h1 class="booked-orders-title">
+        Your Order Is Booked
+      </h1>
+
+      <p class="booked-orders-subtitle">
+        Your order has been booked for production.
+        Check its current status and estimated shipping date below.
+      </p>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="booked-search">
+
+      <input
+        type="search"
+        id="bookedOrderSearch"
+        class="booked-search-input"
+        placeholder="Enter Order ID • DS-D1201"
+        autocomplete="off"
+        spellcheck="false"
+      >
+
+      <button
+        type="button"
+        id="bookedSearchBtn"
+        class="booked-search-btn"
+      >
+        VIEW
+      </button>
+
+    </div>
+
+
+    <!-- LIST HEADER -->
+
+    <div class="booked-list-header">
+
+      <div class="booked-list-title">
+        Your Booked Orders
+      </div>
+
+      <div class="booked-list-note">
+        Oldest → Newest
+      </div>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      id="bookedOrdersLoading"
+      class="booked-orders-loading"
+    >
+      Loading booked orders...
+    </div>
+
+
+    <!-- CARDS CREATED BY JS -->
+
+    <div
+      id="bookedOrdersList"
+      class="booked-orders-list"
+    ></div>
+
+
+    <!-- EMPTY -->
+
+    <div
+      id="bookedOrdersEmpty"
+      class="booked-orders-empty"
+    >
+
+      <div class="booked-empty-title">
+        Order not found
+      </div>
+
+      <div class="booked-empty-text">
+        Please check your Order ID and try again.
+      </div>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      id="bookedOrdersError"
+      class="booked-orders-error"
+    >
+      Unable to load booked orders.
+      Please try again later.
+    </div>
+
+
+    <!-- INFO -->
+
+    <div class="booked-orders-note">
+
+      <strong>Shipping estimate:</strong>
+
+      The estimated date may change slightly depending
+      on production and dispatch conditions.
+
+    </div>
+
+  </div>
+
+</section>
 
 
 <footer class="footer">
