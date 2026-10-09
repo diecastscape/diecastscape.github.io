@@ -1,38 +1,34 @@
+
 import { db } from "../firebase-init.js";
 
 import {
   collection,
-  addDoc,
   updateDoc,
   doc,
   getDoc,
   getDocs,
   deleteDoc,
-  query,
-  orderBy,
   runTransaction,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-  adminState
-} from "/assets/js/dashboard/dashboard.js";
-
+import { adminState } from "/assets/js/dashboard/dashboard.js";
 
 // ======================================================
 // SETTINGS
 // ======================================================
 
 const ORDERS_COLLECTION = "bookedOrders";
+const COUNTERS_COLLECTION = "bookedOrderCounters";
+const COUNTER_DOCUMENT = "orderIdSequence";
 
 const COUNTER_REF = doc(
   db,
-  "bookedOrderCounters",
-  "orderIdSequence"
+  COUNTERS_COLLECTION,
+  COUNTER_DOCUMENT
 );
 
 const ORDER_PREFIX = "DS-D";
-
 const FIRST_ORDER_NUMBER = 1000;
 
 const ORDER_STATUSES = [
@@ -43,11 +39,9 @@ const ORDER_STATUSES = [
   "Dispatched"
 ];
 
-
-// Change this if your public progress page has another URL.
+// Change this if your public tracking page uses another URL.
 const ORDER_PROGRESS_URL =
   `${window.location.origin}/booked-orders.html`;
-
 
 // ======================================================
 // HELPERS
@@ -56,7 +50,6 @@ const ORDER_PROGRESS_URL =
 function byId(id) {
   return document.getElementById(id);
 }
-
 
 function escapeHTML(value = "") {
   return String(value).replace(/[&<>"']/g, char => ({
@@ -68,68 +61,50 @@ function escapeHTML(value = "") {
   })[char]);
 }
 
-
 function todayISO() {
   const now = new Date();
-
   const year = now.getFullYear();
-
-  const month = String(
-    now.getMonth() + 1
-  ).padStart(2, "0");
-
-  const day = String(
-    now.getDate()
-  ).padStart(2, "0");
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 }
-
 
 function isoToDisplayDate(value) {
   if (!value) return "";
 
   const parts = String(value).split("-");
 
-  if (parts.length !== 3) {
-    return String(value);
-  }
+  if (parts.length !== 3) return String(value);
 
   return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
-
 
 function displayToISODate(value) {
   if (!value) return "";
 
   const parts = String(value).split("/");
 
-  if (parts.length !== 3) {
-    return value;
-  }
+  if (parts.length !== 3) return "";
 
   return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }
-
 
 function storedDateToISO(value) {
   if (!value) return "";
 
   const text = String(value).trim();
 
-  // Already YYYY-MM-DD.
   if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
     return text;
   }
 
-  // Existing stored format: DD/MM/YYYY.
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
     return displayToISODate(text);
   }
 
   return "";
 }
-
 
 function storedDateToDisplay(value) {
   if (!value) return "";
@@ -143,66 +118,78 @@ function storedDateToDisplay(value) {
   return text;
 }
 
-
 function setMessage(message, type = "") {
   const element = byId("bo-saveMsg");
-
   if (!element) return;
 
   element.textContent = message;
-
   element.className = "booked-save-message";
 
-  if (type) {
-    element.classList.add(type);
-  }
+  if (type) element.classList.add(type);
 }
-
 
 function setSaving(isSaving) {
   const button = byId("bo-saveBtn");
   const loader = byId("bo-saveLoader");
 
-  if (button) {
-    button.disabled = isSaving;
-  }
-
-  if (loader) {
-    loader.classList.toggle("show", isSaving);
-  }
+  if (button) button.disabled = isSaving;
+  if (loader) loader.classList.toggle("show", isSaving);
 }
 
+function setAddButtonEditing(isEditing) {
+  const button = byId("bookedOrdersAddBtn");
+  if (!button) return;
+
+  button.textContent = isEditing ? "Cancel" : "+ Add";
+  button.classList.toggle("cancel-btn", isEditing);
+}
+
+function setEditModeBar(text = "", visible = false) {
+  const bar = byId("bookedOrderEditModeBar");
+  if (!bar) return;
+
+  bar.textContent = text;
+  bar.style.display = visible ? "block" : "none";
+}
+
+function productsToText(products) {
+  if (typeof products === "string") return products;
+
+  if (!Array.isArray(products)) return "";
+
+  return products.map(item => {
+    if (typeof item === "string") return item;
+
+    const name = item?.name || item?.title || "Product";
+    const quantity = item?.quantity
+      ? `× ${item.quantity}`
+      : "";
+
+    return [name, quantity].filter(Boolean).join(" ");
+  }).join("\n");
+}
 
 function getFormValues() {
-  const orderId = byId("bo-orderId").value.trim();
-
-  const bookedDate = byId("bo-bookedDate").value;
-
-  const design = byId("bo-design").value.trim();
-
-  const products = byId("bo-products").value.trim();
-
-  const shippingDate = byId("bo-shippingDate").value;
-
-  const status = byId("bo-status").value;
-
-  const dispatchedDate = byId("bo-dispatchedDate").value;
-
   return {
-    orderId,
-    bookedDate: isoToDisplayDate(bookedDate),
-    design,
-    products,
-    shippingDate: isoToDisplayDate(shippingDate),
-    status,
-    dispatchedDate: isoToDisplayDate(dispatchedDate)
+    orderId: byId("bo-orderId")?.value.trim() || "",
+    bookedDate: isoToDisplayDate(
+      byId("bo-bookedDate")?.value || ""
+    ),
+    design: byId("bo-design")?.value.trim() || "",
+    products: byId("bo-products")?.value.trim() || "",
+    shippingDate: isoToDisplayDate(
+      byId("bo-shippingDate")?.value || ""
+    ),
+    status: byId("bo-status")?.value || "Pending",
+    dispatchedDate: isoToDisplayDate(
+      byId("bo-dispatchedDate")?.value || ""
+    )
   };
 }
 
-
-function validateForm(data) {
-  if (!data.orderId) {
-    setMessage("The Order ID is not ready. Please try again.", "error");
+function validateForm(data, isEditing) {
+  if (isEditing && !data.orderId) {
+    setMessage("The existing Order ID is missing.", "error");
     return false;
   }
 
@@ -231,23 +218,24 @@ function validateForm(data) {
     return false;
   }
 
-  if (
-    data.status === "Dispatched" &&
-    !data.dispatchedDate
-  ) {
+  if (data.status === "Dispatched" && !data.dispatchedDate) {
     data.dispatchedDate = isoToDisplayDate(todayISO());
   }
 
   return true;
 }
 
+function getOrderNumber(orderId) {
+  const match = String(orderId || "").match(/^DS-D(\d+)$/);
+  return match ? Number(match[1]) : 0;
+}
 
 // ======================================================
-// GENERATE THE NEXT SEQUENTIAL ORDER ID
+// SAFE SEQUENTIAL ORDER ID + ORDER CREATION
 // ======================================================
 
-// Finds the highest existing order ID when the counter
-// document has not yet been created.
+// The sequence counter and the new order are saved in the
+// SAME transaction. Cancelling the form does not consume an ID.
 
 async function findHighestExistingOrderNumber() {
   const snapshot = await getDocs(
@@ -257,60 +245,62 @@ async function findHighestExistingOrderNumber() {
   let highest = FIRST_ORDER_NUMBER;
 
   snapshot.forEach(orderDoc => {
-    const data = orderDoc.data();
-
-    const match = String(data.orderId || "").match(
-      /^DS-D(\d+)$/
+    highest = Math.max(
+      highest,
+      getOrderNumber(orderDoc.data().orderId)
     );
-
-    if (match) {
-      highest = Math.max(
-        highest,
-        Number(match[1])
-      );
-    }
   });
 
   return highest;
 }
 
+async function createBookedOrder(data) {
+  // Used only if the counter document has not been created yet.
+  const highestExisting = await findHighestExistingOrderNumber();
 
-async function generateNextOrderId() {
-  const highestExisting =
-    await findHighestExistingOrderNumber();
+  // Generate a Firestore document reference before the transaction.
+  const newOrderRef = doc(collection(db, ORDERS_COLLECTION));
 
-  const nextNumber = await runTransaction(
-    db,
-    async transaction => {
-      const counterSnapshot = await transaction.get(
-        COUNTER_REF
-      );
+  return await runTransaction(db, async transaction => {
+    const counterSnapshot = await transaction.get(COUNTER_REF);
 
-      const previousNumber = counterSnapshot.exists()
-        ? Number(counterSnapshot.data().lastNumber) || FIRST_ORDER_NUMBER
-        : highestExisting;
+    const previousNumber = counterSnapshot.exists()
+      ? Math.max(
+          FIRST_ORDER_NUMBER,
+          Number(counterSnapshot.data().lastNumber) ||
+            FIRST_ORDER_NUMBER
+        )
+      : highestExisting;
 
-      const next = Math.max(
-        FIRST_ORDER_NUMBER,
-        previousNumber,
-        highestExisting
-      ) + 1;
+    const nextNumber = Math.max(
+      previousNumber,
+      highestExisting,
+      FIRST_ORDER_NUMBER
+    ) + 1;
 
-      transaction.set(
-        COUNTER_REF,
-        {
-          lastNumber: next,
-          updatedAt: serverTimestamp()
-        }
-      );
+    const orderId = `${ORDER_PREFIX}${nextNumber}`;
 
-      return next;
-    }
-  );
+    transaction.set(COUNTER_REF, {
+      lastNumber: nextNumber,
+      updatedAt: serverTimestamp()
+    });
 
-  return `${ORDER_PREFIX}${nextNumber}`;
+    transaction.set(newOrderRef, {
+      orderId,
+      bookedDate: data.bookedDate,
+      design: data.design,
+      products: data.products,
+      shippingDate: data.shippingDate,
+      status: data.status,
+      dispatchedDate: data.dispatchedDate,
+      hidden: false,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+
+    return { orderId, documentId: newOrderRef.id };
+  });
 }
-
 
 // ======================================================
 // RESET FORM
@@ -319,13 +309,20 @@ async function generateNextOrderId() {
 window.resetBookedOrderForm = function () {
   const form = byId("bookedOrderForm");
 
-  if (!form) return;
+  if (form) {
+    form.querySelectorAll("input, textarea").forEach(input => {
+      if (input.id === "bo-orderId") return;
+      input.value = "";
+    });
+  }
 
-  form.querySelectorAll("input, textarea").forEach(input => {
-    if (input.id === "bo-orderId") return;
+  const orderIdInput = byId("bo-orderId");
 
-    input.value = "";
-  });
+  if (orderIdInput) {
+    orderIdInput.value = "";
+    orderIdInput.placeholder = "Generated automatically when saved";
+    orderIdInput.readOnly = true;
+  }
 
   if (byId("bo-status")) {
     byId("bo-status").value = "Pending";
@@ -336,37 +333,26 @@ window.resetBookedOrderForm = function () {
   }
 
   if (byId("bo-saveBtn")) {
-    byId("bo-saveBtn").textContent =
-      "Book Order & Copy Message";
-
+    byId("bo-saveBtn").textContent = "Book Order & Copy Message";
     byId("bo-saveBtn").disabled = false;
   }
 
   setSaving(false);
   setMessage("");
-
-  const bar = byId("bookedOrderEditModeBar");
-
-  if (bar) {
-    bar.style.display = "none";
-  }
+  setEditModeBar("", false);
 };
-
 
 // ======================================================
 // OPEN ADD FORM
 // ======================================================
 
-window.toggleBookedOrderForm = async function () {
+window.toggleBookedOrderForm = function () {
   const wrap = byId("add-bookedOrders");
   const list = byId("bookedOrdersList");
-  const button = byId("bookedOrdersAddBtn");
 
   if (!wrap || !list) return;
 
-  const isOpening = wrap.style.display !== "block";
-
-  if (!isOpening) {
+  if (wrap.style.display === "block") {
     window.cancelBookedOrderForm();
     return;
   }
@@ -379,53 +365,13 @@ window.toggleBookedOrderForm = async function () {
   wrap.style.display = "block";
   list.style.display = "none";
 
-  if (button) {
-    button.textContent = "Cancel";
-    button.classList.add("cancel-btn");
-  }
+  setAddButtonEditing(true);
 
-  const orderIdInput = byId("bo-orderId");
-
-  if (orderIdInput) {
-    orderIdInput.value = "Generating...";
-  }
-
-  setMessage("Generating a new Order ID...");
-
-  try {
-    const newOrderId = await generateNextOrderId();
-
-    // Do not replace the ID if the form was closed while waiting.
-    if (wrap.style.display !== "block") return;
-
-    if (
-      adminState.editingType === "bookedOrders" &&
-      adminState.editingId
-    ) {
-      return;
-    }
-
-    if (orderIdInput) {
-      orderIdInput.value = newOrderId;
-    }
-
-    setMessage("New Order ID generated.", "success");
-
-  } catch (error) {
-    console.error("Error generating Order ID:", error);
-
-    setMessage(
-      "Could not generate an Order ID. Check Firebase permissions and try again.",
-      "error"
-    );
-
-    if (orderIdInput) {
-      orderIdInput.value = "";
-    }
-  }
-
+  setMessage(
+    "The next Order ID will be generated automatically when you save.",
+    "success"
+  );
 };
-
 
 // ======================================================
 // CANCEL FORM
@@ -434,16 +380,11 @@ window.toggleBookedOrderForm = async function () {
 window.cancelBookedOrderForm = function () {
   const wrap = byId("add-bookedOrders");
   const list = byId("bookedOrdersList");
-  const button = byId("bookedOrdersAddBtn");
 
   if (wrap) wrap.style.display = "none";
-
   if (list) list.style.display = "block";
 
-  if (button) {
-    button.textContent = "+ Add";
-    button.classList.remove("cancel-btn");
-  }
+  setAddButtonEditing(false);
 
   adminState.editingId = null;
   adminState.editingType = null;
@@ -451,31 +392,27 @@ window.cancelBookedOrderForm = function () {
   window.resetBookedOrderForm();
 };
 
-
 // ======================================================
-// SAVE / UPDATE BOOKED ORDER
+// SAVE / UPDATE ORDER
 // ======================================================
 
 window.saveBookedOrder = async function () {
   const button = byId("bo-saveBtn");
-
   if (!button || button.disabled) return;
-
-  const data = getFormValues();
-
-  if (!validateForm(data)) return;
 
   const isEditing =
     adminState.editingType === "bookedOrders" &&
     Boolean(adminState.editingId);
+
+  const data = getFormValues();
+
+  if (!validateForm(data, isEditing)) return;
 
   setSaving(true);
   setMessage("");
 
   try {
     if (isEditing) {
-      // Preserve the original Order ID. It is never read
-      // from an editable field during an update.
       const orderRef = doc(
         db,
         ORDERS_COLLECTION,
@@ -488,9 +425,7 @@ window.saveBookedOrder = async function () {
         throw new Error("This order no longer exists.");
       }
 
-      const originalOrderId =
-        existing.data().orderId || data.orderId;
-
+      // Do not update orderId. It is permanent.
       await updateDoc(orderRef, {
         bookedDate: data.bookedDate,
         design: data.design,
@@ -501,44 +436,17 @@ window.saveBookedOrder = async function () {
         updatedAt: serverTimestamp()
       });
 
-      // Keep original ID visible in the form.
-      if (byId("bo-orderId")) {
-        byId("bo-orderId").value = originalOrderId;
-      }
-
-      setMessage("Order updated successfully.", "success");
-
       setSaving(false);
-
       window.cancelBookedOrderForm();
-
       await window.loadBookedOrders();
 
+      alert("Order updated successfully.");
       return;
     }
 
-    // Add new order. Its ID was reserved when the
-    // Add button opened the form.
-    const orderId = byId("bo-orderId").value.trim();
-
-    if (!orderId) {
-      throw new Error("Order ID is missing. Please cancel and try again.");
-    }
-
-    await addDoc(
-      collection(db, ORDERS_COLLECTION),
-      {
-        orderId,
-        bookedDate: data.bookedDate,
-        design: data.design,
-        products: data.products,
-        shippingDate: data.shippingDate,
-        status: data.status,
-        dispatchedDate: data.dispatchedDate,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      }
-    );
+    // Create the order and allocate its ID atomically.
+    const created = await createBookedOrder(data);
+    const orderId = created.orderId;
 
     const confirmation =
       `Your order has been booked successfully! ✅\n\n` +
@@ -546,48 +454,39 @@ window.saveBookedOrder = async function () {
       `Track your order progress here:\n${ORDER_PROGRESS_URL}\n\n` +
       `Thank you for choosing Diecast.scape!`;
 
-    let copied = false;
+    setSaving(false);
+    window.cancelBookedOrderForm();
+    await window.loadBookedOrders();
 
     try {
       await navigator.clipboard.writeText(confirmation);
-      copied = true;
-    } catch (clipboardError) {
-      // Clipboard access may be blocked by browser permissions.
-      console.warn("Clipboard copy failed:", clipboardError);
-    }
 
-    setSaving(false);
-
-    window.cancelBookedOrderForm();
-
-    await window.loadBookedOrders();
-
-    if (copied) {
       alert(
         `Order ${orderId} saved successfully.\n\n` +
         `The booking confirmation has been copied to your clipboard.`
       );
-    } else {
-      // The order has already been saved. Do not report it
-      // as a failed save merely because clipboard access failed.
+    } catch (clipboardError) {
+      console.warn("Clipboard copy failed:", clipboardError);
+
+      // Saving already succeeded, so clipboard failure must not
+      // be shown as an order-save failure.
       window.prompt(
-        `Order ${orderId} was saved successfully.\nCopy this confirmation:`,
+        `Order ${orderId} was saved successfully. Copy this confirmation:`,
         confirmation
       );
     }
-
   } catch (error) {
     console.error("Error saving booked order:", error);
 
     setSaving(false);
 
     setMessage(
-      error.message || "Could not save the order. Please try again.",
+      error.message ||
+        "Could not save the order. Check Firebase permissions and try again.",
       "error"
     );
   }
 };
-
 
 // ======================================================
 // LOAD BOOKED ORDERS
@@ -595,7 +494,6 @@ window.saveBookedOrder = async function () {
 
 window.loadBookedOrders = async function () {
   const container = byId("bookedOrdersList");
-
   if (!container) return;
 
   container.innerHTML = `
@@ -606,8 +504,8 @@ window.loadBookedOrders = async function () {
 
   try {
     const snapshot = await getDocs(
-  collection(db, ORDERS_COLLECTION)
-);
+      collection(db, ORDERS_COLLECTION)
+    );
 
     const orders = [];
 
@@ -618,17 +516,8 @@ window.loadBookedOrders = async function () {
       });
     });
 
-    // Sort by the numeric part of the order ID, descending.
     orders.sort((a, b) => {
-      const numberA = Number(
-        String(a.orderId || "").replace("DS-D", "")
-      ) || 0;
-
-      const numberB = Number(
-        String(b.orderId || "").replace("DS-D", "")
-      ) || 0;
-
-      return numberB - numberA;
+      return getOrderNumber(b.orderId) - getOrderNumber(a.orderId);
     });
 
     if (!orders.length) {
@@ -638,13 +527,15 @@ window.loadBookedOrders = async function () {
           Click <strong>+ Add</strong> to create your first order.
         </div>
       `;
-
       return;
     }
+
+    const hiddenCount = orders.filter(order => order.hidden === true).length;
 
     let html = `
       <div class="booked-order-count">
         Total booked orders: ${orders.length}
+        ${hiddenCount ? ` · Hidden from public: ${hiddenCount}` : ""}
       </div>
     `;
 
@@ -653,19 +544,8 @@ window.loadBookedOrders = async function () {
         ? order.status
         : "Pending";
 
-      const productText =
-        typeof order.products === "string"
-          ? order.products
-          : Array.isArray(order.products)
-            ? order.products.map(item => {
-                if (typeof item === "string") return item;
-
-                return [
-                  item.name || item.title || "Product",
-                  item.quantity ? `× ${item.quantity}` : ""
-                ].filter(Boolean).join(" ");
-              }).join("\n")
-            : "";
+      const productText = productsToText(order.products);
+      const isHidden = order.hidden === true;
 
       const statusOptions = ORDER_STATUSES.map(option => `
         <option
@@ -680,7 +560,6 @@ window.loadBookedOrders = async function () {
         <article class="booked-order-card">
 
           <div class="booked-order-top">
-
             <div>
               <div class="booked-order-id">
                 ${escapeHTML(order.orderId || "No Order ID")}
@@ -691,39 +570,36 @@ window.loadBookedOrders = async function () {
               </div>
             </div>
 
+            <div class="booked-visibility-label">
+              ${isHidden ? "Hidden from public" : "Visible publicly"}
+            </div>
           </div>
 
           <div class="booked-order-details">
 
             <div class="booked-order-detail">
-              <span class="booked-order-detail-label">
-                Booking Date
-              </span>
+              <span class="booked-order-detail-label">Booking Date</span>
               <div class="booked-order-detail-value">
                 ${escapeHTML(storedDateToDisplay(order.bookedDate) || "—")}
               </div>
             </div>
 
             <div class="booked-order-detail">
-              <span class="booked-order-detail-label">
-                Shipping Date
-              </span>
+              <span class="booked-order-detail-label">Shipping Date</span>
               <div class="booked-order-detail-value">
                 ${escapeHTML(storedDateToDisplay(order.shippingDate) || "—")}
               </div>
             </div>
 
             <div class="booked-order-detail">
-              <span class="booked-order-detail-label">
-                Products / Details
-              </span>
-              <div class="booked-order-detail-value">${escapeHTML(productText || "—")}</div>
+              <span class="booked-order-detail-label">Products / Details</span>
+              <div class="booked-order-detail-value">
+                ${escapeHTML(productText || "—").replace(/\n/g, "<br>")}
+              </div>
             </div>
 
             <div class="booked-order-detail">
-              <span class="booked-order-detail-label">
-                Dispatched Date
-              </span>
+              <span class="booked-order-detail-label">Dispatched Date</span>
               <div class="booked-order-detail-value">
                 ${escapeHTML(storedDateToDisplay(order.dispatchedDate) || "—")}
               </div>
@@ -732,7 +608,6 @@ window.loadBookedOrders = async function () {
           </div>
 
           <div class="booked-status-row">
-
             <label for="bo-status-${escapeHTML(order.id)}">
               Update Order Progress
             </label>
@@ -751,11 +626,9 @@ window.loadBookedOrders = async function () {
             >
               Update Progress
             </button>
-
           </div>
 
           <div class="booked-order-actions">
-
             <button
               type="button"
               onclick="editBookedOrder('${escapeHTML(order.id)}')"
@@ -765,12 +638,18 @@ window.loadBookedOrders = async function () {
 
             <button
               type="button"
+              onclick="toggleBookedOrderVisibility('${escapeHTML(order.id)}')"
+            >
+              ${isHidden ? "Show Publicly" : "Hide from Public"}
+            </button>
+
+            <button
+              type="button"
               class="booked-delete-btn"
               onclick="deleteBookedOrder('${escapeHTML(order.id)}')"
             >
               Delete
             </button>
-
           </div>
 
         </article>
@@ -778,7 +657,6 @@ window.loadBookedOrders = async function () {
     });
 
     container.innerHTML = html;
-
   } catch (error) {
     console.error("Error loading booked orders:", error);
 
@@ -791,21 +669,13 @@ window.loadBookedOrders = async function () {
   }
 };
 
-
 // ======================================================
-// REFRESH ORDERS
+// REFRESH
 // ======================================================
 
 window.refreshBookedOrders = async function () {
-  const wrap = byId("add-bookedOrders");
-
-  if (wrap && wrap.style.display === "block") {
-    window.cancelBookedOrderForm();
-  }
-
   await window.loadBookedOrders();
 };
-
 
 // ======================================================
 // EDIT EXISTING ORDER
@@ -829,71 +699,65 @@ window.editBookedOrder = async function (id) {
 
     const wrap = byId("add-bookedOrders");
     const list = byId("bookedOrdersList");
-    const button = byId("bookedOrdersAddBtn");
 
     if (wrap) wrap.style.display = "block";
-
     if (list) list.style.display = "none";
 
-    if (button) {
-      button.textContent = "Cancel";
-      button.classList.add("cancel-btn");
+    setAddButtonEditing(true);
+
+    const orderIdInput = byId("bo-orderId");
+    if (orderIdInput) {
+      orderIdInput.value = data.orderId || "";
+      orderIdInput.readOnly = true;
     }
 
-    byId("bo-orderId").value = data.orderId || "";
-
-    byId("bo-bookedDate").value =
-      storedDateToISO(data.bookedDate);
-
-    byId("bo-design").value = data.design || "";
-
-    byId("bo-products").value =
-      typeof data.products === "string"
-        ? data.products
-        : Array.isArray(data.products)
-          ? data.products.map(item => {
-              if (typeof item === "string") return item;
-
-              return [
-                item.name || item.title || "Product",
-                item.quantity ? `× ${item.quantity}` : ""
-              ].filter(Boolean).join(" ");
-            }).join("\n")
-          : "";
-
-    byId("bo-shippingDate").value =
-      storedDateToISO(data.shippingDate);
-
-    byId("bo-status").value =
-      ORDER_STATUSES.includes(data.status)
-        ? data.status
-        : "Pending";
-
-    byId("bo-dispatchedDate").value =
-      storedDateToISO(data.dispatchedDate);
-
-    const bar = byId("bookedOrderEditModeBar");
-
-    if (bar) {
-      bar.style.display = "block";
-      bar.textContent = `Editing Order ${data.orderId || ""}`;
+    if (byId("bo-bookedDate")) {
+      byId("bo-bookedDate").value =
+        storedDateToISO(data.bookedDate);
     }
+
+    if (byId("bo-design")) {
+      byId("bo-design").value = data.design || "";
+    }
+
+    if (byId("bo-products")) {
+      byId("bo-products").value = productsToText(data.products);
+    }
+
+    if (byId("bo-shippingDate")) {
+      byId("bo-shippingDate").value =
+        storedDateToISO(data.shippingDate);
+    }
+
+    if (byId("bo-status")) {
+      byId("bo-status").value =
+        ORDER_STATUSES.includes(data.status)
+          ? data.status
+          : "Pending";
+    }
+
+    if (byId("bo-dispatchedDate")) {
+      byId("bo-dispatchedDate").value =
+        storedDateToISO(data.dispatchedDate);
+    }
+
+    setEditModeBar(
+      `Editing Order ${data.orderId || ""} — Order ID cannot be changed`,
+      true
+    );
 
     const saveButton = byId("bo-saveBtn");
-
     if (saveButton) {
       saveButton.textContent = "Update Order";
+      saveButton.disabled = false;
     }
 
     setMessage("");
-
   } catch (error) {
     console.error("Error editing booked order:", error);
-
     alert("Could not open this order for editing.");
   }
 };
-
 
 // ======================================================
 // UPDATE ORDER PROGRESS
@@ -901,7 +765,6 @@ window.editBookedOrder = async function (id) {
 
 window.updateBookedOrderStatus = async function (id) {
   const select = byId(`bo-status-${id}`);
-
   if (!select) return;
 
   const status = select.value;
@@ -912,12 +775,7 @@ window.updateBookedOrderStatus = async function (id) {
   }
 
   try {
-    const orderRef = doc(
-      db,
-      ORDERS_COLLECTION,
-      id
-    );
-
+    const orderRef = doc(db, ORDERS_COLLECTION, id);
     const snapshot = await getDoc(orderRef);
 
     if (!snapshot.exists()) {
@@ -941,16 +799,48 @@ window.updateBookedOrderStatus = async function (id) {
     });
 
     await window.loadBookedOrders();
-
     alert("Order progress updated successfully.");
-
   } catch (error) {
     console.error("Error updating order progress:", error);
-
     alert("Could not update order progress. Check Firebase permissions.");
   }
 };
 
+// ======================================================
+// HIDE / SHOW ORDER ON PUBLIC SCHEDULE
+// ======================================================
+
+window.toggleBookedOrderVisibility = async function (id) {
+  try {
+    const orderRef = doc(db, ORDERS_COLLECTION, id);
+    const snapshot = await getDoc(orderRef);
+
+    if (!snapshot.exists()) {
+      alert("This order no longer exists.");
+      await window.loadBookedOrders();
+      return;
+    }
+
+    const currentlyHidden = snapshot.data().hidden === true;
+    const newHiddenValue = !currentlyHidden;
+
+    await updateDoc(orderRef, {
+      hidden: newHiddenValue,
+      updatedAt: serverTimestamp()
+    });
+
+    await window.loadBookedOrders();
+
+    alert(
+      newHiddenValue
+        ? "Order hidden from the public schedule."
+        : "Order is visible on the public schedule again."
+    );
+  } catch (error) {
+    console.error("Error changing order visibility:", error);
+    alert("Could not change visibility. Check Firebase permissions.");
+  }
+};
 
 // ======================================================
 // DELETE ORDER
@@ -958,36 +848,33 @@ window.updateBookedOrderStatus = async function (id) {
 
 window.deleteBookedOrder = async function (id) {
   const confirmed = confirm(
-    "Permanently delete this booked order?\n\nThis action cannot be undone."
+    "Permanently delete this booked order?\n\n" +
+    "This action cannot be undone."
   );
 
   if (!confirmed) return;
 
   try {
-    await deleteDoc(
-      doc(db, ORDERS_COLLECTION, id)
-    );
-
+    await deleteDoc(doc(db, ORDERS_COLLECTION, id));
     await window.loadBookedOrders();
-
   } catch (error) {
     console.error("Error deleting booked order:", error);
-
     alert("Could not delete this order. Check Firebase permissions.");
   }
 };
 
-
 // ======================================================
-// INITIAL FORM STATE
+// INITIAL STATE
 // ======================================================
 
 window.addEventListener("DOMContentLoaded", () => {
   const wrap = byId("add-bookedOrders");
-
-  if (wrap) {
-    wrap.style.display = "none";
-  }
+  if (wrap) wrap.style.display = "none";
 
   window.resetBookedOrderForm();
+
+  // Load automatically if the list exists on the current page.
+  if (byId("bookedOrdersList")) {
+    window.loadBookedOrders();
+  }
 });
