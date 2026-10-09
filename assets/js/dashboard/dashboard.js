@@ -328,19 +328,40 @@ window.openSection =
 
 
     const addWrap =
-      document.getElementById(
-        "add-" + type
-      );
+  document.getElementById(
+    "add-" + type
+  );
+
+if (addWrap) {
+  addWrap.style.display = "none";
+}
 
 
-    if (addWrap) {
-      addWrap.style.display =
-        "none";
-    }
+// ======================================================
+// BOOKED ORDERS SECTION
+// ======================================================
 
+if (type === "bookedOrders") {
 
-    let listBox;
+  const bookedList =
+    document.getElementById(
+      "bookedOrdersList"
+    );
 
+  if (bookedList) {
+    bookedList.style.display = "block";
+  }
+
+  if (
+    typeof window.loadBookedOrders === "function"
+  ) {
+    window.loadBookedOrders();
+  }
+
+  return;
+}
+
+let listBox;
 
     if (type === "main") {
 
