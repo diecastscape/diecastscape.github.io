@@ -130,13 +130,9 @@
 
   <div class="dash-top">
 
-    <h3>
-      Booked Orders
-    </h3>
+    <h3>Booked Orders</h3>
 
-    <button
-      onclick="openSection('bookedOrders')"
-    >
+    <button onclick="openSection('bookedOrders')">
       View
     </button>
 
@@ -145,84 +141,7 @@
 </div>
 
 
-<!-- ==================================================
-     BOOKED ORDERS SECTION
-================================================== -->
-
-<div
-  id="section-bookedOrders"
-  class="section-panel"
->
-
-  <div class="section-top">
-
-    <h3>
-      Booked Orders
-    </h3>
-
-    <div class="btn-row">
-
-      <button
-        onclick="toggleList('bookedOrders')"
-      >
-        Refresh
-      </button>
-
-      <button
-        onclick="toggleAdd('bookedOrders')"
-        id="bookedOrdersAddBtn"
-      >
-        + Add
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <div class="border-top"></div>
-
-
-  <!-- BOOKED ORDERS LIST -->
-
-  <div id="bookedOrdersList"></div>
-
-
-  <!-- ==================================================
-       ADD / EDIT BOOKED ORDER
-  ================================================== -->
-
-  <div
-    id="add-bookedOrders"
-    class="add-wrap"
-  >
-
-    <div id="bookedOrdersAddForm">
-
-
-      <h4
-        id="bookedOrdersEditModeBar"
-        class="edit-mode-bar"
-        style="display:none;"
-      >
-        Editing Booked Order
-      </h4>
-
-
-      <!-- ORDER ID -->
-
-      <h5>
-        Order ID
-      </h5>
-
-      <input
-        id="bo-orderId"
-        type="text"
-        placeholder="Example: DS-D1201"
-      >
-
-
-      <!-- BOOKED DATE -->
+BOOKED DATE -->
 
       <h5>
         Booked Date
@@ -330,36 +249,6 @@
       >
         Save Booked Order
       </button>
-
-
-      <!-- CANCEL -->
-
-      <button
-        type="button"
-        onclick="cancelBookedOrderEdit()"
-        class="primary-btn secondary-btn"
-      >
-        Cancel
-      </button>
-
-
-      <div
-        id="bo-saveLoader"
-        class="loader"
-      ></div>
-
-
-      <p
-        id="bo-saveMsg"
-        class="center-msg"
-      ></p>
-
-
-    </div>
-
-  </div>
-
-</div>
 
 
 <!-- ==================================================
@@ -1069,7 +958,245 @@
 
 </div>
 
+<!-- ==================================================
+     BOOKED ORDERS SECTION
+================================================== -->
 
+<div
+  id="section-bookedOrders"
+  class="section-panel booked-orders-section"
+>
+
+  <div class="section-top">
+
+    <h3>Booked Orders</h3>
+
+    <div class="btn-row">
+
+      <button onclick="refreshBookedOrders()">
+        Refresh
+      </button>
+
+      <button
+        id="bookedOrdersAddBtn"
+        onclick="toggleBookedOrderForm()"
+      >
+        + Add
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="border-top"></div>
+
+  <!-- ORDER LIST -->
+
+  <div id="bookedOrdersList">
+
+    <div class="product-list-loading">
+      Loading booked orders...
+    </div>
+
+  </div>
+
+
+  <!-- ADD / EDIT ORDER FORM -->
+
+  <div
+    id="add-bookedOrders"
+    class="add-wrap booked-order-form-wrap"
+  >
+
+    <div id="bookedOrderForm">
+
+      <h4
+        id="bookedOrderEditModeBar"
+        class="edit-mode-bar booked-edit-mode"
+        style="display:none;"
+      >
+        Adding Order
+      </h4>
+
+
+      <h4 class="booked-form-heading">
+        Order Details
+      </h4>
+
+
+      <!-- ORDER ID -->
+
+      <label for="bo-orderId">
+        Order ID
+      </label>
+
+      <input
+        id="bo-orderId"
+        type="text"
+        placeholder="Generating order ID..."
+        readonly
+      >
+
+      <small class="booked-field-note">
+        Automatically generated. This ID cannot be edited.
+      </small>
+
+
+      <!-- BOOKING DATE -->
+
+      <label for="bo-bookedDate">
+        Booking Date
+      </label>
+
+      <input
+        id="bo-bookedDate"
+        type="date"
+        required
+      >
+
+
+      <!-- DESIGN -->
+
+      <label for="bo-design">
+        Design
+      </label>
+
+      <input
+        id="bo-design"
+        type="text"
+        placeholder="Example: Custom Diorama"
+        required
+      >
+
+
+      <!-- PRODUCTS -->
+
+      <label for="bo-products">
+        Products / Order Details
+      </label>
+
+      <textarea
+        id="bo-products"
+        rows="4"
+        placeholder="Example:
+Premium Diorama × 1
+Accessories Set × 2"
+        required
+      ></textarea>
+
+      <small class="booked-field-note">
+        You can enter multiple products, one per line.
+      </small>
+
+
+      <!-- SHIPPING DATE -->
+
+      <label for="bo-shippingDate">
+        Expected Shipping Date
+      </label>
+
+      <input
+        id="bo-shippingDate"
+        type="date"
+        required
+      >
+
+
+      <!-- STATUS -->
+
+      <label for="bo-status">
+        Order Progress
+      </label>
+
+      <select id="bo-status" required>
+
+        <option value="Pending">Pending</option>
+
+        <option value="Next in Work">
+          Next in Work
+        </option>
+
+        <option value="In Progress">
+          In Progress
+        </option>
+
+        <option value="Ready to Dispatch">
+          Ready to Dispatch
+        </option>
+
+        <option value="Dispatched">
+          Dispatched
+        </option>
+
+      </select>
+
+
+      <!-- DISPATCHED DATE -->
+
+      <label for="bo-dispatchedDate">
+        Dispatched Date
+      </label>
+
+      <input
+        id="bo-dispatchedDate"
+        type="date"
+      >
+
+
+      <!-- FORM MESSAGE -->
+
+      <div
+        id="bo-saveMsg"
+        class="booked-save-message"
+        role="status"
+      ></div>
+
+
+      <!-- LOADER -->
+
+      <div
+        id="bo-saveLoader"
+        class="booked-save-loader"
+      >
+        Saving order...
+      </div>
+
+
+      <!-- FORM BUTTONS -->
+
+      <div class="booked-form-actions">
+
+        <button
+          type="button"
+          id="bo-saveBtn"
+          onclick="saveBookedOrder()"
+        >
+          Book Order &amp; Copy Message
+        </button>
+
+        <button
+          type="button"
+          class="booked-clear-btn"
+          onclick="resetBookedOrderForm()"
+        >
+          Clear Form
+        </button>
+
+        <button
+          type="button"
+          class="booked-cancel-btn"
+          onclick="cancelBookedOrderForm()"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 
 </div>
 
