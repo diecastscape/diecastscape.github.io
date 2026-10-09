@@ -946,39 +946,33 @@
       >
 
 
-      <!-- DESIGN -->
+      
+<!-- DESIGN SELECTION -->
+<label for="bo-design">Design</label>
 
-      <label for="bo-design">
-        Design
-      </label>
+<select id="bo-design" required>
+  <option value="">Select design status</option>
+  <option value="Confirmed Design">Confirmed Design</option>
+  <option value="Custom Design">Custom Design</option>
+  <option value="Custom Design Confirmed">Custom Design Confirmed</option>
+</select>
 
-      <input
-        id="bo-design"
-        type="text"
-        placeholder="Example: Custom Diorama"
-        required
-      >
+<!-- MULTIPLE PRODUCTS -->
+<label>Products</label>
 
+<div id="bo-productsList" class="bo-products-list"></div>
 
-      <!-- PRODUCTS -->
+<button
+  type="button"
+  class="bo-add-product-btn"
+  onclick="addBookedProductRow()"
+>
+  + Add Another Product
+</button>
 
-      <label for="bo-products">
-        Products / Order Details
-      </label>
-
-      <textarea
-        id="bo-products"
-        rows="4"
-        placeholder="Example:
-Premium Diorama × 1
-Accessories Set × 2"
-        required
-      ></textarea>
-
-      <small class="booked-field-note">
-        You can enter multiple products, one per line.
-      </small>
-
+<small class="booked-field-note">
+  Select each product and its quantity. You can add multiple products to one order.
+</small>
 
       <!-- SHIPPING DATE -->
 
