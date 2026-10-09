@@ -606,11 +606,8 @@ window.loadBookedOrders = async function () {
 
   try {
     const snapshot = await getDocs(
-      query(
-        collection(db, ORDERS_COLLECTION),
-        orderBy("createdAt", "desc")
-      )
-    );
+  collection(db, ORDERS_COLLECTION)
+);
 
     const orders = [];
 
