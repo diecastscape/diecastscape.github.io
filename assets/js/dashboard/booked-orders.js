@@ -347,6 +347,7 @@ function productsToText(products) {
   }).join("\n");
 }
 
+
 function getFormValues() {
   return {
     orderId: byId("bo-orderId")?.value.trim() || "",
@@ -354,7 +355,7 @@ function getFormValues() {
       byId("bo-bookedDate")?.value || ""
     ),
     design: byId("bo-design")?.value.trim() || "",
-    products: byId("bo-products")?.value.trim() || "",
+    products: [],
     shippingDate: isoToDisplayDate(
       byId("bo-shippingDate")?.value || ""
     ),
@@ -582,13 +583,24 @@ window.saveBookedOrder = async function () {
     adminState.editingType === "bookedOrders" &&
     Boolean(adminState.editingId);
 
-  const data = getFormValues();
+  
+let data;
 
-  if (!validateForm(data, isEditing)) return;
+try {
+  data = getFormValues();
+  data.products = getBookedProducts();
+} catch (error) {
+  setMessage(
+    error.message || "Please add at least one product.",
+    "error"
+  );
+  return;
+}
 
-  setSaving(true);
-  setMessage("");
+if (!validateForm(data, isEditing)) return;
 
+setSaving(true);
+setMessage("");
   try {
     if (isEditing) {
       const orderRef = doc(
