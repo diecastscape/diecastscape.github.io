@@ -381,11 +381,10 @@ function validateForm(data, isEditing) {
     setMessage("Please enter the design.", "error");
     return false;
   }
-
-  if (!data.products) {
-    setMessage("Please enter the products / order details.", "error");
-    return false;
-  }
+if (!Array.isArray(data.products) || data.products.length === 0) {
+  setMessage("Please add at least one product.", "error");
+  return false;
+}
 
   if (!data.shippingDate) {
     setMessage("Please select the expected shipping date.", "error");
@@ -516,9 +515,17 @@ window.resetBookedOrderForm = function () {
     byId("bo-saveBtn").disabled = false;
   }
 
-  setSaving(false);
-  setMessage("");
-  setEditModeBar("", false);
+  
+const productsList = byId("bo-productsList");
+
+if (productsList) {
+  productsList.innerHTML = "";
+  addBookedProductRow();
+}
+
+setSaving(false);
+setMessage("");
+setEditModeBar("", false);
 };
 
 // ======================================================
@@ -910,9 +917,7 @@ window.editBookedOrder = async function (id) {
       byId("bo-design").value = data.design || "";
     }
 
-    if (byId("bo-products")) {
-      byId("bo-products").value = productsToText(data.products);
-    }
+renderBookedProducts(data.products);
 
     if (byId("bo-shippingDate")) {
       byId("bo-shippingDate").value =
