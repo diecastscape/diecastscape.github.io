@@ -106,6 +106,184 @@ function storedDateToISO(value) {
   return "";
 }
 
+/* =========================================
+   BOOKED ORDER — MULTIPLE PRODUCTS
+========================================= */
+
+let bookedProductRowCount = 0;
+
+/**
+ * Add a new product row to the booked order form.
+ * Each row includes a product name and quantity.
+ */
+function addBookedProductRow(productName = "", quantity = 1) {
+  const productsList = document.getElementById("bo-productsList");
+
+  if (!productsList) {
+    console.error("Missing #bo-productsList element.");
+    return;
+  }
+
+  const rowId = `bo-product-row-${++bookedProductRowCount}`;
+
+  const row = document.createElement("div");
+  row.className = "bo-product-row";
+  row.id = rowId;
+
+  row.innerHTML = `
+    <div class="bo-product-field">
+      <label for="${rowId}-name">Product</label>
+      <input
+        type="text"
+        id="${rowId}-name"
+        class="bo-product-name"
+        placeholder="Enter product name"
+        maxlength="150"
+        required
+      >
+    </div>
+
+    <div class="bo-product-field bo-product-quantity-field">
+      <label for="${rowId}-qty">Qty</label>
+      <input
+        type="number"
+        id="${rowId}-qty"
+        class="bo-product-quantity"
+        min="1"
+        step="1"
+        value="${Number.isInteger(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1}"
+        required
+      >
+    </div>
+
+    <button
+      type="button"
+      class="bo-remove-product-btn"
+      aria-label="Remove this product"
+      title="Remove product"
+    >Remove</button>
+  `;
+
+  const nameInput = row.querySelector(".bo-product-name");
+  nameInput.value = productName;
+
+  row.querySelector(".bo-remove-product-btn").addEventListener("click", () => {
+    row.remove();
+
+    // Keep one blank row so a new product can always be added.
+    if (!productsList.querySelector(".bo-product-row")) {
+      addBookedProductRow();
+    }
+  });
+
+  productsList.appendChild(row);
+}
+
+/**
+ * Read and validate all product rows.
+ * Returns an array of { name, quantity } objects.
+ */
+function getBookedProducts() {
+  const productsList = document.getElementById("bo-productsList");
+
+  if (!productsList) {
+    throw new Error("Products section is missing from the form.");
+  }
+
+  const rows = [...productsList.querySelectorAll(".bo-product-row")];
+
+  const products = rows.map((row) => {
+    const nameInput = row.querySelector(".bo-product-name");
+    const quantityInput = row.querySelector(".bo-product-quantity");
+
+    const name = nameInput?.value.trim() || "";
+    const quantity = Number(quantityInput?.value);
+
+    if (!name) {
+      throw new Error("Please enter a name for every product.");
+    }
+
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      throw new Error(`Enter a valid quantity for "${name}".`);
+    }
+
+    return { name, quantity };
+  });
+
+  if (products.length === 0) {
+    throw new Error("Please add at least one product.");
+  }
+
+  return products;
+}
+
+/**
+ * Display saved products when editing an existing order.
+ */
+function renderBookedProducts(products) {
+  const productsList = document.getElementById("bo-productsList");
+  if (!productsList) return;
+
+  productsList.innerHTML = "";
+
+  let normalizedProducts = [];
+
+  if (Array.isArray(products)) {
+    normalizedProducts = products.map((item) => {
+      if (typeof item === "string") {
+        return { name: item, quantity: 1 };
+      }
+
+      return {
+        name: item?.name || item?.productName || "",
+        quantity: Number(item?.quantity) || 1
+      };
+    });
+  } else if (typeof products === "string" && products.trim()) {
+    // Supports older orders where products were saved as plain text.
+    normalizedProducts = products
+      .split(/\n|,\s*(?=[^,]+$)/)
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .map((name) => ({ name, quantity: 1 }));
+  }
+
+  if (normalizedProducts.length === 0) {
+    addBookedProductRow();
+    return;
+  }
+
+  normalizedProducts.forEach((product) => {
+    addBookedProductRow(product.name, product.quantity);
+  });
+}
+
+/**
+ * Convert products to readable text for old code,
+ * order summaries, or WhatsApp messages.
+ */
+function bookedProductsToText(products) {
+  if (!Array.isArray(products)) return String(products || "");
+
+  return products
+    .map((product) => `${product.name} × ${product.quantity}`)
+    .join("\n");
+}
+
+// Keep these functions available to inline HTML handlers.
+window.addBookedProductRow = addBookedProductRow;
+window.getBookedProducts = getBookedProducts;
+window.renderBookedProducts = renderBookedProducts;
+window.bookedProductsToText = bookedProductsToText;
+
+// Start with one empty product row when the page is ready.
+document.addEventListener("DOMContentLoaded", () => {
+  const productsList = document.getElementById("bo-productsList");
+
+  if (productsList && !productsList.querySelector(".bo-product-row")) {
+    addBookedProductRow();
+  }
+});
 function storedDateToDisplay(value) {
   if (!value) return "";
 
