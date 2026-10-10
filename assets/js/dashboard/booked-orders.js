@@ -131,18 +131,21 @@ function addBookedProductRow(productName = "", quantity = 1) {
   row.id = rowId;
 
   row.innerHTML = `
-    <div class="bo-product-field">
-      <label for="${rowId}-name">Product</label>
-      <input
-        type="text"
-        id="${rowId}-name"
-        class="bo-product-name"
-        placeholder="Enter product name"
-        maxlength="150"
-        required
-      >
-    </div>
-
+    
+<div class="bo-product-field">
+  <label for="${rowId}-name">Product</label>
+  <select
+    id="${rowId}-name"
+    class="bo-product-name"
+    required
+  >
+    <option value="">Select Diorama</option>
+    <option value="Classic Diorama">Classic Diorama</option>
+    <option value="Premium Diorama">Premium Diorama</option>
+    <option value="Exclusive Diorama">Exclusive Diorama</option>
+    <option value="Custom Diorama">Custom Diorama</option>
+  </select>
+</div>
     <div class="bo-product-field bo-product-quantity-field">
       <label for="${rowId}-qty">Qty</label>
       <input
@@ -164,8 +167,20 @@ function addBookedProductRow(productName = "", quantity = 1) {
     >Remove</button>
   `;
 
-  const nameInput = row.querySelector(".bo-product-name");
-  nameInput.value = productName;
+  
+const nameInput = row.querySelector(".bo-product-name");
+
+if (
+  productName &&
+  ![...nameInput.options].some(option => option.value === productName)
+) {
+  const oldOption = document.createElement("option");
+  oldOption.value = productName;
+  oldOption.textContent = productName;
+  nameInput.appendChild(oldOption);
+}
+
+nameInput.value = productName;
 
   row.querySelector(".bo-remove-product-btn").addEventListener("click", () => {
     row.remove();
