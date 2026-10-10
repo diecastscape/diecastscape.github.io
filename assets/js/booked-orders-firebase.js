@@ -431,7 +431,8 @@ function createBookingCard(
 
         <div class="booked-detail-value">
           ${escapeHTML(
-            order.products
+  formatProducts(order.products)
+).replace(/\n/g, "<br>")}
           )}
         </div>
 
@@ -487,6 +488,55 @@ function createBookingCard(
 
 }
 
+function formatProducts(products) {
+  if (!products) return "";
+
+  // New format: array of product objects
+  if (Array.isArray(products)) {
+    return products
+      .map((product) => {
+        if (typeof product === "string") {
+          return product;
+        }
+
+        const name =
+          product?.name ||
+          product?.productName ||
+          product?.title ||
+          "";
+
+        const quantity = Number(product?.quantity);
+
+        if (!name) return "";
+
+        return Number.isFinite(quantity) && quantity > 0
+          ? `${name} × ${quantity}`
+          : name;
+      })
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  // Old format: plain text
+  if (typeof products === "string") {
+    return products;
+  }
+
+  // Handle a single product object
+  if (typeof products === "object") {
+    const name =
+      products.name ||
+      products.productName ||
+      products.title ||
+      "";
+
+    return name
+      ? `${name}${products.quantity ? ` × ${products.quantity}` : ""}`
+      : "";
+  }
+
+  return String(products);
+}
 
 
 /* =========================================================
