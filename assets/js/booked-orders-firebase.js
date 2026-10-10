@@ -433,7 +433,7 @@ function createBookingCard(
           ${escapeHTML(
   formatProducts(order.products)
 ).replace(/\n/g, "<br>")}
-          )}
+          
         </div>
 
       </div>
