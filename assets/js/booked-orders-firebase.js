@@ -553,10 +553,12 @@ function renderBookedOrders(
     "none";
 
 
-  const visibleOrders =
-    orders.filter(
-      shouldShowOrder
-    );
+const visibleOrders =
+  orders.filter(
+    order =>
+      order.hidden !== true &&
+      shouldShowOrder(order)
+  );
 
 
   if (
