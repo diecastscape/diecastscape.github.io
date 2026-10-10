@@ -638,33 +638,38 @@ async function loadBookedOrders() {
           docSnap.data();
 
 
-        bookedOrders.push({
+        
+bookedOrders.push({
 
-          firestoreId:
-            docSnap.id,
+  firestoreId:
+    docSnap.id,
 
-          orderId:
-            data.orderId || "",
+  orderId:
+    data.orderId || "",
 
-          bookedDate:
-            data.bookedDate || "",
+  bookedDate:
+    data.bookedDate || "",
 
-          design:
-            data.design || "",
+  design:
+    data.design || "",
 
-          products:
-            data.products || "",
+  products:
+    data.products || "",
 
-          shippingDate:
-            data.shippingDate || "",
+  shippingDate:
+    data.shippingDate || "",
 
-          status:
-            data.status || "",
+  status:
+    data.status || "",
 
-          dispatchedDate:
-            data.dispatchedDate || ""
+  dispatchedDate:
+    data.dispatchedDate || "",
 
-        });
+  // Read the same visibility field used by the admin page.
+  hidden:
+    data.hidden === true
+
+});
 
       }
     );
