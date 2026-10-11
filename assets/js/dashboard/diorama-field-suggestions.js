@@ -4,17 +4,21 @@ import { db } from "../firebase-init.js";
 import {
   collection,
   getDocs,
-  doc,
-  setDoc
+  addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// ======================================================
-// DIORAMA QUICK TYPE SELECT
-// Only Quick Specifications + Offer Ribbon
-// ======================================================
+/* =====================================================
+   DIORAMA FIELD AUTOCOMPLETE
+===================================================== */
 
-const FIELD_IDS = {
+const PRODUCTS_COLLECTION = "products";
+const SUGGESTIONS_COLLECTION = "dioramaFieldSuggestions";
+
+const ADMIN_FIELDS = {
+  name: "p-name",
+  subtitle: "p-subtitle",
+
   dimensions: "p-dimensions",
   flore: "p-flore",
   suitableScale: "p-suitableScale",
@@ -25,80 +29,217 @@ const FIELD_IDS = {
   lightingAdapter: "p-lightingAdapter",
   cover: "p-cover",
   build: "p-build",
+
   offerClime: "p-offerClime",
   offerText: "p-offerText"
 };
 
-const SUGGESTION_COLLECTION = "dioramaFieldSuggestions";
 
-const suggestionsByField = {};
+/* =====================================================
+   STATE
+===================================================== */
 
-let suggestionsLoaded = false;
+const suggestions = {};
+const savedValues = {};
+
+let suggestionBoxCounter = 0;
 
 
-// ======================================================
-// STYLES
-// ======================================================
+/* =====================================================
+   INITIALIZE FIELD DATA
+===================================================== */
 
-function addSuggestionStyles() {
-  if (document.getElementById("dioramaQuickTypeStyles")) {
+Object.keys(ADMIN_FIELDS).forEach(field => {
+  suggestions[field] = [];
+  savedValues[field] = new Set();
+});
+
+
+/* =====================================================
+   NORMALIZE VALUES
+===================================================== */
+
+function normalizeValue(value) {
+  return String(value ?? "").trim();
+}
+
+function valueKey(value) {
+  return normalizeValue(value).toLocaleLowerCase();
+}
+
+
+/* =====================================================
+   ADD UNIQUE SUGGESTION
+===================================================== */
+
+function addSuggestion(field, value) {
+  const cleanValue = normalizeValue(value);
+
+  if (!cleanValue) return;
+
+  const key = valueKey(cleanValue);
+
+  if (savedValues[field].has(key)) return;
+
+  savedValues[field].add(key);
+  suggestions[field].push(cleanValue);
+
+  suggestions[field].sort((a, b) =>
+    a.localeCompare(b, undefined, {
+      sensitivity: "base",
+      numeric: true
+    })
+  );
+}
+
+
+/* =====================================================
+   LOAD EXISTING PRODUCT VALUES
+===================================================== */
+
+async function loadProductSuggestions() {
+  const snapshot = await getDocs(
+    collection(db, PRODUCTS_COLLECTION)
+  );
+
+  snapshot.forEach(productDoc => {
+    const product = productDoc.data();
+
+    Object.keys(ADMIN_FIELDS).forEach(field => {
+      addSuggestion(field, product[field]);
+    });
+  });
+}
+
+
+/* =====================================================
+   LOAD CUSTOM SAVED SUGGESTIONS
+===================================================== */
+
+async function loadSavedSuggestions() {
+  const snapshot = await getDocs(
+    collection(db, SUGGESTIONS_COLLECTION)
+  );
+
+  snapshot.forEach(suggestionDoc => {
+    const item = suggestionDoc.data();
+
+    if (
+      item.field &&
+      Object.prototype.hasOwnProperty.call(
+        ADMIN_FIELDS,
+        item.field
+      )
+    ) {
+      addSuggestion(item.field, item.value);
+    }
+  });
+}
+
+
+/* =====================================================
+   SAVE A NEW CUSTOM SUGGESTION
+===================================================== */
+
+async function saveCustomSuggestion(field, value) {
+  const cleanValue = normalizeValue(value);
+
+  if (!cleanValue) return;
+
+  const key = valueKey(cleanValue);
+
+  if (savedValues[field].has(key)) return;
+
+  // Make the suggestion available immediately.
+  addSuggestion(field, cleanValue);
+
+  try {
+    await addDoc(
+      collection(db, SUGGESTIONS_COLLECTION),
+      {
+        field,
+        value: cleanValue,
+        createdAt: Date.now()
+      }
+    );
+  } catch (error) {
+    console.error(
+      `Unable to save ${field} suggestion:`,
+      error
+    );
+  }
+}
+
+
+/* =====================================================
+   ADD AUTOCOMPLETE STYLES
+===================================================== */
+
+function addAutocompleteStyles() {
+  if (document.getElementById("dioramaSuggestionStyles")) {
     return;
   }
 
   const style = document.createElement("style");
 
-  style.id = "dioramaQuickTypeStyles";
+  style.id = "dioramaSuggestionStyles";
 
   style.textContent = `
-    .diorama-quick-type-wrap {
+    .diorama-autocomplete-wrap {
       position: relative;
       width: 100%;
     }
 
-    .diorama-quick-type-menu {
+    .diorama-suggestion-list {
       position: absolute;
-      top: calc(100% + 5px);
+      top: calc(100% + 4px);
       left: 0;
       right: 0;
       z-index: 9999;
+
       display: none;
       max-height: 220px;
       overflow-y: auto;
+
       background: #ffffff;
-      color: #202124;
-      border: 1px solid #d7dce2;
-      border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
-      padding: 5px;
+      color: #222222;
+      border: 1px solid #d6d6d6;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
     }
 
-    .diorama-quick-type-menu.show {
+    .diorama-suggestion-list.is-open {
       display: block;
     }
 
-    .diorama-quick-type-option {
+    .diorama-suggestion-option {
       display: block;
       width: 100%;
       padding: 11px 12px;
+
       border: 0;
-      border-radius: 7px;
-      background: transparent;
-      color: inherit;
+      border-bottom: 1px solid #eeeeee;
+      background: #ffffff;
+      color: #222222;
+
       text-align: left;
       font: inherit;
-      font-size: 14px;
       cursor: pointer;
       overflow-wrap: anywhere;
     }
 
-    .diorama-quick-type-option:hover,
-    .diorama-quick-type-option:focus-visible {
-      background: #e8f8fa;
-      outline: none;
+    .diorama-suggestion-option:last-child {
+      border-bottom: 0;
     }
 
-    .diorama-quick-type-empty {
-      padding: 10px 12px;
+    .diorama-suggestion-option:hover,
+    .diorama-suggestion-option.is-active {
+      background: #eaf9fb;
+      color: #087f8b;
+    }
+
+    .diorama-suggestion-empty {
+      padding: 11px 12px;
       color: #777777;
       font-size: 13px;
     }
@@ -108,252 +249,245 @@ function addSuggestionStyles() {
 }
 
 
-// ======================================================
-// ADD A SUGGESTION WITHOUT DUPLICATES
-// ======================================================
+/* =====================================================
+   ATTACH AUTOCOMPLETE TO ONE INPUT
+===================================================== */
 
-function addLocalSuggestion(field, value) {
-  const cleanValue = String(value ?? "").trim();
-
-  if (!cleanValue) {
+function attachAutocomplete(field, input) {
+  if (!input || input.dataset.suggestionsAttached === "true") {
     return;
   }
 
-  if (!suggestionsByField[field]) {
-    suggestionsByField[field] = [];
-  }
-
-  const exists = suggestionsByField[field].some(
-    item => item.toLowerCase() === cleanValue.toLowerCase()
-  );
-
-  if (!exists) {
-    suggestionsByField[field].push(cleanValue);
-
-    suggestionsByField[field].sort((a, b) =>
-      a.localeCompare(b, undefined, {
-        sensitivity: "base",
-        numeric: true
-      })
-    );
-  }
-}
-
-
-// ======================================================
-// LOAD SUGGESTIONS
-// From existing Diorama products + saved reusable values
-// ======================================================
-
-async function loadSuggestions() {
-  try {
-    const [productsSnap, savedSnap] = await Promise.all([
-      getDocs(collection(db, "products")),
-      getDocs(collection(db, SUGGESTION_COLLECTION))
-    ]);
-
-    // Existing Diorama product values
-    productsSnap.forEach(productDoc => {
-      const product = productDoc.data();
-
-      Object.entries(FIELD_IDS).forEach(([field, inputId]) => {
-        addLocalSuggestion(field, product[field]);
-      });
-    });
-
-    // Reusable suggestions, including values typed previously
-    savedSnap.forEach(suggestionDoc => {
-      const data = suggestionDoc.data();
-
-      if (FIELD_IDS[data.field]) {
-        addLocalSuggestion(data.field, data.value);
-      }
-    });
-
-    suggestionsLoaded = true;
-
-  } catch (error) {
-    console.error("Could not load Diorama suggestions:", error);
-  }
-}
-
-
-// ======================================================
-// SAVE A NEW REUSABLE SUGGESTION
-// ======================================================
-
-function makeDocumentId(field, value) {
-  const normalized = value.trim().toLowerCase();
-
-  // Compact deterministic hash keeps document IDs short.
-  let hash = 2166136261;
-
-  for (let i = 0; i < normalized.length; i++) {
-    hash ^= normalized.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-
-  return `${field}_${(hash >>> 0).toString(36)}`;
-}
-
-async function saveSuggestion(field, value) {
-  const cleanValue = String(value ?? "").trim();
-
-  if (!FIELD_IDS[field] || !cleanValue) {
-    return;
-  }
-
-  // Make it available immediately in the current session.
-  addLocalSuggestion(field, cleanValue);
-
-  try {
-    const documentId = makeDocumentId(field, cleanValue);
-
-    await setDoc(
-      doc(db, SUGGESTION_COLLECTION, documentId),
-      {
-        field,
-        value: cleanValue,
-        normalized: cleanValue.toLowerCase(),
-        updatedAt: Date.now()
-      },
-      { merge: true }
-    );
-
-  } catch (error) {
-    console.error("Could not save Diorama suggestion:", error);
-  }
-}
-
-
-// ======================================================
-// AUTOCOMPLETE MENU
-// ======================================================
-
-function setupQuickType(field, input) {
-  if (input.dataset.quickTypeReady === "true") {
-    return;
-  }
-
-  input.dataset.quickTypeReady = "true";
-
-  const parent = input.parentElement;
+  input.dataset.suggestionsAttached = "true";
 
   const wrapper = document.createElement("div");
-  wrapper.className = "diorama-quick-type-wrap";
+  wrapper.className = "diorama-autocomplete-wrap";
 
-  parent.insertBefore(wrapper, input);
+  input.parentNode.insertBefore(wrapper, input);
   wrapper.appendChild(input);
 
-  const menu = document.createElement("div");
-  menu.className = "diorama-quick-type-menu";
-  menu.setAttribute("role", "listbox");
+  const box = document.createElement("div");
 
-  wrapper.appendChild(menu);
+  box.className = "diorama-suggestion-list";
+  box.id = `diorama-suggestions-${++suggestionBoxCounter}`;
+
+  box.setAttribute("role", "listbox");
+
+  wrapper.appendChild(box);
+
+  let activeIndex = -1;
+  let pointerSelecting = false;
 
 
-  function hideMenu() {
-    menu.classList.remove("show");
-    menu.innerHTML = "";
+  /* ===================================================
+     CLOSE SUGGESTIONS
+  =================================================== */
+
+  function closeSuggestions() {
+    box.classList.remove("is-open");
+    box.innerHTML = "";
+    activeIndex = -1;
   }
 
+
+  /* ===================================================
+     SHOW MATCHING SUGGESTIONS
+  =================================================== */
 
   function showSuggestions() {
-    const query = input.value.trim().toLowerCase();
+    const typedValue = valueKey(input.value);
 
-    const allValues = suggestionsByField[field] || [];
+    const matches = suggestions[field].filter(value =>
+      !typedValue ||
+      valueKey(value).includes(typedValue)
+    );
 
-    // Blank input shows recent alphabetical choices.
-    // Typed input filters matching choices.
-    const matches = allValues
-      .filter(value =>
-        !query || value.toLowerCase().includes(query)
-      )
-      .slice(0, 8);
+    box.innerHTML = "";
+    activeIndex = -1;
 
-    menu.innerHTML = "";
+    if (!matches.length) {
+      const empty = document.createElement("div");
 
-    if (matches.length === 0) {
-      if (query) {
-        const empty = document.createElement("div");
-        empty.className = "diorama-quick-type-empty";
-        empty.textContent = "No match — keep typing your own value";
-        menu.appendChild(empty);
-      } else {
-        hideMenu();
-        return;
-      }
-    } else {
-      matches.forEach(value => {
-        const option = document.createElement("button");
+      empty.className = "diorama-suggestion-empty";
+      empty.textContent = "No matching suggestions";
 
-        option.type = "button";
-        option.className = "diorama-quick-type-option";
-        option.setAttribute("role", "option");
-        option.textContent = value;
+      box.appendChild(empty);
+      box.classList.add("is-open");
 
-        // Keep the input focused so tapping a suggestion works.
-        option.addEventListener("mousedown", event => {
-          event.preventDefault();
-        });
-
-        option.addEventListener("click", () => {
-          input.value = value;
-          hideMenu();
-          input.dispatchEvent(new Event("change", { bubbles: true }));
-        });
-
-        menu.appendChild(option);
-      });
+      return;
     }
 
-    menu.classList.add("show");
+    matches.slice(0, 30).forEach(value => {
+      const option = document.createElement("button");
+
+      option.type = "button";
+      option.className = "diorama-suggestion-option";
+      option.textContent = value;
+
+      option.setAttribute("role", "option");
+
+      option.addEventListener("pointerdown", event => {
+        // Select before the input loses focus.
+        event.preventDefault();
+        pointerSelecting = true;
+
+        input.value = value;
+        closeSuggestions();
+
+        input.dispatchEvent(
+          new Event("input", { bubbles: true })
+        );
+
+        input.focus();
+
+        saveCustomSuggestion(field, value);
+      });
+
+      box.appendChild(option);
+    });
+
+    box.classList.add("is-open");
   }
 
+
+  /* ===================================================
+     KEYBOARD NAVIGATION
+  =================================================== */
+
+  input.addEventListener("keydown", event => {
+    if (!box.classList.contains("is-open")) {
+      if (
+        event.key === "ArrowDown" &&
+        suggestions[field].length
+      ) {
+        event.preventDefault();
+        showSuggestions();
+      }
+
+      return;
+    }
+
+    const options = [
+      ...box.querySelectorAll(".diorama-suggestion-option")
+    ];
+
+    if (!options.length) {
+      if (event.key === "Escape") {
+        closeSuggestions();
+      }
+
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+
+      activeIndex = (activeIndex + 1) % options.length;
+
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+
+      activeIndex =
+        (activeIndex - 1 + options.length) % options.length;
+
+    } else if (event.key === "Enter" && activeIndex >= 0) {
+      event.preventDefault();
+
+      options[activeIndex].click();
+      return;
+
+    } else if (event.key === "Escape") {
+      closeSuggestions();
+      return;
+
+    } else {
+      return;
+    }
+
+    options.forEach((option, index) => {
+      option.classList.toggle(
+        "is-active",
+        index === activeIndex
+      );
+    });
+  });
+
+
+  /* ===================================================
+     INPUT EVENTS
+  =================================================== */
 
   input.addEventListener("focus", showSuggestions);
   input.addEventListener("input", showSuggestions);
 
-  input.addEventListener("keydown", event => {
-    if (event.key === "Escape") {
-      hideMenu();
-    }
-  });
-
   input.addEventListener("blur", () => {
-    // Save a custom value for future use.
-    const value = input.value.trim();
-
-    if (value) {
-      saveSuggestion(field, value);
+    if (pointerSelecting) {
+      pointerSelecting = false;
+      return;
     }
 
-    hideMenu();
+    closeSuggestions();
+
+    // Save new values without preventing normal typing.
+    saveCustomSuggestion(field, input.value);
   });
 
-  // Do not change the value while the user is typing.
-  // Suggestions only fill the input when tapped.
+
+  /* ===================================================
+     CLOSE ON OUTSIDE CLICK
+  =================================================== */
+
+  document.addEventListener("pointerdown", event => {
+    if (!wrapper.contains(event.target)) {
+      closeSuggestions();
+    }
+  });
 }
 
 
-// ======================================================
-// INITIALIZE ONLY THE MAIN DIORAMA FORM
-// ======================================================
+/* =====================================================
+   INITIALIZE ALL ADMIN FIELDS
+===================================================== */
 
-async function initDioramaQuickType() {
-  addSuggestionStyles();
+function initializeAutocomplete() {
+  addAutocompleteStyles();
 
-  Object.entries(FIELD_IDS).forEach(([field, inputId]) => {
-    const input = document.getElementById(inputId);
+  Object.entries(ADMIN_FIELDS).forEach(([field, elementId]) => {
+    const input = document.getElementById(elementId);
 
     if (input) {
-      setupQuickType(field, input);
+      attachAutocomplete(field, input);
     }
   });
-
-  await loadSuggestions();
 }
 
 
-// This file is loaded at the end of the HTML body.
-initDioramaQuickType();
+/* =====================================================
+   START
+===================================================== */
+
+async function startDioramaSuggestions() {
+  initializeAutocomplete();
+
+  try {
+    await Promise.all([
+      loadProductSuggestions(),
+      loadSavedSuggestions()
+    ]);
+  } catch (error) {
+    console.error(
+      "Unable to load diorama field suggestions:",
+      error
+    );
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    startDioramaSuggestions,
+    { once: true }
+  );
+} else {
+  startDioramaSuggestions();
+}
