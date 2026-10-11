@@ -111,9 +111,7 @@ function buildProductHTML(p) {
 
     <div class="slider-wrap">
 
-      <div class="offer-badge">
-        📸 Real Product Images
-      </div>
+      
 
       <div class="slider">
         ${imgs}
