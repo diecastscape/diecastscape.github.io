@@ -1,562 +1,587 @@
+
+/* =========================================
+   FRAMES CART — UPDATED SYSTEM
+========================================= */
+
 const CART_KEY = "diecastscape_cart";
+const WHATSAPP_NUMBER = "918792744018";
 
-let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
+let cart = {};
+
+try {
+  cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
+} catch (error) {
+  console.error("Unable to load Frames cart:", error);
+  cart = {};
+}
+
+let toastTimer = null;
+
+
+/* =========================================
+   SAVE / GET CART
+========================================= */
+
 function saveCart() {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
+
 function getCartProducts() {
-    return Object.values(cart);
+  return Object.values(cart);
 }
-function addProductInfo(id,name,price){
 
-    if(cart[id]){
-
-        cart[id].qty++;
-
-    }else{
-
-        cart[id]={
-
-            id,
-            name,
-            price,
-            qty:1
-
-        };
-
-    }
-
-    saveCart();
-
-    renderCart();
-
+function getCartProductTotal() {
+  return getCartProducts().reduce(
+    (sum, item) =>
+      sum + (Number(item.price) || 0) * (Number(item.qty) || 0),
+    0
+  );
 }
+
+function getCartItemCount() {
+  return getCartProducts().reduce(
+    (sum, item) => sum + (Number(item.qty) || 0),
+    0
+  );
+}
+
+
+/* =========================================
+   FRAME SHIPPING
+   1–2 frames: ₹75
+   3+ frames: FREE
+========================================= */
+
 function getShipping(count) {
-
-    if (count === 0) {
-        return 0;
-    }
-
-    // Up to 2 frames = ₹100 shipping
-    if (count <= 2) {
-        return 75;
-    }
-
-    
-    // 3 or more frames = FREE shipping
-    return 0;
+  if (count <= 0) return 0;
+  return count >= 3 ? 0 : 75;
 }
+
+
+/* =========================================
+   FRAME DISCOUNT
+   6+ frames: 20% OFF
+========================================= */
+
+function getFrameDiscount(productTotal, count) {
+  return count >= 6 ? Math.round(productTotal * 0.20) : 0;
+}
+
+
+/* =========================================
+   ADD PRODUCT
+========================================= */
+
+function addProductInfo(id, name, price) {
+  if (!cart[id]) {
+    cart[id] = {
+      id: String(id),
+      name: String(name),
+      price: Number(price) || 0,
+      qty: 1
+    };
+  } else {
+    cart[id].qty = (Number(cart[id].qty) || 0) + 1;
+  }
+
+  saveCart();
+  renderCart();
+  updateFrameAddedStatus();
+  showToast("Added to cart");
+}
+
+
+/* =========================================
+   REMOVE ITEM
+========================================= */
+
+function removeItem(id) {
+  if (!cart[id]) return;
+
+  delete cart[id];
+
+  saveCart();
+  renderCart();
+  updateFrameAddedStatus();
+  showToast("Item removed");
+}
+
+
+/* =========================================
+   FRAME PRODUCT ADDED STATUS
+========================================= */
+
 window.updateFrameAddedStatus = function () {
+  let currentCart = {};
 
-  const cart =
-    JSON.parse(localStorage.getItem("diecastscape_cart")) || {};
+  try {
+    currentCart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
+  } catch (error) {
+    console.error("Unable to refresh Frames cart status:", error);
+  }
 
-  document.querySelectorAll(".shop-card").forEach(card => {
+  document.querySelectorAll(".acc-card").forEach(card => {
+    const button = card.querySelector(".acc-cart-btn");
+    const priceRow = card.querySelector(".acc-price-row");
 
-    const button =
-      card.querySelector(".add-cart-btn");
+    if (!button || !priceRow) return;
 
-    if (!button) return;
-
-    const price =
-      card.querySelector(".price");
-
-    if (!price) return;
-
-    const match =
-      button.getAttribute("onclick")?.match(
-        /addProductInfo\(\s*['"]([^'"]+)['"]/
-      );
+    const match = (button.getAttribute("onclick") || "").match(
+      /addProductInfo\(\s*['"]([^'"]+)['"]/
+    );
 
     if (!match) return;
 
     const productId = match[1];
+    const existing = priceRow.querySelector(".acc-added");
 
-    const addedText =
-      price.querySelector(".added-cart-text");
-
-    /* Product is in cart */
-    if (cart[productId]) {
-
-      if (!addedText) {
-
-        price.insertAdjacentHTML(
+    if (currentCart[productId]) {
+      if (!existing) {
+        priceRow.insertAdjacentHTML(
           "beforeend",
-          `<span class="added-cart-text">Added ✔️</span>`
+          '<span class="acc-added">Added ✓</span>'
         );
-
       }
-
+    } else if (existing) {
+      existing.remove();
     }
-
-    /* Product is NOT in cart */
-    else {
-
-      if (addedText) {
-        addedText.remove();
-      }
-
-    }
-
   });
-
 };
-function renderCart() {
 
-    const list = document.getElementById("cartItems");
 
-    list.innerHTML = "";
+window.showFrameAdded = function (productId) {
+  updateFrameAddedStatus();
+};
 
-    let total = 0;
-    let count = 0;
 
-    // =========================
-    // CART ITEMS
-    // =========================
+/* =========================================
+   ESCAPE TEXT BEFORE HTML INSERTION
+========================================= */
 
-    getCartProducts().forEach(item => {
+function escapeCartHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
-        const subTotal = item.price * item.qty;
 
-        total += subTotal;
-        count += item.qty;
+/* =========================================
+   RENDER PRODUCTS IN CART POPUP
+========================================= */
 
-        list.innerHTML += `
-        <div class="cart-item">
+function renderCartPopupProducts(checkoutMode = false) {
+  const container = document.getElementById("cartPopupItems");
+  if (!container) return;
 
-            <div class="cart-row">
+  container.innerHTML = "";
 
-                <div class="cart-name">
-                    ${item.name}
-                </div>
+  getCartProducts().forEach(item => {
+    const price = Number(item.price) || 0;
+    const qty = Number(item.qty) || 0;
+    const subtotal = price * qty;
 
-                <div class="cart-price">
-                    ${item.price} × ${item.qty} = ₹${subTotal}
-                </div>
+    const element = document.createElement("div");
+    element.className = "cart-popup-item";
 
-            </div>
+    element.innerHTML = `
+      <div class="cart-popup-item-row">
+        <div class="cart-popup-item-info">
 
-            <button
-                class="remove-item"
-                onclick="removeItem('${item.id}')">
+          <div class="cart-popup-item-name">
+            ${escapeCartHTML(item.name)}
+          </div>
 
-                Remove
+          <div class="cart-popup-item-quantity">
+            Frame × ${qty} qty
+          </div>
 
-            </button>
+          <div class="cart-popup-item-price">
+            ₹${price} × ${qty} = ₹${subtotal}
+          </div>
 
         </div>
-        `;
 
+        ${
+          checkoutMode
+            ? ""
+            : `<button
+                 type="button"
+                 class="cart-popup-remove"
+                 data-remove-id="${escapeCartHTML(item.id)}">
+                 Remove
+               </button>`
+        }
+      </div>
+    `;
+
+    container.appendChild(element);
+  });
+
+  container.querySelectorAll("[data-remove-id]").forEach(button => {
+    button.addEventListener("click", () => {
+      removeItem(button.getAttribute("data-remove-id"));
     });
-
-
-    // =========================
-    // OFFER ELEMENTS
-    // =========================
-
-    const offerBar = document.getElementById("offerBar");
-    const offerCount = document.getElementById("offerCount");
-    const offerText = document.getElementById("offerText");
-    const offerApply = document.getElementById("offerApply");
-    const offerApply2 = document.getElementById("offerApply2");
-    const offerApply3 = document.getElementById("offerApply3");
-
-    // =========================
-    // SHIPPING
-    // =========================
-
-    const shipping = getShipping(count);
-
-
-    // =========================
-    // DISCOUNT
-    // =========================
-
-    let discount = 0;
-
-
-    // 0–3 frames
-    if (count < 3) {
-
-        discount = 0;
-
-    }
-
-    // 4–5 frames
-    else if (count < 6) {
-
-        discount = 0;
-
-    }
-
-        
-    // 6+ frames
-    else {
-
-        discount = Math.round(total * 0.20);
-
-    }
-
-
-    // =========================
-    // TOTAL CALCULATION
-    // =========================
-
-    const finalPrice = total + shipping;
-
-    const grandTotal = finalPrice - discount;
-
-
-    // =========================
-    // UPDATE CART SUMMARY
-    // =========================
-
-    document.getElementById("summaryTotal").innerText =
-        "₹" + total;
-
-    document.getElementById("shippingPrice").innerText =
-        shipping === 0 && count >= 3
-            ? "₹0"
-            : "₹" + shipping;
-
-    document.getElementById("bottomTotal").innerText =
-        "₹" + finalPrice;
-
-    document.getElementById("offerSave").innerText =
-        "-₹" + discount;
-
-    document.getElementById("grandTotal").innerText =
-        "₹" + grandTotal;
-
-    document.getElementById("grandTotal1").innerText =
-        "₹" + grandTotal;
-
-
-    // =========================
-    // PROGRESSIVE OFFER BAR
-    // =========================
-
-
-    // -------------------------
-    // 0–3 FRAME 
-    // -------------------------
-
-    if (count < 3) {
-
-        const remaining = 3 - count;
-
-        offerCount.innerText =
-            `${count} / 3 Frames`;
-
-        offerText.innerText =
-            `Add ${remaining} frame${remaining > 1 ? "s" : ""} to unlock FREE SHIPPING`;
-
-        offerApply.innerText =
-            ``;
-
-        offerApply2.innerText =
-            ``;
-
-        // Progress: 0 → 100%
-        offerBar.style.width =
-            (count / 3 * 100) + "%";
-
-    }
-
-
-    // -------------------------
-    // 4–5 FRAMES 
-        // free shipping
-    // -------------------------
-
-    
-
-
-    else if (count < 6) {
-
-        const remaining = 6 - count;
-
-        offerCount.innerText =
-            `${count} / 6 Frames`;
-
-        offerText.innerText =
-            `Free delivery Unlocked.Add ${remaining} more frame${remaining > 1 ? "s" : ""} to get 20% OFF`;
-
-        offerApply.innerText =
-            ``;
-
-        offerApply2.innerText =
-            `Offer applyd `;
-        offerApply3.innerText =
-            `Free delivery`;
-        // Progress starts from 4 and goes to 8
-        offerBar.style.width =
-            (count / 6 * 100) + "%";
-
-    }
-    // -------------------------
-    // 6+ FRAMES
-    // 20% OFF + FREE SHIPPING
-    // -------------------------
-
-    else {
-
-        offerCount.innerText =
-            `${count} Frames`;
-
-        offerText.innerText =
-            `🎉 20% Off + Free delivery Unlocked`;
-
-        offerApply.innerText =
-            `20% off`;
-
-        offerApply2.innerText =
-            `Offer applyd `;
-        offerApply3.innerText =
-            `Free delivery`;
-        offerBar.style.width =
-            "100%";
-
-    }
-
-
-    // =========================
-    // EMPTY CART
-    // =========================
-
-    if (count === 0) {
-
-        document.getElementById("shippingPrice").innerText =
-            "₹0";
-
-        document.getElementById("offerSave").innerText =
-            "-₹0";
-
-        document.getElementById("grandTotal").innerText =
-            "₹0";
-
-        document.getElementById("grandTotal1").innerText =
-            "₹0";
-
-        document.getElementById("bottomTotal").innerText =
-            "₹0";
-
-        offerCount.innerText =
-            "0 / 3 Frames";
-
-        offerText.innerText =
-            "Add 3 frames to unlock FREE SHIPPING";
-
-        offerApply.innerText =
-            "";
-
-        offerApply2.innerText =
-            "";
-        offerApply3.innerText =
-            ``;
-        offerBar.style.width =
-            "0%";
-
-
-        cartBox.classList.remove("open");
-
-        cartOverlay.classList.remove("show");
-
-        document.body.style.overflow = "";
-
-        cartHeader.style.display = "none";
-
-    }
-
-    else {
-
-        cartHeader.style.display = "flex";
-
-    }
-
+  });
 }
-window.addEventListener("DOMContentLoaded", () => {
 
-    renderCart();
 
-});
-function removeItem(id) {
+/* =========================================
+   UPDATE OFFER BAR
+========================================= */
 
-    delete cart[id];
+function updateFrameOfferBar(count) {
+  const offerCount = document.getElementById("offerCount");
+  const offerText = document.getElementById("offerText");
+  const progress = document.getElementById("offerProgressFill");
 
-    saveCart();
+  if (!offerCount || !offerText || !progress) return;
+
+  if (count <= 0) {
+    offerCount.textContent = "Add frames to your cart";
+    offerText.textContent = "Add 3 frames to unlock FREE SHIPPING";
+    progress.style.width = "0%";
+    return;
+  }
+
+  if (count < 3) {
+    const remaining = 3 - count;
+
+    offerCount.textContent = `${count} / 3 Frames`;
+    offerText.textContent =
+      `Add ${remaining} more frame${remaining === 1 ? "" : "s"} to unlock FREE SHIPPING`;
+
+    progress.style.width = `${(count / 3) * 100}%`;
+    return;
+  }
+
+  if (count < 6) {
+    const remaining = 6 - count;
+
+    offerCount.textContent = `${count} / 6 Frames`;
+    offerText.textContent =
+      `Free shipping unlocked! Add ${remaining} more frame${remaining === 1 ? "" : "s"} to get 20% OFF`;
+
+    progress.style.width = `${(count / 6) * 100}%`;
+    return;
+  }
+
+  offerCount.textContent = `${count} Frames`;
+  offerText.textContent = "🎉 20% OFF + FREE SHIPPING unlocked";
+  progress.style.width = "100%";
+}
+
+
+/* =========================================
+   RENDER CART
+========================================= */
+
+function renderCart() {
+  const products = getCartProducts();
+  const count = getCartItemCount();
+  const productTotal = getCartProductTotal();
+  const shipping = getShipping(count);
+  const discount = getFrameDiscount(productTotal, count);
+  const orderTotal = productTotal + shipping - discount;
+
+  const grandTotal = document.getElementById("grandTotal");
+  const popupProductTotal = document.getElementById("cartPopupProductTotal");
+  const popupShipping = document.getElementById("cartPopupShipping");
+  const popupDiscount = document.getElementById("cartPopupDiscount");
+  const popupGrandTotal = document.getElementById("cartPopupGrandTotal");
+
+  if (grandTotal) grandTotal.textContent = `₹${orderTotal}`;
+  if (popupProductTotal) popupProductTotal.textContent = `₹${productTotal}`;
+
+  if (popupShipping) {
+    popupShipping.textContent =
+      count >= 3 ? "FREE" : `₹${shipping}`;
+  }
+
+  if (popupDiscount) {
+    popupDiscount.textContent = discount > 0 ? `−₹${discount}` : "₹0";
+  }
+
+  if (popupGrandTotal) {
+    popupGrandTotal.textContent = `₹${orderTotal}`;
+  }
+
+  updateFrameOfferBar(count);
+
+  const popup = document.getElementById("cartPopup");
+  const emptyBox = document.getElementById("cartPopupEmpty");
+  const normalActions = document.getElementById("cartNormalActions");
+  const checkoutSection = document.getElementById("cartCheckoutSection");
+
+  const checkoutMode =
+    popup && popup.dataset.checkoutMode === "true";
+
+  if (emptyBox) emptyBox.hidden = products.length !== 0;
+
+  if (normalActions) {
+    normalActions.style.display =
+      products.length === 0 || checkoutMode ? "none" : "flex";
+  }
+
+  if (checkoutSection && products.length === 0) {
+    checkoutSection.hidden = true;
+
+    if (popup) popup.dataset.checkoutMode = "false";
+  }
+
+  renderCartPopupProducts(checkoutMode && products.length > 0);
+}
+
+
+/* =========================================
+   OPEN CART POPUP
+========================================= */
+
+function openCartPopup() {
+  if (getCartProducts().length === 0) {
+    showToast("Your cart is empty");
+    return;
+  }
+
+  const popup = document.getElementById("cartPopup");
+  const overlay = document.getElementById("cartOverlay");
+  const title = document.getElementById("cartPopupTitle");
+  const normalActions = document.getElementById("cartNormalActions");
+  const checkoutSection = document.getElementById("cartCheckoutSection");
+
+  if (!popup) return;
+
+  popup.dataset.checkoutMode = "false";
+
+  if (title) title.textContent = "Your Cart";
+  if (normalActions) normalActions.style.display = "flex";
+  if (checkoutSection) checkoutSection.hidden = true;
+
+  popup.classList.add("show");
+  popup.setAttribute("aria-hidden", "false");
+
+  const card = popup.querySelector(".cart-popup");
+  if (card) card.classList.add("show");
+
+  if (overlay) overlay.classList.add("show");
+
+  document.body.classList.add("cart-popup-open");
+
   renderCart();
-updateFrameAddedStatus();
-if (window.updateAccessoryAddedStatus) {
-    updateAccessoryAddedStatus();
 }
 
+
+/* =========================================
+   CLOSE CART POPUP
+========================================= */
+
+function closeCartPopup() {
+  const popup = document.getElementById("cartPopup");
+  const overlay = document.getElementById("cartOverlay");
+
+  if (popup) {
+    popup.classList.remove("show");
+    popup.setAttribute("aria-hidden", "true");
+    popup.dataset.checkoutMode = "false";
+
+    const card = popup.querySelector(".cart-popup");
+    if (card) card.classList.remove("show");
+
+    const checkoutSection = document.getElementById("cartCheckoutSection");
+    const normalActions = document.getElementById("cartNormalActions");
+    const title = document.getElementById("cartPopupTitle");
+
+    if (checkoutSection) checkoutSection.hidden = true;
+    if (normalActions) normalActions.style.display = "flex";
+    if (title) title.textContent = "Your Cart";
+  }
+
+  if (overlay) overlay.classList.remove("show");
+
+  document.body.classList.remove("cart-popup-open");
 }
-function showToast(message){
 
-    const toast = document.getElementById("toast");
 
-    toast.innerText = message;
+/* =========================================
+   ENTER CHECKOUT MODE
+========================================= */
 
-    toast.classList.add("show");
-
-    clearTimeout(window.toastTimer);
-
-    window.toastTimer = setTimeout(function(){
-
-        toast.classList.remove("show");
-
-    },2000);
-
-}
 function checkoutCart() {
+  if (getCartProducts().length === 0) {
+    showToast("Your cart is empty");
+    return;
+  }
 
-    const products = getCartProducts();
+  const popup = document.getElementById("cartPopup");
+  const title = document.getElementById("cartPopupTitle");
+  const normalActions = document.getElementById("cartNormalActions");
+  const checkoutSection = document.getElementById("cartCheckoutSection");
 
-    if (products.length === 0) {
-        showToast("No products in cart");
-        return;
-    }
+  if (!popup || !checkoutSection) return;
 
-    let total = 0;
-    let count = 0;
+  popup.dataset.checkoutMode = "true";
 
-    let message = "*Hello - Diecast.scape*%0A%0A";
+  if (title) title.textContent = "Checkout";
+  if (normalActions) normalActions.style.display = "none";
 
+  checkoutSection.hidden = false;
 
-    // =========================
-    // PRODUCTS
-    // =========================
+  renderCartPopupProducts(true);
 
-    products.forEach(item => {
-
-        const subTotal = item.price * item.qty;
-
-        total += subTotal;
-        count += item.qty;
-
-        message += `• ${item.name}%0A`;
-        message += `₹${item.price} × ${item.qty} = ₹${subTotal}%0A%0A`;
-
-    });
-
-
-    
-
-
-    // Get shipping from new function
-    const shipping = getShipping(count);
-
-
-    
-    let discount = 0;
-
-    
-    
-    if (count >= 6) {
-
-        discount = Math.round(total * 0.20);
-
+  const popupBox = popup.querySelector(".cart-popup-box");
+  if (popupBox) popupBox.scrollTop = 0;
 }
 
-    // =========================
-    // GRAND TOTAL
-    // =========================
 
-    const grandTotal =
-        total + shipping - discount;
+/* =========================================
+   FINAL WHATSAPP ORDER
+========================================= */
 
+function proceedOrderWhatsApp() {
+  const products = getCartProducts();
 
+  if (products.length === 0) {
+    showToast("Your cart is empty");
+    return;
+  }
 
+  const addressInput = document.getElementById("checkoutAddress");
+  const pincodeInput = document.getElementById("checkoutPincode");
+  const phoneInput = document.getElementById("checkoutPhone");
 
+  const address = addressInput ? addressInput.value.trim() : "";
+  const pincode = pincodeInput ? pincodeInput.value.trim() : "";
+  const phone = phoneInput ? phoneInput.value.trim() : "";
 
-    // =========================
-    // WHATSAPP MESSAGE
-    // =========================
+  if (!address) {
+    showToast("Please enter your address");
+    if (addressInput) addressInput.focus();
+    return;
+  }
 
-    message += "━━━━━━━━━━━━━━%0A";
+  if (!/^\d{6}$/.test(pincode)) {
+    showToast("Please enter a valid 6-digit pincode");
+    if (pincodeInput) pincodeInput.focus();
+    return;
+  }
 
-    message += `Total Frames : ${count}%0A`;
+  if (!/^\d{10}$/.test(phone)) {
+    showToast("Please enter a valid 10-digit phone number");
+    if (phoneInput) phoneInput.focus();
+    return;
+  }
 
-    message += `Product Total : ₹${total}%0A`;
+  const count = getCartItemCount();
+  const productTotal = getCartProductTotal();
+  const shipping = getShipping(count);
+  const discount = getFrameDiscount(productTotal, count);
+  const orderTotal = productTotal + shipping - discount;
 
+  let message = "🖼️ *Frames Order - Diecast.scape*\n\n";
 
-    // Show FREE instead of ₹0 for 4+ frames
-    if (count >= 3) {
+  products.forEach(item => {
+    const price = Number(item.price) || 0;
+    const qty = Number(item.qty) || 0;
+    const subtotal = price * qty;
 
-        message += `Shipping : FREE%0A`;
+    message += `• ${item.name}\n`;
+    message += `₹${price} × ${qty} = ₹${subtotal}\n\n`;
+  });
 
-    } else {
+  message += "━━━━━━━━━━━━━━\n";
+  message += `Total Frames : ${count}\n`;
+  message += `Product Total : ₹${productTotal}\n`;
+  message += `Shipping : ${shipping === 0 ? "FREE" : `₹${shipping}`}\n`;
+  message += `Discount : −₹${discount}\n`;
+  message += "━━━━━━━━━━━━━━\n";
+  message += `*Order Total : ₹${orderTotal}*\n\n`;
+  message += "*Delivery Details*\n";
+  message += `Address : ${address}\n`;
+  message += `Pincode : ${pincode}\n`;
+  message += `Phone : ${phone}`;
 
-        message += `Shipping : ₹${shipping}%0A`;
+  const whatsappURL =
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-    }
-
-
-    message += `Discount : - ₹${discount}%0A`;
-
-
-    message += "━━━━━━━━━━━━━━%0A";
-
-    message +=
-        `*Grand Total : ₹${grandTotal}*%0A%0A`;
-
-    message +=
-        "Share me payment details.";
-
-
-    // =========================
-    // OPEN WHATSAPP
-    // =========================
-
-    window.open(
-        "https://wa.me/918792744018?text=" + message,
-        "_blank"
-    );
-
-}
-const cartBox = document.getElementById("cartBox");
-const cartHeader = document.getElementById("cartHeader");
-const cartOverlay = document.getElementById("cartOverlay");
-const checkoutBtn = document.getElementById("checkoutBtn");
-const clearCartBtn = document.getElementById("clearCartBtn");
-cartHeader.addEventListener("click", () => {
-
-    cartBox.classList.toggle("open");
-if(cartBox.classList.contains("open")){
-    cartOverlay.classList.add("show");
-    document.body.style.overflow = "hidden";
-}else{
-    cartOverlay.classList.remove("show");
-    document.body.style.overflow = "";
-}
-    
-
-});
-
-
-checkoutBtn.addEventListener("click", checkoutCart);
-
-clearCartBtn.addEventListener("click", () => {
-
-    if(!Object.keys(cart).length){
-        showToast("Cart is already empty");
-        return;
-    }
-
-    if(confirm("Remove this items?")){
-
-        cart = {};
-
-        saveCart();
-
-        renderCart();
-updateFrameAddedStatus();
-
-if (window.updateAccessoryAddedStatus) {
-    updateAccessoryAddedStatus();
+  window.open(whatsappURL, "_blank");
 }
 
-    }
 
+/* =========================================
+   CLEAR CART
+========================================= */
+
+function clearCartDirectly() {
+  if (getCartProducts().length === 0) {
+    showToast("Cart is already empty");
+    return;
+  }
+
+  cart = {};
+  saveCart();
+
+  const popup = document.getElementById("cartPopup");
+  if (popup) popup.dataset.checkoutMode = "false";
+
+  renderCart();
+  updateFrameAddedStatus();
+  closeCartPopup();
+
+  showToast("Cart cleared");
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
+}
+
+
+/* =========================================
+   EVENT LISTENERS
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  const closeBtn = document.getElementById("cartPopupClose");
+  const overlay = document.getElementById("cartOverlay");
+  const popupCheckoutBtn = document.getElementById("cartPopupCheckoutBtn");
+  const clearCartBtn = document.getElementById("clearCartBtn");
+  const finalWhatsAppBtn = document.getElementById("finalWhatsAppBtn");
+
+  if (checkoutBtn) checkoutBtn.addEventListener("click", openCartPopup);
+  if (closeBtn) closeBtn.addEventListener("click", closeCartPopup);
+  if (overlay) overlay.addEventListener("click", closeCartPopup);
+  if (popupCheckoutBtn) popupCheckoutBtn.addEventListener("click", checkoutCart);
+  if (clearCartBtn) clearCartBtn.addEventListener("click", clearCartDirectly);
+  if (finalWhatsAppBtn) {
+    finalWhatsAppBtn.addEventListener("click", proceedOrderWhatsApp);
+  }
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      const popup = document.getElementById("cartPopup");
+      if (popup && popup.classList.contains("show")) {
+        closeCartPopup();
+      }
+    }
+  });
+
+  renderCart();
+  updateFrameAddedStatus();
 });
