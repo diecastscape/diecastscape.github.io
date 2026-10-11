@@ -127,8 +127,7 @@ function buildSaleHTML(p) {
             '${p.id}',
             '${p.name}',
             ${p.price}
-          );
-          showAccessoryAdded('${p.id}');
+          );showFrameAdded('${p.id}');
         "
       >
         <span class="acc-cart-plus">+</span>
@@ -316,7 +315,9 @@ async function loadSaleProducts() {
     `;
 
   }
-
+if (window.updateFrameAddedStatus) {
+  window.updateFrameAddedStatus();
+}
 }
 
 
