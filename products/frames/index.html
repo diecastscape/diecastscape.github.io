@@ -126,131 +126,171 @@ class="search-bar">
 </div>
 
 
-<!-- ===========================
-SMART CART
-=========================== -->
+<!-- =========================
+     BOTTOM CART BAR
+========================= -->
 
 <div id="cartBox" class="cart-box">
+  <div class="cart-footer">
 
-    <!-- Header -->
-    <div id="cartHeader" class="cart-header">
+    <div class="offer-title">🔥 Add More, Save More</div>
 
-        <div class="cart-grip"></div>
-
-        <div class="cart-title">
-            View Cart
-        </div>
-
+    <div class="offer-progress">
+      <div class="offer-progress-fill" id="offerProgressFill"></div>
     </div>
 
-
-    <!-- Expandable Content -->
-    <div id="cartContent" class="cart-content">
-
-        <div id="cartItems" class="cart-items">
-        </div>
-
-        <button
-            id="clearCartBtn"
-            class="clear-cart">
-            Clear Cart
-        </button>
-
-        <div class="cart-summary">
-          
-            <div class="summary-row">
-                <span>Items</span>
-
-                <span id="summaryTotal">
-                  
-               </span>
-            </div>
-
-            <div class="summary-row">
-                <span>Delivery</span>
-
-                <span id="offerApply3" class="offer-apply"></span>
-
-                <span id="shippingPrice">
-                  
-               </span>
-            </div>
-
-            <div class="summary-row cart-border">
-                <span>Total</span>
-
-                <span id="bottomTotal"> 
-               </span>
-            </div>
-
-            <div class="summary-row">
-                <span>Discount</span>
-
-                <span id="offerApply" class="offer-apply"></span>
-
-                <span id="offerSave"></span>
-            </div>
-         
-            <div class="summary-row cart-border">
-                <span>Order Total</span>
-
-                <span id="grandTotal">
-               </span>
-            </div>
-
-        </div>
-
+    <div class="offer-count" id="offerCount">
+      Add frames to your cart
     </div>
 
-
-    <div class="cart-footer">
-
-        <div>
-
-            <div class="offer-title"> 
-                🔥 Add More, Save More
-            </div>
-
-            <div class="offer-progress"> 
-                <div id="offerBar" class="offer-progress-fill">
-                </div> 
-            </div>
-   
-            <div class="footer-bottom">
-
-                <div> 
-
-                    <div class="offer-count" id="offerCount">
-                    </div> 
-
-                    <div class="offer-text" id="offerText"> 
-                    </div>
-
-                    <div class="price-row">
-
-                        <div id="grandTotal1" class="footer-price">
-                        </div>
-
-                        <div id="offerApply2" class="offer-apply">
-                        </div>
-
-                    </div>
-
-                </div> 
-
-                <button id="checkoutBtn" class="checkout-btn">
-                    Checkout
-                </button> 
-
-            </div> 
-
-        </div>
-
+    <div class="offer-text" id="offerText">
+      Add 3 frames to unlock FREE SHIPPING
     </div>
 
+    <div class="footer-bottom">
+      <div class="grand-total">
+        <strong id="grandTotal">₹0</strong>
+      </div>
+
+      <button type="button" id="checkoutBtn" class="checkout-btn">
+        View Cart
+      </button>
+    </div>
+
+  </div>
 </div>
 
 
+<!-- =========================
+     CART POPUP
+========================= -->
+
+<div id="cartPopup" class="cart-popup-overlay" aria-hidden="true">
+  <div class="cart-popup" role="dialog" aria-modal="true"
+       aria-labelledby="cartPopupTitle">
+
+    <div class="cart-popup-box">
+
+      <div class="cart-popup-header">
+        <div>
+          <div class="cart-popup-label">DIECAST.SCAPE</div>
+          <h2 id="cartPopupTitle" class="cart-popup-title">Your Cart</h2>
+        </div>
+
+        <button type="button" id="cartPopupClose"
+                class="cart-popup-close" aria-label="Close cart">
+          ×
+        </button>
+      </div>
+
+      <div id="cartPopupContent">
+
+        <div id="cartPopupItems" class="cart-popup-items"></div>
+
+        <div class="cart-popup-summary">
+
+          <div class="cart-popup-summary-row">
+            <span>Product Total</span>
+            <strong id="cartPopupProductTotal">₹0</strong>
+          </div>
+
+          <div class="cart-popup-summary-row">
+            <span>Shipping</span>
+            <strong id="cartPopupShipping">₹0</strong>
+          </div>
+
+          <div class="cart-popup-summary-row">
+            <span>Discount</span>
+            <strong id="cartPopupDiscount">₹0</strong>
+          </div>
+
+          <div class="cart-popup-divider"></div>
+
+          <div class="cart-popup-summary-row cart-popup-total-row">
+            <span>Order Total</span>
+            <strong id="cartPopupGrandTotal">₹0</strong>
+          </div>
+
+        </div>
+
+        <!-- NORMAL CART ACTIONS -->
+        <div id="cartNormalActions" class="cart-popup-actions">
+
+          <button type="button" id="clearCartBtn" class="cart-popup-clear">
+            Clear Cart
+          </button>
+
+          <button type="button" id="cartPopupCheckoutBtn"
+                  class="cart-popup-checkout">
+            Checkout
+          </button>
+
+        </div>
+
+        <!-- CHECKOUT SECTION -->
+        <div id="cartCheckoutSection" class="cart-checkout-section" hidden>
+
+          <div class="order-policy">
+            <div class="order-policy-title">Note:</div>
+            <p>We dispatch orders every Thursday after payment is completed.</p>
+            <p>If any product in your order is out of stock after payment, we will either refund the amount for that product or dispatch it once it is back in stock, as you choose.</p>
+          </div>
+
+          <div class="checkout-fields">
+
+            <div class="checkout-field">
+              <label for="checkoutAddress">Address</label>
+              <textarea id="checkoutAddress" rows="3"
+                placeholder="Enter your complete delivery address"
+                autocomplete="street-address"></textarea>
+            </div>
+
+            <div class="checkout-field">
+              <label for="checkoutPincode">Pincode</label>
+              <input type="text" id="checkoutPincode" inputmode="numeric"
+                maxlength="6" placeholder="Enter 6-digit pincode"
+                autocomplete="postal-code">
+            </div>
+
+            <div class="checkout-field">
+              <label for="checkoutPhone">Phone Number</label>
+              <input type="tel" id="checkoutPhone" inputmode="numeric"
+                maxlength="10" placeholder="Enter 10-digit phone number"
+                autocomplete="tel">
+            </div>
+
+          </div>
+
+          <div class="order-popup-action">
+            <button type="button" id="finalWhatsAppBtn"
+                    class="proceed-order-btn">
+              Proceed to order
+            </button>
+
+            <div class="order-whatsapp-note">
+              Order securely through WhatsApp
+            </div>
+          </div>
+
+        </div>
+
+        <!-- EMPTY CART -->
+        <div id="cartPopupEmpty" class="cart-popup-empty" hidden>
+          <div class="cart-popup-empty-icon">🛒</div>
+          <h3>Your cart is empty</h3>
+          <p>Add some frames to continue.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART BACKDROP -->
+<div id="cartOverlay" class="cart-popup-backdrop"></div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
 <footer class="footer">
 
   <div class="footer-title">
