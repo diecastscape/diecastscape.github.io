@@ -1254,7 +1254,7 @@ PRODUCT IMAGE SLIDER
   width: 95%;
   aspect-ratio: 1 / 1;
   display: flex;
-  gap: 0;
+  gap: 2px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -1275,7 +1275,7 @@ PRODUCT IMAGE SLIDER
   max-width: none;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  border-radius: 25px;
+  border-radius: 20px;
   scroll-snap-align: start;
   box-sizing: border-box;
 }
@@ -1288,7 +1288,7 @@ PRODUCT IMAGE SLIDER
   max-width: none;
   object-fit: cover;
   object-position: center;
-  border-radius: 25px;
+  border-radius: 20px;
   background: #000;
 }
 
