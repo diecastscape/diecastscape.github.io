@@ -1239,20 +1239,21 @@ PRODUCT IMAGE SLIDER
 }
 
 
-/* =====================================================
-   PRODUCT IMAGE SLIDER — FULL WIDTH SQUARE
-===================================================== */
+
+/* PRODUCT IMAGE SLIDER — 80% WIDTH, CENTERED */
 
 .slider-wrap {
   position: relative;
   width: 100%;
+  display: flex;
+  justify-content: center;
   box-sizing: border-box;
 }
 
 .slider {
-  display: flex;
-  width: 100%;
+  width: 80%;
   aspect-ratio: 1 / 1;
+  display: flex;
   gap: 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1266,23 +1267,18 @@ PRODUCT IMAGE SLIDER
   display: none;
 }
 
-/* Each image fills 100% of the card width */
-
 .img-box {
   position: relative;
   flex: 0 0 100%;
   width: 100%;
   min-width: 100%;
   max-width: none;
-  height: auto;
   aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 9px;
   scroll-snap-align: start;
   box-sizing: border-box;
 }
-
-/* Image fills the complete square */
 
 .slider img,
 .img-box img {
@@ -1294,25 +1290,21 @@ PRODUCT IMAGE SLIDER
   object-position: center;
   border-radius: 9px;
   background: #000;
-  flex-shrink: 0;
 }
 
-/* Keep image dots visible over the image */
-
+/* IMAGE DOTS */
 .image-dots {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 5px;
+  bottom: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   z-index: 5;
   pointer-events: none;
 }
-
-
 
 
 
