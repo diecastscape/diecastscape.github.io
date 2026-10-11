@@ -112,30 +112,43 @@ async function loadProductSuggestions() {
 }
 
 
-/* =====================================================
-   LOAD CUSTOM SAVED SUGGESTIONS
-===================================================== */
 
-async function loadSavedSuggestions() {
+async function loadProductSuggestions() {
   const snapshot = await getDocs(
-    collection(db, SUGGESTIONS_COLLECTION)
+    collection(db, PRODUCTS_COLLECTION)
   );
 
-  snapshot.forEach(suggestionDoc => {
-    const item = suggestionDoc.data();
+  snapshot.forEach(productDoc => {
+    const product = productDoc.data();
 
-    if (
-      item.field &&
-      Object.prototype.hasOwnProperty.call(
-        ADMIN_FIELDS,
-        item.field
-      )
-    ) {
-      addSuggestion(item.field, item.value);
-    }
+    // Explicitly load Title and Subtitle.
+    addSuggestion("name", product.name);
+    addSuggestion("subtitle", product.subtitle);
+
+    // Load all other fields without changing their behavior.
+    const otherFields = [
+      "dimensions",
+      "flore",
+      "suitableScale",
+      "capacity",
+      "accessories",
+      "rotating",
+      "lighting",
+      "lightingAdapter",
+      "cover",
+      "build",
+      "offerClime",
+      "offerText"
+    ];
+
+    otherFields.forEach(field => {
+      addSuggestion(field, product[field]);
+    });
   });
-}
 
+  console.log("Title suggestions:", suggestions.name);
+  console.log("Subtitle suggestions:", suggestions.subtitle);
+}
 
 /* =====================================================
    SAVE A NEW CUSTOM SUGGESTION
