@@ -41,7 +41,7 @@ const ORDER_STATUSES = [
 
 // Change this if your public tracking page uses another URL.
 const ORDER_PROGRESS_URL =
-  `${window.location.origin}/booked-orders.html`;
+  `${window.location.origin}/booked-orders/`;
 
 // ======================================================
 // HELPERS
