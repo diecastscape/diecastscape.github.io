@@ -851,222 +851,157 @@ export async function loadAdminProducts(type) {
 
         html += `
 
-          <div class="admin-product">
+          
+const valueOrDash = value =>
+  value !== undefined && value !== null && String(value).trim() !== ""
+    ? String(value)
+    : "—";
 
-            <div class="admin-title">
-              ${p.name || "No name"}
-            </div>
+const imageCount = Array.isArray(p.images) ? p.images.length : 0;
 
+const isMainProduct = type === "main";
 
-            <div class="admin-price-row">
+const productInfo = isMainProduct ? `
+  <div class="admin-product-details">
 
-              ${priceHTML}
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Subtitle</span>
+      <span class="admin-detail-value">${valueOrDash(p.subtitle)}</span>
+    </div>
 
-            </div>
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Old price</span>
+      <span class="admin-detail-value admin-old-value">
+        ₹${valueOrDash(p.priceOld)}
+      </span>
+    </div>
 
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">New price</span>
+      <span class="admin-detail-value admin-new-value">
+        ₹${valueOrDash(p.priceNew)}
+      </span>
+    </div>
 
-            <div class="admin-shipping">
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Shipping price</span>
+      <span class="admin-detail-value">
+        ${p.shippingPrice !== undefined && p.shippingPrice !== null
+          ? "₹" + p.shippingPrice
+          : valueOrDash(p.shippingText)}
+      </span>
+    </div>
 
-              ${
-                p.shippingText ||
-                "Shipping charges applicable"
-              }
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Ribbon / offer label</span>
+      <span class="admin-detail-value">${valueOrDash(p.offerClime)}</span>
+    </div>
 
-            </div>
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Offer text</span>
+      <span class="admin-detail-value">${valueOrDash(p.offerText)}</span>
+    </div>
 
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Dimensions</span>
+      <span class="admin-detail-value">${valueOrDash(p.dimensions)}</span>
+    </div>
 
-            <div class="admin-actions">
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Floors</span>
+      <span class="admin-detail-value">${valueOrDash(p.flore)}</span>
+    </div>
 
-              <button
-                onclick="${editFunction}"
-              >
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Suitable scale</span>
+      <span class="admin-detail-value">${valueOrDash(p.suitableScale)}</span>
+    </div>
 
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 256 256"
-                >
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Car capacity</span>
+      <span class="admin-detail-value">${valueOrDash(p.capacity)}</span>
+    </div>
 
-                  <g
-                    transform="
-                      translate(1.4066 1.4066)
-                      scale(2.81)
-                    "
-                  >
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Accessories</span>
+      <span class="admin-detail-value">${valueOrDash(p.accessories)}</span>
+    </div>
 
-                    <path
-                      d="M87.851 6.29
-                      83.71 2.15
-                      C82.324.763
-                      80.48 0
-                      78.521 0
-                      c-1.961 0
-                      -3.804.763
-                      -5.19 2.15
-                      L67.15 8.331
-                      22.822 52.658
-                      c-.074.074
-                      -.134.156
-                      -.194.238
-                      -.016.022
-                      -.036.04
-                      -.052.063
-                      -.087.13
-                      -.155.268
-                      -.208.411
-                      -.004.011
-                      -.012.019
-                      -.015.03
-                      l-6.486 18.178
-                      c-.26.728
-                      -.077 1.54
-                      .47 2.086
-                      .381.382
-                      .893.586
-                      1.415.586
-                      .225 0
-                      .452-.038
-                      .671-.116
-                      l18.177-6.485
-                      c.014-.005
-                      .025-.014
-                      .038-.019
-                      .142-.054
-                      .279-.12
-                      .406-.206
-                      .017-.012
-                      .031-.027
-                      .048-.039
-                      .088-.063
-                      .174-.128
-                      .251-.206
-                      l44.328-44.328
-                      6.182-6.181
-                      c2.861-2.862
-                      2.861-7.518
-                      0-10.38z"
-                      fill="currentColor"
-                    />
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Rotating feature</span>
+      <span class="admin-detail-value">${valueOrDash(p.rotating)}</span>
+    </div>
 
-                    <path
-                      d="M79.388 45.667
-                      c-1.104 0
-                      -2 .896
-                      -2 2v34.804
-                      c0 1.946
-                      -1.584 3.529
-                      -3.53 3.529H7.53
-                      C5.583 86 4 84.417 4 82.471V16.142
-                      c0-1.946 1.583-3.53 3.53-3.53h34.803
-                      c1.104 0 2-.896 2-2
-                      s-.896-2-2-2H7.53
-                      C3.378 8.612 0 11.99 0 16.142v66.329
-                      C0 86.622 3.378 90 7.53 90h66.328
-                      c4.152 0 7.53-3.378 7.53-7.529V47.667
-                      c0-1.105-.896-2-2-2z"
-                      fill="currentColor"
-                    />
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Lighting</span>
+      <span class="admin-detail-value">${valueOrDash(p.lighting)}</span>
+    </div>
 
-                  </g>
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Lighting / adapter</span>
+      <span class="admin-detail-value">${valueOrDash(p.lightingAdapter)}</span>
+    </div>
 
-                </svg>
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Acrylic cover</span>
+      <span class="admin-detail-value">${valueOrDash(p.cover)}</span>
+    </div>
 
-              </button>
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Build details</span>
+      <span class="admin-detail-value">${valueOrDash(p.build)}</span>
+    </div>
 
+    <div class="admin-detail-row admin-image-count">
+      <span class="admin-detail-label">Product images</span>
+      <span class="admin-detail-value">${imageCount} image${imageCount === 1 ? "" : "s"}</span>
+    </div>
 
-              <button
-                onclick="${deleteFunction}"
-              >
+    <div class="admin-description">
+      <span class="admin-detail-label">Product description</span>
+      <div class="admin-description-content">
+        ${p.detailsHTML || "No description added"}
+      </div>
+    </div>
 
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 256 256"
-                >
+  </div>
+` : `
+  <div class="admin-product-details">
+    <div class="admin-detail-row">
+      <span class="admin-detail-label">Shipping</span>
+      <span class="admin-detail-value">
+        ${valueOrDash(p.shippingText)}
+      </span>
+    </div>
+  </div>
+`;
 
-                  <g
-                    transform="
-                      translate(1.4066 1.4066)
-                      scale(2.81)
-                    "
-                  >
+html += `
+  <div class="admin-product">
 
-                    <path
-                      d="M66.911 90H23.089
-                      c-1.589 0-2.902-1.238-2.995-2.824
-                      l-3.69-63.018
-                      c-.048-.825.246-1.633.813-2.234
-                      .567-.601 1.356-.941 2.183-.941h51.201
-                      c.826 0 1.615.341 2.183.941
-                      .566.601.86 1.409.813 2.234
-                      l-3.689 63.018
-                      C69.813 88.762 68.5 90 66.911 90z"
-                      fill="currentColor"
-                    />
+    <div class="admin-product-heading">
+      <div class="admin-title">${valueOrDash(p.name)}</div>
+      <div class="admin-product-type">
+        ${isMainProduct ? "MAIN PRODUCT" : type.toUpperCase()}
+      </div>
+    </div>
 
-                    <path
-                      d="M75.977 26.983
-                      H14.023c-1.657 0-3-1.343-3-3v-3.869
-                      c0-5.645 4.592-10.237 10.237-10.237h47.479
-                      c5.645 0 10.237 4.592 10.237 10.237v3.869
-                      c0 1.657-1.343 3-3 3z"
-                      fill="currentColor"
-                    />
+    <div class="admin-price-row">
+      ${priceHTML}
+    </div>
 
-                    <path
-                      d="M56.913 15.876H33.086c-1.657 0-3-1.343-3-3
-                      C30.086 5.776 35.863 0 42.963 0h4.074
-                      c7.1 0 12.876 5.776 12.876 12.876
-                      c0 1.657-1.343 3-3 3z"
-                      fill="currentColor"
-                    />
+    ${productInfo}
 
-                    <path
-                      d="M55.613 76.021
-                      c-.06 0-.118-.002-.179-.005
-                      -1.653-.097-2.916-1.517-2.819-3.171
-                      l2.146-36.658
-                      c.098-1.654 1.509-2.911 3.171-2.82
-                      1.653.097 2.916 1.517 2.819 3.17
-                      l-2.146 36.659
-                      c-.093 1.594-1.416 2.825-2.992 2.825z"
-                      fill="currentColor"
-                    />
+    <div class="admin-actions">
+      <button onclick="${editFunction}">Edit product</button>
+      <button onclick="${deleteFunction}" class="admin-delete-btn">
+        Delete product
+      </button>
+    </div>
 
-                    <path
-                      d="M34.386 76.021
-                      c-1.577 0-2.898-1.23-2.992-2.824
-                      l-2.146-36.659
-                      c-.097-1.654 1.166-3.073 2.82-3.17
-                      1.644-.088 3.073 1.166 3.17 2.82
-                      l2.146 36.658
-                      c.097 1.658-1.166 3.074-2.819 3.171
-                      -.06.002-.12.004-.179.004z"
-                      fill="currentColor"
-                    />
-
-                    <path
-                      d="M45 76.021
-                      c-1.657 0-3-1.343-3-3V36.362
-                      c0-1.657 1.343-3 3-3s3 1.343 3 3v36.658
-                      c0 1.658-1.343 3.001-3 3.001z"
-                      fill="currentColor"
-                    />
-
-                  </g>
-
-                </svg>
-
-              </button>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    );
+  </div>
+`;
+                  
 
 
     if (!html) {
