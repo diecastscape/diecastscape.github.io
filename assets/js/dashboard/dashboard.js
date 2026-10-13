@@ -816,7 +816,7 @@ export async function loadAdminProducts(type) {
             ${priceHTML}
           </div>
 
-          ${detailsHTML}
+          
 
           <div class="admin-actions">
             <button type="button" onclick="${editFunction}">
