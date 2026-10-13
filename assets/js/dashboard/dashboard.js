@@ -640,10 +640,11 @@ window.toggleList =
   };
 
 
-// ======================================================
-// LOAD ADMIN PRODUCTS
-// ======================================================
 
+
+// ======================================================
+// LOAD ADMIN PRODUCTS — FIXED
+// ======================================================
 
 export async function loadAdminProducts(type) {
   const containers = {
@@ -652,23 +653,26 @@ export async function loadAdminProducts(type) {
     accessories: "accessoriesProducts"
   };
 
-  const container = document.getElementById(containers[type]);
-  if (!container) return;
-
-  const addWrap = document.getElementById("add-" + type);
-  if (addWrap) addWrap.style.display = "none";
-
-  container.style.display = "block";
-  container.innerHTML = `<div class="product-list-loading">Loading products...</div>`;
-
   const collections = {
     main: "products",
     frames: "frameProducts",
     accessories: "accessoriesProducts"
   };
 
+  const container = document.getElementById(containers[type]);
+  if (!container || !collections[type]) return;
+
+  const addWrap = document.getElementById("add-" + type);
+  if (addWrap) addWrap.style.display = "none";
+
+  container.style.display = "block";
+  container.innerHTML =
+    '<div class="product-list-loading">Loading products...</div>';
+
   const value = v =>
-    v !== undefined && v !== null && String(v).trim() !== ""
+    v !== undefined &&
+    v !== null &&
+    String(v).trim() !== ""
       ? String(v)
       : "—";
 
@@ -695,14 +699,27 @@ export async function loadAdminProducts(type) {
       const id = productDoc.id;
       const isMain = type === "main";
 
+      // Prices
       const priceHTML = isMain
-        ? `<div class="price-stack">
-             <span class="admin-old-price">₹${safe(value(p.priceOld))}</span>
-             <span class="admin-price">₹${safe(value(p.priceNew))}</span>
-           </div>`
-        : `<div class="admin-price">₹${safe(value(p.price))}</div>`;
+        ? `
+          <div class="price-stack">
+            <span class="admin-old-price">
+              ${p.priceOld != null ? "₹" + safe(p.priceOld) : "—"}
+            </span>
+            <span class="admin-price">
+              ${p.priceNew != null ? "₹" + safe(p.priceNew) : "—"}
+            </span>
+          </div>
+        `
+        : `
+          <div class="admin-price">
+            ${p.price != null ? "₹" + safe(p.price) : "—"}
+          </div>
+        `;
 
-      let editFunction, deleteFunction;
+      // Existing edit/delete functions
+      let editFunction;
+      let deleteFunction;
 
       if (type === "frames") {
         editFunction = `editFrameProduct('${id}')`;
@@ -715,12 +732,17 @@ export async function loadAdminProducts(type) {
         deleteFunction = `deleteProduct('${type}','${id}')`;
       }
 
-      let details = "";
+      // Product information rows
+      let rows = [];
 
       if (isMain) {
-        const rows = [
-          
-          ["Shipping price", p.shippingPrice == null ? p.shippingText : "₹" + p.shippingPrice],
+        const shipping =
+          p.shippingPrice != null
+            ? "₹" + p.shippingPrice
+            : value(p.shippingText);
+
+        rows = [
+          ["Shipping price", shipping],
           ["Ribbon / offer label", p.offerClime],
           ["Offer text", p.offerText],
           ["Dimensions", p.dimensions],
@@ -733,37 +755,96 @@ export async function loadAdminProducts(type) {
           ["Lighting / adapter", p.lightingAdapter],
           ["Acrylic cover", p.cover],
           ["Build details", p.build],
-          ["Total product images", Array.isArray(p.images) ? p.images.length : 0]
+          [
+            "Total product images",
+            Array.isArray(p.images) ? p.images.length : 0
+          ]
         ];
+      } else {
+        rows = [
+          [
+            "Shipping price",
+            p.shippingPrice != null
+              ? "₹" + p.shippingPrice
+              : value(p.shippingText)
+          ],
+          [
+            "Total product images",
+            Array.isArray(p.images) ? p.images.length : 0
+          ]
+        ];
+      }
 
-        let details = "";
+      // IMPORTANT: Convert rows into visible HTML
+      const detailsHTML = `
+        <div class="admin-product-details">
+          ${rows.map(([label, val]) => `
+            <div class="admin-detail-row">
+              <span class="admin-detail-label">${safe(label)}</span>
+              <span class="admin-detail-value">${safe(value(val))}</span>
+            </div>
+          `).join("")}
 
+          ${isMain ? `
+            <div class="admin-description">
+              <span class="admin-detail-label">Product description</span>
+              <div class="admin-description-content">
+                ${p.detailsHTML || "No description added"}
+              </div>
+            </div>
+          ` : ""}
+        </div>
+      `;
+
+      // Render ALL product types, not only main products
       html += `
         <div class="admin-product">
+
           <div class="admin-product-heading">
             <div class="admin-title">${safe(value(p.name))}</div>
-            <div class="admin-product-type">${safe(value(p.subtitle))}</div>
-                      </div>
+            ${p.subtitle ? `
+              <div class="admin-product-subtitle">
+                ${safe(p.subtitle)}
+              </div>
+            ` : ""}
+            <div class="admin-product-type">
+              ${isMain ? "MAIN PRODUCT" : safe(type.toUpperCase())}
+            </div>
+          </div>
 
-          <div class="admin-price-row">${priceHTML}</div>
+          <div class="admin-price-row">
+            ${priceHTML}
+          </div>
 
-          ${details}
+          ${detailsHTML}
 
           <div class="admin-actions">
-            <button onclick="${editFunction}">Edit product</button>
-            <button onclick="${deleteFunction}" class="admin-delete-btn">Delete product</button>
+            <button type="button" onclick="${editFunction}">
+              Edit product
+            </button>
+            <button
+              type="button"
+              onclick="${deleteFunction}"
+              class="admin-delete-btn"
+            >
+              Delete product
+            </button>
           </div>
+
         </div>
       `;
     });
 
-    container.innerHTML = html || "<p>No products</p>";
+    container.innerHTML = html || "<p>No products found.</p>";
 
   } catch (error) {
     console.error("Error loading products:", error);
-    container.innerHTML = "<p>Error loading products. Check the console.</p>";
+    container.innerHTML =
+      "<p>Error loading products. Check the browser console.</p>";
   }
 }
+
+
 
 // ======================================================
 // CANCEL EDIT
