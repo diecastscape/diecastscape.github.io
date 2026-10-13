@@ -160,13 +160,13 @@ textarea {
 }
 
 input {
-  margin: 8px 0;
+  margin: 3px 0;
   padding: 10px;
 }
 
 textarea {
   height: 140px;
-  margin: 8px 0;
+  margin: 3px 0;
   padding: 10px;
   resize: vertical;
 }
@@ -373,8 +373,8 @@ button:active {
 ========================================= */
 
 h5 {
-  margin-top: 16px;
-  margin-bottom: 4px;
+  margin-top: 9px;
+  margin-bottom: 1px;
   color: var(--text);
 }
 
