@@ -719,9 +719,7 @@ export async function loadAdminProducts(type) {
 
       if (isMain) {
         const rows = [
-          ["Subtitle", p.subtitle],
-          ["Old price", p.priceOld == null ? "—" : "₹" + p.priceOld],
-          ["New price", p.priceNew == null ? "—" : "₹" + p.priceNew],
+          
           ["Shipping price", p.shippingPrice == null ? p.shippingText : "₹" + p.shippingPrice],
           ["Ribbon / offer label", p.offerClime],
           ["Offer text", p.offerText],
@@ -738,40 +736,14 @@ export async function loadAdminProducts(type) {
           ["Total product images", Array.isArray(p.images) ? p.images.length : 0]
         ];
 
-        details = `
-          <div class="admin-product-details">
-            ${rows.map(([label, val]) => `
-              <div class="admin-detail-row">
-                <span class="admin-detail-label">${safe(label)}</span>
-                <span class="admin-detail-value">${safe(value(val))}</span>
-              </div>
-            `).join("")}
-
-            <div class="admin-description">
-              <span class="admin-detail-label">Product description</span>
-              <div class="admin-description-content">
-                ${p.detailsHTML || "No description added"}
-              </div>
-            </div>
-          </div>
-        `;
-      } else {
-        details = `
-          <div class="admin-product-details">
-            <div class="admin-detail-row">
-              <span class="admin-detail-label">Shipping</span>
-              <span class="admin-detail-value">${safe(value(p.shippingText))}</span>
-            </div>
-          </div>
-        `;
-      }
+        let details = "";
 
       html += `
         <div class="admin-product">
           <div class="admin-product-heading">
             <div class="admin-title">${safe(value(p.name))}</div>
-            <div class="admin-product-type">${isMain ? "MAIN PRODUCT" : safe(type.toUpperCase())}</div>
-          </div>
+            <div class="admin-product-type">${safe(value(p.subtitle))}</div>
+                      </div>
 
           <div class="admin-price-row">${priceHTML}</div>
 
