@@ -785,14 +785,6 @@ export async function loadAdminProducts(type) {
             </div>
           `).join("")}
 
-          ${isMain ? `
-            <div class="admin-description">
-              <span class="admin-detail-label">Product description</span>
-              <div class="admin-description-content">
-                ${p.detailsHTML || "No description added"}
-              </div>
-            </div>
-          ` : ""}
         </div>
       `;
 
@@ -816,7 +808,7 @@ export async function loadAdminProducts(type) {
             ${priceHTML}
           </div>
 
-          
+          ${detailsHTML}
 
           <div class="admin-actions">
             <button type="button" onclick="${editFunction}">
