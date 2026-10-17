@@ -967,209 +967,144 @@ function renderCheckoutProducts() {
 }
 
 
+
+
 /* =========================================
    FINAL WHATSAPP ORDER
 ========================================= */
 
 function proceedOrderWhatsApp() {
 
-  const products =
-    getCartProducts();
+  const products = getCartProducts();
 
-  const total =
-    getCartProductTotal();
+  const total = getCartProductTotal();
+  const shipping = getShipping(total);
+  const orderTotal = total + shipping;
 
-  const shipping =
-    getShipping(total);
-
-  const orderTotal =
-    total + shipping;
-
-
-  /*
-    Minimum order check.
-  */
-
+  /* EMPTY CART CHECK */
   if (products.length === 0) {
-
-    showToast(
-      "Your cart is empty"
-    );
-
+    showToast("Your cart is empty");
     return;
   }
 
-
+  /* MINIMUM ORDER CHECK */
   if (total < MIN_CART_VALUE) {
-
-    showToast(
-      `Minimum order value is ₹${MIN_CART_VALUE}`
-    );
-
+    showToast(`Minimum order value is ₹${MIN_CART_VALUE}`);
     return;
   }
 
+  /* GET DELIVERY DETAILS */
+  const addressInput = document.getElementById("checkoutAddress");
+  const pincodeInput = document.getElementById("checkoutPincode");
+  const phoneInput = document.getElementById("checkoutPhone");
 
-  /*
-    GET DELIVERY DETAILS
-  */
+  const address = addressInput ? addressInput.value.trim() : "";
+  const pincode = pincodeInput ? pincodeInput.value.trim() : "";
+  const phone = phoneInput ? phoneInput.value.trim() : "";
 
-  const addressInput =
-    document.getElementById(
-      "checkoutAddress"
-    );
-
-  const pincodeInput =
-    document.getElementById(
-      "checkoutPincode"
-    );
-
-  const phoneInput =
-    document.getElementById(
-      "checkoutPhone"
-    );
-
-
-  const address =
-    addressInput
-      ? addressInput.value.trim()
-      : "";
-
-  const pincode =
-    pincodeInput
-      ? pincodeInput.value.trim()
-      : "";
-
-  const phone =
-    phoneInput
-      ? phoneInput.value.trim()
-      : "";
-
-
-  /*
-    VALIDATION
-  */
-
+  /* VALIDATION */
   if (!address) {
-
-    showToast(
-      "Please enter your address"
-    );
-
-    if (addressInput) {
-      addressInput.focus();
-    }
-
+    showToast("Please enter your address");
+    if (addressInput) addressInput.focus();
     return;
   }
-
 
   if (!/^\d{6}$/.test(pincode)) {
-
-    showToast(
-      "Please enter a valid 6-digit pincode"
-    );
-
-    if (pincodeInput) {
-      pincodeInput.focus();
-    }
-
+    showToast("Please enter a valid 6-digit pincode");
+    if (pincodeInput) pincodeInput.focus();
     return;
   }
-
 
   if (!/^\d{10}$/.test(phone)) {
-
-    showToast(
-      "Please enter a valid 10-digit phone number"
-    );
-
-    if (phoneInput) {
-      phoneInput.focus();
-    }
-
+    showToast("Please enter a valid 10-digit phone number");
+    if (phoneInput) phoneInput.focus();
     return;
   }
 
+  /* =========================================
+     GENERATE PRODUCT CODES
+     Example: #TR05 + quantity 3 = #TR0503
+  ========================================= */
+
+  const orderItems = [];
+
+  for (const item of products) {
+
+    const qty = Math.floor(Number(item.qty) || 0);
+    const price = Number(item.price) || 0;
+
+    if (qty < 1) continue;
+
+    // Base code saved with the product
+    const baseCode = String(item.productCode || "")
+      .trim()
+      .toUpperCase();
+
+    // Require a base code such as #TR05
+    if (!/^#[A-Z0-9]{4}$/.test(baseCode)) {
+      showToast(
+        `Missing or invalid product code for ${item.name}. Please update its productCode first.`
+      );
+      return;
+    }
+
+    // Current format supports quantities 1–99
+    if (qty > 99) {
+      showToast(
+        `Quantity for ${item.name} cannot exceed 99 in this code format`
+      );
+      return;
+    }
+
+    // Add quantity as two digits
+    const generatedCode =
+      baseCode + String(qty).padStart(2, "0");
+
+    orderItems.push({
+      name: item.name,
+      quantityText: item.quantityText || "Quantity",
+      qty: qty,
+      price: price,
+      subtotal: price * qty,
+      code: generatedCode
+    });
+  }
+
+  if (orderItems.length === 0) {
+    showToast("Your cart has no valid products");
+    return;
+  }
 
   /* =========================================
      BUILD WHATSAPP MESSAGE
   ========================================= */
 
-  let message =
-    "🛒 *Accessories Order - Diecast.scape*\n\n";
+  let message = "🛒 *Accessories Order - Diecast.scape*\n\n";
 
+  orderItems.forEach(item => {
 
-  products.forEach(item => {
-
-    const price =
-      Number(item.price) || 0;
-
-    const qty =
-      Number(item.qty) || 0;
-
-    const subtotal =
-      price * qty;
-
-    const quantityText =
-      item.quantityText ||
-      "Quantity";
-
-
-    message +=
-      `• ${item.name}\n`;
-
-    message +=
-      `${quantityText} × ${qty} qty\n`;
-
-    message +=
-      `₹${price} × ${qty} = ₹${subtotal}\n\n`;
+    message += `• ${item.name}\n`;
+    message += `${item.quantityText} × ${item.qty} qty - ${item.code}\n`;
+    message += `₹${item.price} × ${item.qty} = ₹${item.subtotal}\n\n`;
 
   });
 
+  message += "━━━━━━━━━━━━━━\n";
+  message += `Product Total : ₹${total}\n`;
+  message += `Shipping : ${shipping === 0 ? "FREE" : `₹${shipping}`}\n`;
+  message += "━━━━━━━━━━━━━━\n";
+  message += `*Order Total : ₹${orderTotal}*\n\n`;
 
-  message +=
-    "━━━━━━━━━━━━━━\n";
+  message += "*Delivery Details*\n";
+  message += `Address : ${address}\n`;
+  message += `Pincode : ${pincode}\n`;
+  message += `Phone : ${phone}`;
 
-  message +=
-    `Product Total : ₹${total}\n`;
-
-  message +=
-    `Shipping : ${shipping === 0 ? "FREE" : `₹${shipping}`}\n`;
-
-  message +=
-    "━━━━━━━━━━━━━━\n";
-
-  message +=
-    `*Order Total : ₹${orderTotal}*\n\n`;
-
-  message +=
-    "*Delivery Details*\n";
-
-  message +=
-    `Address : ${address}\n`;
-
-  message +=
-    `Pincode : ${pincode}\n`;
-
-  message +=
-    `Phone : ${phone}`;
-
-
-  /*
-    DIRECT WHATSAPP REDIRECT.
-    No confirmation popup.
-  */
-
+  /* OPEN WHATSAPP */
   const whatsappURL =
     `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-
-  window.open(
-    whatsappURL,
-    "_blank"
-  );
-
+  window.open(whatsappURL, "_blank");
 }
 
 function clearCartDirectly() {
