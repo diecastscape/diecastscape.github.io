@@ -36,6 +36,7 @@ function getCartProducts() {
 }
 
 
+
 /* =========================================
    ADD PRODUCT INFO
 ========================================= */
@@ -44,33 +45,32 @@ function addProductInfo(
   id,
   name,
   price,
-  quantityText = ""
+  quantityText = "",
+  productCode = ""
 ) {
-
   if (!cart[id]) {
-
     cart[id] = {
       id: id,
       name: name,
       price: Number(price) || 0,
       qty: 1,
-      quantityText: quantityText || ""
+      quantityText: quantityText || "",
+      productCode: productCode || ""
     };
-
   } else {
-
     cart[id].qty += 1;
 
     if (quantityText) {
       cart[id].quantityText = quantityText;
     }
 
+    if (productCode) {
+      cart[id].productCode = productCode;
+    }
   }
 
   saveCart();
-
   renderCart();
-
   showToast("Added to cart");
 }
 
@@ -84,17 +84,17 @@ function changeAccessoryQty(
   name,
   price,
   change,
-  quantityText = ""
+  quantityText = "",
+  productCode = ""
 ) {
-
   if (!cart[id]) {
-
     if (change > 0) {
       addProductInfo(
         id,
         name,
         price,
-        quantityText
+        quantityText,
+        productCode
       );
     }
 
@@ -107,15 +107,17 @@ function changeAccessoryQty(
     cart[id].quantityText = quantityText;
   }
 
+  if (productCode) {
+    cart[id].productCode = productCode;
+  }
+
   if (cart[id].qty <= 0) {
     delete cart[id];
   }
 
   saveCart();
-
   renderCart();
 }
-
 
 /* =========================================
    UPDATE ACCESSORY QUANTITY
