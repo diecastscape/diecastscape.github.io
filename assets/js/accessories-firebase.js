@@ -1,3 +1,4 @@
+
 import { db } from "./firebase-init.js";
 
 import {
@@ -8,528 +9,280 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ==========================================
+// HELPERS
+// ==========================================
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function escapeJS(value) {
+  return String(value ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, "\\r")
+    .replace(/\n/g, "\\n");
+}
+
+// ==========================================
 // BUILD ACCESSORY PRODUCT CARD
 // ==========================================
 
 function buildSaleHTML(p) {
+  const images = Array.isArray(p.images) ? p.images : [];
 
-  let imgs = "";
+  const productName = p.name || "";
+  const quantityText = p.quantity || "";
+  const subtitleText = p.subtitle || "";
+  const price = Number(p.price) || 0;
 
+  // All stock data now comes from accessoriesProducts.
+  const stockValue = Number(p.stock);
+  const hasKnownStock =
+    p.stock !== undefined &&
+    p.stock !== null &&
+    p.stock !== "" &&
+    Number.isFinite(stockValue);
 
-
-  // ==========================================
-  // OUT OF STOCK CHECK
-  // ==========================================
-
+  // Missing stock does not automatically mean out of stock.
   const isOutOfStock =
-    p.stockout &&
-    String(p.stockout).trim() !== "";
-
-
-
-  // ==========================================
-  // OUT OF STOCK RIBBON
-  // ==========================================
+    hasKnownStock && stockValue <= 0;
 
   const offerRibbon = isOutOfStock
-    ? `
-      <div class="product-offer-ribbon2">
-        <span>${p.stockout}</span>
-      </div>
-    `
+    ? `<div class="product-offer-ribbon2">
+         <span>Out of Stock</span>
+       </div>`
     : "";
 
+  const safeId = escapeHTML(p.id);
+  const safeName = escapeHTML(productName);
+  const safeQuantity = escapeHTML(quantityText);
+  const safeSubtitle = escapeHTML(subtitleText);
 
+  const cartId = escapeJS(p.id);
+  const cartName = escapeJS(productName);
+  const cartQuantity = escapeJS(quantityText);
+
+  // Base code saved in Firestore, e.g. #TR05.
+  const cartProductCode = escapeJS(
+    String(p.productCode || "").trim().toUpperCase()
+  );
 
   // ==========================================
   // PRODUCT IMAGES
   // ==========================================
 
-  if (Array.isArray(p.images)) {
+  const imgs = images.map(im => `
+    <div class="acc-img-box">
+      <div class="acc-img-loader"></div>
 
-    p.images.forEach(im => {
+      <img
+        src="/images/accessories/${encodeURIComponent(String(im))}.webp"
+        alt="${safeName}"
+        loading="lazy"
+        onload="this.previousElementSibling?.remove();this.style.opacity='1'"
+        onerror="this.previousElementSibling?.remove();this.style.opacity='1'"
+        style="opacity:0"
+        onclick="openLightbox(this.src)"
+      >
+    </div>
+  `).join("");
 
-      imgs += `
-        <div class="acc-img-box">
-
-          <div class="acc-img-loader"></div>
-
-          <img
-            src="/images/accessories/${im}.webp"
-            alt="${p.name || ""}"
-            loading="lazy"
-            onload="
-              this.previousElementSibling.remove();
-              this.style.opacity='1';
-            "
-            style="opacity:0"
-            onclick="openLightbox(this.src)"
-          >
-
-        </div>
-      `;
-
-    });
-
-  }
-
-
+  const dots = images.length > 1
+    ? `<div class="acc-image-dots">
+        ${images.map((_, i) => `
+          <span class="acc-image-dot ${i === 0 ? "active" : ""}"></span>
+        `).join("")}
+      </div>`
+    : "";
 
   // ==========================================
-  // PRODUCT NAME
+  // ADD BUTTON
   // ==========================================
 
-  const productName =
-    p.name || "";
-
-
-
-  // ==========================================
-  // FIREBASE QUANTITY
-  // Example: Set of 5
-  // ==========================================
-
-  const quantityText =
-    p.quantity || "";
-
-
-
-  // ==========================================
-  // SUBTITLE
-  // ==========================================
-
-  const subtitleText =
-    p.subtitle || "";
-
-
-
-  // ==========================================
-  // PRODUCT CARD
-  // ==========================================
-
-  return `
-
-    <div class="acc-card">
-
-      ${offerRibbon}
-
-
-
-      <!-- PRODUCT NAME -->
-
-      <div class="acc-name">
-        ${productName}
-      </div>
-
-
-
-      <!-- FIREBASE QUANTITY -->
-
-      ${
-        quantityText
-          ? `
-            <div class="acc-quantity">
-              ${quantityText}
-            </div>
-          `
-          : ""
-      }
-
-
-
-      <!-- SUBTITLE -->
-
-      ${
-        subtitleText
-          ? `
-            <div class="acc-subtitle">
-              ${subtitleText}
-            </div>
-          `
-          : ""
-      }
-
-
-
-      <!-- PRODUCT IMAGE -->
-
-      <div class="acc-image-wrapper">
-
-        <div class="acc-image-area">
-          ${imgs}
-        </div>
-
-        ${
-          p.images.length > 1
-            ? `
-              <div class="acc-image-dots">
-
-                ${p.images.map((_, i) => `
-                  <span
-                    class="acc-image-dot ${i === 0 ? "active" : ""}"
-                  ></span>
-                `).join("")}
-
-              </div>
-            `
-            : ""
-        }
-
-      </div>
-
-
-
-      <!-- PRICE -->
-
-      <div class="acc-price-row">
-
-        <span class="acc-price">
-          ₹${Number(p.price)}/-
-        </span>
-
-      </div>
-
-
-
-      <!-- ======================================
-           CART CONTROLS
-      ======================================= -->
-
-      <div class="cart-controls">
-
-
-
-        <!-- MINUS -->
-
-        <button
-          class="maines-cart-btn"
-          onclick="changeAccessoryQty(
-            '${String(p.id).replace(/'/g, "\\'")}',
-            '${String(p.name || "").replace(/'/g, "\\'")}',
-            ${Number(p.price)},
-            -1,
-            '${String(p.quantity || "").replace(/'/g, "\\'")}'
-          )"
-        >
-          −
-        </button>
-
-
-
-        <!-- QUANTITY -->
-
-        <span
-          class="qty"
-          id="qty-${p.id}"
-        >
-          0
-        </span>
-
-
-
-        <!-- ADD -->
-${
-  isOutOfStock
+  const addButton = isOutOfStock
     ? `
       <button
         class="add-cart-btn out-of-stock-btn"
         type="button"
-        onclick="showToast('Can\\'t add-out of stock')"
+        onclick="showToast('This product is out of stock')"
         aria-disabled="true"
-      >
-        Add
-      </button>
+      >Out of Stock</button>
     `
     : `
-        
-              <button
-                class="add-cart-btn"
-                type="button"
-                onclick="changeAccessoryQty(
-                  '${String(p.id).replace(/'/g, "\\'")}',
-                  '${String(p.name || "").replace(/'/g, "\\'")}',
-                  ${Number(p.price)},
-                  1,
-                  '${String(p.quantity || "").replace(/'/g, "\\'")}'
-                )"
-              >
-                Add
-              </button>
-            `
-        }
+      <button
+        class="add-cart-btn"
+        type="button"
+        onclick="changeAccessoryQty(
+          '${cartId}',
+          '${cartName}',
+          ${price},
+          1,
+          '${cartQuantity}',
+          '${cartProductCode}'
+        )"
+      >Add</button>
+    `;
 
+  // ==========================================
+  // COMPLETE PRODUCT CARD
+  // ==========================================
 
+  return `
+    <div class="acc-card">
+      ${offerRibbon}
 
+      <div class="acc-name">${safeName}</div>
+
+      ${quantityText
+        ? `<div class="acc-quantity">${safeQuantity}</div>`
+        : ""}
+
+      ${subtitleText
+        ? `<div class="acc-subtitle">${safeSubtitle}</div>`
+        : ""}
+
+      <div class="acc-image-wrapper">
+        <div class="acc-image-area">${imgs}</div>
+        ${dots}
       </div>
 
+      <div class="acc-price-row">
+        <span class="acc-price">₹${price}/-</span>
+      </div>
 
+      <div class="cart-controls">
 
+        <button
+          class="maines-cart-btn"
+          type="button"
+          onclick="changeAccessoryQty(
+            '${cartId}',
+            '${cartName}',
+            ${price},
+            -1,
+            '${cartQuantity}',
+            '${cartProductCode}'
+          )"
+          aria-label="Decrease ${safeName} quantity"
+        >−</button>
+
+        <span class="qty" id="qty-${safeId}">0</span>
+
+        ${addButton}
+
+      </div>
     </div>
-
   `;
-
 }
 
-
-
-
-
 // ==========================================
-// UPDATE ACCESSORY IMAGE DOTS
+// ACCESSORY IMAGE DOTS
 // ==========================================
 
 function initAccessoryImageDots() {
-
-  document
-    .querySelectorAll(".acc-image-wrapper")
+  document.querySelectorAll(".acc-image-wrapper")
     .forEach(wrapper => {
+      const slider = wrapper.querySelector(".acc-image-area");
+      const dots = wrapper.querySelectorAll(".acc-image-dot");
 
-      const slider =
-        wrapper.querySelector(".acc-image-area");
+      if (!slider || dots.length <= 1) return;
 
-      const dots =
-        wrapper.querySelectorAll(".acc-image-dot");
+      slider.addEventListener("scroll", () => {
+        const slideWidth = slider.clientWidth;
 
-      if (!slider || dots.length <= 1) {
-        return;
-      }
+        if (!slideWidth) return;
 
-      slider.addEventListener(
-        "scroll",
-        () => {
+        const index = Math.round(
+          slider.scrollLeft / slideWidth
+        );
 
-          const slideWidth =
-            slider.clientWidth;
-
-          if (!slideWidth) {
-            return;
-          }
-
-          const index =
-            Math.round(
-              slider.scrollLeft / slideWidth
-            );
-
-          dots.forEach((dot, i) => {
-
-            dot.classList.toggle(
-              "active",
-              i === index
-            );
-
-          });
-
-        },
-        {
-          passive: true
-        }
-      );
-
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === index);
+        });
+      }, { passive: true });
     });
-
 }
 
 // ==========================================
-// LOAD ACCESSORIES FROM FIREBASE
+// LOAD ACCESSORIES FROM ONE COLLECTION
 // ==========================================
 
 async function loadSaleProducts() {
-
-  const container =
-    document.getElementById(
-      "sale-main"
-    );
-
-  const loader =
-    document.getElementById(
-      "productsLoader"
-    );
-
-
-  // ==========================================
-  // SAFETY CHECK
-  // ==========================================
+  const container = document.getElementById("sale-main");
+  const loader = document.getElementById("productsLoader");
 
   if (!container) {
-
-    console.error(
-      "Accessories container #sale-main not found."
-    );
-
+    console.error("Accessories container #sale-main not found.");
     return;
-
   }
-
 
   try {
-
-
-    // ==========================================
-    // FIREBASE QUERY
-    // ==========================================
-
-    const q = query(
-
-      collection(
-        db,
-        "accessoriesProducts"
-      ),
-
-      orderBy(
-  "created",
-  "asc"
-)
-
+    const productsQuery = query(
+      collection(db, "accessoriesProducts"),
+      orderBy("created", "asc")
     );
 
+    // Only one Firestore collection is read.
+    const productsSnap = await getDocs(productsQuery);
 
-    // ==========================================
-    // GET PRODUCTS
-    // ==========================================
+    const products = [];
 
-    const snap =
-      await getDocs(q);
+    productsSnap.forEach(doc => {
+      const product = {
+        id: doc.id,
+        ...doc.data()
+      };
 
-
-    let count = 0;
-
-
-    // ==========================================
-    // ADD PRODUCTS
-    // ==========================================
-
-    snap.forEach(doc => {
-
-      const p =
-        doc.data();
-
-
-      // Firebase document ID
-
-      p.id =
-        doc.id;
-
-
-      // Only active products
-
-      if (
-        p.active === true
-      ) {
-
-        container.insertAdjacentHTML(
-          "beforeend",
-          buildSaleHTML(p)
-        );
-
-        count++;
-
+      if (product.active === true) {
+        products.push(product);
       }
-
     });
 
+    container.innerHTML = "";
 
-    // ==========================================
-    // REMOVE LOADER
-    // ==========================================
-
-    requestAnimationFrame(() => {
-
-      if (loader) {
-
-        loader.remove();
-
-      }
-
+    products.forEach(product => {
+      container.insertAdjacentHTML(
+        "beforeend",
+        buildSaleHTML(product)
+      );
     });
 
+    if (loader) loader.remove();
 
-    // ==========================================
-    // RESTORE CART COUNTERS
-    //
-    // Not required because renderCart()
-    // already updates .qty elements.
-    // ==========================================
+    if (typeof renderCart === "function") {
+      renderCart();
+    }
 
-    if (
-  typeof renderCart === "function"
-) {
+    initAccessoryImageDots();
 
-  renderCart();
-
-}
-
-initAccessoryImageDots();
-    // ==========================================
-    // EMPTY PRODUCT STATE
-    // ==========================================
-
-    if (
-      count === 0
-    ) {
-
+    if (products.length === 0) {
       container.innerHTML = `
-
         <div class="border-top">
-
           <div class="sale-off">
-
-            <p>
-              No products available
-            </p>
-
+            <p>No products available</p>
           </div>
-
         </div>
-
       `;
-
     }
 
+  } catch (error) {
+    console.error("Error loading accessories:", error);
 
-  }
+    if (loader) loader.remove();
 
-  catch (error) {
-
-    console.error(
-      "Error loading accessories:",
-      error
-    );
-
-
-    if (loader) {
-
-      loader.remove();
-
-    }
-
-
-    container.insertAdjacentHTML(
-
-      "beforeend",
-
-      `
-
+    container.innerHTML = `
       <div class="sale-off">
-
-        <p>
-          Unable to load products.
-          Please try again later.
-        </p>
-
+        <p>Unable to load products. Please try again later.</p>
       </div>
-
-      `
-
-    );
-
+    `;
   }
-
 }
-
-
-// ==========================================
-// LOAD PRODUCTS WHEN PAGE IS READY
-// ==========================================
 
 window.addEventListener(
   "DOMContentLoaded",
