@@ -116,6 +116,15 @@ window.saveAccessoryProduct =
           .value
       );
 
+const productCode = document
+  .getElementById("a-productCode")
+  .value.trim().toUpperCase();
+
+const stockInput = document
+  .getElementById("a-stock")
+  .value.trim();
+
+const stock = Number(stockInput);
 
     if (msg) {
       msg.innerText = "";
@@ -173,6 +182,21 @@ window.saveAccessoryProduct =
     }
 
 
+if (!/^#[A-Z0-9]{4}$/.test(productCode)) {
+  if (msg) msg.innerText =
+    "Enter a valid product code, e.g. #TR05";
+  return;
+}
+
+if (
+  stockInput === "" ||
+  !Number.isInteger(stock) ||
+  stock < 0
+) {
+  if (msg) msg.innerText =
+    "Stock must be a whole number (0 or more)";
+  return;
+}
     // ==================================================
     // IMAGES
     // ==================================================
@@ -241,13 +265,15 @@ window.saveAccessoryProduct =
             adminState.editingId
           ),
 
-          {
-            name,
-            quantity,
-            subtitle,
-            price,
-            images
-          }
+{
+  name,
+  quantity,
+  subtitle,
+  price,
+  productCode,
+  stock,
+  images
+}
 
         );
 
@@ -267,18 +293,17 @@ window.saveAccessoryProduct =
             "accessoriesProducts"
           ),
 
-          {
-            name,
-            quantity,
-            subtitle,
-            price,
-            images,
-
-            active: true,
-
-            created:
-              Date.now()
-          }
+{
+  name,
+  quantity,
+  subtitle,
+  price,
+  productCode,
+  stock,
+  images,
+  active: true,
+  created: Date.now()
+}
 
         );
 
@@ -537,6 +562,11 @@ window.editAccessoryProduct =
         data.price ?? "";
 
 
+document.getElementById("a-productCode").value =
+  data.productCode || "";
+
+document.getElementById("a-stock").value =
+  data.stock ?? 0;
       // ==================================================
       // LOAD IMAGES
       // ==================================================
@@ -708,6 +738,11 @@ window.resetAccessoryForm =
         "a-price"
       );
 
+const productCode = document.getElementById("a-productCode");
+const stock = document.getElementById("a-stock");
+
+if (productCode) productCode.value = "";
+if (stock) stock.value = "";
     const list =
       document.getElementById(
         "a-imagesList"
