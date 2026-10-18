@@ -112,7 +112,7 @@ function buildSaleHTML(p) {
         type="button"
         onclick="showToast('This product is out of stock')"
         aria-disabled="true"
-      >Out of Stock</button>
+      >Add</button>
     `
     : `
       <button
