@@ -760,19 +760,27 @@ export async function loadAdminProducts(type) {
             Array.isArray(p.images) ? p.images.length : 0
           ]
         ];
-      } else {
-        rows = [
-          [
-            "Shipping price",
-            p.shippingPrice != null
-              ? "₹" + p.shippingPrice
-              : value(p.shippingText)
-          ],
-          [
-            "Total product images",
-            Array.isArray(p.images) ? p.images.length : 0
-          ]
-        ];
+      
+} else {
+  rows = [
+    ...(type === "accessories"
+      ? [
+          ["Product code", p.productCode],
+          ["Available stock (pieces)", p.stock ?? 0]
+        ]
+      : []
+    ),
+    [
+      "Shipping price",
+      p.shippingPrice != null
+        ? "₹" + p.shippingPrice
+        : value(p.shippingText)
+    ],
+    [
+      "Total product images",
+      Array.isArray(p.images) ? p.images.length : 0
+    ]
+  ];
       }
 
       // IMPORTANT: Convert rows into visible HTML
