@@ -152,14 +152,14 @@
 .ds-card-pack {
   color: #526078;
   font-size: 11px;
-  line-height: 1.4;
+  line-height: 1;
   font-weight: 650;
 }
 
 .ds-card-subtitle {
   color: #7a8495;
   font-size: 11px;
-  line-height: 1.4;
+  line-height: 1;
   overflow-wrap: anywhere;
 }
 
@@ -267,8 +267,4 @@
     gap: 5px;
   }
 
-  .ds-card-qty-button {
-    width: 32px;
-    height: 32px;
-  }
 }
