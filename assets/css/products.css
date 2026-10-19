@@ -3855,4 +3855,12 @@ body.cart-popup-open {
 }
 
 
+.product-offer-ribbon2[hidden] {
+  display: none !important;
+}
+
+.add-cart-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
 
