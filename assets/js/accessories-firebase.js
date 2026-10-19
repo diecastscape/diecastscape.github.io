@@ -133,15 +133,15 @@ function buildSaleHTML(p) {
       class="add-cart-btn ${outOfStock ? "out-of-stock-btn" : ""}"
       type="button"
       data-add-product="${safeId}"
-      ${outOfStock ? "disabled" : ""}
+      
       onclick="changeAccessoryQty(
-        '${cartId}',
-        '${cartName}',
-        ${price},
-        1,
-        '${cartQuantity}',
-        '${cartProductCode}'
-      )"
+  '${cartId}',
+  '${cartName}',
+  ${price},
+  1,
+  '${cartQuantity}',
+  '${cartProductCode}'
+)"
     >Add</button>
   `;
 
