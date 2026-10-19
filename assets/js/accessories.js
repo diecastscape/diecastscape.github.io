@@ -8,7 +8,11 @@ const CART_VERSION_KEY = "diecastscape_accessories_cart_version";
 const CART_UPDATED_KEY = "diecastscape_accessories_cart_updated_at";
 const CART_VERSION = "2";
 const CART_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
+const FREE_SHIPPING_LIMIT = 900;
+const SHIPPING_CHARGE = 75;
+const MIN_CART_VALUE = 199;
 
+const WHATSAPP_NUMBER = "918792744018";
 // One-time migration: clear carts saved by the old system.
 if (localStorage.getItem(CART_VERSION_KEY) !== CART_VERSION) {
   localStorage.removeItem(CART_KEY);
@@ -57,8 +61,9 @@ function getCurrentAvailableSets(id) {
   return window.getAccessoryAvailableSets(product);
 }
 
+
 function canChangeCartQuantity(id, nextQty) {
-  // Removing an item must always remain possible.
+  // Always allow customers to remove items.
   if (nextQty <= 0) return true;
 
   if (!window.accessoryStockReady) {
@@ -68,26 +73,24 @@ function canChangeCartQuantity(id, nextQty) {
 
   const product = getCurrentAccessoryProduct(id);
 
-  if (!product || getCurrentAvailableSets(id) < 1) {
-    showToast("Sorry, this product is out of stock.");
+  if (!product) {
+    showToast("Product stock is unavailable. Please try again.");
     return false;
   }
 
-  // Maximum one set of each product in the cart.
-  if (nextQty > 1) {
-    showToast("Only one set per product is allowed.");
+  const availableSets = getCurrentAvailableSets(id);
+
+  if (nextQty > availableSets) {
+    showToast(
+      availableSets === 0
+        ? "This product is out of stock."
+        : `Only ${availableSets} complete set(s) available.`
+    );
     return false;
   }
 
   return true;
 }
-const FREE_SHIPPING_LIMIT = 900;
-const SHIPPING_CHARGE = 75;
-const MIN_CART_VALUE = 199;
-
-const WHATSAPP_NUMBER = "918792744018";
-
-
 
 
 /* =========================================
