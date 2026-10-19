@@ -8,8 +8,8 @@ const CART_VERSION_KEY = "diecastscape_accessories_cart_version";
 const CART_UPDATED_KEY = "diecastscape_accessories_cart_updated_at";
 const CART_VERSION = "2";
 const CART_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
-const FREE_SHIPPING_LIMIT = 900;
-const SHIPPING_CHARGE = 75;
+const FREE_SHIPPING_LIMIT = 799;
+const SHIPPING_CHARGE = 55;
 const MIN_CART_VALUE = 199;
 
 const WHATSAPP_NUMBER = "918792744018";
