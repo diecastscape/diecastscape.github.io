@@ -160,6 +160,7 @@ function addProductInfo(
 ========================================= */
 
 
+
 function changeAccessoryQty(
   id,
   name,
@@ -168,19 +169,30 @@ function changeAccessoryQty(
   quantityText = "",
   productCode = ""
 ) {
-  const currentQty = cart[id] ? Number(cart[id].qty) || 0 : 0;
+  const currentQty = cart[id]
+    ? Number(cart[id].qty) || 0
+    : 0;
+
   const nextQty = currentQty + Number(change);
 
-  if (nextQty <= 0) {
-    if (cart[id]) {
+  // Always allow reducing or removing a product,
+  // even when live stock has decreased.
+  if (Number(change) < 0) {
+    if (nextQty <= 0) {
       delete cart[id];
-      saveCart();
-      renderCart();
+    } else {
+      cart[id].qty = nextQty;
     }
+
+    saveCart();
+    renderCart();
     return;
   }
 
-  if (!canChangeCartQuantity(id, nextQty)) return;
+  // Only check stock when increasing quantity.
+  if (!canChangeCartQuantity(id, nextQty)) {
+    return;
+  }
 
   if (!cart[id]) {
     cart[id] = {
@@ -193,8 +205,10 @@ function changeAccessoryQty(
     };
   } else {
     cart[id].qty = nextQty;
-    cart[id].quantityText = quantityText || cart[id].quantityText;
-    cart[id].productCode = productCode || cart[id].productCode;
+    cart[id].quantityText =
+      quantityText || cart[id].quantityText;
+    cart[id].productCode =
+      productCode || cart[id].productCode;
   }
 
   saveCart();
