@@ -5,12 +5,17 @@ import {
   collection,
   query,
   orderBy,
+  onSnapshot,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ==========================================
-// HELPERS
-// ==========================================
+const PRODUCTS = "accessoriesProducts";
+
+window.accessoryLiveStock = {};
+window.accessoryStockReady = false;
+
+let firstSnapshot = true;
+let previousIds = new Set();
 
 function escapeHTML(value) {
   return String(value ?? "")
@@ -29,9 +34,41 @@ function escapeJS(value) {
     .replace(/\n/g, "\\n");
 }
 
-// ==========================================
-// BUILD ACCESSORY PRODUCT CARD
-// ==========================================
+function getPackSize(code) {
+  const match = String(code || "")
+    .trim()
+    .toUpperCase()
+    .match(/(\d{2})$/);
+
+  if (!match) return 1;
+
+  const size = Number(match[1]);
+  return Number.isInteger(size) && size > 0 ? size : 1;
+}
+
+function getAvailableSets(product) {
+  const stock = Number(product?.stock);
+
+  if (
+    product?.stock === undefined ||
+    product?.stock === null ||
+    product?.stock === "" ||
+    !Number.isFinite(stock) ||
+    stock < 0
+  ) {
+    return 0;
+  }
+
+  return Math.floor(
+    stock / getPackSize(product.productCode)
+  );
+}
+
+function isOutOfStock(product) {
+  return getAvailableSets(product) < 1;
+}
+
+window.getAccessoryAvailableSets = getAvailableSets;
 
 function buildSaleHTML(p) {
   const images = Array.isArray(p.images) ? p.images : [];
@@ -41,23 +78,16 @@ function buildSaleHTML(p) {
   const subtitleText = p.subtitle || "";
   const price = Number(p.price) || 0;
 
-  // All stock data now comes from accessoriesProducts.
-  const stockValue = Number(p.stock);
-  const hasKnownStock =
-    p.stock !== undefined &&
-    p.stock !== null &&
-    p.stock !== "" &&
-    Number.isFinite(stockValue);
+  const outOfStock = isOutOfStock(p);
 
-  // Missing stock does not automatically mean out of stock.
-  const isOutOfStock =
-    hasKnownStock && stockValue <= 0;
-
-  const offerRibbon = isOutOfStock
-    ? `<div class="product-offer-ribbon2">
-         <span>Out of Stock</span>
-       </div>`
-    : "";
+  const offerRibbon = `
+    <div
+      class="product-offer-ribbon2"
+      ${outOfStock ? "" : "hidden"}
+    >
+      <span>Out of Stock</span>
+    </div>
+  `;
 
   const safeId = escapeHTML(p.id);
   const safeName = escapeHTML(productName);
@@ -68,14 +98,9 @@ function buildSaleHTML(p) {
   const cartName = escapeJS(productName);
   const cartQuantity = escapeJS(quantityText);
 
-  // Base code saved in Firestore, e.g. #TR05.
   const cartProductCode = escapeJS(
     String(p.productCode || "").trim().toUpperCase()
   );
-
-  // ==========================================
-  // PRODUCT IMAGES
-  // ==========================================
 
   const imgs = images.map(im => `
     <div class="acc-img-box">
@@ -94,47 +119,37 @@ function buildSaleHTML(p) {
   `).join("");
 
   const dots = images.length > 1
-    ? `<div class="acc-image-dots">
+    ? `
+      <div class="acc-image-dots">
         ${images.map((_, i) => `
           <span class="acc-image-dot ${i === 0 ? "active" : ""}"></span>
         `).join("")}
-      </div>`
+      </div>
+    `
     : "";
 
-  // ==========================================
-  // ADD BUTTON
-  // ==========================================
-
-  const addButton = isOutOfStock
-    ? `
-      <button
-        class="add-cart-btn out-of-stock-btn"
-        type="button"
-        onclick="showToast('This product is out of stock')"
-        aria-disabled="true"
-      >Add</button>
-    `
-    : `
-      <button
-        class="add-cart-btn"
-        type="button"
-        onclick="changeAccessoryQty(
-          '${cartId}',
-          '${cartName}',
-          ${price},
-          1,
-          '${cartQuantity}',
-          '${cartProductCode}'
-        )"
-      >Add</button>
-    `;
-
-  // ==========================================
-  // COMPLETE PRODUCT CARD
-  // ==========================================
+  const addButton = `
+    <button
+      class="add-cart-btn ${outOfStock ? "out-of-stock-btn" : ""}"
+      type="button"
+      data-add-product="${safeId}"
+      ${outOfStock ? "disabled" : ""}
+      onclick="changeAccessoryQty(
+        '${cartId}',
+        '${cartName}',
+        ${price},
+        1,
+        '${cartQuantity}',
+        '${cartProductCode}'
+      )"
+    >Add</button>
+  `;
 
   return `
-    <div class="acc-card">
+    <div
+      class="acc-card"
+      data-accessory-product-id="${safeId}"
+    >
       ${offerRibbon}
 
       <div class="acc-name">${safeName}</div>
@@ -157,7 +172,6 @@ function buildSaleHTML(p) {
       </div>
 
       <div class="cart-controls">
-
         <button
           class="maines-cart-btn"
           type="button"
@@ -175,15 +189,10 @@ function buildSaleHTML(p) {
         <span class="qty" id="qty-${safeId}">0</span>
 
         ${addButton}
-
       </div>
     </div>
   `;
 }
-
-// ==========================================
-// ACCESSORY IMAGE DOTS
-// ==========================================
 
 function initAccessoryImageDots() {
   document.querySelectorAll(".acc-image-wrapper")
@@ -193,9 +202,12 @@ function initAccessoryImageDots() {
 
       if (!slider || dots.length <= 1) return;
 
+      // Prevent registering duplicate scroll listeners.
+      if (slider.dataset.dotsInitialised === "true") return;
+      slider.dataset.dotsInitialised = "true";
+
       slider.addEventListener("scroll", () => {
         const slideWidth = slider.clientWidth;
-
         if (!slideWidth) return;
 
         const index = Math.round(
@@ -209,82 +221,147 @@ function initAccessoryImageDots() {
     });
 }
 
-// ==========================================
-// LOAD ACCESSORIES FROM ONE COLLECTION
-// ==========================================
+function updateProductStockUI(product) {
+  const cards = document.querySelectorAll(
+    "[data-accessory-product-id]"
+  );
 
-async function loadSaleProducts() {
-  const container = document.getElementById("sale-main");
-  const loader = document.getElementById("productsLoader");
+  const card = [...cards].find(
+    element =>
+      element.dataset.accessoryProductId === product.id
+  );
 
-  if (!container) {
-    console.error("Accessories container #sale-main not found.");
-    return;
+  if (!card) return;
+
+  const outOfStock = isOutOfStock(product);
+  const ribbon = card.querySelector(".product-offer-ribbon2");
+  const addButton = card.querySelector("[data-add-product]");
+
+  if (ribbon) {
+    ribbon.hidden = !outOfStock;
   }
 
-  try {
-    const productsQuery = query(
-      collection(db, "accessoriesProducts"),
-      orderBy("created", "asc")
+  if (addButton) {
+    addButton.disabled = outOfStock;
+    addButton.classList.toggle(
+      "out-of-stock-btn",
+      outOfStock
     );
+  }
 
-    // Only one Firestore collection is read.
-    const productsSnap = await getDocs(productsQuery);
+  card.dataset.availableSets = String(
+    getAvailableSets(product)
+  );
+}
 
-    const products = [];
+function renderAllProducts(products) {
+  const container = document.getElementById("sale-main");
+  if (!container) return;
 
-    productsSnap.forEach(doc => {
-      const product = {
-        id: doc.id,
-        ...doc.data()
-      };
+  container.innerHTML = "";
 
-      if (product.active === true) {
-        products.push(product);
-      }
-    });
+  products.forEach(product => {
+    container.insertAdjacentHTML(
+      "beforeend",
+      buildSaleHTML(product)
+    );
+  });
 
-    container.innerHTML = "";
+  initAccessoryImageDots();
 
-    products.forEach(product => {
-      container.insertAdjacentHTML(
-        "beforeend",
-        buildSaleHTML(product)
-      );
-    });
-
-    if (loader) loader.remove();
-
-    if (typeof renderCart === "function") {
-      renderCart();
-    }
-
-    initAccessoryImageDots();
-
-    if (products.length === 0) {
-      container.innerHTML = `
-        <div class="border-top">
-          <div class="sale-off">
-            <p>No products available</p>
-          </div>
-        </div>
-      `;
-    }
-
-  } catch (error) {
-    console.error("Error loading accessories:", error);
-
-    if (loader) loader.remove();
-
-    container.innerHTML = `
-      <div class="sale-off">
-        <p>Unable to load products. Please try again later.</p>
-      </div>
-    `;
+  if (typeof window.renderCart === "function") {
+    window.renderCart();
   }
 }
 
-window.addEventListener(
-  "DOMContentLoaded",
-  loadSaleProducts
-);
+function handleLiveSnapshot(snapshot) {
+  const products = [];
+
+  snapshot.forEach(doc => {
+    const product = {
+      id: doc.id,
+      ...doc.data()
+    };
+
+    if (product.active === true) {
+      products.push(product);
+      window.accessoryLiveStock[product.id] = product;
+    } else {
+      delete window.accessoryLiveStock[product.id];
+    }
+  });
+
+  const currentIds = new Set(products.map(p => p.id));
+
+  const membershipChanged =
+    firstSnapshot ||
+    currentIds.size !== previousIds.size ||
+    [...currentIds].some(id => !previousIds.has(id));
+
+  if (membershipChanged) {
+    renderAllProducts(products);
+  } else {
+    // Update stock labels/buttons only. Do not rebuild cards,
+    // so scrolling position in the image carousel is preserved.
+    products.forEach(updateProductStockUI);
+  }
+
+  firstSnapshot = false;
+  previousIds = currentIds;
+  window.accessoryStockReady = true;
+
+  const loader = document.getElementById("productsLoader");
+  if (loader) loader.remove();
+
+  document.dispatchEvent(
+    new CustomEvent("accessory-stock-ready")
+  );
+}
+
+function startLiveStockListener() {
+  const productsQuery = query(
+    collection(db, PRODUCTS),
+    orderBy("created", "asc")
+  );
+
+  onSnapshot(
+    productsQuery,
+    handleLiveSnapshot,
+    error => {
+      console.error("Live accessory stock error:", error);
+
+      window.accessoryStockReady = false;
+
+      document.dispatchEvent(
+        new CustomEvent("accessory-stock-error")
+      );
+    }
+  );
+}
+
+// Explicit fresh fetch for checkout validation.
+window.refreshAccessoryStockNow = async function () {
+  const snapshot = await getDocs(
+    collection(db, PRODUCTS)
+  );
+
+  snapshot.forEach(doc => {
+    const product = {
+      id: doc.id,
+      ...doc.data()
+    };
+
+    if (product.active === true) {
+      window.accessoryLiveStock[product.id] = product;
+    } else {
+      delete window.accessoryLiveStock[product.id];
+    }
+  });
+
+  window.accessoryStockReady = true;
+  return window.accessoryLiveStock;
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+  startLiveStockListener();
+});
