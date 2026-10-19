@@ -119,16 +119,14 @@ function buildSaleHTML(p) {
     </div>
   `).join("");
 
-  const dots = images.length > 1
-    ? `
-      <div class="ds-card-image-dots">
+  
+const dots = images.length > 1
+    ? `<div class="acc-image-dots">
         ${images.map((_, i) => `
-          <span class="ds-card-image-dot ${i === 0 ? "active" : ""}"></span>
+          <span class="acc-image-dot ${i === 0 ? "active" : ""}"></span>
         `).join("")}
-      </div>
-    `
+      </div>`
     : "";
-
   return `
     <article
       class="ds-card-product ${outOfStock ? "ds-card-sold-out" : ""}"
