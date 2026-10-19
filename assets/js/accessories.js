@@ -2,30 +2,108 @@
    ACCESSORIES CART
 ========================================= */
 
-const CART_KEY = "diecastscape_accessories_cart";
 
+const CART_KEY = "diecastscape_accessories_cart";
+const CART_VERSION_KEY = "diecastscape_accessories_cart_version";
+const CART_UPDATED_KEY = "diecastscape_accessories_cart_updated_at";
+const CART_VERSION = "2";
+const CART_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
+
+// One-time migration: clear carts saved by the old system.
+if (localStorage.getItem(CART_VERSION_KEY) !== CART_VERSION) {
+  localStorage.removeItem(CART_KEY);
+  localStorage.removeItem(CART_UPDATED_KEY);
+  localStorage.setItem(CART_VERSION_KEY, CART_VERSION);
+}
+
+// Expire saved carts after 30 days.
+const savedCartTime = Number(
+  localStorage.getItem(CART_UPDATED_KEY)
+);
+
+if (localStorage.getItem(CART_KEY)) {
+  if (
+    !Number.isFinite(savedCartTime) ||
+    savedCartTime <= 0 ||
+    Date.now() - savedCartTime >= CART_MAX_AGE
+  ) {
+    localStorage.removeItem(CART_KEY);
+    localStorage.removeItem(CART_UPDATED_KEY);
+  }
+}
+
+let cart = {};
+
+try {
+  cart = JSON.parse(localStorage.getItem(CART_KEY) || "{}");
+  if (!cart || Array.isArray(cart) || typeof cart !== "object") {
+    cart = {};
+  }
+} catch {
+  cart = {};
+}
+
+function getCurrentAccessoryProduct(id) {
+  return window.accessoryLiveStock?.[String(id)] || null;
+}
+
+function getCurrentAvailableSets(id) {
+  const product = getCurrentAccessoryProduct(id);
+
+  if (!product || !window.accessoryStockReady) {
+    return 0;
+  }
+
+  return window.getAccessoryAvailableSets(product);
+}
+
+function canChangeCartQuantity(id, nextQty) {
+  // Removing an item must always remain possible.
+  if (nextQty <= 0) return true;
+
+  if (!window.accessoryStockReady) {
+    showToast("Checking current stock. Please try again.");
+    return false;
+  }
+
+  const product = getCurrentAccessoryProduct(id);
+
+  if (!product || getCurrentAvailableSets(id) < 1) {
+    showToast("Sorry, this product is out of stock.");
+    return false;
+  }
+
+  // Maximum one set of each product in the cart.
+  if (nextQty > 1) {
+    showToast("Only one set per product is allowed.");
+    return false;
+  }
+
+  return true;
+}
 const FREE_SHIPPING_LIMIT = 900;
 const SHIPPING_CHARGE = 75;
 const MIN_CART_VALUE = 199;
 
 const WHATSAPP_NUMBER = "918792744018";
 
-let cart = JSON.parse(
-  localStorage.getItem(CART_KEY)
-) || {};
+
 
 
 /* =========================================
    SAVE CART
 ========================================= */
 
-function saveCart() {
-  localStorage.setItem(
-    CART_KEY,
-    JSON.stringify(cart)
-  );
-}
 
+function saveCart() {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+
+  if (Object.keys(cart).length > 0) {
+    localStorage.setItem(CART_UPDATED_KEY, String(Date.now()));
+  } else {
+    localStorage.removeItem(CART_UPDATED_KEY);
+  }
+}
 
 /* =========================================
    GET CART PRODUCTS
@@ -41,6 +119,7 @@ function getCartProducts() {
    ADD PRODUCT INFO
 ========================================= */
 
+
 function addProductInfo(
   id,
   name,
@@ -48,25 +127,23 @@ function addProductInfo(
   quantityText = "",
   productCode = ""
 ) {
+  const nextQty = cart[id] ? Number(cart[id].qty) + 1 : 1;
+
+  if (!canChangeCartQuantity(id, nextQty)) return;
+
   if (!cart[id]) {
     cart[id] = {
-      id: id,
-      name: name,
+      id,
+      name,
       price: Number(price) || 0,
       qty: 1,
       quantityText: quantityText || "",
       productCode: productCode || ""
     };
   } else {
-    cart[id].qty += 1;
-
-    if (quantityText) {
-      cart[id].quantityText = quantityText;
-    }
-
-    if (productCode) {
-      cart[id].productCode = productCode;
-    }
+    cart[id].qty = nextQty;
+    cart[id].quantityText = quantityText || cart[id].quantityText;
+    cart[id].productCode = productCode || cart[id].productCode;
   }
 
   saveCart();
@@ -79,6 +156,7 @@ function addProductInfo(
    CHANGE ACCESSORY QUANTITY
 ========================================= */
 
+
 function changeAccessoryQty(
   id,
   name,
@@ -87,56 +165,59 @@ function changeAccessoryQty(
   quantityText = "",
   productCode = ""
 ) {
-  if (!cart[id]) {
-    if (change > 0) {
-      addProductInfo(
-        id,
-        name,
-        price,
-        quantityText,
-        productCode
-      );
-    }
+  const currentQty = cart[id] ? Number(cart[id].qty) || 0 : 0;
+  const nextQty = currentQty + Number(change);
 
+  if (nextQty <= 0) {
+    if (cart[id]) {
+      delete cart[id];
+      saveCart();
+      renderCart();
+    }
     return;
   }
 
-  cart[id].qty += change;
+  if (!canChangeCartQuantity(id, nextQty)) return;
 
-  if (quantityText) {
-    cart[id].quantityText = quantityText;
-  }
-
-  if (productCode) {
-    cart[id].productCode = productCode;
-  }
-
-  if (cart[id].qty <= 0) {
-    delete cart[id];
+  if (!cart[id]) {
+    cart[id] = {
+      id,
+      name,
+      price: Number(price) || 0,
+      qty: 1,
+      quantityText: quantityText || "",
+      productCode: productCode || ""
+    };
+  } else {
+    cart[id].qty = nextQty;
+    cart[id].quantityText = quantityText || cart[id].quantityText;
+    cart[id].productCode = productCode || cart[id].productCode;
   }
 
   saveCart();
   renderCart();
 }
-
 /* =========================================
    UPDATE ACCESSORY QUANTITY
 ========================================= */
 
-function updateAccessoryQuantity(id) {
 
+function updateAccessoryQuantity(id) {
   if (!cart[id]) return;
 
-  const qty = Number(cart[id].qty);
+  const qty = Math.floor(Number(cart[id].qty));
 
   if (!Number.isFinite(qty) || qty <= 0) {
     delete cart[id];
   } else {
-    cart[id].qty = Math.floor(qty);
+    if (!canChangeCartQuantity(id, qty)) {
+      cart[id].qty = 1;
+    } else {
+      cart[id].qty = qty;
+    }
   }
 
   saveCart();
-
   renderCart();
 }
 
@@ -972,8 +1053,7 @@ function renderCheckoutProducts() {
 /* =========================================
    FINAL WHATSAPP ORDER
 ========================================= */
-
-function proceedOrderWhatsApp() {
+async function proceedOrderWhatsApp() {
 
   const products = getCartProducts();
 
@@ -987,6 +1067,29 @@ function proceedOrderWhatsApp() {
     return;
   }
 
+  // Fetch the latest stock before sending the order to WhatsApp.
+  try {
+    await window.refreshAccessoryStockNow();
+  } catch (error) {
+    console.error("Checkout stock check failed:", error);
+    showToast("Unable to check stock. Please try again.");
+    return;
+  }
+
+  // Verify every cart item against the fresh stock.
+  for (const item of products) {
+    const product = getCurrentAccessoryProduct(item.id);
+
+    if (!product || getCurrentAvailableSets(item.id) < 1) {
+      showToast(`${item.name} is currently out of stock.`);
+      return;
+    }
+
+    if (Number(item.qty) !== 1) {
+      showToast("Only one set per product is allowed.");
+      return;
+    }
+  }
   /* MINIMUM ORDER CHECK */
   if (total < MIN_CART_VALUE) {
     showToast(`Minimum order value is ₹${MIN_CART_VALUE}`);
