@@ -70,6 +70,7 @@ function isOutOfStock(product) {
 
 window.getAccessoryAvailableSets = getAvailableSets;
 
+
 function buildSaleHTML(p) {
   const images = Array.isArray(p.images) ? p.images : [];
 
@@ -79,15 +80,6 @@ function buildSaleHTML(p) {
   const price = Number(p.price) || 0;
 
   const outOfStock = isOutOfStock(p);
-
-  const offerRibbon = `
-    <div
-      class="product-offer-ribbon2"
-      ${outOfStock ? "" : "hidden"}
-    >
-      <span>Out of Stock</span>
-    </div>
-  `;
 
   const safeId = escapeHTML(p.id);
   const safeName = escapeHTML(productName);
@@ -102,9 +94,18 @@ function buildSaleHTML(p) {
     String(p.productCode || "").trim().toUpperCase()
   );
 
+  const offerRibbon = `
+    <div
+      class="ds-card-stock-label"
+      ${outOfStock ? "" : "hidden"}
+    >
+      OUT OF STOCK
+    </div>
+  `;
+
   const imgs = images.map(im => `
-    <div class="acc-img-box">
-      <div class="acc-img-loader"></div>
+    <div class="ds-card-image-slide">
+      <div class="ds-card-image-loader"></div>
 
       <img
         src="/images/accessories/${encodeURIComponent(String(im))}.webp"
@@ -120,77 +121,88 @@ function buildSaleHTML(p) {
 
   const dots = images.length > 1
     ? `
-      <div class="acc-image-dots">
+      <div class="ds-card-image-dots">
         ${images.map((_, i) => `
-          <span class="acc-image-dot ${i === 0 ? "active" : ""}"></span>
+          <span class="ds-card-image-dot ${i === 0 ? "active" : ""}"></span>
         `).join("")}
       </div>
     `
     : "";
 
-  const addButton = `
-    <button
-      class="add-cart-btn ${outOfStock ? "out-of-stock-btn" : ""}"
-      type="button"
-      data-add-product="${safeId}"
-      
-      onclick="changeAccessoryQty(
-  '${cartId}',
-  '${cartName}',
-  ${price},
-  1,
-  '${cartQuantity}',
-  '${cartProductCode}'
-)"
-    >Add</button>
-  `;
-
   return `
-    <div
-      class="acc-card"
+    <article
+      class="ds-card-product ${outOfStock ? "ds-card-sold-out" : ""}"
       data-accessory-product-id="${safeId}"
     >
-      ${offerRibbon}
 
-      <div class="acc-name">${safeName}</div>
+      <div class="ds-card-image-wrap">
 
-      ${quantityText
-        ? `<div class="acc-quantity">${safeQuantity}</div>`
-        : ""}
+        <div class="ds-card-image-track">
+          ${imgs}
+        </div>
 
-      ${subtitleText
-        ? `<div class="acc-subtitle">${safeSubtitle}</div>`
-        : ""}
-
-      <div class="acc-image-wrapper">
-        <div class="acc-image-area">${imgs}</div>
+        ${offerRibbon}
         ${dots}
+
       </div>
 
-      <div class="acc-price-row">
-        <span class="acc-price">₹${price}/-</span>
+      <div class="ds-card-details">
+
+        <h3 class="ds-card-name">${safeName}</h3>
+
+        ${
+          quantityText
+            ? `<div class="ds-card-pack">${safeQuantity}</div>`
+            : ""
+        }
+
+        ${
+          subtitleText
+            ? `<div class="ds-card-subtitle">${safeSubtitle}</div>`
+            : ""
+        }
+
+        <div class="ds-card-price-row">
+          <span class="ds-card-price">₹${price}/-</span>
+        </div>
+
+        <div class="ds-card-cart-controls">
+
+          <button
+            class="ds-card-qty-button ds-card-minus"
+            type="button"
+            onclick="changeAccessoryQty(
+              '${cartId}',
+              '${cartName}',
+              ${price},
+              -1,
+              '${cartQuantity}',
+              '${cartProductCode}'
+            )"
+            aria-label="Decrease ${safeName} quantity"
+          >−</button>
+
+          <span class="ds-card-qty" id="qty-${safeId}">0</span>
+
+          <button
+            class="ds-card-qty-button ds-card-add"
+            type="button"
+            data-add-product="${safeId}"
+            onclick="changeAccessoryQty(
+              '${cartId}',
+              '${cartName}',
+              ${price},
+              1,
+              '${cartQuantity}',
+              '${cartProductCode}'
+            )"
+            aria-label="Add ${safeName} to cart"
+          >+</button>
+
+        </div>
+
       </div>
-
-      <div class="cart-controls">
-        <button
-          class="maines-cart-btn"
-          type="button"
-          onclick="changeAccessoryQty(
-            '${cartId}',
-            '${cartName}',
-            ${price},
-            -1,
-            '${cartQuantity}',
-            '${cartProductCode}'
-          )"
-          aria-label="Decrease ${safeName} quantity"
-        >−</button>
-
-        <span class="qty" id="qty-${safeId}">0</span>
-
-        ${addButton}
-      </div>
-    </div>
+    </article>
   `;
 }
 
