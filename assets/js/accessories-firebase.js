@@ -180,7 +180,7 @@ const dots = images.length > 1
             aria-label="Decrease ${safeName} quantity"
           >−</button>
 
-          <span class="ds-card-qty" id="qty-${safeId}">0</span>
+          <span class="qty ds-card-qty" id="qty-${safeId}">0</span>
 
           <button
             class="ds-card-qty-button ds-card-add"
