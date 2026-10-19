@@ -84,7 +84,7 @@ function canChangeCartQuantity(id, nextQty) {
     showToast(
       availableSets === 0
         ? "This product is out of stock."
-        : `Only ${availableSets} complete set(s) available.`
+        : `Only ${availableSets} set available.`
     );
     return false;
   }
@@ -687,7 +687,13 @@ function renderCart() {
           : "flex";
 
     }
+document.querySelectorAll(".acc-card").forEach(card => {
+  const qtyElement = card.querySelector(".qty");
+  if (!qtyElement) return;
 
+  const id = card.dataset.accessoryProductId;
+  qtyElement.textContent = cart[id]?.qty || 0;
+});
   }
 
 }
