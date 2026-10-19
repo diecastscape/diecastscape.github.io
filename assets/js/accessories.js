@@ -1087,19 +1087,15 @@ async function proceedOrderWhatsApp() {
   }
 
   // Verify every cart item against the fresh stock.
-  for (const item of products) {
-    const product = getCurrentAccessoryProduct(item.id);
+  
+for (const item of products) {
+  const product = getCurrentAccessoryProduct(item.id);
 
-    if (!product || getCurrentAvailableSets(item.id) < 1) {
-      showToast(`${item.name} is currently out of stock.`);
-      return;
-    }
-
-    if (Number(item.qty) !== 1) {
-      showToast("Only one set per product is allowed.");
-      return;
-    }
+  if (!product || getCurrentAvailableSets(item.id) < Number(item.qty)) {
+    showToast(`${item.name} does not have enough stock available.`);
+    return;
   }
+}
   /* MINIMUM ORDER CHECK */
   if (total < MIN_CART_VALUE) {
     showToast(`Minimum order value is ₹${MIN_CART_VALUE}`);
