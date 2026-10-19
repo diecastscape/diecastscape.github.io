@@ -229,19 +229,20 @@ function updateAccessoryQuantity(id) {
    REMOVE ITEM
 ========================================= */
 
+
 function removeItem(id) {
-
-  if (!cart[id]) return;
-
   delete cart[id];
 
   saveCart();
-
   renderCart();
 
-  showToast("Item removed");
-}
+  // Immediately reset the quantity shown on the product card.
+  const qtyElement = document.getElementById(`qty-${id}`);
 
+  if (qtyElement) {
+    qtyElement.textContent = "0";
+  }
+}
 
 /* =========================================
    PRODUCT TOTAL
