@@ -205,9 +205,9 @@ const dots = images.length > 1
 }
 
 function initAccessoryImageDots() {
-  document.querySelectorAll(".acc-image-wrapper")
+  document.querySelectorAll(".ds-card-image-wrap")
     .forEach(wrapper => {
-      const slider = wrapper.querySelector(".acc-image-area");
+      const slider = wrapper.querySelector(".ds-card-image-track");
       const dots = wrapper.querySelectorAll(".acc-image-dot");
 
       if (!slider || dots.length <= 1) return;
@@ -244,8 +244,8 @@ function updateProductStockUI(product) {
   if (!card) return;
 
   const outOfStock = isOutOfStock(product);
-  const ribbon = card.querySelector(".product-offer-ribbon2");
-  const addButton = card.querySelector("[data-add-product]");
+  const ribbon = card.querySelector(".ds-card-stock-label");
+const addButton = card.querySelector(".ds-card-add");
 
   if (ribbon) {
     ribbon.hidden = !outOfStock;
