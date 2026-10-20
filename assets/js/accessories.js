@@ -702,13 +702,14 @@ function renderCart() {
           : "flex";
 
     }
-document.querySelectorAll(".acc-card").forEach(card => {
-  const qtyElement = card.querySelector(".qty");
-  if (!qtyElement) return;
 
-  const id = card.dataset.accessoryProductId;
-  qtyElement.textContent = cart[id]?.qty || 0;
-});
+  document.querySelectorAll(".ds-card-product").forEach(card => {
+    const qtyElement = card.querySelector(".ds-card-qty");
+    if (!qtyElement) return;
+
+    const id = card.dataset.accessoryProductId;
+    qtyElement.textContent = cart[id]?.qty || 0;
+  });
   }
 
 }
