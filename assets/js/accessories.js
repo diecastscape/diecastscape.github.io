@@ -576,23 +576,17 @@ function renderCartPopup() {
    RENDER CART
 ========================================= */
 
+
+
+
+  
 function renderCart() {
+  const products = getCartProducts();
 
-  const products =
-    getCartProducts();
-
-  const total =
-    getCartProductTotal();
-
-  const shipping =
-    getShipping(total);
-
-  const orderTotal =
-    total + shipping;
-
-  const totalItems =
-    getCartItemCount();
-
+  const total = getCartProductTotal();
+  const shipping = getShipping(total);
+  const orderTotal = total + shipping;
+  const totalItems = getCartItemCount();
 
   updateBottomCartBar(
     total,
@@ -601,123 +595,81 @@ function renderCart() {
     totalItems
   );
 
-
   renderCartPopup();
 
-
   const productTotalElement =
-    document.getElementById(
-      "cartPopupProductTotal"
-    );
+    document.getElementById("cartPopupProductTotal");
 
   const shippingElement =
-    document.getElementById(
-      "cartPopupShipping"
-    );
+    document.getElementById("cartPopupShipping");
 
   const grandTotalElement =
-    document.getElementById(
-      "cartPopupGrandTotal"
-    );
-
+    document.getElementById("cartPopupGrandTotal");
 
   if (productTotalElement) {
-    productTotalElement.textContent =
-      `₹${total}`;
+    productTotalElement.textContent = `₹${total}`;
   }
-
 
   if (shippingElement) {
-
     shippingElement.textContent =
-      shipping === 0
-        ? "FREE"
-        : `₹${shipping}`;
-
+      shipping === 0 ? "FREE" : `₹${shipping}`;
   }
-
 
   if (grandTotalElement) {
-    grandTotalElement.textContent =
-      `₹${orderTotal}`;
+    grandTotalElement.textContent = `₹${orderTotal}`;
   }
 
-
   const emptyBox =
-    document.getElementById(
-      "cartPopupEmpty"
-    );
+    document.getElementById("cartPopupEmpty");
 
   const normalActions =
-    document.getElementById(
-      "cartNormalActions"
-    );
+    document.getElementById("cartNormalActions");
 
   const checkoutSection =
-    document.getElementById(
-      "cartCheckoutSection"
-    );
-
+    document.getElementById("cartCheckoutSection");
 
   if (products.length === 0) {
-
     if (emptyBox) {
       emptyBox.hidden = false;
     }
 
     if (normalActions) {
-      normalActions.style.display =
-        "none";
+      normalActions.style.display = "none";
     }
 
     if (checkoutSection) {
       checkoutSection.hidden = true;
     }
-
   } else {
-
     if (emptyBox) {
       emptyBox.hidden = true;
     }
 
-    /*
-      Only show normal actions when
-      checkout mode is NOT active.
-    */
-
     if (normalActions) {
-
-      const popup =
-        document.getElementById(
-          "cartPopup"
-        );
+      const popup = document.getElementById("cartPopup");
 
       const checkoutMode =
         popup &&
         popup.dataset.checkoutMode === "true";
 
       normalActions.style.display =
-        checkoutMode
-          ? "none"
-          : "flex";
-
+        checkoutMode ? "none" : "flex";
     }
-
-  // Update quantity numbers on the new accessory cards
-document.querySelectorAll(".ds-card-product").forEach(card => {
-  const qtyElement = card.querySelector(".qty");
-  if (!qtyElement) return;
-
-  const id = card.dataset.accessoryProductId;
-  const item = cart[id];
-
-  qtyElement.textContent = item ? item.qty : 0;
-});
   }
 
+  // Always update product-card counters,
+  // even when the cart is completely empty.
+  document.querySelectorAll(".ds-card-product").forEach(card => {
+    const qtyElement = card.querySelector(".qty");
+    if (!qtyElement) return;
+
+    const id = card.dataset.accessoryProductId;
+    const item = cart[id];
+
+    qtyElement.textContent =
+      String(Math.max(0, Number(item?.qty) || 0));
+  });
 }
-
-
 /* =========================================
    OPEN CART POPUP
 ========================================= */
