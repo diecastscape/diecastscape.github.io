@@ -703,13 +703,16 @@ function renderCart() {
 
     }
 
-  document.querySelectorAll(".ds-card-product").forEach(card => {
-    const qtyElement = card.querySelector(".ds-card-qty");
-    if (!qtyElement) return;
+  // Update quantity numbers on the new accessory cards
+document.querySelectorAll(".ds-card-product").forEach(card => {
+  const qtyElement = card.querySelector(".qty");
+  if (!qtyElement) return;
 
-    const id = card.dataset.accessoryProductId;
-    qtyElement.textContent = cart[id]?.qty || 0;
-  });
+  const id = card.dataset.accessoryProductId;
+  const item = cart[id];
+
+  qtyElement.textContent = item ? item.qty : 0;
+});
   }
 
 }
