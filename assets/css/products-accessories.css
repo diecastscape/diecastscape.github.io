@@ -88,7 +88,7 @@
   right: auto;
   z-index: 4;
 
-  padding: 6px 9px;
+  padding: 4px 6px;
   border-radius: 5px;
 
   background: #c83d4d;
@@ -104,12 +104,6 @@
 .ds-card-stock-label[hidden] {
   display: none;
 }
-
-
-/* IMAGE CAROUSEL DOTS */
-
-
-
 
 /* PRODUCT DETAILS */
 
