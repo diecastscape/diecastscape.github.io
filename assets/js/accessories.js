@@ -1033,21 +1033,71 @@ function renderCheckoutProducts() {
 /* =========================================
    FINAL WHATSAPP ORDER
 ========================================= */
-async function proceedOrderWhatsApp() {
 
+    
+async function proceedOrderWhatsApp() {
   const products = getCartProducts();
 
   const total = getCartProductTotal();
   const shipping = getShipping(total);
   const orderTotal = total + shipping;
 
-  /* EMPTY CART CHECK */
   if (products.length === 0) {
     showToast("Your cart is empty");
     return;
   }
 
-  // Fetch the latest stock before sending the order to WhatsApp.
+  if (total < MIN_CART_VALUE) {
+    showToast(`Minimum order value is ₹${MIN_CART_VALUE}`);
+    return;
+  }
+
+  // Checkout preference
+  const withoutDetailsCheckbox =
+    document.getElementById("checkoutWithoutDetails");
+
+  const withoutDetails =
+    Boolean(withoutDetailsCheckbox?.checked);
+
+  // Customer details
+  const nameInput = document.getElementById("checkoutName");
+  const addressInput = document.getElementById("checkoutAddress");
+  const pincodeInput = document.getElementById("checkoutPincode");
+  const phoneInput = document.getElementById("checkoutPhone");
+
+  const name = nameInput?.value.trim() || "";
+  const address = addressInput?.value.trim() || "";
+  const pincode = pincodeInput?.value.trim() || "";
+  const phone = phoneInput?.value.trim() || "";
+
+  // Personal details are required only for normal checkout.
+  if (!withoutDetails) {
+    if (!name) {
+      showToast("Please enter your name");
+      nameInput?.focus();
+      return;
+    }
+
+    if (!address) {
+      showToast("Please enter your address");
+      addressInput?.focus();
+      return;
+    }
+
+    if (!/^\d{6}$/.test(pincode)) {
+      showToast("Please enter a valid 6-digit pincode");
+      pincodeInput?.focus();
+      return;
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+      showToast("Please enter a valid 10-digit phone number");
+      phoneInput?.focus();
+      return;
+    }
+  }
+
+  // Refresh live stock before creating the WhatsApp message.
   try {
     await window.refreshAccessoryStockNow();
   } catch (error) {
@@ -1056,70 +1106,39 @@ async function proceedOrderWhatsApp() {
     return;
   }
 
-  // Verify every cart item against the fresh stock.
-  
-for (const item of products) {
-  const product = getCurrentAccessoryProduct(item.id);
+  // Normal checkout must have enough stock.
+  // Stock-check requests can still be sent without personal details,
+  // even if an item appears unavailable, so availability can be confirmed.
+  if (!withoutDetails) {
+    for (const item of products) {
+      const product = getCurrentAccessoryProduct(item.id);
 
-  if (!product || getCurrentAvailableSets(item.id) < Number(item.qty)) {
-    showToast(`${item.name} does not have enough stock available.`);
-    return;
-  }
-}
-  /* MINIMUM ORDER CHECK */
-  if (total < MIN_CART_VALUE) {
-    showToast(`Minimum order value is ₹${MIN_CART_VALUE}`);
-    return;
-  }
-
-  /* GET DELIVERY DETAILS */
-  const addressInput = document.getElementById("checkoutAddress");
-  const pincodeInput = document.getElementById("checkoutPincode");
-  const phoneInput = document.getElementById("checkoutPhone");
-
-  const address = addressInput ? addressInput.value.trim() : "";
-  const pincode = pincodeInput ? pincodeInput.value.trim() : "";
-  const phone = phoneInput ? phoneInput.value.trim() : "";
-
-  /* VALIDATION */
-  if (!address) {
-    showToast("Please enter your address");
-    if (addressInput) addressInput.focus();
-    return;
+      if (
+        !product ||
+        getCurrentAvailableSets(item.id) < Number(item.qty)
+      ) {
+        showToast(
+          `${item.name} does not have enough stock available.`
+        );
+        return;
+      }
+    }
   }
 
-  if (!/^\d{6}$/.test(pincode)) {
-    showToast("Please enter a valid 6-digit pincode");
-    if (pincodeInput) pincodeInput.focus();
-    return;
-  }
-
-  if (!/^\d{10}$/.test(phone)) {
-    showToast("Please enter a valid 10-digit phone number");
-    if (phoneInput) phoneInput.focus();
-    return;
-  }
-
-  /* =========================================
-     GENERATE PRODUCT CODES
-     Example: #TR05 + quantity 3 = #TR0503
-  ========================================= */
-
+  // Generate product codes.
+  // Example: #TR05 + quantity 3 = #TR0503
   const orderItems = [];
 
   for (const item of products) {
-
     const qty = Math.floor(Number(item.qty) || 0);
     const price = Number(item.price) || 0;
 
     if (qty < 1) continue;
 
-    // Base code saved with the product
     const baseCode = String(item.productCode || "")
       .trim()
       .toUpperCase();
 
-    // Require a base code such as #TR05
     if (!/^#[A-Z0-9]{4}$/.test(baseCode)) {
       showToast(
         `Missing or invalid product code for ${item.name}. Please update its productCode first.`
@@ -1127,7 +1146,6 @@ for (const item of products) {
       return;
     }
 
-    // Current format supports quantities 1–99
     if (qty > 99) {
       showToast(
         `Quantity for ${item.name} cannot exceed 99 in this code format`
@@ -1135,15 +1153,14 @@ for (const item of products) {
       return;
     }
 
-    // Add quantity as two digits
     const generatedCode =
       baseCode + String(qty).padStart(2, "0");
 
     orderItems.push({
       name: item.name,
       quantityText: item.quantityText || "Quantity",
-      qty: qty,
-      price: price,
+      qty,
+      price,
       subtotal: price * qty,
       code: generatedCode
     });
@@ -1154,18 +1171,20 @@ for (const item of products) {
     return;
   }
 
-  /* =========================================
-     BUILD WHATSAPP MESSAGE
-  ========================================= */
+  // Build WhatsApp message.
+  let message = withoutDetails
+    ? "🔎 *Product Availability Check - Diecast.scape*\n\n"
+    : "🛒 *Accessories Order - Diecast.scape*\n\n";
 
-  let message = "🛒 *Accessories Order - Diecast.scape*\n\n";
+  if (withoutDetails) {
+    message +=
+      "Hi! Please confirm the current stock availability for these items before I share my delivery details.\n\n";
+  }
 
   orderItems.forEach(item => {
-
     message += `• ${item.name}\n`;
     message += `${item.quantityText} × ${item.qty} qty - ${item.code}\n`;
     message += `₹${item.price} × ${item.qty} = ₹${item.subtotal}\n\n`;
-
   });
 
   message += "━━━━━━━━━━━━━━\n";
@@ -1174,18 +1193,22 @@ for (const item of products) {
   message += "━━━━━━━━━━━━━━\n";
   message += `*Order Total : ₹${orderTotal}*\n\n`;
 
-  message += "*Delivery Details*\n";
-  message += `Address : ${address}\n`;
-  message += `Pincode : ${pincode}\n`;
-  message += `Phone : ${phone}`;
+  if (withoutDetails) {
+    message +=
+      "*Request:* Please confirm which products are available. I will share my delivery details after stock confirmation.\n";
+  } else {
+    message += "*Delivery Details*\n";
+    message += `Name : ${name}\n`;
+    message += `Address : ${address}\n`;
+    message += `Pincode : ${pincode}\n`;
+    message += `Phone : ${phone}`;
+  }
 
-  /* OPEN WHATSAPP */
   const whatsappURL =
     `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
   window.open(whatsappURL, "_blank");
 }
-
 function clearCartDirectly() {
 
   cart = {};
