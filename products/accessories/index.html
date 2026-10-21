@@ -294,82 +294,89 @@ class="search-bar">
 
 </div>
 
+<!-- DELIVERY DETAILS -->
+<div class="checkout-fields">
 
-          <!-- DELIVERY DETAILS -->
+  <!-- Customer Name -->
+  <div class="checkout-field">
+    <label for="checkoutName">Name</label>
+    <input
+      type="text"
+      id="checkoutName"
+      placeholder="Enter your full name"
+      autocomplete="name"
+    >
+  </div>
 
-          <div class="checkout-fields">
+  <!-- Address -->
+  <div class="checkout-field">
+    <label for="checkoutAddress">Address</label>
+    <textarea
+      id="checkoutAddress"
+      rows="3"
+      placeholder="Enter your complete delivery address"
+      autocomplete="street-address"
+    ></textarea>
+  </div>
 
-            <div class="checkout-field">
+  <!-- Pincode -->
+  <div class="checkout-field">
+    <label for="checkoutPincode">Pincode</label>
+    <input
+      type="text"
+      id="checkoutPincode"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="Enter 6-digit pincode"
+      autocomplete="postal-code"
+    >
+  </div>
 
-              <label for="checkoutAddress">
-                Address
-              </label>
+  <!-- Phone -->
+  <div class="checkout-field">
+    <label for="checkoutPhone">Phone Number</label>
+    <input
+      type="tel"
+      id="checkoutPhone"
+      inputmode="numeric"
+      maxlength="10"
+      placeholder="Enter 10-digit phone number"
+      autocomplete="tel"
+    >
+  </div>
 
-              <textarea
-                id="checkoutAddress"
-                rows="3"
-                placeholder="Enter your complete delivery address"
-                autocomplete="street-address"
-              ></textarea>
+</div>
 
-            </div>
+<!-- CONTINUE WITHOUT PERSONAL DETAILS -->
+<label class="checkout-no-details" for="checkoutWithoutDetails">
+  <input
+    type="checkbox"
+    id="checkoutWithoutDetails"
+  >
+  <span>
+    <strong>Continue without personal details</strong>
+    <small>Just send my cart to check product availability first.</small>
+  </span>
+</label>
 
+<div class="order-popup-action">
+  <button
+    type="button"
+    id="finalWhatsAppBtn"
+    class="proceed-order-btn"
+  >
+    Proceed to order
+  </button>
 
-            <div class="checkout-field">
+  <div class="order-whatsapp-note">
+    Order securely through WhatsApp
+  </div>
+</div>
 
-              <label for="checkoutPincode">
-                Pincode
-              </label>
-
-              <input
-                type="text"
-                id="checkoutPincode"
-                inputmode="numeric"
-                maxlength="6"
-                placeholder="Enter 6-digit pincode"
-                autocomplete="postal-code"
-              >
-
-            </div>
-
-
-            <div class="checkout-field">
-
-              <label for="checkoutPhone">
-                Phone Number
-              </label>
-
-              <input
-                type="tel"
-                id="checkoutPhone"
-                inputmode="numeric"
-                maxlength="10"
-                placeholder="Enter 10-digit phone number"
-                autocomplete="tel"
-              >
-
-            </div>
-
-          </div>
 
 
       
 
-          <div class="order-popup-action">
-
-      <button
-            type="button"
-            id="finalWhatsAppBtn"
-            class="proceed-order-btn"
-          >
-            Proceed to order
-          </button>
-
-      <div class="order-whatsapp-note">
-        Order securely through WhatsApp
-      </div>
-
-          </div>
 
 
         </div>
