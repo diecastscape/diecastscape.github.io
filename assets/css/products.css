@@ -1,3 +1,42 @@
+
+/* Continue without personal details */
+.checkout-no-details {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 16px 0;
+  padding: 13px;
+  border: 1px solid #dce5ed;
+  border-radius: 10px;
+  background: #f7fafc;
+  cursor: pointer;
+}
+
+.checkout-no-details input {
+  width: 17px;
+  height: 17px;
+  margin: 2px 0 0;
+  flex-shrink: 0;
+  accent-color: #0b132b;
+  cursor: pointer;
+}
+
+.checkout-no-details span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.checkout-no-details strong {
+  font-size: 13px;
+  color: #0b132b;
+}
+
+.checkout-no-details small {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #64748b;
+}
 /* =====================================================
    WHATSAPP REDIRECT POPUP
 ===================================================== */
