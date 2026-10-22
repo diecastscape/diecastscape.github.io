@@ -12,10 +12,8 @@
 
 <title>Admin Dashboard — Diecast.scape</title>
 
-<link
-  rel="stylesheet"
-  href="/assets/css/admin-style.css"
->
+<link rel="stylesheet" href="/assets/css/admin-style.css">
+<link rel="stylesheet" href="/assets/css/stock-management.css">
 
 </head>
 
@@ -548,6 +546,33 @@
 
 
   <div class="border-top"></div>
+
+
+<div class="stock-management-card">
+  <div class="stock-management-head">
+    <div>
+      <h4>Accessories Order Reader</h4>
+      <p>Paste a WhatsApp order, verify live stock, then confirm to book and deduct stock.</p>
+    </div>
+    <button type="button" class="sm-refresh" onclick="refreshStockManagement()">Refresh Stock</button>
+  </div>
+
+  <h5>Current Available Stock</h5>
+  <div id="stockInventoryList" class="sm-inventory-list">
+    <div class="sm-empty">Loading current stock…</div>
+  </div>
+
+  <label class="sm-label" for="stockOrderMessage">Customer WhatsApp order message</label>
+  <textarea id="stockOrderMessage" class="sm-textarea"
+    placeholder="Paste the complete Accessories Order - Diecast.scape message here..."></textarea>
+  <small class="sm-help">The final two digits of the checkout code are the set multiplier. The middle two digits are pieces per set. Example: #BR0412 = #BR04 × 12 sets = 48 pieces.</small>
+
+  <button type="button" id="stockCheckOrderBtn" class="sm-primary" onclick="checkAccessoryOrder()">Check Order &amp; Stock</button>
+  <div id="stockOrderStatus" class="sm-message" role="status" aria-live="polite"></div>
+  <div id="stockOrderReview" aria-live="polite"></div>
+  <button type="button" id="stockConfirmOrderBtn" class="sm-confirm" onclick="confirmAccessoryStockOrder()" disabled>Confirm Order &amp; Update Stock</button>
+  <div id="stockOrderSuccess" aria-live="polite"></div>
+</div>
 
 
   <!-- ACCESSORIES PRODUCT LIST -->
@@ -1118,6 +1143,7 @@
 <script type="module" src="/assets/js/dashboard/main-products.js"></script>
 <script type="module" src="/assets/js/dashboard/frame-products.js"></script>
 <script type="module" src="/assets/js/dashboard/accessories.js"></script>
+<script type="module" src="/assets/js/dashboard/stock-management.js"></script>
 <script type="module" src="/assets/js/dashboard/diorama-field-suggestions.js"></script>
 
 </body>
