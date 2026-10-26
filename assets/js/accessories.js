@@ -1060,16 +1060,18 @@ async function proceedOrderWhatsApp() {
     Boolean(withoutDetailsCheckbox?.checked);
 
   // Customer details
-  const nameInput = document.getElementById("checkoutName");
-  const addressInput = document.getElementById("checkoutAddress");
-  const pincodeInput = document.getElementById("checkoutPincode");
-  const phoneInput = document.getElementById("checkoutPhone");
+// Customer details
+const nameInput = document.getElementById("checkoutName");
+const addressInput = document.getElementById("checkoutAddress");
+const postOfficeInput = document.getElementById("checkoutPostOffice");
+const pincodeInput = document.getElementById("checkoutPincode");
+const phoneInput = document.getElementById("checkoutPhone");
 
-  const name = nameInput?.value.trim() || "";
-  const address = addressInput?.value.trim() || "";
-  const pincode = pincodeInput?.value.trim() || "";
-  const phone = phoneInput?.value.trim() || "";
-
+const name = nameInput?.value.trim() || "";
+const address = addressInput?.value.trim() || "";
+const postOffice = postOfficeInput?.value.trim() || "";
+const pincode = pincodeInput?.value.trim() || "";
+const phone = phoneInput?.value.trim() || "";
   // Personal details are required only for normal checkout.
   if (!withoutDetails) {
     if (!name) {
@@ -1198,10 +1200,11 @@ async function proceedOrderWhatsApp() {
       "*Request:* Please confirm which products are available. I will share my delivery details after stock confirmation.\n";
   } else {
     message += "*Delivery Details*\n";
-    message += `Name : ${name}\n`;
-    message += `Address : ${address}\n`;
-    message += `Pincode : ${pincode}\n`;
-    message += `Phone : ${phone}`;
+message += `Name : ${name}\n`;
+message += `Address : ${address}\n`;
+message += `Post Office Name : ${postOffice || "Not provided"}\n`;
+message += `Pincode : ${pincode}\n`;
+message += `Phone : ${phone}`;
   }
 
   const whatsappURL =
