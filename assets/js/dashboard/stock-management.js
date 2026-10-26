@@ -88,13 +88,17 @@ function parseCustomerDetails(text) {
 
   const details = {
     name: find("Name"),
-    address: addressValue || "Not provided",
+    address:
+      !addressValue || /^not provided$/i.test(addressValue)
+        ? "Not provided"
+        : addressValue,
     postOffice: find("Post Office Name"),
     pincode: find("Pincode"),
     phone: find("Phone")
   };
 
   const missing = [];
+  const warnings = [];
 
   if (!details.name) {
     missing.push("Name");
@@ -108,21 +112,14 @@ function parseCustomerDetails(text) {
     missing.push("valid phone number");
   }
 
-  const warnings = [];
-
-  if (!addressValue || /^not provided$/i.test(addressValue)) {
+  if (details.address === "Not provided") {
     warnings.push(
-      "Customer address is missing. The order can still be booked, but the address must be collected before dispatch."
+      "Customer address not provided. Collect the complete address before dispatch."
     );
   }
 
-  return {
-    details,
-    missing,
-    warnings
-  };
+  return { details, missing, warnings };
 }
-
 function parseOrderMessage(rawText) {
   const text = String(rawText || "").trim();
   if (!text) throw new Error("Paste the complete WhatsApp order message first.");
@@ -241,14 +238,14 @@ function parseOrderMessage(rawText) {
   if (Math.round((productTotal + shipping) * 100) !== Math.round(orderTotal * 100)) {
     throw new Error("Order Total does not equal Product Total + Shipping.");
   }
-
-  const {
+const {
   details,
   missing,
   warnings: customerWarnings
 } = parseCustomerDetails(text);
 
 warnings.push(...customerWarnings);
+
   return {
     rawText: text,
     items,
@@ -357,9 +354,14 @@ function renderOrderReview(order, liveProducts) {
   });
 
   const warningsHTML = order.warnings.length
-    ? `<div class="sm-warning"><strong>Check pack-size text:</strong><ul>${order.warnings.map(w => `<li>${escapeHTML(w)}</li>`).join("")}</ul><small>Stock is calculated from the encoded product code, as requested.</small></div>`
-    : "";
-
+  ? `<div class="sm-warning">
+       <strong>Order warnings:</strong>
+       <ul>
+         ${order.warnings.map(w => `<li>${escapeHTML(w)}</li>`).join("")}
+       </ul>
+       <small>Review these warnings before dispatch. Stock calculations follow the encoded product code.</small>
+     </div>`
+  : "";
   const missingHTML = order.missingCustomerFields.length
   ? `<div class="sm-error">Missing required details: ${escapeHTML(order.missingCustomerFields.join(", "))}. Complete these details before confirming.</div>`
   : "";
