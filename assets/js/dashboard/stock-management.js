@@ -364,6 +364,10 @@ function renderOrderReview(order, liveProducts) {
   const missingHTML = order.missingCustomerFields.length
   ? `<div class="sm-error">Missing required details: ${escapeHTML(order.missingCustomerFields.join(", "))}. Complete these details before confirming.</div>`
   : "";
+const missingRequiredDetails = order.missingCustomerFields.filter(
+  field => !/^address$/i.test(field.trim())
+);
+
 
 const canConfirm = stockOkay && order.missingCustomerFields.length === 0;
   review.innerHTML = `
@@ -468,11 +472,19 @@ async function confirmAccessoryStockOrder() {
     confirmButton.disabled = true;
     return;
   }
+const missingRequiredDetails = order.missingCustomerFields.filter(
+  field => !/^address$/i.test(field.trim())
+);
 
-  if (order.missingCustomerFields.length) {
-    setMessage($("stockOrderStatus"), "Customer delivery details are required to book this order.", "error");
-    return;
-  }
+if (missingRequiredDetails.length) {
+  setMessage(
+    $("stockOrderStatus"),
+    `Missing required details: ${missingRequiredDetails.join(", ")}.`,
+    "error"
+  );
+  return;
+}
+  
 
   confirmButton.disabled = true;
   if (checkButton) checkButton.disabled = true;
