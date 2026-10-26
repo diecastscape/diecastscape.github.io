@@ -369,7 +369,7 @@ const missingRequiredDetails = order.missingCustomerFields.filter(
 );
 
 
-const canConfirm = stockOkay && order.missingCustomerFields.length === 0;
+const canConfirm = stockOkay && missingRequiredDetails.length === 0;
   review.innerHTML = `
     <div class="sm-review-summary">
       <div><span>Products</span><strong>${money(order.productTotal)}</strong></div>
