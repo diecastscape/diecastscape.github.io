@@ -77,24 +77,50 @@ function extractAmount(text, label) {
 
 function parseCustomerDetails(text) {
   const find = (label) => {
-    const match = text.match(new RegExp(`^\\s*${label}\\s*:\\s*(.*?)\\s*$`, "im"));
+    const match = text.match(
+      new RegExp(`^\\s*${label}\\s*:\\s*(.*?)\\s*$`, "im")
+    );
+
     return match ? match[1].trim() : "";
   };
 
+  const addressValue = find("Address");
+
   const details = {
     name: find("Name"),
-    address: find("Address"),
+    address: addressValue || "Not provided",
+    postOffice: find("Post Office Name"),
     pincode: find("Pincode"),
     phone: find("Phone")
   };
 
   const missing = [];
-  if (!details.name) missing.push("Name");
-  if (!details.address) missing.push("Address");
-  if (!/^\d{6}$/.test(details.pincode)) missing.push("valid 6-digit pincode");
-  if (!/^[+\d][\d\s()-]{7,18}$/.test(details.phone)) missing.push("valid phone number");
 
-  return { details, missing };
+  if (!details.name) {
+    missing.push("Name");
+  }
+
+  if (!/^\d{6}$/.test(details.pincode)) {
+    missing.push("valid 6-digit pincode");
+  }
+
+  if (!/^[+\d][\d\s()-]{7,18}$/.test(details.phone)) {
+    missing.push("valid phone number");
+  }
+
+  const warnings = [];
+
+  if (!addressValue || /^not provided$/i.test(addressValue)) {
+    warnings.push(
+      "Customer address is missing. The order can still be booked, but the address must be collected before dispatch."
+    );
+  }
+
+  return {
+    details,
+    missing,
+    warnings
+  };
 }
 
 function parseOrderMessage(rawText) {
@@ -216,8 +242,13 @@ function parseOrderMessage(rawText) {
     throw new Error("Order Total does not equal Product Total + Shipping.");
   }
 
-  const { details, missing } = parseCustomerDetails(text);
+  const {
+  details,
+  missing,
+  warnings: customerWarnings
+} = parseCustomerDetails(text);
 
+warnings.push(...customerWarnings);
   return {
     rawText: text,
     items,
@@ -330,11 +361,10 @@ function renderOrderReview(order, liveProducts) {
     : "";
 
   const missingHTML = order.missingCustomerFields.length
-    ? `<div class="sm-error">Missing delivery details: ${escapeHTML(order.missingCustomerFields.join(", "))}. An actual booked order needs customer delivery details.</div>`
-    : "";
+  ? `<div class="sm-error">Missing required details: ${escapeHTML(order.missingCustomerFields.join(", "))}. Complete these details before confirming.</div>`
+  : "";
 
-  const canConfirm = stockOkay && order.missingCustomerFields.length === 0;
-
+const canConfirm = stockOkay && order.missingCustomerFields.length === 0;
   review.innerHTML = `
     <div class="sm-review-summary">
       <div><span>Products</span><strong>${money(order.productTotal)}</strong></div>
@@ -463,12 +493,14 @@ async function confirmAccessoryStockOrder() {
     }
 
     const customer = order.customerDetails;
-    const customerDetails = [
-      `Name: ${customer.name}`,
-      `Address: ${customer.address}`,
-      `Pincode: ${customer.pincode}`,
-      `Phone: ${customer.phone}`
-    ].join(", ");
+
+const customerDetails = [
+  `Name: ${customer.name}`,
+  `Address: ${customer.address || "Not provided"}`,
+  `Post Office Name: ${customer.postOffice || "Not provided"}`,
+  `Pincode: ${customer.pincode}`,
+  `Phone: ${customer.phone}`
+].join(", ");
 
     const result = await runTransaction(db, async transaction => {
       // All reads must occur before writes in Firestore transactions.
