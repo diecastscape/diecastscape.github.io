@@ -365,11 +365,14 @@ function renderOrderReview(order, liveProducts) {
   ? `<div class="sm-error">Missing required details: ${escapeHTML(order.missingCustomerFields.join(", "))}. Complete these details before confirming.</div>`
   : "";
 const missingRequiredDetails = order.missingCustomerFields.filter(
-  field => !/^address$/i.test(field.trim())
+  field => !/address/i.test(field.trim())
 );
 
+const canConfirm =
+  stockOkay &&
+  missingRequiredDetails.length === 0;
 
-const canConfirm = stockOkay && missingRequiredDetails.length === 0;
+
   review.innerHTML = `
     <div class="sm-review-summary">
       <div><span>Products</span><strong>${money(order.productTotal)}</strong></div>
@@ -473,7 +476,7 @@ async function confirmAccessoryStockOrder() {
     return;
   }
 const missingRequiredDetails = order.missingCustomerFields.filter(
-  field => !/^address$/i.test(field.trim())
+  field => !/address/i.test(field.trim())
 );
 
 if (missingRequiredDetails.length) {
