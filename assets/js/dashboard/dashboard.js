@@ -454,7 +454,16 @@ window.toggleAdd =
       addWrap.style.display !==
       "block";
 
+// Hide stock management while adding or editing an accessory.
+if (type === "accessories") {
+  const stockCard = document.querySelector(
+    "#section-accessories .stock-management-card"
+  );
 
+  if (stockCard) {
+    stockCard.style.display = "none";
+  }
+}
     if (opening) {
 
       if (!adminState.editingId) {
@@ -528,7 +537,16 @@ window.toggleAdd =
       addWrap.style.display =
         "none";
 
+// Restore stock management when cancelling the accessory form.
+if (type === "accessories") {
+  const stockCard = document.querySelector(
+    "#section-accessories .stock-management-card"
+  );
 
+  if (stockCard) {
+    stockCard.style.display = "";
+  }
+      }
       if (listBox) {
         listBox.style.display =
           "block";
@@ -890,18 +908,20 @@ window.cancelEdit =
       window.resetFrameForm();
 
     }
+else if (type === "accessories") {
+  listBox = document.getElementById("accessoriesProducts");
 
-    else if (type === "accessories") {
+  window.resetAccessoryForm();
 
-      listBox =
-        document.getElementById(
-          "accessoriesProducts"
-        );
+  const stockCard = document.querySelector(
+    "#section-accessories .stock-management-card"
+  );
 
-      window.resetAccessoryForm();
-
-    }
-
+  if (stockCard) {
+    stockCard.style.display = "";
+  }
+         }
+    
 
     const btn =
       type === "main"
