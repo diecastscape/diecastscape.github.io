@@ -113,11 +113,10 @@ function parseCustomerDetails(text) {
   }
 
   if (details.address === "Not provided") {
-    warnings.push(
-      "Customer address not provided. Collect the complete address before dispatch."
-    );
-  }
-
+  warnings.push(
+    "⚠️ ADDRESS REQUIRED BEFORE DISPATCH: This order can be booked now, but collect the customer's complete delivery address before dispatching."
+  );
+}
   return { details, missing, warnings };
 }
 function parseOrderMessage(rawText) {
