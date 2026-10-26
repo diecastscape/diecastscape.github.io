@@ -239,7 +239,7 @@
   }
 
   .ds-card-cart-controls {
-    grid-template-columns: 25px minmax(16px, 1fr) 25px;
+    grid-template-columns: 10px minmax(13px, 1fr) 10px;
     gap: 5px;
   }
 
