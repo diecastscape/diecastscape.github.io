@@ -169,14 +169,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 35px;
+  width: 40px;
+  height: 33px;
   padding: 0;
   border: 1px solid #dce3ec;
   border-radius: 8px;
   background: #ffffff;
   color: #0b132b;
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1;
   font-weight: 600;
   cursor: pointer;
@@ -239,7 +239,7 @@
   }
 
   .ds-card-cart-controls {
-    grid-template-columns: 32px minmax(18px, 1fr) 32px;
+    grid-template-columns: 25px minmax(16px, 1fr) 25px;
     gap: 5px;
   }
 
