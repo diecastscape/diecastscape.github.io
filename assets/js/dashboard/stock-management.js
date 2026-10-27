@@ -394,7 +394,12 @@ async function checkAccessoryOrder() {
 parsedOrder = null;
 confirmButton.disabled = true;
 review.innerHTML = "";
-$("stockOrderSuccess").innerHTML = "";
+const success = $("stockOrderSuccess");
+
+if (success) {
+  success.innerHTML = "";
+  success.style.display = "";
+}
 setMessage($("stockOrderStatus"), "");
 
 // Show Clear as soon as an order check is attempted,
@@ -686,10 +691,16 @@ function clearAccessoryOrderCheck() {
   const checkButton = $("stockCheckOrderBtn");
   const clearButton = $("stockClearOrderBtn");
 
-  // Clear pasted WhatsApp message and review.
+  // Clear the pasted WhatsApp message and order review.
   if (message) message.value = "";
   if (review) review.innerHTML = "";
-  if (success) success.innerHTML = "";
+
+  // Close and clear the customer-copy popup,
+  // including the order ID and stock-deduction summary.
+  if (success) {
+    success.innerHTML = "";
+    success.style.display = "none";
+  }
 
   // Clear status messages.
   if (status) {
@@ -697,20 +708,23 @@ function clearAccessoryOrderCheck() {
     status.className = "sm-message";
   }
 
-  // Reset buttons.
+  // Reset the Confirm button.
   if (confirmButton) {
     confirmButton.disabled = true;
     confirmButton.textContent = "Confirm Order & Update Stock";
     confirmButton.title = "";
   }
 
+  // Reset the Check button.
   if (checkButton) {
     checkButton.disabled = false;
     checkButton.textContent = "Check Order & Stock";
   }
 
-  // Hide Clear until the next check is attempted.
-  if (clearButton) clearButton.hidden = true;
+  // Hide Clear until the next order check.
+  if (clearButton) {
+    clearButton.hidden = true;
+  }
 }
 
 window.clearAccessoryOrderCheck = clearAccessoryOrderCheck;
