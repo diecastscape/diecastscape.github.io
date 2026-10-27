@@ -391,10 +391,16 @@ async function checkAccessoryOrder() {
   if (!message || !review || !confirmButton) return;
 
   const token = ++previewToken;
-  parsedOrder = null;
-  confirmButton.disabled = true;
-  review.innerHTML = "";
-  setMessage($("stockOrderStatus"), "");
+parsedOrder = null;
+confirmButton.disabled = true;
+review.innerHTML = "";
+$("stockOrderSuccess").innerHTML = "";
+setMessage($("stockOrderStatus"), "");
+
+// Show Clear as soon as an order check is attempted,
+// whether the pasted message is valid or invalid.
+const clearButton = $("stockClearOrderBtn");
+if (clearButton) clearButton.hidden = false;
 
   if (checkButton) {
     checkButton.disabled = true;
@@ -665,6 +671,68 @@ window.refreshStockManagement = refreshStockManagement;
 window.checkAccessoryOrder = checkAccessoryOrder;
 window.confirmAccessoryStockOrder = confirmAccessoryStockOrder;
 
+function clearAccessoryOrderCheck() {
+  // Invalidate any pending order-check request.
+  previewToken++;
+
+  // Clear the current order from memory.
+  parsedOrder = null;
+
+  const message = $("stockOrderMessage");
+  const review = $("stockOrderReview");
+  const success = $("stockOrderSuccess");
+  const status = $("stockOrderStatus");
+  const confirmButton = $("stockConfirmOrderBtn");
+  const checkButton = $("stockCheckOrderBtn");
+  const clearButton = $("stockClearOrderBtn");
+
+  // Clear pasted WhatsApp message and review.
+  if (message) message.value = "";
+  if (review) review.innerHTML = "";
+  if (success) success.innerHTML = "";
+
+  // Clear status messages.
+  if (status) {
+    status.textContent = "";
+    status.className = "sm-message";
+  }
+
+  // Reset buttons.
+  if (confirmButton) {
+    confirmButton.disabled = true;
+    confirmButton.textContent = "Confirm Order & Update Stock";
+    confirmButton.title = "";
+  }
+
+  if (checkButton) {
+    checkButton.disabled = false;
+    checkButton.textContent = "Check Order & Stock";
+  }
+
+  // Hide Clear until the next check is attempted.
+  if (clearButton) clearButton.hidden = true;
+}
+
+window.clearAccessoryOrderCheck = clearAccessoryOrderCheck;
+
 window.addEventListener("DOMContentLoaded", () => {
+  const checkButton = $("stockCheckOrderBtn");
+
+  if (checkButton && !$("stockClearOrderBtn")) {
+    const clearButton = document.createElement("button");
+
+    clearButton.type = "button";
+    clearButton.id = "stockClearOrderBtn";
+    clearButton.textContent = "Clear";
+    clearButton.className = checkButton.className;
+    clearButton.hidden = true;
+    clearButton.style.marginLeft = "8px";
+
+    checkButton.insertAdjacentElement("afterend", clearButton);
+
+    clearButton.addEventListener("click", clearAccessoryOrderCheck);
+  }
+
   refreshStockManagement();
 });
+
