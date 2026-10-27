@@ -84,41 +84,41 @@ function parseCustomerDetails(text) {
     return match ? match[1].trim() : "";
   };
 
-  const addressValue = find("Address");
+  const getValue = (value) => {
+    return !value || /^not provided$/i.test(value.trim())
+      ? "Not provided"
+      : value.trim();
+  };
 
   const details = {
-    name: find("Name"),
-    address:
-      !addressValue || /^not provided$/i.test(addressValue)
-        ? "Not provided"
-        : addressValue,
-    postOffice: find("Post Office Name"),
-    pincode: find("Pincode"),
-    phone: find("Phone")
+    name: getValue(find("Name")),
+    address: getValue(find("Address")),
+    postOffice: getValue(find("Post Office Name")),
+    pincode: getValue(find("Pincode")),
+    phone: getValue(find("Phone"))
   };
 
   const missing = [];
   const warnings = [];
 
-  if (!details.name) {
-    missing.push("Name");
+  const deliveryDetailsMissing = [
+    details.name,
+    details.address,
+    details.postOffice,
+    details.pincode,
+    details.phone
+  ].some(value => value === "Not provided");
+
+  if (deliveryDetailsMissing) {
+    warnings.push(
+      "⚠️ DELIVERY DETAILS INCOMPLETE: The order can be booked now. Collect the missing delivery details before dispatch."
+    );
   }
 
-  if (!/^\d{6}$/.test(details.pincode)) {
-    missing.push("valid 6-digit pincode");
-  }
-
-  if (!/^[+\d][\d\s()-]{7,18}$/.test(details.phone)) {
-    missing.push("valid phone number");
-  }
-
-  if (details.address === "Not provided") {
-  warnings.push(
-    "⚠️ ADDRESS REQUIRED BEFORE DISPATCH: This order can be booked now, but collect the customer's complete delivery address before dispatching."
-  );
-}
   return { details, missing, warnings };
 }
+
+
 function parseOrderMessage(rawText) {
   const text = String(rawText || "").trim();
   if (!text) throw new Error("Paste the complete WhatsApp order message first.");
@@ -364,14 +364,7 @@ function renderOrderReview(order, liveProducts) {
   const missingHTML = order.missingCustomerFields.length
   ? `<div class="sm-error">Missing required details: ${escapeHTML(order.missingCustomerFields.join(", "))}. Complete these details before confirming.</div>`
   : "";
-const missingRequiredDetails = order.missingCustomerFields.filter(
-  field => !/address/i.test(field.trim())
-);
-
-const canConfirm =
-  stockOkay &&
-  missingRequiredDetails.length === 0;
-
+const canConfirm = stockOkay;
 
   review.innerHTML = `
     <div class="sm-review-summary">
@@ -475,18 +468,7 @@ async function confirmAccessoryStockOrder() {
     confirmButton.disabled = true;
     return;
   }
-const missingRequiredDetails = order.missingCustomerFields.filter(
-  field => !/address/i.test(field.trim())
-);
 
-if (missingRequiredDetails.length) {
-  setMessage(
-    $("stockOrderStatus"),
-    `Missing required details: ${missingRequiredDetails.join(", ")}.`,
-    "error"
-  );
-  return;
-}
   
 
   confirmButton.disabled = true;
@@ -511,13 +493,13 @@ if (missingRequiredDetails.length) {
     const customer = order.customerDetails;
 
 const customerDetails = [
-  `Name: ${customer.name}`,
+  `Name: ${customer.name || "Not provided"}`,
   `Address: ${customer.address || "Not provided"}`,
   `Post Office Name: ${customer.postOffice || "Not provided"}`,
-  `Pincode: ${customer.pincode}`,
-  `Phone: ${customer.phone}`
+  `Pincode: ${customer.pincode || "Not provided"}`,
+  `Phone: ${customer.phone || "Not provided"}`
 ].join(", ");
-
+    
     const result = await runTransaction(db, async transaction => {
       // All reads must occur before writes in Firestore transactions.
       const duplicateSnapshot = await transaction.get(existingOrderRef);
