@@ -479,17 +479,18 @@ async function createBookedOrder(data) {
     });
 
     transaction.set(newOrderRef, {
-      orderId,
-      bookedDate: data.bookedDate,
-      design: data.design,
-      products: data.products,
-      shippingDate: data.shippingDate,
-      status: data.status,
-      dispatchedDate: data.dispatchedDate,
-      hidden: false,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
-    });
+orderId,
+bookedDate: data.bookedDate,
+design: data.design,
+products: data.products.map(item => ({
+name: item.name,
+quantity: item.quantity
+})),
+shippingDate: data.shippingDate,
+status: data.status,
+dispatchedDate: data.dispatchedDate,
+hidden: false
+});
 
     return { orderId, documentId: newOrderRef.id };
   });
@@ -636,17 +637,18 @@ setMessage("");
       if (!existing.exists()) {
         throw new Error("This order no longer exists.");
       }
+await updateDoc(orderRef, {
+bookedDate: data.bookedDate,
+design: data.design,
+products: data.products.map(item => ({
+name: item.name,
+quantity: item.quantity
+})),
+shippingDate: data.shippingDate,
+status: data.status,
+dispatchedDate: data.dispatchedDate
+});
 
-      // Do not update orderId. It is permanent.
-      await updateDoc(orderRef, {
-        bookedDate: data.bookedDate,
-        design: data.design,
-        products: data.products,
-        shippingDate: data.shippingDate,
-        status: data.status,
-        dispatchedDate: data.dispatchedDate,
-        updatedAt: serverTimestamp()
-      });
 
       setSaving(false);
       window.cancelBookedOrderForm();
@@ -1003,10 +1005,9 @@ window.updateBookedOrderStatus = async function (id) {
     }
 
     await updateDoc(orderRef, {
-      status,
-      dispatchedDate,
-      updatedAt: serverTimestamp()
-    });
+  status,
+  dispatchedDate
+});
 
     await window.loadBookedOrders();
     alert("Order progress updated successfully.");
@@ -1035,9 +1036,8 @@ window.toggleBookedOrderVisibility = async function (id) {
     const newHiddenValue = !currentlyHidden;
 
     await updateDoc(orderRef, {
-      hidden: newHiddenValue,
-      updatedAt: serverTimestamp()
-    });
+  hidden: newHiddenValue
+});
 
     await window.loadBookedOrders();
 
