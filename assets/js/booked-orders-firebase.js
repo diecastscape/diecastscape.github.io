@@ -246,18 +246,8 @@ function createBookingCard(order, isLatest) {
   const card = document.createElement("article");
 
   card.className = "booked-order-card";
-
-  if (isLatest) {
-    card.classList.add("latest");
-  }
-
-  const latestLabel = isLatest
-    ? `
-      <span class="booked-latest-label">
-        Latest
-      </span>
-    `
-    : "";
+// Search results should not be marked as the latest order.
+const latestLabel = "";
 
   const statusClass = getStatusClass(order.status);
 
