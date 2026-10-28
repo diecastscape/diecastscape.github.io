@@ -482,24 +482,20 @@ async function searchBookedOrder() {
   }
 }
 
-
 /* =========================================================
-   SEARCH BUTTON
+   SEARCH FORM
 ========================================================= */
 
-searchBtn.addEventListener("click", searchBookedOrder);
+const searchForm = document.getElementById(
+  "bookedOrderSearchForm"
+);
 
-
-/* =========================================================
-   ENTER KEY
-========================================================= */
-
-searchInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+if (searchForm) {
+  searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
     searchBookedOrder();
-  }
-});
+  });
+}
 
 
 /* =========================================================
