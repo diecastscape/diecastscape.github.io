@@ -61,8 +61,9 @@
   <span class="breadcrumb-current">BOOKED ORDERS</span>
 </nav>
     
-  <!-- =========================================================
-     BOOKED ORDERS SECTION
+
+<!-- =========================================================
+     BOOKED ORDERS - SEARCH ONLY
 ========================================================= -->
 
 <section class="booked-orders-section">
@@ -74,15 +75,16 @@
     <div class="booked-orders-intro">
 
       <div class="booked-orders-eyebrow">
-        BOOKED ORDER STATUS
+        ORDER TRACKING
       </div>
 
       <h1 class="booked-orders-title">
-        Order Schedule
+        Track Your Order
       </h1>
 
       <p class="booked-orders-subtitle">
-        View our current booked orders and estimated shipping schedule below. New orders will be added as they are booked.
+        Enter your Order ID below to check your booking status
+        and estimated shipping schedule.
       </p>
 
     </div>
@@ -90,41 +92,31 @@
 
     <!-- SEARCH -->
 
-    <div class="booked-search">
+    <form
+      class="booked-search"
+      id="bookedOrderSearchForm"
+    >
 
       <input
         type="search"
         id="bookedOrderSearch"
         class="booked-search-input"
         placeholder="Enter Order ID • DS-D1201"
+        aria-label="Enter your Order ID"
         autocomplete="off"
+        autocapitalize="characters"
         spellcheck="false"
       >
 
       <button
-        type="button"
+        type="submit"
         id="bookedSearchBtn"
         class="booked-search-btn"
       >
-        VIEW
+        SEARCH
       </button>
 
-    </div>
-
-
-    <!-- LIST HEADER -->
-
-    <div class="booked-list-header">
-
-      <div class="booked-list-title">
-        Our Booked Orders
-      </div>
-
-      <div class="booked-list-note">
-        Oldest → Newest
-      </div>
-
-    </div>
+    </form>
 
 
     <!-- LOADING -->
@@ -132,28 +124,35 @@
     <div
       id="bookedOrdersLoading"
       class="booked-orders-loading"
+      style="display: none;"
+      role="status"
+      aria-live="polite"
     >
-      Loading booked orders...
+      Searching for your order...
     </div>
 
 
-    <!-- CARDS CREATED BY JS -->
+    <!-- ORDER RESULT -->
 
     <div
       id="bookedOrdersList"
       class="booked-orders-list"
+      style="display: none;"
     ></div>
 
 
-    <!-- EMPTY -->
+    <!-- EMPTY / NOT FOUND -->
 
     <div
       id="bookedOrdersEmpty"
       class="booked-orders-empty"
+      style="display: none;"
+      role="status"
+      aria-live="polite"
     >
 
       <div class="booked-empty-title">
-        Order not found
+        Order Not Found
       </div>
 
       <div class="booked-empty-text">
@@ -168,27 +167,29 @@
     <div
       id="bookedOrdersError"
       class="booked-orders-error"
+      style="display: none;"
+      role="alert"
     >
-      Unable to load booked orders.
+      Unable to search for your order right now.
       Please try again later.
     </div>
 
 
-    <!-- INFO -->
+    <!-- SHIPPING INFORMATION -->
 
     <div class="booked-orders-note">
 
       <strong>Shipping estimate:</strong>
 
-      The estimated date may change slightly depending
-      on production and dispatch conditions.
+      The estimated shipping date may change slightly
+      depending on production, order volume, and dispatch
+      conditions.
 
     </div>
 
   </div>
 
 </section>
-
 
 <footer class="footer">
 
