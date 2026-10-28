@@ -276,7 +276,7 @@ const latestLabel = "";
 
       <div class="booked-detail">
         <div class="booked-detail-label">
-          Design
+          Order type
         </div>
 
         <div class="booked-detail-value">
