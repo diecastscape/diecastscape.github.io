@@ -593,30 +593,61 @@ const customerDetails = [
         updatedAt: serverTimestamp()
       });
 
-      transaction.set(existingOrderRef, {
-        orderId,
-        orderType: "Accessories",
-        bookedDate: toDisplayDate(),
-        design: "Accessories Order",
-        products: savedProducts,
-        shippingDate: "",
-        status: "Pending",
-        dispatchedDate: "",
-        hidden: false,
-        productTotal: order.productTotal,
-        shipping: order.shipping,
-        orderTotal: order.orderTotal,
-        totalPiecesDeducted: deductions.reduce((sum, item) => sum + item.piecesDeducted, 0),
-        stockDeductions: deductions,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      });
+      // =====================================================
+// PUBLIC ORDER: bookedOrders
+// Only fields required for the public tracking card.
+// =====================================================
 
-      transaction.set(customerRef, {
-        orderId,
-        customerDetails,
-        createdAt: serverTimestamp()
-      });
+const publicProducts = savedProducts.map(item => ({
+  name: item.name,
+  quantity: item.quantity
+}));
+
+transaction.set(existingOrderRef, {
+  orderId,
+  bookedDate: toDisplayDate(),
+  design: "Accessories Order",
+  products: publicProducts,
+  shippingDate: "",
+  status: "Pending",
+  dispatchedDate: "",
+  hidden: false
+});
+
+
+// =====================================================
+// PRIVATE ORDER: orderCustomers
+// Customer details + complete order and stock information.
+// =====================================================
+
+transaction.set(customerRef, {
+  orderId,
+  orderType: "Accessories",
+
+  // Customer delivery information
+  customerDetails,
+
+  // Complete product information, including prices
+  products: savedProducts,
+
+  // Order payment totals
+  productTotal: order.productTotal,
+  shipping: order.shipping,
+  orderTotal: order.orderTotal,
+
+  // Stock deduction information
+  totalPiecesDeducted: deductions.reduce(
+    (sum, item) => sum + item.piecesDeducted,
+    0
+  ),
+
+  stockDeductions: deductions,
+
+  // Private record timestamps
+  createdAt: serverTimestamp(),
+  updatedAt: serverTimestamp()
+});
+      
 
       return { orderId, deductions };
     });
