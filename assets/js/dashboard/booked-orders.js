@@ -1677,22 +1677,36 @@ window.toggleBookedOrderVisibility = async function (id) {
 // DELETE ORDER
 // ======================================================
 
-window.deleteBookedOrder = async function (id) {
+async function deleteBookedOrder(orderDocumentId) {
+  if (!orderDocumentId) {
+    alert("Order ID is missing.");
+    return;
+  }
+
   const confirmed = confirm(
-    "Permanently delete this booked order?\n\n" +
+    "Delete this order permanently?\n\n" +
+    "Both booked order details and customer details will be deleted.\n" +
     "This action cannot be undone."
   );
 
   if (!confirmed) return;
 
   try {
-    await deleteDoc(doc(db, ORDERS_COLLECTION, id));
-    await window.loadBookedOrders();
+    const batch = writeBatch(db);
+
+    batch.delete(doc(db, "bookedOrders", orderDocumentId));
+    batch.delete(doc(db, "orderCustomers", orderDocumentId));
+
+    await batch.commit();
+
+    alert("Order and customer details deleted successfully.");
+
+    await loadBookedOrders();
   } catch (error) {
-    console.error("Error deleting booked order:", error);
-    alert("Could not delete this order. Check Firebase permissions.");
+    console.error("Error deleting order:", error);
+    alert("Failed to delete the order. Please try again.");
   }
-};
+}
 
 // ======================================================
 // INITIAL STATE
