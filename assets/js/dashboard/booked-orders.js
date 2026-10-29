@@ -697,10 +697,28 @@ window.editAccessoriesDeliveryDetails = async function (orderId) {
         saveButton.textContent = "Saving...";
 
         try {
-          await updateDoc(customerRef, {
-            customerDetails:
-              formatAccessoriesCustomerDetails(updatedDetails)
-          });
+          
+await updateDoc(customerRef, {
+  name: updatedDetails.name,
+  address: updatedDetails.address,
+  postOffice: updatedDetails.postOfficeName,
+  postOfficeName: updatedDetails.postOfficeName,
+  pincode: updatedDetails.pincode,
+  phone: updatedDetails.phone,
+
+  deliveryDetails: {
+    name: updatedDetails.name,
+    address: updatedDetails.address,
+    postOffice: updatedDetails.postOfficeName,
+    postOfficeName: updatedDetails.postOfficeName,
+    pincode: updatedDetails.pincode,
+    phone: updatedDetails.phone
+  },
+
+  customerDetails: formatAccessoriesCustomerDetails(updatedDetails),
+  updatedAt: serverTimestamp()
+});
+
 
           popup.remove();
 
