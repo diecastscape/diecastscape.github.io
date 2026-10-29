@@ -517,11 +517,28 @@ window.saveAccessoriesDeliveryDetails = async function (orderId) {
       );
     }
 
-    // Update only private customer delivery details.
-    // Preserve the existing document's other fields.
-    await updateDoc(customerRef, {
-      customerDetails: formatAccessoriesCustomerDetails(details)
-    });
+    
+await updateDoc(customerRef, {
+  name: details.name,
+  address: details.address,
+  postOffice: details.postOfficeName,
+  postOfficeName: details.postOfficeName,
+  pincode: details.pincode,
+  phone: details.phone,
+
+  deliveryDetails: {
+    name: details.name,
+    address: details.address,
+    postOffice: details.postOfficeName,
+    postOfficeName: details.postOfficeName,
+    pincode: details.pincode,
+    phone: details.phone
+  },
+
+  customerDetails: formatAccessoriesCustomerDetails(details),
+  updatedAt: serverTimestamp()
+});
+
 
     alert("Accessories delivery details saved successfully.");
 
@@ -561,8 +578,8 @@ window.editAccessoriesDeliveryDetails = async function (orderId) {
     }
 
     const details = parseAccessoriesCustomerDetails(
-      customerSnapshot.data().customerDetails || ""
-    );
+  customerSnapshot.data()
+);
 
     const oldPopup = document.getElementById(
       "accessoryDeliveryEditPopup"
