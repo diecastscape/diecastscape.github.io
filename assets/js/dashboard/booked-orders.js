@@ -378,40 +378,51 @@ function isAccessoriesOrder(order) {
 
 
 // Convert the existing customerDetails text into editable fields.
-function parseAccessoriesCustomerDetails(text = "") {
+
+function parseAccessoriesCustomerDetails(data = {}) {
+  // Support both the new separate fields and old saved records.
+  const oldDetails = data.customerDetails || "";
+
   const details = {
-    name: "",
-    address: "",
-    postOfficeName: "",
-    pincode: "",
-    phone: ""
+    name: data.name || data.deliveryDetails?.name || "",
+    address: data.address || data.deliveryDetails?.address || "",
+    postOfficeName:
+      data.postOfficeName ||
+      data.postOffice ||
+      data.deliveryDetails?.postOfficeName ||
+      data.deliveryDetails?.postOffice ||
+      "",
+    pincode: data.pincode || data.deliveryDetails?.pincode || "",
+    phone: data.phone || data.deliveryDetails?.phone || ""
   };
 
-  const labels = {
-    "name": "name",
-    "address": "address",
-    "post office name": "postOfficeName",
-    "pincode": "pincode",
-    "phone": "phone"
-  };
-
-  String(text).split(/\r?\n/).forEach(line => {
+  // Fill any missing values from the old combined customerDetails string.
+  String(oldDetails).split(/\r?\n/).forEach(line => {
     const separator = line.indexOf(":");
-
     if (separator === -1) return;
 
     const label = line.slice(0, separator).trim().toLowerCase();
     const value = line.slice(separator + 1).trim();
 
-    const key = labels[label];
+    const keyMap = {
+      "name": "name",
+      "address": "address",
+      "post office name": "postOfficeName",
+      "postoffice": "postOfficeName",
+      "pincode": "pincode",
+      "phone": "phone"
+    };
 
-    if (key) {
-      details[key] = /^not provided$/i.test(value) ? "" : value;
+    const key = keyMap[label];
+
+    if (key && !details[key] && !/^not provided$/i.test(value)) {
+      details[key] = value;
     }
   });
 
   return details;
 }
+
 
 
 // Format the fields using the existing orderCustomers schema.
@@ -771,9 +782,7 @@ window.loadAccessoriesBookedOrders = async function () {
       const orderId = String(order.orderId || "");
       const customer = customerMap.get(orderId);
 
-      const details = parseAccessoriesCustomerDetails(
-        customer?.customerDetails || ""
-      );
+      const details = parseAccessoriesCustomerDetails(customer || {});
 
       const isHidden = order.hidden === true;
 
