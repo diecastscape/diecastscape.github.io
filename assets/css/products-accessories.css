@@ -259,3 +259,97 @@
     font-size: 14px;
   }
    }
+/* =========================================
+   TEMPORARY ACCESSORIES COUNTDOWN
+========================================= */
+
+.accessories-countdown {
+  width: calc(100% - 32px);
+  max-width: 520px;
+  margin: 28px auto;
+  padding: 30px 18px;
+  text-align: center;
+  color: #ffffff;
+  background: #111111;
+  border: 1px solid #333333;
+  border-radius: 14px;
+  box-sizing: border-box;
+}
+
+.accessories-countdown[hidden] {
+  display: none !important;
+}
+
+.countdown-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #13adbd;
+  margin-bottom: 14px;
+}
+
+.accessories-countdown h2 {
+  margin: 0 0 12px;
+  font-size: clamp(21px, 5vw, 30px);
+  line-height: 1.3;
+  font-weight: 800;
+}
+
+.countdown-description {
+  max-width: 360px;
+  margin: 0 auto 25px;
+  color: #cccccc;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.countdown-timer {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.countdown-unit {
+  padding: 14px 3px;
+  background: #1d1d1d;
+  border: 1px solid #333333;
+  border-radius: 8px;
+}
+
+.countdown-unit span {
+  display: block;
+  font-size: clamp(22px, 6vw, 32px);
+  font-weight: 800;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  color: #13adbd;
+}
+
+.countdown-unit small {
+  display: block;
+  margin-top: 7px;
+  font-size: 10px;
+  color: #bbbbbb;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.countdown-footer {
+  margin-top: 24px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffffff;
+}
+
+@media (max-width: 360px) {
+  .countdown-timer {
+    gap: 5px;
+  }
+
+  .countdown-unit {
+    padding: 12px 2px;
+  }
+}
