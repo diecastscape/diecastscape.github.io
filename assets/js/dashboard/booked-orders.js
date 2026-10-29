@@ -1673,37 +1673,62 @@ window.toggleBookedOrderVisibility = async function (id) {
   }
 };
 
-// ======================================================
-// DELETE ORDER
-// ======================================================
 
-async function deleteBookedOrder(id) {
+/* ======================================================
+   DELETE ORDER AND CUSTOMER DETAILS
+====================================================== */
+
+window.deleteBookedOrder = async function (id) {
   if (!id) {
-    alert("Order ID is missing.");
+    alert("Order document ID is missing.");
     return;
   }
 
   const confirmed = confirm(
-    "Are you sure you want to permanently delete this order and its customer details?"
+    "Permanently delete this order and its customer details?\n\n" +
+    "This action cannot be undone."
   );
 
   if (!confirmed) return;
 
   try {
-    // Delete the booked order
-    await deleteDoc(doc(db, ORDERS_COLLECTION, id));
+    const orderRef = doc(db, ORDERS_COLLECTION, id);
 
-    // Delete the matching customer details
-    await deleteDoc(doc(db, CUSTOMERS_COLLECTION, id));
+    // Read the order to obtain its actual public order ID.
+    const orderSnapshot = await getDoc(orderRef);
+
+    if (!orderSnapshot.exists()) {
+      alert("This order has already been deleted.");
+      await window.loadBookedOrders();
+      return;
+    }
+
+    const orderData = orderSnapshot.data();
+    const publicOrderId = orderData.orderId || "";
+
+    // Delete the booked order.
+    await deleteDoc(orderRef);
+
+    // Delete its matching customer record.
+    if (publicOrderId) {
+      await deleteDoc(
+        doc(db, CUSTOMERS_COLLECTION, publicOrderId)
+      );
+    }
 
     alert("Order and customer details deleted successfully.");
 
     await window.loadBookedOrders();
+
   } catch (error) {
     console.error("Error deleting order:", error);
-    alert("Failed to delete order. Check the console for details.");
+
+    alert(
+      "Could not completely delete the order.\n\n" +
+      (error.message || "Check Firebase permissions.")
+    );
   }
-}
+};
 
 
 // ======================================================
