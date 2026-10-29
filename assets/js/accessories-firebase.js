@@ -375,3 +375,52 @@ window.refreshAccessoryStockNow = async function () {
 window.addEventListener("DOMContentLoaded", () => {
   startLiveStockListener();
 });
+/* =========================================
+   TEMPORARY ACCESSORIES COUNTDOWN
+========================================= */
+
+const ACCESSORIES_COUNTDOWN_END = new Date(
+  "2026-11-01T00:00:00+05:30"
+).getTime();
+
+function updateAccessoriesCountdown() {
+  const countdown = document.getElementById("accessoriesCountdown");
+
+  if (!countdown) return;
+
+  countdown.hidden = false;
+
+  let remaining = Math.max(
+    0,
+    ACCESSORIES_COUNTDOWN_END - Date.now()
+  );
+
+  const days = Math.floor(remaining / 86400000);
+  remaining %= 86400000;
+
+  const hours = Math.floor(remaining / 3600000);
+  remaining %= 3600000;
+
+  const minutes = Math.floor(remaining / 60000);
+  remaining %= 60000;
+
+  const seconds = Math.floor(remaining / 1000);
+
+  document.getElementById("countdownDays").textContent =
+    String(days).padStart(2, "0");
+
+  document.getElementById("countdownHours").textContent =
+    String(hours).padStart(2, "0");
+
+  document.getElementById("countdownMinutes").textContent =
+    String(minutes).padStart(2, "0");
+
+  document.getElementById("countdownSeconds").textContent =
+    String(seconds).padStart(2, "0");
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  updateAccessoriesCountdown();
+
+  setInterval(updateAccessoriesCountdown, 1000);
+});
