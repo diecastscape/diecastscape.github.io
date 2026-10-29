@@ -683,18 +683,18 @@ async function confirmAccessoryStockOrder() {
       productRefs.push(matched.ref);
     }
 
-    const customer = order.customerDetails;
-
-    // Keep the existing combined field for compatibility.
-    const customer = order.customerDetails;
+    
+const customer = order.customerDetails || {};
 
 const deliveryFields = {
   name: customer.name || "Not provided",
   address: customer.address || "Not provided",
+  postOffice: customer.postOffice || "Not provided",
   postOfficeName: customer.postOffice || "Not provided",
   pincode: customer.pincode || "Not provided",
   phone: customer.phone || "Not provided"
 };
+
 
     // Calculate the dispatch date once when the order is confirmed.
     const confirmedAt = new Date();
@@ -848,29 +848,24 @@ const deliveryFields = {
         estimatedDispatchDate: estimatedDispatchISO,
         estimatedDispatchDay: "Thursday",
 
-        // Save delivery details as separate fields.
-        name: customer.name || "Not provided",
-        address: customer.address || "Not provided",
-        postOffice: customer.postOffice || "Not provided",
-        pincode: customer.pincode || "Not provided",
-        phone: customer.phone || "Not provided",
+        
+        // Customer delivery information — separate Firestore fields.
+        name: deliveryFields.name,
+        address: deliveryFields.address,
+        postOffice: deliveryFields.postOffice,
+        postOfficeName: deliveryFields.postOfficeName,
+        pincode: deliveryFields.pincode,
+        phone: deliveryFields.phone,
 
-        // Also keep a nested object for easier future use.
+        // Nested copy for future use.
         deliveryDetails: {
-          name: customer.name || "Not provided",
-          address: customer.address || "Not provided",
-          postOffice: customer.postOffice || "Not provided",
-          pincode: customer.pincode || "Not provided",
-          phone: customer.phone || "Not provided"
+          name: deliveryFields.name,
+          address: deliveryFields.address,
+          postOffice: deliveryFields.postOffice,
+          pincode: deliveryFields.pincode,
+          phone: deliveryFields.phone
         },
 
-        
-        // Customer delivery information — saved as separate fields
-name: deliveryFields.name,
-address: deliveryFields.address,
-postOfficeName: deliveryFields.postOfficeName,
-pincode: deliveryFields.pincode,
-phone: deliveryFields.phone,
 
         products: savedProducts,
 
