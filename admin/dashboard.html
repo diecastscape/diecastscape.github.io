@@ -526,20 +526,26 @@
 
     <div class="btn-row">
 
-      <button
-        onclick="toggleList('accessories')"
-      >
-        Refresh
-      </button>
+  <button onclick="toggleList('accessories')">
+    Refresh
+  </button>
 
-      <button
-        onclick="toggleAdd('accessories')"
-        id="accessoriesAddBtn"
-      >
-        + Add
-      </button>
+  <button
+    type="button"
+    id="accessoriesVisibilityBtn"
+    onclick="toggleAllAccessoriesVisibility()"
+  >
+    Hide All
+  </button>
 
-    </div>
+  <button
+    onclick="toggleAdd('accessories')"
+    id="accessoriesAddBtn"
+  >
+    + Add
+  </button>
+
+</div>
 
   </div>
 
