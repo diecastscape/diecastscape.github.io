@@ -1178,25 +1178,31 @@ window.loadBookedOrders = async function () {
     const orders = [];
 
     snapshot.forEach(orderDoc => {
-      orders.push({
-        id: orderDoc.id,
-        ...orderDoc.data()
-      });
-    });
+  const order = {
+    id: orderDoc.id,
+    ...orderDoc.data()
+  };
+
+  if (!isAccessoriesOrder(order)) {
+    orders.push(order);
+  }
+});
 
     orders.sort((a, b) => {
       return getOrderNumber(b.orderId) - getOrderNumber(a.orderId);
     });
 
     if (!orders.length) {
-      container.innerHTML = `
-        <div class="booked-empty-state">
-          No booked orders yet.<br>
-          Click <strong>+ Add</strong> to create your first order.
-        </div>
-      `;
-      return;
-    }
+  container.innerHTML = `
+    <div class="booked-empty-state">
+      No Diorama bookings yet.<br>
+      Click <strong>+ Add</strong> to create your first order.
+    </div>
+  `;
+
+  await window.loadAccessoriesBookedOrders();
+  return;
+}
 
     const hiddenCount = orders.filter(order => order.hidden === true).length;
 
@@ -1325,6 +1331,7 @@ window.loadBookedOrders = async function () {
     });
 
     container.innerHTML = html;
+    await window.loadAccessoriesBookedOrders();
   } catch (error) {
     console.error("Error loading booked orders:", error);
 
