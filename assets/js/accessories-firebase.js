@@ -383,28 +383,38 @@ const ACCESSORIES_COUNTDOWN_END = new Date(
   "2026-11-01T00:00:00+05:30"
 ).getTime();
 
+
 function updateAccessoriesCountdown() {
   const countdown = document.getElementById("accessoriesCountdown");
-
   if (!countdown) return;
 
   countdown.hidden = false;
 
-  let remaining = Math.max(
-    0,
-    ACCESSORIES_COUNTDOWN_END - Date.now()
-  );
+  const finished = Date.now() >= ACCESSORIES_COUNTDOWN_END;
+  const timer = countdown.querySelector(".countdown-timer");
+  const date = countdown.querySelector(".countdown-date");
+  const footer = countdown.querySelector(".countdown-bottom");
+  const celebration = document.getElementById("countdownFinished");
+
+  if (finished) {
+    if (timer) timer.hidden = true;
+    if (date) date.hidden = true;
+    if (footer) footer.hidden = true;
+    if (celebration) celebration.hidden = false;
+    return;
+  }
+
+  if (timer) timer.hidden = false;
+  if (date) date.hidden = false;
+  if (footer) footer.hidden = false;
+  if (celebration) celebration.hidden = true;
+
+  const remaining = ACCESSORIES_COUNTDOWN_END - Date.now();
 
   const days = Math.floor(remaining / 86400000);
-  remaining %= 86400000;
-
-  const hours = Math.floor(remaining / 3600000);
-  remaining %= 3600000;
-
-  const minutes = Math.floor(remaining / 60000);
-  remaining %= 60000;
-
-  const seconds = Math.floor(remaining / 1000);
+  const hours = Math.floor((remaining % 86400000) / 3600000);
+  const minutes = Math.floor((remaining % 3600000) / 60000);
+  const seconds = Math.floor((remaining % 60000) / 1000);
 
   document.getElementById("countdownDays").textContent =
     String(days).padStart(2, "0");
@@ -418,6 +428,7 @@ function updateAccessoriesCountdown() {
   document.getElementById("countdownSeconds").textContent =
     String(seconds).padStart(2, "0");
 }
+
 
 window.addEventListener("DOMContentLoaded", () => {
   updateAccessoriesCountdown();
