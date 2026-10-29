@@ -686,13 +686,15 @@ async function confirmAccessoryStockOrder() {
     const customer = order.customerDetails;
 
     // Keep the existing combined field for compatibility.
-    const customerDetails = [
-      `Name: ${customer.name || "Not provided"}`,
-      `Address: ${customer.address || "Not provided"}`,
-      `Post Office Name: ${customer.postOffice || "Not provided"}`,
-      `Pincode: ${customer.pincode || "Not provided"}`,
-      `Phone: ${customer.phone || "Not provided"}`
-    ].join(", ");
+    const customer = order.customerDetails;
+
+const deliveryFields = {
+  name: customer.name || "Not provided",
+  address: customer.address || "Not provided",
+  postOfficeName: customer.postOffice || "Not provided",
+  pincode: customer.pincode || "Not provided",
+  phone: customer.phone || "Not provided"
+};
 
     // Calculate the dispatch date once when the order is confirmed.
     const confirmedAt = new Date();
@@ -862,8 +864,13 @@ async function confirmAccessoryStockOrder() {
           phone: customer.phone || "Not provided"
         },
 
-        // Preserve compatibility with code using the old field.
-        customerDetails,
+        
+        // Customer delivery information — saved as separate fields
+name: deliveryFields.name,
+address: deliveryFields.address,
+postOfficeName: deliveryFields.postOfficeName,
+pincode: deliveryFields.pincode,
+phone: deliveryFields.phone,
 
         products: savedProducts,
 
