@@ -679,85 +679,36 @@ window.loadAccessoriesBookedOrders = async function () {
           </div>
 
           <h4 class="booked-form-heading">
-            Delivery Details
-          </h4>
+  Delivery Details
+</h4>
 
-          ${
-            customer
-              ? ""
-              : `<p class="booked-save-message error">
-                   Customer details document not found.
-                 </p>`
-          }
+${
+  customer
+    ? `
+      <div class="accessory-delivery-details">
+        <p><strong>Name:</strong> ${escapeHTML(details.name || "—")}</p>
+        <p><strong>Address:</strong> ${escapeHTML(details.address || "—")}</p>
+        <p><strong>Post Office:</strong> ${escapeHTML(details.postOfficeName || "—")}</p>
+        <p><strong>Pincode:</strong> ${escapeHTML(details.pincode || "—")}</p>
+        <p><strong>Phone:</strong> ${escapeHTML(details.phone || "—")}</p>
+      </div>
+    `
+    : `
+      <p class="booked-save-message error">
+        Customer details document not found.
+      </p>
+    `
+}
 
-          <div class="accessory-delivery-fields">
-
-            <label for="accessory-name-${escapeHTML(orderId)}">
-              Customer Name
-            </label>
-
-            <input
-              id="accessory-name-${escapeHTML(orderId)}"
-              type="text"
-              value="${escapeHTML(details.name)}"
-              autocomplete="name"
-            >
-
-            <label for="accessory-address-${escapeHTML(orderId)}">
-              Delivery Address
-            </label>
-
-            <textarea
-              id="accessory-address-${escapeHTML(orderId)}"
-              rows="3"
-              autocomplete="street-address"
-            >${escapeHTML(details.address)}</textarea>
-
-            <label for="accessory-postOfficeName-${escapeHTML(orderId)}">
-              Post Office Name
-            </label>
-
-            <input
-              id="accessory-postOfficeName-${escapeHTML(orderId)}"
-              type="text"
-              value="${escapeHTML(details.postOfficeName)}"
-            >
-
-            <label for="accessory-pincode-${escapeHTML(orderId)}">
-              Pincode
-            </label>
-
-            <input
-              id="accessory-pincode-${escapeHTML(orderId)}"
-              type="text"
-              inputmode="numeric"
-              maxlength="6"
-              value="${escapeHTML(details.pincode)}"
-            >
-
-            <label for="accessory-phone-${escapeHTML(orderId)}">
-              Phone
-            </label>
-
-            <input
-              id="accessory-phone-${escapeHTML(orderId)}"
-              type="tel"
-              inputmode="numeric"
-              maxlength="10"
-              value="${escapeHTML(details.phone)}"
-            >
-
-            <button
-              type="button"
-              id="accessory-customer-save-${escapeHTML(orderId)}"
-              ${customer ? "" : "disabled"}
-              onclick="saveAccessoriesDeliveryDetails('${escapeHTML(orderId)}')"
-            >
-              Save Delivery Details
-            </button>
-
-          </div>
-
+<div class="booked-order-actions">
+  <button
+    type="button"
+    onclick="editAccessoriesDeliveryDetails('${escapeHTML(orderId)}')"
+    ${customer ? "" : "disabled"}
+  >
+    Edit Delivery Details
+  </button>
+</div>
           <div class="booked-status-row">
 
             <label for="bo-status-${escapeHTML(order.id)}">
