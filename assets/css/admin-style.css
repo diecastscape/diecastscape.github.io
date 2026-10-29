@@ -198,14 +198,14 @@ textarea:focus {
 ========================================= */
 
 button {
-  max-width: 65px;
-  padding: 10px 1px;
+  min-width: 65px;
+  padding: 8px 2px;
   border: none;
   border-radius: 8px;
   background: var(--primary);
   color: #FFFFFF;
   font-weight: 600;
-  margin: 8px 0;
+  margin: 5px 0;
   cursor: pointer;
   box-sizing: border-box;
   transition:
