@@ -19,6 +19,8 @@ import { adminState } from "/assets/js/dashboard/dashboard.js";
 // ======================================================
 
 const ORDERS_COLLECTION = "bookedOrders";
+const CUSTOMERS_COLLECTION = "orderCustomers";
+
 const COUNTERS_COLLECTION = "bookedOrderCounters";
 const COUNTER_DOCUMENT = "orderIdSequence";
 
