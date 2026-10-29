@@ -361,10 +361,462 @@ function productsToText(products) {
       : "";
 
     return [name, quantity].filter(Boolean).join(" ");
+    
   }).join("\n");
 }
 
+// ======================================================
+// ACCESSORIES BOOKING HELPERS
+// ======================================================
 
+function isAccessoriesOrder(order) {
+  return (
+    String(order?.orderId || "").startsWith("DS-A") ||
+    String(order?.orderType || "").toLowerCase() === "accessories"
+  );
+}
+
+
+// Convert the existing customerDetails text into editable fields.
+function parseAccessoriesCustomerDetails(text = "") {
+  const details = {
+    name: "",
+    address: "",
+    postOfficeName: "",
+    pincode: "",
+    phone: ""
+  };
+
+  const labels = {
+    "name": "name",
+    "address": "address",
+    "post office name": "postOfficeName",
+    "pincode": "pincode",
+    "phone": "phone"
+  };
+
+  String(text).split(/\r?\n/).forEach(line => {
+    const separator = line.indexOf(":");
+
+    if (separator === -1) return;
+
+    const label = line.slice(0, separator).trim().toLowerCase();
+    const value = line.slice(separator + 1).trim();
+
+    const key = labels[label];
+
+    if (key) {
+      details[key] = /^not provided$/i.test(value) ? "" : value;
+    }
+  });
+
+  return details;
+}
+
+
+// Format the fields using the existing orderCustomers schema.
+function formatAccessoriesCustomerDetails(details) {
+  return [
+    `Name: ${details.name.trim() || "Not provided"}`,
+    `Address: ${details.address.trim() || "Not provided"}`,
+    `Post Office Name: ${details.postOfficeName.trim() || "Not provided"}`,
+    `Pincode: ${details.pincode.trim() || "Not provided"}`,
+    `Phone: ${details.phone.trim() || "Not provided"}`
+  ].join("\n");
+}
+
+
+// Display product names and ordered quantities only.
+function accessoriesProductsToText(products) {
+  if (!Array.isArray(products)) return "";
+
+  return products.map(item => {
+    if (typeof item === "string") {
+      return `${item} × 1`;
+    }
+
+    const name = item?.name || item?.productName || "Product";
+    const quantity = Number(item?.quantity) || 1;
+
+    return `${name} × ${quantity}`;
+  }).join("\n");
+}
+// ======================================================
+// ACCESSORIES DELIVERY DETAILS
+// ======================================================
+
+window.saveAccessoriesDeliveryDetails = async function (orderId) {
+  const button = byId(`accessory-customer-save-${orderId}`);
+
+  if (button?.disabled) return;
+
+  const getValue = field =>
+    byId(`accessory-${field}-${orderId}`)?.value.trim() || "";
+
+  const details = {
+    name: getValue("name"),
+    address: getValue("address"),
+    postOfficeName: getValue("postOfficeName"),
+    pincode: getValue("pincode"),
+    phone: getValue("phone")
+  };
+
+  if (!details.name) {
+    alert("Please enter the customer's name.");
+    return;
+  }
+
+  if (!details.address) {
+    alert("Please enter the delivery address.");
+    return;
+  }
+
+  if (!details.postOfficeName) {
+    alert("Please enter the post office name.");
+    return;
+  }
+
+  if (!/^\d{6}$/.test(details.pincode)) {
+    alert("Please enter a valid 6-digit pincode.");
+    return;
+  }
+
+  if (!/^[6-9]\d{9}$/.test(details.phone)) {
+    alert("Please enter a valid 10-digit Indian mobile number.");
+    return;
+  }
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Saving...";
+  }
+
+  try {
+    const customerRef = doc(
+      db,
+      CUSTOMERS_COLLECTION,
+      orderId
+    );
+
+    const customerSnapshot = await getDoc(customerRef);
+
+    if (!customerSnapshot.exists()) {
+      throw new Error(
+        "Customer details document not found for " + orderId
+      );
+    }
+
+    // Update only private customer delivery details.
+    // Preserve the existing document's other fields.
+    await updateDoc(customerRef, {
+      customerDetails: formatAccessoriesCustomerDetails(details)
+    });
+
+    alert("Accessories delivery details saved successfully.");
+
+    await window.loadAccessoriesBookedOrders();
+
+  } catch (error) {
+    console.error("Error saving delivery details:", error);
+
+    alert(
+      error.message ||
+      "Could not save delivery details. Check admin permissions."
+    );
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Save Delivery Details";
+    }
+  }
+};
+// ======================================================
+// LOAD ACCESSORIES BOOKINGS
+// ======================================================
+
+window.loadAccessoriesBookedOrders = async function () {
+  const container = byId("accessoriesBookedOrdersList");
+
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="booked-loading-state">
+      Loading Accessories bookings...
+    </div>
+  `;
+
+  try {
+    // Public booking and tracking information.
+    const ordersSnapshot = await getDocs(
+      collection(db, ORDERS_COLLECTION)
+    );
+
+    const orders = [];
+
+    ordersSnapshot.forEach(orderDoc => {
+      const order = {
+        id: orderDoc.id,
+        ...orderDoc.data()
+      };
+
+      if (isAccessoriesOrder(order)) {
+        orders.push(order);
+      }
+    });
+
+    orders.sort((a, b) => {
+      const numberA = Number(
+        String(a.orderId || "").match(/\d+$/)?.[0] || 0
+      );
+
+      const numberB = Number(
+        String(b.orderId || "").match(/\d+$/)?.[0] || 0
+      );
+
+      return numberB - numberA;
+    });
+
+    if (!orders.length) {
+      container.innerHTML = `
+        <div class="booked-empty-state">
+          No Accessories bookings found.
+        </div>
+      `;
+      return;
+    }
+
+    // Private customer details are loaded separately.
+    const customersSnapshot = await getDocs(
+      collection(db, CUSTOMERS_COLLECTION)
+    );
+
+    const customerMap = new Map();
+
+    customersSnapshot.forEach(customerDoc => {
+      customerMap.set(customerDoc.id, customerDoc.data());
+    });
+
+    let html = `
+      <div class="booked-order-count">
+        Total Accessories bookings: ${orders.length}
+      </div>
+    `;
+
+    orders.forEach(order => {
+      const orderId = String(order.orderId || "");
+      const customer = customerMap.get(orderId);
+
+      const details = parseAccessoriesCustomerDetails(
+        customer?.customerDetails || ""
+      );
+
+      const isHidden = order.hidden === true;
+
+      const status = ORDER_STATUSES.includes(order.status)
+        ? order.status
+        : "Pending";
+
+      const productsText = accessoriesProductsToText(order.products);
+
+      const statusOptions = ORDER_STATUSES.map(option => `
+        <option
+          value="${escapeHTML(option)}"
+          ${option === status ? "selected" : ""}
+        >
+          ${escapeHTML(option)}
+        </option>
+      `).join("");
+
+      html += `
+        <article class="booked-order-card">
+
+          <div class="booked-order-top">
+            <div>
+              <div class="booked-order-id">
+                ${escapeHTML(orderId || "No Order ID")}
+              </div>
+
+              <div class="booked-order-design">
+                Accessories Order
+              </div>
+            </div>
+
+            <div class="booked-visibility-label">
+              ${isHidden ? "Hidden from public" : "Visible publicly"}
+            </div>
+          </div>
+
+          <div class="booked-order-details">
+
+            <div class="booked-order-detail">
+              <span class="booked-order-detail-label">Booking Date</span>
+              <div class="booked-order-detail-value">
+                ${escapeHTML(storedDateToDisplay(order.bookedDate) || "—")}
+              </div>
+            </div>
+
+            <div class="booked-order-detail">
+              <span class="booked-order-detail-label">Shipping Date</span>
+              <div class="booked-order-detail-value">
+                ${escapeHTML(storedDateToDisplay(order.shippingDate) || "—")}
+              </div>
+            </div>
+
+            <div class="booked-order-detail">
+              <span class="booked-order-detail-label">Products</span>
+              <div class="booked-order-detail-value">
+                ${escapeHTML(productsText || "—").replace(/\n/g, "<br>")}
+              </div>
+            </div>
+
+            <div class="booked-order-detail">
+              <span class="booked-order-detail-label">Dispatched Date</span>
+              <div class="booked-order-detail-value">
+                ${escapeHTML(storedDateToDisplay(order.dispatchedDate) || "—")}
+              </div>
+            </div>
+
+          </div>
+
+          <h4 class="booked-form-heading">
+            Delivery Details
+          </h4>
+
+          ${
+            customer
+              ? ""
+              : `<p class="booked-save-message error">
+                   Customer details document not found.
+                 </p>`
+          }
+
+          <div class="accessory-delivery-fields">
+
+            <label for="accessory-name-${escapeHTML(orderId)}">
+              Customer Name
+            </label>
+
+            <input
+              id="accessory-name-${escapeHTML(orderId)}"
+              type="text"
+              value="${escapeHTML(details.name)}"
+              autocomplete="name"
+            >
+
+            <label for="accessory-address-${escapeHTML(orderId)}">
+              Delivery Address
+            </label>
+
+            <textarea
+              id="accessory-address-${escapeHTML(orderId)}"
+              rows="3"
+              autocomplete="street-address"
+            >${escapeHTML(details.address)}</textarea>
+
+            <label for="accessory-postOfficeName-${escapeHTML(orderId)}">
+              Post Office Name
+            </label>
+
+            <input
+              id="accessory-postOfficeName-${escapeHTML(orderId)}"
+              type="text"
+              value="${escapeHTML(details.postOfficeName)}"
+            >
+
+            <label for="accessory-pincode-${escapeHTML(orderId)}">
+              Pincode
+            </label>
+
+            <input
+              id="accessory-pincode-${escapeHTML(orderId)}"
+              type="text"
+              inputmode="numeric"
+              maxlength="6"
+              value="${escapeHTML(details.pincode)}"
+            >
+
+            <label for="accessory-phone-${escapeHTML(orderId)}">
+              Phone
+            </label>
+
+            <input
+              id="accessory-phone-${escapeHTML(orderId)}"
+              type="tel"
+              inputmode="numeric"
+              maxlength="10"
+              value="${escapeHTML(details.phone)}"
+            >
+
+            <button
+              type="button"
+              id="accessory-customer-save-${escapeHTML(orderId)}"
+              ${customer ? "" : "disabled"}
+              onclick="saveAccessoriesDeliveryDetails('${escapeHTML(orderId)}')"
+            >
+              Save Delivery Details
+            </button>
+
+          </div>
+
+          <div class="booked-status-row">
+
+            <label for="bo-status-${escapeHTML(order.id)}">
+              Update Order Progress
+            </label>
+
+            <select
+              class="booked-status-select"
+              id="bo-status-${escapeHTML(order.id)}"
+            >
+              ${statusOptions}
+            </select>
+
+            <button
+              type="button"
+              class="booked-status-update"
+              onclick="updateBookedOrderStatus('${escapeHTML(order.id)}')"
+            >
+              Update Progress
+            </button>
+
+          </div>
+
+          <div class="booked-order-actions">
+
+            <button
+              type="button"
+              onclick="toggleBookedOrderVisibility('${escapeHTML(order.id)}')"
+            >
+              ${isHidden ? "Show Publicly" : "Hide from Public"}
+            </button>
+
+            <button
+              type="button"
+              class="booked-delete-btn"
+              onclick="deleteBookedOrder('${escapeHTML(order.id)}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </article>
+      `;
+    });
+
+    container.innerHTML = html;
+
+  } catch (error) {
+    console.error("Error loading Accessories bookings:", error);
+
+    container.innerHTML = `
+      <div class="booked-error-state">
+        Could not load Accessories bookings.<br>
+        Check Firebase permissions and refresh.
+      </div>
+    `;
+  }
+};
 function getFormValues() {
   return {
     orderId: byId("bo-orderId")?.value.trim() || "",
