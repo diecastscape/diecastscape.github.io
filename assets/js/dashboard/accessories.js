@@ -6,9 +6,9 @@ import {
   addDoc,
   doc,
   getDoc,
+  getDocs,
   deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 import {
   adminState,
   showEditMode,
@@ -870,3 +870,95 @@ window.addEventListener(
 
   }
 );
+// ======================================================
+// SHOW / HIDE ALL ACCESSORIES
+// ======================================================
+
+window.toggleAllAccessoriesVisibility = async function () {
+
+  const btn = document.getElementById(
+    "accessoriesVisibilityBtn"
+  );
+
+  if (!btn || btn.disabled) return;
+
+  const originalText = btn.innerText;
+
+  try {
+
+    btn.disabled = true;
+    btn.innerText = "Updating...";
+
+    const snapshot = await getDocs(
+      collection(db, "accessoriesProducts")
+    );
+
+    if (snapshot.empty) {
+      alert("No accessories found.");
+      return;
+    }
+
+    // If every product is active, hide all.
+    // Otherwise, show all.
+    const allActive = snapshot.docs.every(
+      product => product.data().active === true
+    );
+
+    const newActiveState = !allActive;
+
+    const actionText = newActiveState
+      ? "SHOW all accessories"
+      : "HIDE all accessories";
+
+    if (!confirm(`Are you sure you want to ${actionText}?`)) {
+      return;
+    }
+
+    for (const product of snapshot.docs) {
+
+      if (product.data().active !== newActiveState) {
+
+        await updateDoc(product.ref, {
+          active: newActiveState
+        });
+
+      }
+
+    }
+
+    btn.innerText = newActiveState
+      ? "Hide All"
+      : "Show All";
+
+    alert(
+      newActiveState
+        ? "All accessories are now active."
+        : "All accessories are now hidden."
+    );
+
+    if (typeof loadAdminProducts === "function") {
+      await loadAdminProducts("accessories");
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Error updating accessory visibility:",
+      error
+    );
+
+    alert(
+      "Could not update all accessories. Please check Firebase and try again."
+    );
+
+  } finally {
+
+    btn.disabled = false;
+
+    if (btn.innerText === "Updating...") {
+      btn.innerText = originalText;
+    }
+
+  }
+
+};
