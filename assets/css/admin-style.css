@@ -198,7 +198,7 @@ textarea:focus {
 ========================================= */
 
 button {
-  min-width: 80px;
+  min-width: 75px;
   padding: 10px;
   border: none;
   border-radius: 8px;
