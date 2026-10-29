@@ -531,6 +531,171 @@ window.saveAccessoriesDeliveryDetails = async function (orderId) {
   }
 };
 // ======================================================
+// EDIT ACCESSORIES DELIVERY DETAILS
+// ======================================================
+
+window.editAccessoriesDeliveryDetails = async function (orderId) {
+  try {
+    const customerRef = doc(
+      db,
+      CUSTOMERS_COLLECTION,
+      orderId
+    );
+
+    const customerSnapshot = await getDoc(customerRef);
+
+    if (!customerSnapshot.exists()) {
+      alert("Customer details document not found.");
+      return;
+    }
+
+    const details = parseAccessoriesCustomerDetails(
+      customerSnapshot.data().customerDetails || ""
+    );
+
+    const oldPopup = document.getElementById(
+      "accessoryDeliveryEditPopup"
+    );
+
+    if (oldPopup) oldPopup.remove();
+
+    const popup = document.createElement("div");
+    popup.id = "accessoryDeliveryEditPopup";
+    popup.className = "accessory-edit-overlay";
+
+    popup.innerHTML = `
+      <div class="accessory-edit-box">
+
+        <h3>Edit Delivery Details</h3>
+
+        <p>Order ID: ${escapeHTML(orderId)}</p>
+
+        <label for="accessory-edit-name">Customer Name</label>
+        <input
+          id="accessory-edit-name"
+          type="text"
+          value="${escapeHTML(details.name)}"
+        >
+
+        <label for="accessory-edit-address">Delivery Address</label>
+        <textarea
+          id="accessory-edit-address"
+          rows="3"
+        >${escapeHTML(details.address)}</textarea>
+
+        <label for="accessory-edit-postOffice">Post Office Name</label>
+        <input
+          id="accessory-edit-postOffice"
+          type="text"
+          value="${escapeHTML(details.postOfficeName)}"
+        >
+
+        <label for="accessory-edit-pincode">Pincode</label>
+        <input
+          id="accessory-edit-pincode"
+          type="text"
+          inputmode="numeric"
+          maxlength="6"
+          value="${escapeHTML(details.pincode)}"
+        >
+
+        <label for="accessory-edit-phone">Phone</label>
+        <input
+          id="accessory-edit-phone"
+          type="tel"
+          inputmode="numeric"
+          maxlength="10"
+          value="${escapeHTML(details.phone)}"
+        >
+
+        <div class="accessory-edit-actions">
+          <button
+            type="button"
+            id="accessory-edit-save"
+          >
+            Save Changes
+          </button>
+
+          <button
+            type="button"
+            id="accessory-edit-cancel"
+          >
+            Cancel
+          </button>
+        </div>
+
+      </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    popup.querySelector("#accessory-edit-cancel")
+      .addEventListener("click", () => popup.remove());
+
+    popup.querySelector("#accessory-edit-save")
+      .addEventListener("click", async () => {
+        const saveButton = popup.querySelector(
+          "#accessory-edit-save"
+        );
+
+        const updatedDetails = {
+          name: popup.querySelector("#accessory-edit-name").value.trim(),
+          address: popup.querySelector("#accessory-edit-address").value.trim(),
+          postOfficeName: popup.querySelector("#accessory-edit-postOffice").value.trim(),
+          pincode: popup.querySelector("#accessory-edit-pincode").value.trim(),
+          phone: popup.querySelector("#accessory-edit-phone").value.trim()
+        };
+
+        if (
+          !updatedDetails.name ||
+          !updatedDetails.address ||
+          !updatedDetails.postOfficeName
+        ) {
+          alert("Please complete the name, address, and post office fields.");
+          return;
+        }
+
+        if (!/^\d{6}$/.test(updatedDetails.pincode)) {
+          alert("Please enter a valid 6-digit pincode.");
+          return;
+        }
+
+        if (!/^[6-9]\d{9}$/.test(updatedDetails.phone)) {
+          alert("Please enter a valid 10-digit Indian mobile number.");
+          return;
+        }
+
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+
+        try {
+          await updateDoc(customerRef, {
+            customerDetails:
+              formatAccessoriesCustomerDetails(updatedDetails)
+          });
+
+          popup.remove();
+
+          await window.loadAccessoriesBookedOrders();
+
+          alert("Delivery details updated successfully.");
+
+        } catch (error) {
+          console.error("Error updating delivery details:", error);
+
+          alert("Could not save delivery details. Check Firebase permissions.");
+
+          saveButton.disabled = false;
+          saveButton.textContent = "Save Changes";
+        }
+      });
+
+  } catch (error) {
+    console.error("Error opening delivery editor:", error);
+    alert("Could not load the delivery details.");
+  }
+};
+// ======================================================
 // LOAD ACCESSORIES BOOKINGS
 // ======================================================
 
