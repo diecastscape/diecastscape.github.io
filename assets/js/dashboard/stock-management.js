@@ -354,10 +354,14 @@ async function refreshStockManagement() {
 
     const snapshot = await getDocs(collection(db, PRODUCTS_COLLECTION));
 
-    const products = snapshot.docs.map(d => ({
-  id: d.id,
-  ...d.data()
-}));
+    
+const products = snapshot.docs
+  .map(d => ({ id: d.id, ...d.data() }))
+  .sort((a, b) => {
+    const dateA = a.created?.toMillis?.() ?? 0;
+    const dateB = b.created?.toMillis?.() ?? 0;
+    return dateA - dateB;
+  });
     if (!products.length) {
       list.innerHTML = `<div class="sm-empty">No accessory products found.</div>`;
       return;
