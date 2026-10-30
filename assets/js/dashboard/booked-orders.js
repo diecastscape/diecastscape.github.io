@@ -877,7 +877,23 @@ window.loadAccessoriesBookedOrders = async function () {
                 ${escapeHTML(productsText || "—").replace(/\n/g, "<br>")}
               </div>
             </div>
+<div class="booked-order-detail packaging-detail-card">
+  <span class="booked-order-detail-label">📦 Packaging</span>
 
+  <div class="booked-order-detail-value packaging-detail-list">
+    ${
+      Array.isArray(customer?.stockDeductions) &&
+      customer.stockDeductions.length
+        ? customer.stockDeductions.map(item => `
+            <div class="packaging-item">
+              <span>${escapeHTML(item.productName || "Unnamed product")}</span>
+              <strong>${Number(item.piecesDeducted || 0)} pcs</strong>
+            </div>
+          `).join("")
+        : `<div class="packaging-empty">No stock deduction data available</div>`
+    }
+  </div>
+</div>
             <div class="booked-order-detail">
               <span class="booked-order-detail-label">Dispatched Date</span>
               <div class="booked-order-detail-value">
