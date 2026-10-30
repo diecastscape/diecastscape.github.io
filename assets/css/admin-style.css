@@ -1353,3 +1353,49 @@ h5 {
   opacity: 0.6;
   cursor: wait;
 }
+/* =====================================================
+   ACCESSORIES PACKAGING INNER CARD
+===================================================== */
+
+.packaging-detail-card {
+  background: #f0fafa;
+  border: 1px solid #b8e8eb;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.packaging-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.packaging-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 10px;
+  background: #ffffff;
+  border: 1px solid #dcebed;
+  border-radius: 7px;
+}
+
+.packaging-item span {
+  font-size: 14px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.packaging-item strong {
+  flex-shrink: 0;
+  color: #078c98;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.packaging-empty {
+  font-size: 13px;
+  color: #777777;
+}
