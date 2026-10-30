@@ -34,13 +34,14 @@ const ORDER_PREFIX = "DS-D";
 const FIRST_ORDER_NUMBER = 1000;
 
 const ORDER_STATUSES = [
-  "Pending",
-  "Next in Work",
-  "In Progress",
-  "Ready to Dispatch",
-  "Dispatched"
+    "Pending",
+    "Next in Work",
+    "In Progress",
+    "Ready to Pack",
+    "Packing",
+    "Ready to Dispatch",
+    "Dispatched"
 ];
-
 // Change this if your public tracking page uses another URL.
 const ORDER_PROGRESS_URL =
   `${window.location.origin}/booked-orders/`;
