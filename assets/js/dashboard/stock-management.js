@@ -831,7 +831,7 @@ const deliveryFields = {
         estimatedDispatchDate: estimatedDispatchISO,
         estimatedDispatchDay: "Thursday",
 
-        status: "Pending",
+        status: "Ready to Pack",
         dispatchedDate: "",
         hidden: false
       });
