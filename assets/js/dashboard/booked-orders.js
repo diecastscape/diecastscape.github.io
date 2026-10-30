@@ -1615,7 +1615,7 @@ renderBookedProducts(data.products);
 
 window.updateBookedOrderStatus = async function (id) {
     try {
-        const statusSelect = document.getElementById(`status-${id}`);
+        const statusSelect = document.getElementById(`bo-status-${id}`);
 
         if (!statusSelect) {
             console.error("Status dropdown not found for order:", id);
