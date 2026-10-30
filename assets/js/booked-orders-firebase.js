@@ -304,7 +304,23 @@ const latestLabel = "";
           ${escapeHTML(order.shippingDate)}
         </div>
       </div>
+${order.dispatchedDate ? `
+  <div class="booked-detail booked-dispatched">
+    <div class="booked-detail-label">
+      Dispatched Date
+    </div>
 
+    <div class="booked-detail-value">
+      ${escapeHTML(order.dispatchedDate)}
+    </div>
+  </div>
+
+  <div class="booked-tracking-note">
+    Your courier tracking ID will be sent to your provided
+    phone number via SMS, as we use the courier service
+    directly for shipping.
+  </div>
+` : ""}
       <div class="booked-status-wrap">
         <span class="booked-status ${statusClass}">
           ${escapeHTML(order.status)}
