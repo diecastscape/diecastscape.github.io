@@ -771,3 +771,79 @@
     height: 38px;
   }
 }
+/* =========================================================
+   DISPATCHED DATE
+========================================================= */
+
+.booked-dispatched {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin-top: 3px;
+  padding-top: 7px;
+  border-top: 1px solid #edf0f3;
+}
+
+.booked-dispatched .booked-detail-label {
+  color: #7d8796;
+  margin-bottom: 4px;
+}
+
+.booked-dispatched .booked-detail-value {
+  color: #18834c;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   COURIER TRACKING SMS NOTE
+========================================================= */
+
+.booked-tracking-note {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin-top: 2px;
+  padding: 8px 10px;
+  border: 1px solid #d8e9f7;
+  border-radius: 7px;
+  background: #f1f8ff;
+  color: #526b83;
+  font-size: 9px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  box-sizing: border-box;
+}
+
+.booked-tracking-note::before {
+  content: "ⓘ ";
+  color: #2878b8;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   MOBILE ADJUSTMENTS
+========================================================= */
+
+@media (max-width: 560px) {
+
+  .booked-dispatched {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+    padding-top: 7px;
+  }
+
+  .booked-dispatched .booked-detail-value {
+    font-size: 9.5px;
+  }
+
+  .booked-tracking-note {
+    grid-column: 1 / -1;
+    margin-top: 2px;
+    padding: 8px;
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
+}
