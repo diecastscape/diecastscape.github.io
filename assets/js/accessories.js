@@ -1191,7 +1191,7 @@ const phone = phoneInput?.value.trim() || "";
 
   message += "━━━━━━━━━━━━━━\n";
   message += `Product Total : ₹${total}\n`;
-  message += `Shipping : ${shipping === 0 ? "FREE" : `₹${shipping}`}\n`;
+  message += `Shipping : ₹${shipping}\n`;
   message += "━━━━━━━━━━━━━━\n";
   message += `*Order Total : ₹${orderTotal}*\n\n`;
 
