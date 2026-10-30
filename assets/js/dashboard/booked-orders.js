@@ -1614,47 +1614,62 @@ renderBookedProducts(data.products);
 // ======================================================
 
 window.updateBookedOrderStatus = async function (id) {
-  const select = byId(`bo-status-${id}`);
-  if (!select) return;
+    try {
+        const statusSelect = document.getElementById(`status-${id}`);
 
-  const status = select.value;
+        if (!statusSelect) {
+            console.error("Status dropdown not found for order:", id);
+            return;
+        }
 
-  if (!ORDER_STATUSES.includes(status)) {
-    alert("Please select a valid order status.");
-    return;
-  }
+        const newStatus = statusSelect.value;
+        const orderRef = doc(db, "bookedOrders", id);
+        const orderSnap = await getDoc(orderRef);
 
-  try {
-    const orderRef = doc(db, ORDERS_COLLECTION, id);
-    const snapshot = await getDoc(orderRef);
+        if (!orderSnap.exists()) {
+            alert("Order not found.");
+            return;
+        }
 
-    if (!snapshot.exists()) {
-      alert("This order no longer exists.");
-      await window.loadBookedOrders();
-      return;
+        const orderData = orderSnap.data();
+
+        const updateData = {
+            status: newStatus
+        };
+
+        // Automatically record the date when the order is dispatched.
+        // Preserve the existing date if one is already saved.
+        if (
+            newStatus === "Dispatched" &&
+            !orderData.dispatchedDate
+        ) {
+            const today = new Date();
+
+            const day = String(today.getDate()).padStart(2, "0");
+            const month = String(today.getMonth() + 1).padStart(2, "0");
+            const year = today.getFullYear();
+
+            updateData.dispatchedDate = `${day}/${month}/${year}`;
+        }
+
+        await updateDoc(orderRef, updateData);
+
+        alert("Order status updated successfully.");
+
+        // Refresh both lists so the updated status/date is displayed.
+        if (typeof window.loadBookedOrders === "function") {
+            await window.loadBookedOrders();
+        }
+
+        if (typeof window.loadAccessoriesBookedOrders === "function") {
+            await window.loadAccessoriesBookedOrders();
+        }
+
+    } catch (error) {
+        console.error("Error updating order status:", error);
+        alert("Failed to update order status. Please try again.");
     }
-
-    const existing = snapshot.data();
-
-    let dispatchedDate = existing.dispatchedDate || "";
-
-    if (status === "Dispatched" && !dispatchedDate) {
-      dispatchedDate = isoToDisplayDate(todayISO());
-    }
-
-    await updateDoc(orderRef, {
-  status,
-  dispatchedDate
-});
-
-    await window.loadBookedOrders();
-    alert("Order progress updated successfully.");
-  } catch (error) {
-    console.error("Error updating order progress:", error);
-    alert("Could not update order progress. Check Firebase permissions.");
-  }
 };
-
 // ======================================================
 // HIDE / SHOW ORDER ON PUBLIC SCHEDULE
 // ======================================================
