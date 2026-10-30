@@ -316,9 +316,7 @@ ${order.dispatchedDate ? `
   </div>
 
   <div class="booked-tracking-note">
-    Your courier tracking ID will be sent to your provided
-    phone number via SMS, as we use the courier service
-    directly for shipping.
+    The courier tracking ID will be sent via SMS to your provided phone number. Please use it to track your shipment.
   </div>
 ` : ""}
       <div class="booked-status-wrap">
