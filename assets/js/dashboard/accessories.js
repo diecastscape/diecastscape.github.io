@@ -281,33 +281,62 @@ if (
 
 
       // ==================================================
-      // ADD NEW PRODUCT
-      // ==================================================
+// ADD NEW PRODUCT
+// ==================================================
 
-      else {
+else {
 
-        await addDoc(
+  // GET CURRENT ACCESSORIES VISIBILITY STATUS
+  const existingProducts = await getDocs(
+    collection(db, "accessoriesProducts")
+  );
 
-          collection(
-            db,
-            "accessoriesProducts"
-          ),
+  const products = existingProducts.docs;
 
-{
-  name,
-  quantity,
-  subtitle,
-  price,
-  productCode,
-  stock,
-  images,
-  active: true,
-  created: Date.now()
+  let newProductActive = true;
+
+  if (products.length > 0) {
+
+    const allActive = products.every(
+      product => product.data().active === true
+    );
+
+    const allInactive = products.every(
+      product => product.data().active === false
+    );
+
+    if (allActive) {
+      newProductActive = true;
+    } 
+    else if (allInactive) {
+      newProductActive = false;
+    }
+
+  }
+
+  // SAVE NEW PRODUCT
+  await addDoc(
+
+    collection(
+      db,
+      "accessoriesProducts"
+    ),
+
+    {
+      name,
+      quantity,
+      subtitle,
+      price,
+      productCode,
+      stock,
+      images,
+      active: newProductActive,
+      created: Date.now()
+    }
+
+  );
+
 }
-
-        );
-
-      }
 
 
       // ==================================================
