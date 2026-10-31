@@ -81,20 +81,34 @@ const $ = (id) => document.getElementById(id);
 
 let parsedOrder = null;
 let previewToken = 0;
+
 /* =====================================================
-   TEMPORARY: RESTORE STOCK FROM 3 TEST ORDERS
-   DS-A1017, DS-A1018, DS-A1019
+   TEMPORARY: RESTORE 3 TEST ORDERS
+   No extra Firestore collection required
 ===================================================== */
 
 async function restoreThreeTestOrdersStock() {
-  const button = document.getElementById("restoreThreeTestOrdersBtn");
+  const button = $("restoreThreeTestOrdersBtn");
+
+  const restoreKey =
+    "diecastscape_test_stock_restored_A1017_A1018_A1019";
+
+  if (localStorage.getItem(restoreKey) === "yes") {
+    alert("These three test orders have already been restored.");
+    return;
+  }
+
+  if (!confirm(
+    "Restore stock deducted by DS-A1017, DS-A1018 and DS-A1019?\n\n" +
+    "Continue only if these were test orders and no genuine sales need to be preserved."
+  )) {
+    return;
+  }
 
   if (button) {
     button.disabled = true;
     button.textContent = "Restoring stock...";
   }
-
-  const restoreId = "restore_test_orders_A1017_A1018_A1019";
 
   const stockToRestore = {
     "#TR10": 46,
@@ -112,21 +126,6 @@ async function restoreThreeTestOrdersStock() {
   };
 
   try {
-    if (!confirm(
-      "Restore stock deducted by test orders DS-A1017, DS-A1018 and DS-A1019?\n\n" +
-      "This will add back the quantities shown in your screenshots and recalculate #CL00.\n\n" +
-      "This action can only run once."
-    )) {
-      return;
-    }
-
-    const restoreRef = doc(
-      db,
-      "stockTestRestores",
-      restoreId
-    );
-
-    // Find all required product documents.
     const productRefs = new Map();
 
     for (const code of [
@@ -142,7 +141,7 @@ async function restoreThreeTestOrdersStock() {
 
       if (snapshot.size !== 1) {
         throw new Error(
-          `${code}: expected exactly one product, found ${snapshot.size}.`
+          `${code}: expected one product, found ${snapshot.size}.`
         );
       }
 
@@ -150,22 +149,14 @@ async function restoreThreeTestOrdersStock() {
     }
 
     await runTransaction(db, async transaction => {
-      const restoreSnapshot = await transaction.get(restoreRef);
+      const products = new Map();
 
-      if (restoreSnapshot.exists()) {
-        throw new Error(
-          "These three test orders have already been restored. No changes made."
-        );
-      }
-
-      // Read every product before making any writes.
-      const productSnapshots = new Map();
-
+      // Read all products before writing.
       for (const [code, ref] of productRefs.entries()) {
         const snapshot = await transaction.get(ref);
 
         if (!snapshot.exists()) {
-          throw new Error(`${code} no longer exists.`);
+          throw new Error(`${code} does not exist.`);
         }
 
         const data = snapshot.data();
@@ -173,94 +164,84 @@ async function restoreThreeTestOrdersStock() {
         if (
           String(data.productCode || "").toUpperCase() !== code
         ) {
-          throw new Error(`Product code mismatch for ${code}.`);
+          throw new Error(`Product code mismatch: ${code}`);
         }
 
-        const currentStock = Number(data.stock);
+        const stock = Number(data.stock);
 
-        if (!Number.isInteger(currentStock) || currentStock < 0) {
-          throw new Error(`Invalid current stock for ${code}.`);
+        if (!Number.isInteger(stock) || stock < 0) {
+          throw new Error(`Invalid stock for ${code}.`);
         }
 
-        productSnapshots.set(code, {
-          ref,
-          data,
-          stock: currentStock
-        });
+        products.set(code, { ref, stock });
       }
 
-      // Add back the three test orders' deductions.
       const updatedStocks = new Map();
 
       for (const [code, quantity] of Object.entries(stockToRestore)) {
-        const product = productSnapshots.get(code);
-
         updatedStocks.set(
           code,
-          product.stock + quantity
+          products.get(code).stock + quantity
         );
       }
 
-      // Recalculate Classic Combo stock from restored components.
+      // Recalculate Classic Combo stock.
       const recipe = COMBO_RECIPES["#CL00"];
 
       if (!recipe) {
-        throw new Error("Classic Combo recipe #CL00 was not found.");
+        throw new Error("Classic Combo recipe is missing.");
       }
 
       let comboStock = Infinity;
 
       for (const component of recipe) {
-        const stock = updatedStocks.has(component.productCode)
+        const componentStock = updatedStocks.has(
+          component.productCode
+        )
           ? updatedStocks.get(component.productCode)
-          : productSnapshots.get(component.productCode)?.stock;
+          : products.get(component.productCode)?.stock;
 
-        if (!Number.isInteger(stock) || stock < 0) {
+        if (!Number.isInteger(componentStock)) {
           throw new Error(
-            `Invalid stock for combo component ${component.productCode}.`
+            `Invalid component stock: ${component.productCode}`
           );
         }
 
         comboStock = Math.min(
           comboStock,
-          Math.floor(stock / component.pieces)
+          Math.floor(componentStock / component.pieces)
         );
       }
 
-      // Save restored component stock.
+      // Restore component stocks.
       for (const [code, newStock] of updatedStocks.entries()) {
-        transaction.update(productSnapshots.get(code).ref, {
+        transaction.update(products.get(code).ref, {
           stock: newStock,
           stockUpdatedAt: serverTimestamp()
         });
       }
 
-      // Save recalculated combo stock.
-      transaction.update(productSnapshots.get("#CL00").ref, {
+      // Update calculated combo stock.
+      transaction.update(products.get("#CL00").ref, {
         stock: comboStock,
         stockUpdatedAt: serverTimestamp()
       });
-
-      // Prevent accidental second execution.
-      transaction.set(restoreRef, {
-        description: "Restored test orders DS-A1017, DS-A1018, DS-A1019",
-        restoredAt: serverTimestamp(),
-        restoredProducts: stockToRestore,
-        comboStockAfter: comboStock
-      });
     });
+
+    // Mark as completed only after Firebase succeeds.
+    localStorage.setItem(restoreKey, "yes");
 
     await refreshStockManagement();
 
     alert(
       "STOCK RESTORED SUCCESSFULLY!\n\n" +
-      "All 12 product quantities have been added back.\n" +
-      "Classic Combo #CL00 has been recalculated.\n\n" +
-      "This restore button cannot be used again."
+      "12 product stocks restored.\n" +
+      "Classic Combo stock recalculated.\n\n" +
+      "You can now remove the temporary code."
     );
 
   } catch (error) {
-    console.error("Test stock restoration failed:", error);
+    console.error("Stock restoration failed:", error);
 
     alert(
       "RESTORATION FAILED:\n\n" +
@@ -274,7 +255,6 @@ async function restoreThreeTestOrdersStock() {
     }
   }
 }
-
 /* =====================================================
    BASIC HELPERS
 ===================================================== */
