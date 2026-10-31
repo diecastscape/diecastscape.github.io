@@ -81,7 +81,199 @@ const $ = (id) => document.getElementById(id);
 
 let parsedOrder = null;
 let previewToken = 0;
+/* =====================================================
+   TEMPORARY: RESTORE STOCK FROM 3 TEST ORDERS
+   DS-A1017, DS-A1018, DS-A1019
+===================================================== */
 
+async function restoreThreeTestOrdersStock() {
+  const button = document.getElementById("restoreThreeTestOrdersBtn");
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Restoring stock...";
+  }
+
+  const restoreId = "restore_test_orders_A1017_A1018_A1019";
+
+  const stockToRestore = {
+    "#TR10": 46,
+    "#OB06": 10,
+    "#DN01": 8,
+    "#LJ02": 10,
+    "#TC10": 50,
+    "#DE02": 2,
+    "#FB01": 5,
+    "#BR04": 6,
+    "#FL01": 3,
+    "#AD01": 3,
+    "#SL01": 3,
+    "#GT01": 3
+  };
+
+  try {
+    if (!confirm(
+      "Restore stock deducted by test orders DS-A1017, DS-A1018 and DS-A1019?\n\n" +
+      "This will add back the quantities shown in your screenshots and recalculate #CL00.\n\n" +
+      "This action can only run once."
+    )) {
+      return;
+    }
+
+    const restoreRef = doc(
+      db,
+      "stockTestRestores",
+      restoreId
+    );
+
+    // Find all required product documents.
+    const productRefs = new Map();
+
+    for (const code of [
+      ...Object.keys(stockToRestore),
+      "#CL00"
+    ]) {
+      const q = query(
+        collection(db, PRODUCTS_COLLECTION),
+        where("productCode", "==", code)
+      );
+
+      const snapshot = await getDocs(q);
+
+      if (snapshot.size !== 1) {
+        throw new Error(
+          `${code}: expected exactly one product, found ${snapshot.size}.`
+        );
+      }
+
+      productRefs.set(code, snapshot.docs[0].ref);
+    }
+
+    await runTransaction(db, async transaction => {
+      const restoreSnapshot = await transaction.get(restoreRef);
+
+      if (restoreSnapshot.exists()) {
+        throw new Error(
+          "These three test orders have already been restored. No changes made."
+        );
+      }
+
+      // Read every product before making any writes.
+      const productSnapshots = new Map();
+
+      for (const [code, ref] of productRefs.entries()) {
+        const snapshot = await transaction.get(ref);
+
+        if (!snapshot.exists()) {
+          throw new Error(`${code} no longer exists.`);
+        }
+
+        const data = snapshot.data();
+
+        if (
+          String(data.productCode || "").toUpperCase() !== code
+        ) {
+          throw new Error(`Product code mismatch for ${code}.`);
+        }
+
+        const currentStock = Number(data.stock);
+
+        if (!Number.isInteger(currentStock) || currentStock < 0) {
+          throw new Error(`Invalid current stock for ${code}.`);
+        }
+
+        productSnapshots.set(code, {
+          ref,
+          data,
+          stock: currentStock
+        });
+      }
+
+      // Add back the three test orders' deductions.
+      const updatedStocks = new Map();
+
+      for (const [code, quantity] of Object.entries(stockToRestore)) {
+        const product = productSnapshots.get(code);
+
+        updatedStocks.set(
+          code,
+          product.stock + quantity
+        );
+      }
+
+      // Recalculate Classic Combo stock from restored components.
+      const recipe = COMBO_RECIPES["#CL00"];
+
+      if (!recipe) {
+        throw new Error("Classic Combo recipe #CL00 was not found.");
+      }
+
+      let comboStock = Infinity;
+
+      for (const component of recipe) {
+        const stock = updatedStocks.has(component.productCode)
+          ? updatedStocks.get(component.productCode)
+          : productSnapshots.get(component.productCode)?.stock;
+
+        if (!Number.isInteger(stock) || stock < 0) {
+          throw new Error(
+            `Invalid stock for combo component ${component.productCode}.`
+          );
+        }
+
+        comboStock = Math.min(
+          comboStock,
+          Math.floor(stock / component.pieces)
+        );
+      }
+
+      // Save restored component stock.
+      for (const [code, newStock] of updatedStocks.entries()) {
+        transaction.update(productSnapshots.get(code).ref, {
+          stock: newStock,
+          stockUpdatedAt: serverTimestamp()
+        });
+      }
+
+      // Save recalculated combo stock.
+      transaction.update(productSnapshots.get("#CL00").ref, {
+        stock: comboStock,
+        stockUpdatedAt: serverTimestamp()
+      });
+
+      // Prevent accidental second execution.
+      transaction.set(restoreRef, {
+        description: "Restored test orders DS-A1017, DS-A1018, DS-A1019",
+        restoredAt: serverTimestamp(),
+        restoredProducts: stockToRestore,
+        comboStockAfter: comboStock
+      });
+    });
+
+    await refreshStockManagement();
+
+    alert(
+      "STOCK RESTORED SUCCESSFULLY!\n\n" +
+      "All 12 product quantities have been added back.\n" +
+      "Classic Combo #CL00 has been recalculated.\n\n" +
+      "This restore button cannot be used again."
+    );
+
+  } catch (error) {
+    console.error("Test stock restoration failed:", error);
+
+    alert(
+      "RESTORATION FAILED:\n\n" +
+      (error.message || "Unknown error")
+    );
+
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Restore 3 Test Orders Stock";
+    }
+  }
+}
 
 /* =====================================================
    BASIC HELPERS
@@ -1776,4 +1968,35 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   refreshStockManagement();
-});
+  
+});const inventoryList = $("stockInventoryList");
+
+if (inventoryList && !$("restoreThreeTestOrdersBtn")) {
+  const restoreButton = document.createElement("button");
+
+  restoreButton.id = "restoreThreeTestOrdersBtn";
+  restoreButton.type = "button";
+  restoreButton.textContent = "Restore 3 Test Orders Stock";
+
+  restoreButton.style.cssText = `
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 15px;
+    border: 0;
+    border-radius: 8px;
+    background: #a52c2c;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+  `;
+
+  restoreButton.addEventListener(
+    "click",
+    restoreThreeTestOrdersStock
+  );
+
+  inventoryList.insertAdjacentElement(
+    "beforebegin",
+    restoreButton
+  );
+}
