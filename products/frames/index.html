@@ -293,6 +293,109 @@ class="search-bar">
 <div id="toast" class="toast"></div>
 <footer class="footer">
 
+<div style="padding:16px;border:1px solid #ccc;border-radius:10px;">
+  <h3>Firebase Read Load Test</h3>
+
+  <label>Number of simulated visits</label>
+  <input id="visits" type="number" value="20" min="1" max="100">
+
+  <label>Concurrent visitors</label>
+  <input id="concurrency" type="number" value="5" min="1" max="10">
+
+  <button id="startTest">Start Test</button>
+
+  <pre id="testResult">Ready to test.</pre>
+</div>
+
+<script type="module">
+import { db } from "./firebase-init.js";
+
+import {
+  collection,
+  getDocs,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const result = document.getElementById("testResult");
+const button = document.getElementById("startTest");
+
+button.addEventListener("click", async () => {
+  const visits = Math.min(100, Math.max(1,
+    Number(document.getElementById("visits").value) || 1
+  ));
+
+  const concurrency = Math.min(10, Math.max(1,
+    Number(document.getElementById("concurrency").value) || 1
+  ));
+
+  button.disabled = true;
+
+  let completed = 0;
+  let failed = 0;
+  let documentsRead = 0;
+
+  const started = performance.now();
+
+  result.textContent = "Starting controlled test...\n";
+
+  async function simulateVisit() {
+    try {
+      const q = query(
+        collection(db, "accessoriesProducts"),
+        where("active", "==", true)
+      );
+
+      const snapshot = await getDocs(q);
+
+      documentsRead += snapshot.size;
+      completed++;
+
+    } catch (error) {
+      failed++;
+      console.error(error);
+    }
+  }
+
+  try {
+    let nextVisit = 0;
+
+    async function worker() {
+      while (nextVisit < visits) {
+        const current = nextVisit++;
+        await simulateVisit();
+
+        result.textContent =
+          `Progress: ${completed + failed}/${visits}\n` +
+          `Successful visits: ${completed}\n` +
+          `Failed visits: ${failed}\n` +
+          `Documents returned: ${documentsRead}\n`;
+      }
+    }
+
+    await Promise.all(
+      Array.from(
+        { length: Math.min(concurrency, visits) },
+        () => worker()
+      )
+    );
+
+    const seconds = ((performance.now() - started) / 1000).toFixed(2);
+
+    result.textContent +=
+      `\nTEST FINISHED\n` +
+      `Duration: ${seconds} seconds\n` +
+      `Successful visits: ${completed}\n` +
+      `Failed visits: ${failed}\n` +
+      `Documents returned: ${documentsRead}\n` +
+      `Approx. returned-document reads: ${documentsRead}`;
+
+  } finally {
+    button.disabled = false;
+  }
+});
+</script>
+
   <div class="footer-title">
     <span></span>
     <h3>Know more</h3>
