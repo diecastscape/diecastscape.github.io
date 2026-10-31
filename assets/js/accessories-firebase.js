@@ -2,11 +2,10 @@
 import { db } from "./firebase-init.js";
 
 import {
-  collection,
+  
   query,
   orderBy,
-  onSnapshot,
-  getDocs
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const PRODUCTS = "accessoriesProducts";
