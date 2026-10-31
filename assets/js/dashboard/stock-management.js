@@ -52,7 +52,7 @@ const FIRST_ORDER_NUMBER = 1000;
    #DN01 = 1 piece
    #LJ02 = 2 pieces
    #TC10 = 10 pieces
-   #DE01 = 1 piece
+   #DE02 = 1 piece
    #FB01 = 1 piece
    #BR04 = 3 pieces
 
@@ -66,7 +66,7 @@ const COMBO_RECIPES = {
     { productCode: "#DN01", pieces: 1 },
     { productCode: "#LJ02", pieces: 2 },
     { productCode: "#TC10", pieces: 10 },
-    { productCode: "#DE01", pieces: 1 },
+    { productCode: "#DE02", pieces: 1 },
     { productCode: "#FB01", pieces: 1 },
     { productCode: "#BR04", pieces: 3 }
   ]
