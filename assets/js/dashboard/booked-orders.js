@@ -1594,8 +1594,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
   window.resetBookedOrderForm();
 
-  // Load automatically if the list exists on the current page.
+  // Load both booked-order sections independently on page startup.
   if (byId("bookedOrdersList")) {
     window.loadBookedOrders();
+  }
+
+  if (byId("accessoriesBookedOrdersList")) {
+    window.loadAccessoriesBookedOrders();
   }
 });
