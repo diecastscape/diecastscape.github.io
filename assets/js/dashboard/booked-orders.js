@@ -1105,7 +1105,10 @@ dispatchedDate: data.dispatchedDate,
 
     setSaving(false);
     window.cancelBookedOrderForm();
-    await window.loadBookedOrders();
+    await Promise.all([
+      window.loadBookedOrders(),
+      window.loadAccessoriesBookedOrders()
+    ]);
 
     try {
       await navigator.clipboard.writeText(confirmation);
