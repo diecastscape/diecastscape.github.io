@@ -119,119 +119,158 @@ let bookedProductRowCount = 0;
  * Add a new product row to the booked order form.
  * Each row includes a product name and quantity.
  */
-function addBookedProductRow(productName = "", quantity = 1) {
-  const productsList = document.getElementById("bo-productsList");
+let bookedDioramaProducts = [];
+let bookedDioramaProductsLoaded = false;
+let bookedDioramaProductsLoading = null;
 
+function bookedProductDisplayName(product) {
+  const name = String(product?.name || product?.title || "").trim();
+  const subtitle = String(product?.subtitle || "").trim();
+  return subtitle ? `${name} — ${subtitle}` : name;
+}
+
+async function loadBookedDioramaProducts() {
+  if (bookedDioramaProductsLoaded) return bookedDioramaProducts;
+  if (bookedDioramaProductsLoading) return bookedDioramaProductsLoading;
+  bookedDioramaProductsLoading = (async () => {
+    try {
+      const snapshot = await getDocs(collection(db, "products"));
+      bookedDioramaProducts = [];
+      snapshot.forEach(productDoc => {
+        const product = productDoc.data() || {};
+        if (product.active === false) return;
+        const displayName = bookedProductDisplayName(product);
+        if (!displayName) return;
+        bookedDioramaProducts.push({
+          id: productDoc.id,
+          name: String(product.name || product.title || "").trim(),
+          subtitle: String(product.subtitle || "").trim(),
+          displayName
+        });
+      });
+      bookedDioramaProducts.sort((a, b) => a.name.localeCompare(b.name));
+      bookedDioramaProductsLoaded = true;
+      refreshBookedProductSelects();
+      return bookedDioramaProducts;
+    } catch (error) {
+      console.error("Could not load Diorama products for Booked Orders:", error);
+      return [];
+    } finally {
+      bookedDioramaProductsLoading = null;
+    }
+  })();
+  return bookedDioramaProductsLoading;
+}
+
+function refreshBookedProductSelects() {
+  document.querySelectorAll("#bo-productsList .bo-product-row").forEach(row => {
+    const select = row.querySelector(".bo-product-name");
+    if (!select) return;
+    const currentValue = select.value;
+    const currentProductId = select.selectedOptions[0]?.dataset.productId || "";
+    select.innerHTML = `
+      <option value="">Select Diorama</option>
+      <option value="Custom Diorama">Custom Diorama</option>
+    `;
+    bookedDioramaProducts.forEach(product => {
+      const option = document.createElement("option");
+      option.value = product.displayName;
+      option.textContent = product.displayName;
+      option.dataset.productId = product.id;
+      option.dataset.productName = product.name;
+      option.dataset.subtitle = product.subtitle;
+      select.appendChild(option);
+    });
+    let match = [...select.options].find(option =>
+      option.value === currentValue ||
+      (currentProductId && option.dataset.productId === currentProductId)
+    );
+    if (!match && currentValue) {
+      const legacy = document.createElement("option");
+      legacy.value = currentValue;
+      legacy.textContent = currentValue;
+      select.appendChild(legacy);
+      match = legacy;
+    }
+    if (match) select.value = match.value;
+  });
+}
+
+function addBookedProductRow(productName = "", quantity = 1, subtitle = "", productId = "") {
+  const productsList = document.getElementById("bo-productsList");
   if (!productsList) {
     console.error("Missing #bo-productsList element.");
     return;
   }
-
   const rowId = `bo-product-row-${++bookedProductRowCount}`;
-
   const row = document.createElement("div");
   row.className = "bo-product-row";
   row.id = rowId;
-
   row.innerHTML = `
-    
-<div class="bo-product-field">
-  <label for="${rowId}-name">Product</label>
-  <select
-    id="${rowId}-name"
-    class="bo-product-name"
-    required
-  >
-    <option value="">Select Diorama</option>
-    <option value="Classic Diorama">Classic Diorama</option>
-    <option value="Premium Diorama">Premium Diorama</option>
-    <option value="Exclusive Diorama">Exclusive Diorama</option>
-    <option value="Custom Diorama">Custom Diorama</option>
-  </select>
-</div>
+    <div class="bo-product-field">
+      <label for="${rowId}-name">Product</label>
+      <select id="${rowId}-name" class="bo-product-name" required>
+        <option value="">Select Diorama</option>
+        <option value="Custom Diorama">Custom Diorama</option>
+      </select>
+    </div>
     <div class="bo-product-field bo-product-quantity-field">
       <label for="${rowId}-qty">Qty</label>
-      <input
-        type="number"
-        id="${rowId}-qty"
-        class="bo-product-quantity"
-        min="1"
-        step="1"
-        value="${Number.isInteger(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1}"
-        required
-      >
+      <input type="number" id="${rowId}-qty" class="bo-product-quantity"
+        min="1" step="1"
+        value="${Number.isInteger(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1}" required>
     </div>
-
-    <button
-      type="button"
-      class="bo-remove-product-btn"
-      aria-label="Remove this product"
-      title="Remove product"
-    >Remove</button>
+    <button type="button" class="bo-remove-product-btn"
+      aria-label="Remove this product" title="Remove product">Remove</button>
   `;
-
-  
-const nameInput = row.querySelector(".bo-product-name");
-
-if (
-  productName &&
-  ![...nameInput.options].some(option => option.value === productName)
-) {
-  const oldOption = document.createElement("option");
-  oldOption.value = productName;
-  oldOption.textContent = productName;
-  nameInput.appendChild(oldOption);
-}
-
-nameInput.value = productName;
-
+  const select = row.querySelector(".bo-product-name");
+  bookedDioramaProducts.forEach(product => {
+    const option = document.createElement("option");
+    option.value = product.displayName;
+    option.textContent = product.displayName;
+    option.dataset.productId = product.id;
+    option.dataset.productName = product.name;
+    option.dataset.subtitle = product.subtitle;
+    select.appendChild(option);
+  });
+  const value = subtitle && productName && !productName.includes(subtitle)
+    ? `${productName} — ${subtitle}`
+    : productName;
+  if (value && ![...select.options].some(option => option.value === value)) {
+    const legacy = document.createElement("option");
+    legacy.value = value;
+    legacy.textContent = value;
+    select.appendChild(legacy);
+  }
+  select.value = value || "";
   row.querySelector(".bo-remove-product-btn").addEventListener("click", () => {
     row.remove();
-
-    // Keep one blank row so a new product can always be added.
-    if (!productsList.querySelector(".bo-product-row")) {
-      addBookedProductRow();
-    }
+    if (!productsList.querySelector(".bo-product-row")) addBookedProductRow();
   });
-
   productsList.appendChild(row);
 }
 
-/**
- * Read and validate all product rows.
- * Returns an array of { name, quantity } objects.
- */
 function getBookedProducts() {
   const productsList = document.getElementById("bo-productsList");
-
-  if (!productsList) {
-    throw new Error("Products section is missing from the form.");
-  }
-
+  if (!productsList) throw new Error("Products section is missing from the form.");
   const rows = [...productsList.querySelectorAll(".bo-product-row")];
-
-  const products = rows.map((row) => {
-    const nameInput = row.querySelector(".bo-product-name");
-    const quantityInput = row.querySelector(".bo-product-quantity");
-
-    const name = nameInput?.value.trim() || "";
-    const quantity = Number(quantityInput?.value);
-
-    if (!name) {
-      throw new Error("Please enter a name for every product.");
-    }
-
+  const products = rows.map(row => {
+    const select = row.querySelector(".bo-product-name");
+    const quantity = Number(row.querySelector(".bo-product-quantity")?.value);
+    const name = select?.value.trim() || "";
+    const option = select?.selectedOptions?.[0];
+    if (!name) throw new Error("Please select a product for every product row.");
     if (!Number.isInteger(quantity) || quantity < 1) {
       throw new Error(`Enter a valid quantity for "${name}".`);
     }
-
-    return { name, quantity };
+    return {
+      name,
+      subtitle: option?.dataset.subtitle || "",
+      productId: option?.dataset.productId || "",
+      quantity
+    };
   });
-
-  if (products.length === 0) {
-    throw new Error("Please add at least one product.");
-  }
-
+  if (!products.length) throw new Error("Please add at least one product.");
   return products;
 }
 
@@ -241,39 +280,29 @@ function getBookedProducts() {
 function renderBookedProducts(products) {
   const productsList = document.getElementById("bo-productsList");
   if (!productsList) return;
-
   productsList.innerHTML = "";
-
   let normalizedProducts = [];
-
   if (Array.isArray(products)) {
-    normalizedProducts = products.map((item) => {
-      if (typeof item === "string") {
-        return { name: item, quantity: 1 };
-      }
-
-      return {
-        name: item?.name || item?.productName || "",
-        quantity: Number(item?.quantity) || 1
-      };
-    });
+    normalizedProducts = products.map(item => typeof item === "string"
+      ? { name: item, quantity: 1 }
+      : {
+          name: item?.name || item?.productName || "",
+          subtitle: item?.subtitle || "",
+          productId: item?.productId || "",
+          quantity: Number(item?.quantity) || 1
+        });
   } else if (typeof products === "string" && products.trim()) {
-    // Supports older orders where products were saved as plain text.
-    normalizedProducts = products
-      .split(/\n|,\s*(?=[^,]+$)/)
-      .map((item) => item.trim())
-      .filter(Boolean)
-      .map((name) => ({ name, quantity: 1 }));
+    normalizedProducts = products.split(/\n|,\s*(?=[^,]+$)/)
+      .map(item => item.trim()).filter(Boolean)
+      .map(name => ({ name, quantity: 1 }));
   }
-
-  if (normalizedProducts.length === 0) {
+  if (!normalizedProducts.length) {
     addBookedProductRow();
     return;
   }
-
-  normalizedProducts.forEach((product) => {
-    addBookedProductRow(product.name, product.quantity);
-  });
+  normalizedProducts.forEach(product =>
+    addBookedProductRow(product.name, product.quantity, product.subtitle, product.productId)
+  );
 }
 
 /**
@@ -297,10 +326,8 @@ window.bookedProductsToText = bookedProductsToText;
 // Start with one empty product row when the page is ready.
 document.addEventListener("DOMContentLoaded", () => {
   const productsList = document.getElementById("bo-productsList");
-
-  if (productsList && !productsList.querySelector(".bo-product-row")) {
-    addBookedProductRow();
-  }
+  if (productsList && !productsList.querySelector(".bo-product-row")) addBookedProductRow();
+  loadBookedDioramaProducts();
 });
 function storedDateToDisplay(value) {
   if (!value) return "";
@@ -903,6 +930,8 @@ bookedDate: data.bookedDate,
 design: data.design,
 products: data.products.map(item => ({
 name: item.name,
+subtitle: item.subtitle || "",
+productId: item.productId || "",
 quantity: item.quantity
 })),
 shippingDate: data.shippingDate,
@@ -971,6 +1000,7 @@ setEditModeBar("", false);
 // ======================================================
 
 window.toggleBookedOrderForm = function () {
+  loadBookedDioramaProducts();
   const wrap = byId("add-bookedOrders");
   const list = byId("bookedOrdersList");
 
@@ -1072,6 +1102,8 @@ bookedDate: data.bookedDate,
 design: data.design || existingData.design || "Accessories Order",
 products: data.products.map(item => ({
 name: item.name,
+subtitle: item.subtitle || "",
+productId: item.productId || "",
 quantity: item.quantity
 })),
 shippingDate: data.shippingDate,
@@ -1341,6 +1373,7 @@ window.refreshBookedOrders = async function () {
 // ======================================================
 
 window.editBookedOrder = async function (id) {
+  await loadBookedDioramaProducts();
   try {
     const snapshot = await getDoc(
       doc(db, ORDERS_COLLECTION, id)
