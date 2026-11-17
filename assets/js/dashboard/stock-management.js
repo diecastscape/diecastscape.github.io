@@ -131,57 +131,6 @@ function extractAmount(text, label) {
 
 
 /* =====================================================
-   CUSTOMER DETAILS
-===================================================== */
-
-function parseCustomerDetails(text) {
-  const find = (label) => {
-    const match = text.match(
-      new RegExp(`^\\s*${label}\\s*:\\s*(.*?)\\s*$`, "im")
-    );
-
-    return match ? match[1].trim() : "";
-  };
-
-  const getValue = (value) => {
-    return !value || /^not provided$/i.test(value.trim())
-      ? "Not provided"
-      : value.trim();
-  };
-
-  const details = {
-    name: getValue(find("Name")),
-    address: getValue(find("Address")),
-    postOffice: getValue(find("Post Office Name")),
-    pincode: getValue(find("Pincode")),
-    phone: getValue(find("Phone"))
-  };
-
-  const warnings = [];
-
-  const deliveryDetailsMissing = [
-    details.name,
-    details.address,
-    details.postOffice,
-    details.pincode,
-    details.phone
-  ].some(value => value === "Not provided");
-
-  if (deliveryDetailsMissing) {
-    warnings.push(
-      "⚠️ DELIVERY DETAILS INCOMPLETE: Collect the missing delivery details before dispatch."
-    );
-  }
-
-  return {
-    details,
-    missing: [],
-    warnings
-  };
-}
-
-
-/* =====================================================
    ORDER MESSAGE PARSER
 ===================================================== */
 
@@ -393,23 +342,13 @@ function parseOrderMessage(rawText) {
     );
   }
 
-  const {
-    details,
-    missing,
-    warnings: customerWarnings
-  } = parseCustomerDetails(text);
-
-  warnings.push(...customerWarnings);
-
   return {
     rawText: text,
     items,
     warnings,
     productTotal,
     shipping,
-    orderTotal,
-    customerDetails: details,
-    missingCustomerFields: missing
+    orderTotal
   };
 }
 
@@ -934,16 +873,6 @@ function renderOrderReview(order, productMap, stockPlan) {
     `
     : "";
 
-  const missingHTML = order.missingCustomerFields.length
-    ? `
-      <div class="sm-error">
-        Missing required details:
-        ${escapeHTML(order.missingCustomerFields.join(", "))}.
-        Complete these details before confirming.
-      </div>
-    `
-    : "";
-
   review.innerHTML = `
     <div class="sm-review-summary">
       <div>
@@ -981,7 +910,17 @@ function renderOrderReview(order, productMap, stockPlan) {
     `}
 
     ${warningsHTML}
-    ${missingHTML}
+
+    <div class="sm-dispatch-date-field">
+      <label for="stockEstimatedDispatchDate">Estimated Dispatch Date</label>
+      <input
+        type="date"
+        id="stockEstimatedDispatchDate"
+        class="sm-dispatch-date-input"
+        required
+      >
+      <small>This date is saved only after you click Confirm Order.</small>
+    </div>
 
     <p class="sm-safe-note">
       Nothing has been changed yet. Stock updates only after you confirm.
@@ -1087,41 +1026,6 @@ function toDisplayDate(date = new Date()) {
   return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
 }
 
-function toISODate(date = new Date()) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-/*
-  Weekly dispatch is every Thursday.
-
-  Monday, Tuesday, Wednesday -> this week's Thursday.
-  Thursday, Friday, Saturday, Sunday -> next week's Thursday.
-*/
-
-function getEstimatedDispatchDate(confirmedAt = new Date()) {
-  const dispatchDate = new Date(
-    confirmedAt.getFullYear(),
-    confirmedAt.getMonth(),
-    confirmedAt.getDate()
-  );
-
-  const day = dispatchDate.getDay();
-  const daysUntilThursday = (4 - day + 7) % 7;
-
-  const daysToAdd = daysUntilThursday === 0
-    ? 7
-    : daysUntilThursday;
-
-  dispatchDate.setDate(dispatchDate.getDate() + daysToAdd);
-
-  return dispatchDate;
-}
-
-
 /* =====================================================
    HASH / ORDER NUMBER
 ===================================================== */
@@ -1176,6 +1080,16 @@ async function confirmAccessoryStockOrder() {
 
   const order = parsedOrder;
   const currentText = $("stockOrderMessage")?.value.trim() || "";
+  const estimatedDispatchISO = $("stockEstimatedDispatchDate")?.value || "";
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(estimatedDispatchISO)) {
+    setMessage(
+      $("stockOrderStatus"),
+      "Select an Estimated Dispatch Date before confirming.",
+      "error"
+    );
+    return;
+  }
 
   if (currentText !== order.rawText) {
     setMessage(
@@ -1231,27 +1145,10 @@ async function confirmAccessoryStockOrder() {
       productRefs.set(code, product.ref);
     }
 
-    const customer = order.customerDetails || {};
-
-    const deliveryFields = {
-      name: customer.name || "Not provided",
-      address: customer.address || "Not provided",
-      postOffice: customer.postOffice || "Not provided",
-      postOfficeName: customer.postOffice || "Not provided",
-      pincode: customer.pincode || "Not provided",
-      phone: customer.phone || "Not provided"
-    };
-
     const confirmedAt = new Date();
-
-    const estimatedDispatchDate =
-      getEstimatedDispatchDate(confirmedAt);
-
-    const estimatedDispatchISO =
-      toISODate(estimatedDispatchDate);
-
-    const estimatedDispatchDisplay =
-      toDisplayDate(estimatedDispatchDate);
+    const estimatedDispatchDisplay = toDisplayDate(
+      new Date(`${estimatedDispatchISO}T00:00:00`)
+    );
 
     const result = await runTransaction(db, async transaction => {
       /* All reads must happen before writes. */
@@ -1301,7 +1198,7 @@ async function confirmAccessoryStockOrder() {
 
       if (customerSnapshot.exists()) {
         throw new Error(
-          `Customer details for ${orderId} already exist. Refresh and try again.`
+          `Order stock record for ${orderId} already exists. Refresh and try again.`
         );
       }
 
@@ -1477,7 +1374,6 @@ async function confirmAccessoryStockOrder() {
 
         shippingDate: estimatedDispatchDisplay,
         estimatedDispatchDate: estimatedDispatchISO,
-        estimatedDispatchDay: "Thursday",
 
         status: "Ready to Pack",
         dispatchedDate: "",
@@ -1493,22 +1389,6 @@ async function confirmAccessoryStockOrder() {
         confirmedAt: serverTimestamp(),
 
         estimatedDispatchDate: estimatedDispatchISO,
-        estimatedDispatchDay: "Thursday",
-
-        name: deliveryFields.name,
-        address: deliveryFields.address,
-        postOffice: deliveryFields.postOffice,
-        postOfficeName: deliveryFields.postOfficeName,
-        pincode: deliveryFields.pincode,
-        phone: deliveryFields.phone,
-
-        deliveryDetails: {
-          name: deliveryFields.name,
-          address: deliveryFields.address,
-          postOffice: deliveryFields.postOffice,
-          pincode: deliveryFields.pincode,
-          phone: deliveryFields.phone
-        },
 
         products: savedProducts,
 
@@ -1547,7 +1427,7 @@ async function confirmAccessoryStockOrder() {
     const confirmation =
       `Diecast.scape order confirmed! ✅\n\n` +
       `Order ID: ${result.orderId}\n` +
-      `Estimated dispatch: Thursday, ${estimatedDispatchDisplay}\n\n` +
+      `Estimated dispatch: ${estimatedDispatchDisplay}\n\n` +
       `Track your order progress here:\n` +
       `${window.location.origin}/booked-orders/\n\n` +
       `Thank you for choosing Diecast.scape!`;
@@ -1569,7 +1449,7 @@ async function confirmAccessoryStockOrder() {
 
           <p>
             <strong>Estimated dispatch:</strong>
-            Thursday, ${escapeHTML(estimatedDispatchDisplay)}
+            ${escapeHTML(estimatedDispatchDisplay)}
           </p>
 
           <small>ORDER ID</small>
@@ -1716,6 +1596,8 @@ function clearAccessoryOrderCheck() {
   if (message) message.value = "";
 
   if (review) review.innerHTML = "";
+  const dispatchDateInput = $("stockEstimatedDispatchDate");
+  if (dispatchDateInput) dispatchDateInput.value = "";
 
   if (success) {
     success.innerHTML = "";
