@@ -664,7 +664,7 @@ window.loadAccessoriesBookedOrders = async function () {
               </div>
 
               <div class="booked-order-design">
-                Accessories Order
+                ${order.products?.some(item => /diorama/i.test(typeof item === "string" ? item : (item?.name || item?.productName || ""))) ? "Accessories &amp; Diorama Order" : "Accessories Order"}
               </div>
             </div>
 
@@ -683,7 +683,7 @@ window.loadAccessoriesBookedOrders = async function () {
             </div>
 
             <div class="booked-order-detail">
-              <span class="booked-order-detail-label">Shipping Date</span>
+              <span class="booked-order-detail-label">Estimated Dispatch Date</span>
               <div class="booked-order-detail-value">
                 ${escapeHTML(storedDateToDisplay(order.shippingDate) || "—")}
               </div>
@@ -721,28 +721,6 @@ window.loadAccessoriesBookedOrders = async function () {
 
           </div>
 
-          <h4 class="booked-form-heading">
-  Delivery Details
-</h4>
-
-${
-  customer
-    ? `
-      <div class="accessory-delivery-details">
-        <p><strong>Name:</strong> ${escapeHTML(details.name || "—")}</p>
-        <p><strong>Address:</strong> ${escapeHTML(details.address || "—")}</p>
-        <p><strong>Post Office:</strong> ${escapeHTML(details.postOfficeName || "—")}</p>
-        <p><strong>Pincode:</strong> ${escapeHTML(details.pincode || "—")}</p>
-        <p><strong>Phone:</strong> ${escapeHTML(details.phone || "—")}</p>
-      </div>
-    `
-    : `
-      <p class="booked-save-message error">
-        Customer details document not found.
-      </p>
-    `
-}
-
           <div class="booked-status-row">
 
             <label for="bo-status-${escapeHTML(order.id)}">
@@ -767,6 +745,8 @@ ${
           </div>
 
           <div class="booked-order-actions">
+
+            <button type="button" onclick="editBookedOrder('${escapeHTML(order.id)}')">Edit</button>
 
             <button
               type="button"
@@ -831,7 +811,7 @@ function validateForm(data, isEditing) {
     return false;
   }
 
-  if (!data.design) {
+  if (!data.design && !String(data.orderId || "").startsWith("DS-A")) {
     setMessage("Please enter the design.", "error");
     return false;
   }
@@ -1042,7 +1022,7 @@ window.saveBookedOrder = async function () {
   if (!button || button.disabled) return;
 
   const isEditing =
-    adminState.editingType === "bookedOrders" &&
+    ["bookedOrders", "accessoriesBookedOrders"].includes(adminState.editingType) &&
     Boolean(adminState.editingId);
 
   
@@ -1076,16 +1056,19 @@ setMessage("");
       if (!existing.exists()) {
         throw new Error("This order no longer exists.");
       }
-await updateDoc(orderRef, {
+const existingData = existing.data();
+      const hasDiorama = data.products.some(item => /diorama/i.test(item.name));
+      await updateDoc(orderRef, {
 bookedDate: data.bookedDate,
-design: data.design,
+design: data.design || existingData.design || "Accessories Order",
 products: data.products.map(item => ({
 name: item.name,
 quantity: item.quantity
 })),
 shippingDate: data.shippingDate,
 status: data.status,
-dispatchedDate: data.dispatchedDate
+dispatchedDate: data.dispatchedDate,
+...(isAccessoriesOrder(existingData) ? { orderType: hasDiorama ? "accessories+diorama" : "accessories" } : {})
 });
 
 
@@ -1355,13 +1338,16 @@ window.editBookedOrder = async function (id) {
     const data = snapshot.data();
 
     adminState.editingId = id;
-    adminState.editingType = "bookedOrders";
+    const accessoriesOrder = isAccessoriesOrder(data);
+    adminState.editingType = accessoriesOrder ? "accessoriesBookedOrders" : "bookedOrders";
 
     const wrap = byId("add-bookedOrders");
     const list = byId("bookedOrdersList");
+    const accessoriesList = byId("accessoriesBookedOrdersList");
 
     if (wrap) wrap.style.display = "block";
     if (list) list.style.display = "none";
+    if (accessoriesList) accessoriesList.style.display = accessoriesOrder ? "none" : "block";
 
     setAddButtonEditing(true);
 
@@ -1377,7 +1363,7 @@ window.editBookedOrder = async function (id) {
     }
 
     if (byId("bo-design")) {
-      byId("bo-design").value = data.design || "";
+      byId("bo-design").value = data.design || (accessoriesOrder ? "Confirmed Design" : "");
     }
 
 renderBookedProducts(data.products);
@@ -1400,7 +1386,7 @@ renderBookedProducts(data.products);
     }
 
     setEditModeBar(
-      `Editing Order ${data.orderId || ""} — Order ID cannot be changed`,
+      `Editing ${accessoriesOrder ? "Accessories" : "Diorama"} Order ${data.orderId || ""} — Order ID cannot be changed`,
       true
     );
 
