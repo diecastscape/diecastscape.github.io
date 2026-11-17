@@ -1005,8 +1005,13 @@ window.cancelBookedOrderForm = function () {
   const wrap = byId("add-bookedOrders");
   const list = byId("bookedOrdersList");
 
+  const wasAccessoriesOrder = adminState.editingType === "accessoriesBookedOrders";
+
   if (wrap) wrap.style.display = "none";
-  if (list) list.style.display = "block";
+  if (list) list.style.display = wasAccessoriesOrder ? "none" : "block";
+
+  const accessoriesList = byId("accessoriesBookedOrdersList");
+  if (accessoriesList) accessoriesList.style.display = wasAccessoriesOrder ? "block" : "none";
 
   setAddButtonEditing(false);
 
@@ -1060,6 +1065,7 @@ setMessage("");
         throw new Error("This order no longer exists.");
       }
 const existingData = existing.data();
+      const wasAccessoriesOrder = isAccessoriesOrder(existingData);
       const hasDiorama = data.products.some(item => /diorama/i.test(item.name));
       await updateDoc(orderRef, {
 bookedDate: data.bookedDate,
@@ -1077,7 +1083,12 @@ dispatchedDate: data.dispatchedDate,
 
       setSaving(false);
       window.cancelBookedOrderForm();
-      await window.loadBookedOrders();
+
+      if (wasAccessoriesOrder) {
+        await window.loadAccessoriesBookedOrders();
+      } else {
+        await window.loadBookedOrders();
+      }
 
       alert("Order updated successfully.");
       return;
@@ -1170,8 +1181,6 @@ window.loadBookedOrders = async function () {
       Click <strong>+ Add</strong> to create your first order.
     </div>
   `;
-
-  await window.loadAccessoriesBookedOrders();
   return;
 }
 
@@ -1302,7 +1311,6 @@ window.loadBookedOrders = async function () {
     });
 
     container.innerHTML = html;
-    await window.loadAccessoriesBookedOrders();
   } catch (error) {
     console.error("Error loading booked orders:", error);
 
@@ -1366,7 +1374,21 @@ window.editBookedOrder = async function (id) {
     }
 
     if (byId("bo-design")) {
-      byId("bo-design").value = data.design || (accessoriesOrder ? "Confirmed Design" : "");
+      const designSelect = byId("bo-design");
+      const savedDesign = data.design || "";
+
+      // Preserve older/custom design values that are not in the standard options.
+      if (
+        savedDesign &&
+        ![...designSelect.options].some(option => option.value === savedDesign)
+      ) {
+        const savedOption = document.createElement("option");
+        savedOption.value = savedDesign;
+        savedOption.textContent = savedDesign;
+        designSelect.appendChild(savedOption);
+      }
+
+      designSelect.value = savedDesign || (accessoriesOrder ? "Confirmed Design" : "");
     }
 
 renderBookedProducts(data.products);
@@ -1456,13 +1478,11 @@ window.updateBookedOrderStatus = async function (id) {
 
         alert("Order status updated successfully.");
 
-        // Refresh both lists so the updated status/date is displayed.
-        if (typeof window.loadBookedOrders === "function") {
-            await window.loadBookedOrders();
-        }
-
-        if (typeof window.loadAccessoriesBookedOrders === "function") {
+        // Refresh only the list containing this order.
+        if (isAccessoriesOrder(orderData)) {
             await window.loadAccessoriesBookedOrders();
+        } else {
+            await window.loadBookedOrders();
         }
 
     } catch (error) {
