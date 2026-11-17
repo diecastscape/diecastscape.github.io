@@ -941,6 +941,9 @@ window.resetBookedOrderForm = function () {
     byId("bo-status").value = "Pending";
   }
 
+  const shippingLabel = document.querySelector('label[for="bo-shippingDate"]');
+  if (shippingLabel) shippingLabel.textContent = "Expected Shipping Date";
+
   if (byId("bo-bookedDate")) {
     byId("bo-bookedDate").value = todayISO();
   }
@@ -1372,6 +1375,9 @@ renderBookedProducts(data.products);
       byId("bo-shippingDate").value =
         storedDateToISO(data.shippingDate);
     }
+
+    const shippingLabel = document.querySelector('label[for="bo-shippingDate"]');
+    if (shippingLabel) shippingLabel.textContent = accessoriesOrder ? "Estimated Dispatch Date" : "Expected Shipping Date";
 
     if (byId("bo-status")) {
       byId("bo-status").value =
