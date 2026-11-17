@@ -108,3 +108,39 @@
   .sm-review-grid span { display: flex; justify-content: space-between; gap: 10px; }
   .sm-review-grid b { margin-top: 0; }
 }
+
+
+/* Manual Estimated Dispatch Date — Accessories Order Reader */
+.sm-dispatch-date-field {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #dce5ed;
+  border-radius: 11px;
+  background: #f8fafc;
+}
+.sm-dispatch-date-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0b132b;
+}
+.sm-dispatch-date-input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #fff;
+  color: #0b132b;
+  font: inherit;
+}
+.sm-dispatch-date-field small {
+  display: block;
+  margin-top: 7px;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.45;
+}
