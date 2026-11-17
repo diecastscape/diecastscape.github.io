@@ -1084,11 +1084,10 @@ dispatchedDate: data.dispatchedDate,
       setSaving(false);
       window.cancelBookedOrderForm();
 
-      if (wasAccessoriesOrder) {
-        await window.loadAccessoriesBookedOrders();
-      } else {
-        await window.loadBookedOrders();
-      }
+      await Promise.all([
+        window.loadBookedOrders(),
+        window.loadAccessoriesBookedOrders()
+      ]);
 
       alert("Order updated successfully.");
       return;
@@ -1328,7 +1327,10 @@ window.loadBookedOrders = async function () {
 // ======================================================
 
 window.refreshBookedOrders = async function () {
-  await window.loadBookedOrders();
+  await Promise.all([
+    window.loadBookedOrders(),
+    window.loadAccessoriesBookedOrders()
+  ]);
 };
 
 // ======================================================
@@ -1478,12 +1480,11 @@ window.updateBookedOrderStatus = async function (id) {
 
         alert("Order status updated successfully.");
 
-        // Refresh only the list containing this order.
-        if (isAccessoriesOrder(orderData)) {
-            await window.loadAccessoriesBookedOrders();
-        } else {
-            await window.loadBookedOrders();
-        }
+        // Refresh both booked-order sections after a progress update.
+        await Promise.all([
+            window.loadBookedOrders(),
+            window.loadAccessoriesBookedOrders()
+        ]);
 
     } catch (error) {
         console.error("Error updating order status:", error);
