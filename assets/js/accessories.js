@@ -1099,11 +1099,29 @@ const phone = phoneInput?.value.trim() || "";
     }
   }
 
+  // Open the WhatsApp tab synchronously during the button click.
+  // Browsers may block window.open() if it is called after an await.
+  const whatsappTab = window.open("about:blank", "_blank");
+
+  if (!whatsappTab) {
+    showToast("Please allow pop-ups to continue to WhatsApp.");
+    return;
+  }
+
+  try {
+    whatsappTab.document.write(
+      "<!doctype html><title>Opening WhatsApp...</title><p style='font-family:Arial,sans-serif;padding:24px'>Preparing your order. Please wait...</p>"
+    );
+  } catch (error) {
+    // The tab can still be navigated even if its temporary page cannot be written.
+  }
+
   // Refresh live stock before creating the WhatsApp message.
   try {
     await window.refreshAccessoryStockNow();
   } catch (error) {
     console.error("Checkout stock check failed:", error);
+    whatsappTab.close();
     showToast("Unable to check stock. Please try again.");
     return;
   }
@@ -1119,6 +1137,7 @@ const phone = phoneInput?.value.trim() || "";
         !product ||
         getCurrentAvailableSets(item.id) < Number(item.qty)
       ) {
+        whatsappTab.close();
         showToast(
           `${item.name} does not have enough stock available.`
         );
@@ -1142,6 +1161,7 @@ const phone = phoneInput?.value.trim() || "";
       .toUpperCase();
 
     if (!/^#[A-Z0-9]{4}$/.test(baseCode)) {
+      whatsappTab.close();
       showToast(
         `Missing or invalid product code for ${item.name}. Please update its productCode first.`
       );
@@ -1149,6 +1169,7 @@ const phone = phoneInput?.value.trim() || "";
     }
 
     if (qty > 99) {
+      whatsappTab.close();
       showToast(
         `Quantity for ${item.name} cannot exceed 99 in this code format`
       );
@@ -1169,6 +1190,7 @@ const phone = phoneInput?.value.trim() || "";
   }
 
   if (orderItems.length === 0) {
+    whatsappTab.close();
     showToast("Your cart has no valid products");
     return;
   }
@@ -1210,7 +1232,8 @@ message += `Phone : ${phone}`;
   const whatsappURL =
     `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-  window.open(whatsappURL, "_blank");
+  // Navigate the already-opened tab so the browser does not block WhatsApp.
+  whatsappTab.location.href = whatsappURL;
 }
 function clearCartDirectly() {
 
