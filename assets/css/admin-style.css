@@ -1399,3 +1399,19 @@ h5 {
   font-size: 13px;
   color: #777777;
 }
+
+
+/* Unified Booked Orders — completed orders separator */
+.booked-dispatched-divider {
+  margin: 24px 0 14px;
+  padding: 11px 14px;
+  border-top: 1px solid #d8e0e8;
+  border-bottom: 1px solid #d8e0e8;
+  border-radius: 7px;
+  background: #f3f6f8;
+  color: #536273;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
