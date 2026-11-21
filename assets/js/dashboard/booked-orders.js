@@ -866,7 +866,7 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
 }
 
 function getOrderNumber(orderId) {
-  const match = String(orderId || "").trim().match(/^DS-[AD](\\d+)$/);
+  const match = String(orderId || "").trim().match(/^DS-[AD](\d+)$/);
   return match ? Number(match[1]) : 0;
 }
 
