@@ -571,7 +571,7 @@ await updateDoc(customerRef, {
 
     alert("Accessories delivery details saved successfully.");
 
-    await window.loadAccessoriesBookedOrders();
+    await window.refreshBookedOrders();
 
   } catch (error) {
     console.error("Error saving delivery details:", error);
@@ -1564,7 +1564,7 @@ window.toggleBookedOrderVisibility = async function (id) {
 
     if (!snapshot.exists()) {
       alert("This order no longer exists.");
-      await window.loadBookedOrders();
+      await window.refreshBookedOrders();
       return;
     }
 
