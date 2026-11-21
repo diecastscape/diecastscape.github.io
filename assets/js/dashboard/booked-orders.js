@@ -23,6 +23,7 @@ const CUSTOMERS_COLLECTION = "orderCustomers";
 
 const COUNTERS_COLLECTION = "bookedOrderCounters";
 const COUNTER_DOCUMENT = "orderIdSequence";
+const LEGACY_COUNTER_DOCUMENT = "accessoryOrderIdSequence";
 
 const COUNTER_REF = doc(
   db,
@@ -30,7 +31,7 @@ const COUNTER_REF = doc(
   COUNTER_DOCUMENT
 );
 
-const ORDER_PREFIX = "DS-D";
+const ORDER_PREFIX = "DS-A";
 const FIRST_ORDER_NUMBER = 1000;
 
 const ORDER_STATUSES = [
@@ -399,7 +400,7 @@ function productsToText(products) {
 
 function isAccessoriesOrder(order) {
   return (
-    String(order?.orderId || "").startsWith("DS-A") ||
+    String(order?.design || "").toLowerCase() === "accessories order" ||
     String(order?.orderType || "").toLowerCase() === "accessories"
   );
 }
@@ -865,7 +866,7 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
 }
 
 function getOrderNumber(orderId) {
-  const match = String(orderId || "").match(/^DS-D(\d+)$/);
+  const match = String(orderId || "").match(/^DS-[AD](\\d+)$/);
   return match ? Number(match[1]) : 0;
 }
 
@@ -900,19 +901,22 @@ async function createBookedOrder(data) {
   // Generate a Firestore document reference before the transaction.
   const newOrderRef = doc(collection(db, ORDERS_COLLECTION));
 
+  const legacyCounterRef = doc(db, COUNTERS_COLLECTION, LEGACY_COUNTER_DOCUMENT);
+
   return await runTransaction(db, async transaction => {
     const counterSnapshot = await transaction.get(COUNTER_REF);
+    const legacyCounterSnapshot = await transaction.get(legacyCounterRef);
+    const legacyLastNumber = legacyCounterSnapshot.exists()
+      ? Number(legacyCounterSnapshot.data().lastNumber) || FIRST_ORDER_NUMBER
+      : FIRST_ORDER_NUMBER;
 
     const previousNumber = counterSnapshot.exists()
-      ? Math.max(
-          FIRST_ORDER_NUMBER,
-          Number(counterSnapshot.data().lastNumber) ||
-            FIRST_ORDER_NUMBER
-        )
+      ? Math.max(FIRST_ORDER_NUMBER, Number(counterSnapshot.data().lastNumber) || FIRST_ORDER_NUMBER)
       : highestExisting;
 
     const nextNumber = Math.max(
       previousNumber,
+      legacyLastNumber,
       highestExisting,
       FIRST_ORDER_NUMBER
     ) + 1;
@@ -930,8 +934,6 @@ bookedDate: data.bookedDate,
 design: data.design,
 products: data.products.map(item => ({
 name: item.name,
-subtitle: item.subtitle || "",
-productId: item.productId || "",
 quantity: item.quantity
 })),
 shippingDate: data.shippingDate,
@@ -1035,13 +1037,11 @@ window.cancelBookedOrderForm = function () {
   const wrap = byId("add-bookedOrders");
   const list = byId("bookedOrdersList");
 
-  const wasAccessoriesOrder = adminState.editingType === "accessoriesBookedOrders";
-
   if (wrap) wrap.style.display = "none";
-  if (list) list.style.display = wasAccessoriesOrder ? "none" : "block";
+  if (list) list.style.display = "block";
 
   const accessoriesList = byId("accessoriesBookedOrdersList");
-  if (accessoriesList) accessoriesList.style.display = wasAccessoriesOrder ? "block" : "none";
+  if (accessoriesList) accessoriesList.style.display = "none";
 
   setAddButtonEditing(false);
 
@@ -1116,10 +1116,7 @@ dispatchedDate: data.dispatchedDate,
       setSaving(false);
       window.cancelBookedOrderForm();
 
-      await Promise.all([
-        window.loadBookedOrders(),
-        window.loadAccessoriesBookedOrders()
-      ]);
+      await window.refreshBookedOrders();
 
       alert("Order updated successfully.");
       return;
@@ -1137,10 +1134,7 @@ dispatchedDate: data.dispatchedDate,
 
     setSaving(false);
     window.cancelBookedOrderForm();
-    await Promise.all([
-      window.loadBookedOrders(),
-      window.loadAccessoriesBookedOrders()
-    ]);
+    await window.refreshBookedOrders();
 
     try {
       await navigator.clipboard.writeText(confirmation);
@@ -1209,14 +1203,9 @@ window.loadBookedOrders = async function () {
     });
 
     if (!orders.length) {
-  container.innerHTML = `
-    <div class="booked-empty-state">
-      No Diorama bookings yet.<br>
-      Click <strong>+ Add</strong> to create your first order.
-    </div>
-  `;
-  return;
-}
+      container.innerHTML = "";
+      return;
+    }
 
     const hiddenCount = orders.filter(order => order.hidden === true).length;
 
@@ -1362,10 +1351,52 @@ window.loadBookedOrders = async function () {
 // ======================================================
 
 window.refreshBookedOrders = async function () {
+  const list = byId("bookedOrdersList");
+  const accessoryBuffer = byId("accessoriesBookedOrdersList");
+
   await Promise.all([
     window.loadBookedOrders(),
     window.loadAccessoriesBookedOrders()
   ]);
+
+  if (!list || !accessoryBuffer) return;
+
+  const cards = [
+    ...list.querySelectorAll(".booked-order-card"),
+    ...accessoryBuffer.querySelectorAll(".booked-order-card")
+  ];
+
+  cards.sort((a, b) => {
+    const idA = a.querySelector(".booked-order-id")?.textContent || "";
+    const idB = b.querySelector(".booked-order-id")?.textContent || "";
+    return getOrderNumber(idB) - getOrderNumber(idA);
+  });
+
+  const activeCards = cards.filter(card =>
+    card.querySelector(".booked-status-select")?.value !== "Dispatched"
+  );
+  const dispatchedCards = cards.filter(card =>
+    card.querySelector(".booked-status-select")?.value === "Dispatched"
+  );
+  const hiddenCount = cards.filter(card =>
+    card.querySelector(".booked-visibility-label")?.textContent.includes("Hidden from public")
+  ).length;
+
+  list.innerHTML = `
+    <div class="booked-order-count">
+      Total booked orders: ${cards.length}${hiddenCount ? ` · Hidden from public: ${hiddenCount}` : ""}
+    </div>
+  `;
+
+  activeCards.forEach(card => list.appendChild(card));
+
+  if (dispatchedCards.length) {
+    const divider = document.createElement("div");
+    divider.className = "booked-dispatched-divider";
+    divider.textContent = "Dispatched Orders";
+    list.appendChild(divider);
+    dispatchedCards.forEach(card => list.appendChild(card));
+  }
 };
 
 // ======================================================
@@ -1396,7 +1427,7 @@ window.editBookedOrder = async function (id) {
 
     if (wrap) wrap.style.display = "block";
     if (list) list.style.display = "none";
-    if (accessoriesList) accessoriesList.style.display = accessoriesOrder ? "none" : "block";
+    if (accessoriesList) accessoriesList.style.display = "none";
 
     setAddButtonEditing(true);
 
@@ -1517,10 +1548,7 @@ window.updateBookedOrderStatus = async function (id) {
         alert("Order status updated successfully.");
 
         // Refresh both booked-order sections after a progress update.
-        await Promise.all([
-            window.loadBookedOrders(),
-            window.loadAccessoriesBookedOrders()
-        ]);
+        await window.refreshBookedOrders();
 
     } catch (error) {
         console.error("Error updating order status:", error);
@@ -1549,7 +1577,7 @@ window.toggleBookedOrderVisibility = async function (id) {
   hidden: newHiddenValue
 });
 
-    await window.loadBookedOrders();
+    await window.refreshBookedOrders();
 
     alert(
       newHiddenValue
@@ -1607,7 +1635,7 @@ window.deleteBookedOrder = async function (id) {
 
     alert("Order and customer details deleted successfully.");
 
-    await window.loadBookedOrders();
+    await window.refreshBookedOrders();
 
   } catch (error) {
     console.error("Error deleting order:", error);
@@ -1630,12 +1658,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   window.resetBookedOrderForm();
 
-  // Load both booked-order sections independently on page startup.
   if (byId("bookedOrdersList")) {
-    window.loadBookedOrders();
-  }
-
-  if (byId("accessoriesBookedOrdersList")) {
-    window.loadAccessoriesBookedOrders();
+    window.refreshBookedOrders();
   }
 });
