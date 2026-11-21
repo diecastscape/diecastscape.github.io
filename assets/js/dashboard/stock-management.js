@@ -1054,7 +1054,7 @@ async function getHighestAccessoryOrderNumber() {
 
   snapshot.forEach(orderDoc => {
     const orderId = String(orderDoc.data().orderId || "");
-    const match = orderId.match(/^DS-[AD](\\d+)$/);
+    const match = orderId.match(/^DS-[AD](\d+)$/);
     if (match) highest = Math.max(highest, Number(match[1]));
   });
 
