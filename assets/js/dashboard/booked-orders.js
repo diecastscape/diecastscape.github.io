@@ -401,7 +401,7 @@ function productsToText(products) {
 function isAccessoriesOrder(order) {
   return (
     String(order?.design || "").toLowerCase() === "accessories order" ||
-    String(order?.orderType || "").toLowerCase() === "accessories"
+    String(order?.orderType || "").toLowerCase().includes("accessories")
   );
 }
 
