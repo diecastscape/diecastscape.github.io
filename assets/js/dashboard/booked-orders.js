@@ -866,7 +866,7 @@ if (!Array.isArray(data.products) || data.products.length === 0) {
 }
 
 function getOrderNumber(orderId) {
-  const match = String(orderId || "").match(/^DS-[AD](\\d+)$/);
+  const match = String(orderId || "").trim().match(/^DS-[AD](\\d+)$/);
   return match ? Number(match[1]) : 0;
 }
 
@@ -1102,8 +1102,6 @@ bookedDate: data.bookedDate,
 design: data.design || existingData.design || "Accessories Order",
 products: data.products.map(item => ({
 name: item.name,
-subtitle: item.subtitle || "",
-productId: item.productId || "",
 quantity: item.quantity
 })),
 shippingDate: data.shippingDate,
