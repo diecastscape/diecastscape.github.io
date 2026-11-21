@@ -1614,7 +1614,7 @@ window.deleteBookedOrder = async function (id) {
 
     if (!orderSnapshot.exists()) {
       alert("This order has already been deleted.");
-      await window.loadBookedOrders();
+      await window.refreshBookedOrders();
       return;
     }
 
