@@ -400,7 +400,7 @@ async function searchBookedOrder() {
 
   if (!isDioramaOrder && !isAccessoriesOrder) {
     emptyState.textContent =
-      "Please enter a valid Order ID, such as DS-D1201 or DS-A1001.";
+      "Please enter a valid Order ID, such as DS-A1001.";
 
     emptyState.style.display = "block";
     return;
@@ -438,7 +438,7 @@ async function searchBookedOrder() {
         return;
       }
 
-      // Keep diorama and accessory ID types separate.
+      // New bookings use one shared DS-A sequence. Legacy DS-D IDs remain trackable.
       if (
         isDioramaOrder &&
         !/^DS-D\d+$/.test(orderId)
