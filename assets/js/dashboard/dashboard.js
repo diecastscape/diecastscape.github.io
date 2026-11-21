@@ -332,9 +332,9 @@ if (type === "bookedOrders") {
     bookedList.style.display = "block";
   }
 
-  if (
-    typeof window.loadBookedOrders === "function"
-  ) {
+  if (typeof window.refreshBookedOrders === "function") {
+    window.refreshBookedOrders();
+  } else if (typeof window.loadBookedOrders === "function") {
     window.loadBookedOrders();
   }
 
