@@ -37,7 +37,8 @@ const PRODUCTS_COLLECTION = "accessoriesProducts";
 const ORDERS_COLLECTION = "bookedOrders";
 const CUSTOMERS_COLLECTION = "orderCustomers";
 const COUNTERS_COLLECTION = "bookedOrderCounters";
-const COUNTER_DOCUMENT = "accessoryOrderIdSequence";
+const COUNTER_DOCUMENT = "orderIdSequence";
+const LEGACY_COUNTER_DOCUMENT = "accessoryOrderIdSequence";
 
 const ORDER_PREFIX = "DS-A";
 const FIRST_ORDER_NUMBER = 1000;
@@ -405,47 +406,47 @@ async function findProductsByCode(productCode) {
 
 function getRequiredProductCodes(order) {
   const codes = new Set();
+  const affectedStockCodes = new Set();
 
   order.items.forEach(item => {
     codes.add(item.productCode);
 
-    if (item.isCombo) {
-      const recipe = COMBO_RECIPES[item.productCode];
-
-      if (!recipe || !recipe.length) {
-        throw new Error(
-          `No combo recipe configured for ${item.productCode}.`
-        );
-      }
-
-      recipe.forEach(component => {
-        codes.add(component.productCode);
-      });
+    if (!item.isCombo) {
+      affectedStockCodes.add(item.productCode);
+      return;
     }
-  });
-
-  // Prevent nested combos and invalid recipes.
-  for (const item of order.items) {
-    if (!item.isCombo) continue;
 
     const recipe = COMBO_RECIPES[item.productCode];
+    if (!recipe || !recipe.length) {
+      throw new Error(`No combo recipe configured for ${item.productCode}.`);
+    }
 
+    recipe.forEach(component => {
+      codes.add(component.productCode);
+      affectedStockCodes.add(component.productCode);
+    });
+  });
+
+  // Validate recipes and load every combo affected by stock deductions.
+  for (const [comboCode, recipe] of Object.entries(COMBO_RECIPES)) {
     recipe.forEach(component => {
       if (COMBO_RECIPES[component.productCode]) {
         throw new Error(
           `Nested combo component ${component.productCode} is not supported. Use normal products inside combo recipes.`
         );
       }
-
-      if (
-        !Number.isInteger(component.pieces) ||
-        component.pieces <= 0
-      ) {
-        throw new Error(
-          `Invalid recipe quantity for ${component.productCode} in ${item.productCode}.`
-        );
+      if (!Number.isInteger(component.pieces) || component.pieces <= 0) {
+        throw new Error(`Invalid recipe quantity for ${component.productCode} in ${comboCode}.`);
       }
     });
+
+    const comboWasOrdered = order.items.some(item => item.productCode === comboCode);
+    const comboIsAffected = recipe.some(component => affectedStockCodes.has(component.productCode));
+
+    if (comboWasOrdered || comboIsAffected) {
+      codes.add(comboCode);
+      recipe.forEach(component => codes.add(component.productCode));
+    }
   }
 
   return [...codes];
@@ -556,8 +557,16 @@ function calculateStockPlan(order, productMap) {
 
   const comboSummaries = [];
 
-  for (const [comboCode, requestedSets] of comboRequested.entries()) {
-    const recipe = COMBO_RECIPES[comboCode];
+  // Recalculate every combo whose recipe uses a component being deducted,
+  // even when the customer did not order that combo.
+  const affectedCombos = Object.entries(COMBO_RECIPES).filter(
+    ([comboCode, recipe]) =>
+      comboRequested.has(comboCode) ||
+      recipe.some(component => deductionsMap.has(component.productCode))
+  );
+
+  for (const [comboCode, recipe] of affectedCombos) {
+    const requestedSets = comboRequested.get(comboCode) || 0;
 
     let availableBefore = Infinity;
     let availableAfter = Infinity;
@@ -602,7 +611,7 @@ function calculateStockPlan(order, productMap) {
       Number.isInteger(availableBefore) &&
       Number.isInteger(availableAfter);
 
-    if (!validAvailability || availableBefore < requestedSets) {
+    if (!validAvailability || (requestedSets > 0 && availableBefore < requestedSets)) {
       stockOkay = false;
     }
 
@@ -1040,19 +1049,13 @@ async function sha256Hex(text) {
 }
 
 async function getHighestAccessoryOrderNumber() {
-  const snapshot = await getDocs(
-    collection(db, ORDERS_COLLECTION)
-  );
-
+  const snapshot = await getDocs(collection(db, ORDERS_COLLECTION));
   let highest = FIRST_ORDER_NUMBER;
 
   snapshot.forEach(orderDoc => {
     const orderId = String(orderDoc.data().orderId || "");
-    const match = orderId.match(/^DS-A(\d+)$/);
-
-    if (match) {
-      highest = Math.max(highest, Number(match[1]));
-    }
+    const match = orderId.match(/^DS-[AD](\\d+)$/);
+    if (match) highest = Math.max(highest, Number(match[1]));
   });
 
   return highest;
@@ -1113,11 +1116,8 @@ async function confirmAccessoryStockOrder() {
       order.rawText.replace(/\s+/g, " ").trim()
     );
 
-    const counterRef = doc(
-      db,
-      COUNTERS_COLLECTION,
-      COUNTER_DOCUMENT
-    );
+    const counterRef = doc(db, COUNTERS_COLLECTION, COUNTER_DOCUMENT);
+    const legacyCounterRef = doc(db, COUNTERS_COLLECTION, LEGACY_COUNTER_DOCUMENT);
 
     const customerRefForId = (orderId) =>
       doc(db, CUSTOMERS_COLLECTION, orderId);
@@ -1162,8 +1162,11 @@ async function confirmAccessoryStockOrder() {
         );
       }
 
-      const counterSnapshot =
-        await transaction.get(counterRef);
+      const counterSnapshot = await transaction.get(counterRef);
+      const legacyCounterSnapshot = await transaction.get(legacyCounterRef);
+      const legacyLastNumber = legacyCounterSnapshot.exists()
+        ? Number(legacyCounterSnapshot.data().lastNumber) || FIRST_ORDER_NUMBER
+        : FIRST_ORDER_NUMBER;
 
       const productSnapshots = new Map();
 
@@ -1185,6 +1188,7 @@ async function confirmAccessoryStockOrder() {
 
       const nextNumber = Math.max(
         previousNumber,
+        legacyLastNumber,
         highestExisting,
         FIRST_ORDER_NUMBER
       ) + 1;
@@ -1368,12 +1372,10 @@ async function confirmAccessoryStockOrder() {
       transaction.set(existingOrderRef, {
         orderId,
         bookedDate: toDisplayDate(confirmedAt),
-        confirmedAt: serverTimestamp(),
         design: "Accessories Order",
         products: publicProducts,
 
         shippingDate: estimatedDispatchDisplay,
-        estimatedDispatchDate: estimatedDispatchISO,
 
         status: "Ready to Pack",
         dispatchedDate: "",
@@ -1538,7 +1540,9 @@ async function confirmAccessoryStockOrder() {
 
     await refreshStockManagement();
 
-    if (typeof window.loadBookedOrders === "function") {
+    if (typeof window.refreshBookedOrders === "function") {
+      await window.refreshBookedOrders();
+    } else if (typeof window.loadBookedOrders === "function") {
       await window.loadBookedOrders();
     }
 
