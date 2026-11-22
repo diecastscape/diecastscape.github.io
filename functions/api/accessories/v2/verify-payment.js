@@ -233,3 +233,6 @@ export async function onRequestPost({request,env}) {
     },500);
   }
 }
+export async function onRequestGet() {
+  return jsonResponse({ok:false,error:"Method Not Allowed",allowedMethod:"POST"},405);
+}
