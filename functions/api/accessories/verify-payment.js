@@ -78,7 +78,7 @@ export async function onRequestPost({request,env}) {
   const previous=counter?Math.max(1000,Number(counter.fields.lastNumber)||1000):1000;
   const next=previous+1;
   const storeOrderId="DS-A"+next;
-  const now=new Date(), dispatchISO=dispatchThursday(), bookedDate=displayDate(now.toLocaleDateString("en-CA",{timeZone:"Asia/Kolkata"}));
+  const now=new Date(), istNow=new Date(Date.now()+19800000), dispatchISO=dispatchThursday(), bookedDate=displayDate(istNow.toISOString().slice(0,10));
   const customer=record.fields.customer||{};
   const customerDetails=[
    "Name: "+String(customer.name||"Not provided"),
