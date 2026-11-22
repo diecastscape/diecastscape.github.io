@@ -73,8 +73,15 @@ export async function firestoreBegin(ctx) {
 }
 export async function firestoreBatchGet(ctx, paths, transaction) {
   const r = await fetch(ctx.base+":batchGet", {method:"POST",headers:{authorization:"Bearer "+ctx.token,"content-type":"application/json"},body:JSON.stringify({documents:paths.map(p=>ctx.base+"/"+p),transaction})});
-  const d = await r.json();
-  if (!r.ok || !Array.isArray(d)) throw new Error("Firestore batch read failed.");
+  const raw = await r.text();
+  let d;
+  try {
+    d = JSON.parse(raw);
+  } catch {
+    d = raw.trim().split(/\\r?\\n/).filter(Boolean).map(line => JSON.parse(line));
+  }
+  if (!r.ok) throw new Error("Firestore batch read failed.");
+  if (!Array.isArray(d)) d = [d];
   const map = new Map();
   for (const x of d) if (x.found) map.set(x.found.name,{name:x.found.name,updateTime:x.found.updateTime,fields:decodeFields(x.found.fields)});
   return map;
