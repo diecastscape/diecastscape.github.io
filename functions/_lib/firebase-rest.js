@@ -96,7 +96,8 @@ export async function firestoreBatchGet(ctx, paths, transaction) {
   }
   if (!r.ok) {
     const apiStatus = d && d.error && d.error.status ? String(d.error.status) : "UNKNOWN";
-    throw new Error("Firestore batch read failed: HTTP " + r.status + " (" + apiStatus + ").");
+    const apiMessage = d && d.error && d.error.message ? String(d.error.message).slice(0,300) : "No API message returned.";
+    throw new Error("Firestore batch read failed: HTTP " + r.status + " (" + apiStatus + "): " + apiMessage);
   }
   if (!Array.isArray(d)) d = [d];
   const map = new Map();
