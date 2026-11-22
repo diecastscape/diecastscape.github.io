@@ -116,16 +116,15 @@ export async function onRequestPost({request,env}) {
   const resourceBase=firebase.base.replace("https://firestore.googleapis.com/v1/","");
   const counterName=resourceBase+"/"+counterPath;
   const counterFields=firestoreFields({lastNumber:next,updatedAt:{__timestamp:now.toISOString()}});
-  if(counter) writes.push({update:{name:counterName,fields:counterFields},updateMask:{fieldPaths:["lastNumber","updatedAt"]},currentDocument:{updateTime:counter.updateTime}});
-  else writes.push({create:{name:counterName,fields:counterFields}});
+  writes.push({update:{name:counterName,fields:counterFields},updateMask:{fieldPaths:["lastNumber","updatedAt"]},currentDocument:counter?{updateTime:counter.updateTime}:{exists:false}});
   const publicName=resourceBase+"/bookedOrders/"+storeOrderId;
   const privateName=resourceBase+"/orderCustomers/"+storeOrderId;
-  writes.push({create:{name:publicName,fields:firestoreFields({
+  writes.push({update:{name:publicName,fields:firestoreFields({
    orderId:storeOrderId,bookedDate,confirmedAt:{__timestamp:now.toISOString()},
    design:"Accessories Order",products:publicProducts,shippingDate:displayDate(dispatchISO),
    estimatedDispatchDate:dispatchISO,status:stockIssue?"Pending":"Ready to Pack",dispatchedDate:"",hidden:false
-  })}});
-  writes.push({create:{name:privateName,fields:firestoreFields({
+  })},currentDocument:{exists:false}});
+  writes.push({update:{name:privateName,fields:firestoreFields({
    orderId:storeOrderId,orderType:"Accessories",bookedDate,confirmedAt:{__timestamp:now.toISOString()},
    estimatedDispatchDate:dispatchISO,products:savedProducts,
    productTotal:record.fields.productTotal,shipping:record.fields.shipping,orderTotal:record.fields.total,
@@ -142,7 +141,7 @@ export async function onRequestPost({request,env}) {
    paymentMethod:"Razorpay",paymentStatus:stockIssue?"paid_stock_issue":"paid",razorpayPaymentId:paymentId,
    createdAt:{__timestamp:now.toISOString()},updatedAt:{__timestamp:now.toISOString()},
    customer:record.fields.customer
-  })}});
+  })},currentDocument:{exists:false}});
   writes.push({update:{name:record.name,fields:firestoreFields({
    status:stockIssue?"paid_stock_issue":"paid",paymentStatus:stockIssue?"paid_stock_issue":"paid",razorpayPaymentId:paymentId,
    paymentVerifiedAt:{__timestamp:now.toISOString()},storeOrderId
