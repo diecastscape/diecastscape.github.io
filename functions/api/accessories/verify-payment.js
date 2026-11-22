@@ -48,7 +48,7 @@ export async function onRequestPost({request,env}) {
   if(!counterPrecheck) {
    const existingOrders=await firestoreListCollection(firebase,"bookedOrders");
    for(const order of existingOrders) {
-    const match=String(order.fields.orderId||"").match(/^DS-A(\\d+)$/i);
+    const match=String(order.fields.orderId||"").match(/^DS-A(\d+)$/i);
     if(match) highestExisting=Math.max(highestExisting,Number(match[1])||1000);
    }
   }
