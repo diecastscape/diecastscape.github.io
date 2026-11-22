@@ -12,8 +12,10 @@ export async function onRequestGet({request,env}) {
   const auth="Basic "+btoa(env.RAZORPAY_KEY_ID+":"+env.RAZORPAY_KEY_SECRET);
   const pr=await fetch("https://api.razorpay.com/v1/payments/"+encodeURIComponent(paymentId),{headers:{authorization:auth}});
   const payment=await pr.json();
-  if(!pr.ok||payment.status!=="captured")
-   return jsonResponse({ok:false,error:"Razorpay does not report this payment as captured."},409);
+  if(!pr.ok)
+   return jsonResponse({ok:false,error:"Razorpay payment lookup failed.",razorpayHttpStatus:pr.status,razorpayErrorCode:String(payment&&payment.error&&payment.error.code||"UNKNOWN"),razorpayErrorField:String(payment&&payment.error&&payment.error.field||"")},502);
+  if(payment.status!=="captured")
+   return jsonResponse({ok:false,error:"Razorpay returned a payment status other than captured.",razorpayHttpStatus:pr.status,razorpayStatus:String(payment.status||"UNKNOWN"),razorpayOrderId:String(payment.order_id||"")},409);
   const firebase=await getFirebaseContext(env);
   const record=await firestoreGet(firebase,"onlinePaymentOrders/"+recordId);
   if(!record) return jsonResponse({ok:false,error:"Payment record not found."},404);
