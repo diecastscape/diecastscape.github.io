@@ -61,14 +61,10 @@ export async function firestoreListCollection(ctx, collection) {
   do {
     const query = new URLSearchParams({ pageSize: "1000" });
     if (pageToken) query.set("pageToken", pageToken);
-    const response = await fetch(ctx.base + "/" + collection + "?" + query.toString(), {
-      headers: { authorization: "Bearer " + ctx.token }
-    });
+    const response = await fetch(ctx.base + "/" + collection + "?" + query.toString(), {headers: { authorization: "Bearer " + ctx.token }});
     const data = await response.json();
     if (!response.ok) throw new Error("Firestore collection listing failed.");
-    for (const doc of data.documents || []) {
-      documents.push({ name: doc.name, fields: decodeFields(doc.fields) });
-    }
+    for (const doc of data.documents || []) documents.push({ name: doc.name, fields: decodeFields(doc.fields) });
     pageToken = data.nextPageToken || "";
   } while (pageToken);
   return documents;
@@ -98,7 +94,10 @@ export async function firestoreBatchGet(ctx, paths, transaction) {
   } catch {
     d = raw.trim().split(/\r?\n/).filter(Boolean).map(line => JSON.parse(line));
   }
-  if (!r.ok) throw new Error("Firestore batch read failed.");
+  if (!r.ok) {
+    const apiStatus = d && d.error && d.error.status ? String(d.error.status) : "UNKNOWN";
+    throw new Error("Firestore batch read failed: HTTP " + r.status + " (" + apiStatus + ").");
+  }
   if (!Array.isArray(d)) d = [d];
   const map = new Map();
   for (const x of d) if (x.found) map.set(x.found.name,{name:x.found.name,updateTime:x.found.updateTime,fields:decodeFields(x.found.fields)});
