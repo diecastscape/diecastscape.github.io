@@ -61,6 +61,8 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     if(!freshRecord)throw new Error("PAYMENT_RECORD_NOT_FOUND");
     if(freshRecord.fields.paymentStatus==="paid"||freshRecord.fields.paymentStatus==="paid_stock_issue")
       return {status:freshRecord.fields.paymentStatus,orderId:freshRecord.fields.storeOrderId||""};
+    if(freshRecord.fields.paymentStatus!=="pending"&&freshRecord.fields.paymentStatus!=="created")
+      throw new Error("PAYMENT_RECORD_NOT_PAYABLE");
 
     const freshCounter=docs.get(firebase.base+"/"+counterPath);
     const previous=freshCounter?Math.max(1000,Number(freshCounter.fields.lastNumber)||1000):highest;
