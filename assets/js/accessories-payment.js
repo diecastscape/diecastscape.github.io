@@ -70,7 +70,10 @@
               if(typeof clearCartDirectly==="function") clearCartDirectly();
               return;
             }
-            if(!verified.ok||!result.ok) throw new Error(result.message||result.error||"Payment verification is pending.");
+            if(!verified.ok||!result.ok) {
+              const diagnostic=result.diagnosticStage?"\nDiagnostic stage: "+result.diagnosticStage:"";
+              throw new Error((result.message||result.error||"Payment verification is pending.")+diagnostic);
+            }
             alert("Payment successful! Your accessories order is confirmed.\nOrder ID: "+(result.orderId||"Please contact us if you need the order ID."));
             if(typeof clearCartDirectly==="function") clearCartDirectly();
           } catch(error) {
