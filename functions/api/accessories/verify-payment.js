@@ -21,27 +21,34 @@ function displayDate(iso) {
  return p[2]+"/"+p[1]+"/"+p[0];
 }
 export async function onRequestPost({request,env}) {
+ let stage="request_parse";
  try {
   const body=await request.json();
+  stage="input_validation";
   const orderId=String(body.razorpay_order_id||""), paymentId=String(body.razorpay_payment_id||""),
    signature=String(body.razorpay_signature||""), recordId=String(body.paymentRecordId||"");
   if(!/^order_[A-Za-z0-9]+$/.test(orderId)||!/^pay_[A-Za-z0-9]+$/.test(paymentId)||
      !/^DSA[A-F0-9]{24}$/.test(recordId)||!/^[a-f0-9]{64}$/i.test(signature))
    return jsonResponse({error:"Payment verification details are invalid."},400);
+  stage="signature_verification";
   const expected=await hmacHex(env.RAZORPAY_KEY_SECRET,orderId+"|"+paymentId);
   if(!equal(expected,signature.toLowerCase())) return jsonResponse({error:"Payment signature verification failed."},400);
+  stage="razorpay_payment_lookup";
   const auth="Basic "+btoa(env.RAZORPAY_KEY_ID+":"+env.RAZORPAY_KEY_SECRET);
   const pr=await fetch("https://api.razorpay.com/v1/payments/"+encodeURIComponent(paymentId),{headers:{authorization:auth}});
   const payment=await pr.json();
   if(!pr.ok||payment.order_id!==orderId||payment.status!=="captured")
    return jsonResponse({error:"Razorpay has not confirmed a captured payment yet."},409);
+  stage="firebase_authentication";
   const firebase=await getFirebaseContext(env), recordPath="onlinePaymentOrders/"+recordId;
+  stage="payment_record_read";
   const current=await firestoreGet(firebase,recordPath);
   if(!current||current.fields.razorpayOrderId!==orderId) return jsonResponse({error:"Payment order could not be found."},404);
   if(Number(payment.amount)!==Number(current.fields.amountPaise)) return jsonResponse({error:"Captured amount does not match the order total."},409);
   if(current.fields.paymentStatus==="paid") return jsonResponse({ok:true,status:"paid",orderId:current.fields.storeOrderId,message:"Payment already verified."});
   if(current.fields.paymentStatus==="paid_stock_issue") return jsonResponse({ok:false,status:"paid_stock_issue",message:"Payment received, but stock needs manual review. Please contact us."},409);
 
+  stage="order_counter_check";
   const counterPath="bookedOrderCounters/accessoryOrderIdSequence";
   const counterPrecheck=await firestoreGet(firebase,counterPath);
   let highestExisting=1000;
@@ -52,10 +59,12 @@ export async function onRequestPost({request,env}) {
     if(match) highestExisting=Math.max(highestExisting,Number(match[1])||1000);
    }
   }
+  stage="firestore_transaction_begin";
   const transaction=await firestoreBegin(firebase);
   const items=current.fields.items||[];
   const productPaths=items.map(item=>"accessoriesProducts/"+encodeURIComponent(item.productId));
   const paths=[recordPath,counterPath,...productPaths];
+  stage="firestore_transaction_read";
   const docs=await firestoreBatchGet(firebase,paths,transaction);
   const record=docs.get(firebase.base+"/"+recordPath);
   if(!record) throw new Error("Payment order disappeared during verification.");
@@ -63,6 +72,7 @@ export async function onRequestPost({request,env}) {
    await firestoreCommit(firebase,transaction,[]);
    return jsonResponse({ok:true,status:"paid",orderId:record.fields.storeOrderId,message:"Payment already verified."});
   }
+  stage="stock_validation";
   let stockIssue=false;
   const stockPlan=[];
   for(const item of items) {
@@ -138,11 +148,13 @@ export async function onRequestPost({request,env}) {
    status:stockIssue?"paid_stock_issue":"paid",paymentStatus:stockIssue?"paid_stock_issue":"paid",razorpayPaymentId:paymentId,
    paymentVerifiedAt:{__timestamp:now.toISOString()},storeOrderId
   })},updateMask:{fieldPaths:["status","paymentStatus","razorpayPaymentId","paymentVerifiedAt","storeOrderId"]},currentDocument:{updateTime:record.updateTime}});
+  stage="firestore_transaction_commit";
   await firestoreCommit(firebase,transaction,writes);
+  stage="completed";
   if(stockIssue) return jsonResponse({ok:false,status:"paid_stock_issue",orderId:storeOrderId,message:"Payment received. Your order has been recorded, but stock needs manual review. We will contact you shortly."},409);
   return jsonResponse({ok:true,status:"paid",orderId:storeOrderId,message:"Payment verified. Your order is confirmed."});
  } catch(error) {
-  console.error("Accessories verify-payment error:",error);
-  return jsonResponse({error:"Unable to verify payment right now. Please do not pay again; contact us if money was deducted."},500);
+  console.error("Accessories verify-payment error:",{stage,message:String(error&&error.message||error)});
+  return jsonResponse({error:"Unable to verify payment right now. Please do not pay again; contact us if money was deducted.",diagnosticStage:stage},500);
  }
 }
