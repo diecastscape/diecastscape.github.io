@@ -86,7 +86,11 @@ export async function firestoreBegin(ctx) {
   return d.transaction;
 }
 export async function firestoreBatchGet(ctx, paths, transaction) {
-  const r = await fetch(ctx.base+":batchGet", {method:"POST",headers:{authorization:"Bearer "+ctx.token,"content-type":"application/json"},body:JSON.stringify({documents:paths.map(p=>ctx.base+"/"+p),transaction})});
+  // Firestore batchGet expects resource names, not full HTTPS REST URLs.
+  const resourceBase = ctx.base.replace("https://firestore.googleapis.com/v1/", "");
+  const requestBody = { documents: paths.map(p => resourceBase + "/" + p) };
+  if (transaction) requestBody.transaction = transaction;
+  const r = await fetch(ctx.base+":batchGet", {method:"POST",headers:{authorization:"Bearer "+ctx.token,"content-type":"application/json"},body:JSON.stringify(requestBody)});
   const raw = await r.text();
   let d;
   try {
