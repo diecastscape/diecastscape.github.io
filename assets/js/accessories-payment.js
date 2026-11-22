@@ -65,12 +65,17 @@
               body:JSON.stringify({...paymentResponse,paymentRecordId:order.paymentRecordId})
             });
             const result=await verified.json();
+            if(result.status==="paid_stock_issue"&&result.orderId) {
+              alert("Payment received. Your order needs a stock review, and Diecast.scape will contact you.\\nOrder ID: "+result.orderId);
+              if(typeof clearCartDirectly==="function") clearCartDirectly();
+              return;
+            }
             if(!verified.ok||!result.ok) throw new Error(result.message||result.error||"Payment verification is pending.");
-            alert("Payment successful! Your accessories order is confirmed.\nOrder ID: "+(result.orderId||"Please contact us if you need the order ID."));
+            alert("Payment successful! Your accessories order is confirmed.\\nOrder ID: "+(result.orderId||"Please contact us if you need the order ID."));
             if(typeof clearCartDirectly==="function") clearCartDirectly();
           } catch(error) {
             console.error("Payment verification error:",error);
-            alert("Your payment may have been received, but automatic verification is pending. Please do not pay again. Contact Diecast.scape and share this payment ID: "+paymentResponse.razorpay_payment_id);
+            alert((error.message||"Payment verification is pending.")+"\\nPlease do not pay again. Contact Diecast.scape and share this payment ID: "+paymentResponse.razorpay_payment_id);
           } finally {
             busy=false;
             if(button) { button.disabled=false; button.textContent="Pay Online"; }
