@@ -107,7 +107,7 @@ export async function firestoreBatchGet(ctx, paths, transaction) {
   const map = new Map();
   for (const x of d) if (x.found) {
     const doc = {name:x.found.name,updateTime:x.found.updateTime,fields:decodeFields(x.found.fields)};
-    map.set(doc.name,doc);
+    map.set(ctx.base + "/" + doc.name,doc);
   }
   return map;
 }
