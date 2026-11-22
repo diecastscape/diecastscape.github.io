@@ -13,7 +13,7 @@ export async function onRequestGet({request,env}) {
   const pr=await fetch("https://api.razorpay.com/v1/payments/"+encodeURIComponent(paymentId),{headers:{authorization:auth}});
   const payment=await pr.json();
   if(!pr.ok)
-   return jsonResponse({ok:false,error:"Razorpay payment lookup failed.",razorpayHttpStatus:pr.status,razorpayErrorCode:String(payment&&payment.error&&payment.error.code||"UNKNOWN"),razorpayErrorField:String(payment&&payment.error&&payment.error.field||"")},502);
+   return jsonResponse({ok:false,error:"Razorpay payment lookup failed.",razorpayHttpStatus:pr.status,razorpayErrorCode:String(payment&&payment.error&&payment.error.code||"UNKNOWN"),razorpayErrorField:String(payment&&payment.error&&payment.error.field||""),razorpayErrorDescription:String(payment&&payment.error&&payment.error.description||"No description returned")},502);
   if(payment.status!=="captured")
    return jsonResponse({ok:false,error:"Razorpay returned a payment status other than captured.",razorpayHttpStatus:pr.status,razorpayStatus:String(payment.status||"UNKNOWN"),razorpayOrderId:String(payment.order_id||"")},409);
   const firebase=await getFirebaseContext(env);
