@@ -155,6 +155,8 @@ export async function onRequestPost({request,env}) {
   return jsonResponse({ok:true,status:"paid",orderId:storeOrderId,message:"Payment verified. Your order is confirmed."});
  } catch(error) {
   console.error("Accessories verify-payment error:",{stage,message:String(error&&error.message||error)});
-  return jsonResponse({error:"Unable to verify payment right now. Please do not pay again; contact us if money was deducted.",diagnosticStage:stage},500);
+  const rawMessage=String(error&&error.message||"");
+  const safeDetail=/^Firestore batch read failed: HTTP [0-9]{3} \([A-Z_]+\)\.$/.test(rawMessage)?rawMessage:"";
+  return jsonResponse({error:"Unable to verify payment right now. Please do not pay again; contact us if money was deducted.",diagnosticStage:stage,diagnosticDetail:safeDetail||undefined},500);
  }
 }
