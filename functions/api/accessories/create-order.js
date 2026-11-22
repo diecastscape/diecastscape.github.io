@@ -28,6 +28,7 @@ export async function onRequestPost({request,env}) {
    const doc=await firestoreGet(firebase,"accessoriesProducts/"+encodeURIComponent(item.id));
    if(!doc||doc.fields.active!==true) return jsonResponse({error:"A product in your cart is no longer available. Refresh and try again."},409);
    const price=Number(doc.fields.price), stock=Number(doc.fields.stock), code=String(doc.fields.productCode||"").trim().toUpperCase(), pack=packSize(code);
+   if(code==="#CL00") return jsonResponse({error:"This combo product is currently available through WhatsApp checkout only. Please choose WhatsApp to place this order."},409);
    if(!Number.isFinite(price)||price<=0||!Number.isInteger(stock)||stock<0||!/^#[A-Z0-9]{4}$/.test(code)) return jsonResponse({error:"A product has incomplete pricing or stock information. Please contact us."},409);
    const available=Math.floor(stock/pack);
    if(item.qty>available) return jsonResponse({error:String(doc.fields.name||"A product")+" has only "+available+" set(s) available."},409);
