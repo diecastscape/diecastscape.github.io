@@ -66,7 +66,7 @@
             });
             const result=await verified.json();
             if(!verified.ok||!result.ok) throw new Error(result.message||result.error||"Payment verification is pending.");
-            alert("Payment successful! Your payment is verified. Diecast.scape will process your accessories order.");
+            alert("Payment successful! Your accessories order is confirmed.\nOrder ID: "+(result.orderId||"Please contact us if you need the order ID."));
             if(typeof clearCartDirectly==="function") clearCartDirectly();
           } catch(error) {
             console.error("Payment verification error:",error);
