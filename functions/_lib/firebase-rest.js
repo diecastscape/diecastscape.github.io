@@ -113,8 +113,14 @@ export async function firestoreBatchGet(ctx, paths, transaction) {
 }
 export async function firestoreCommit(ctx, transaction, writes) {
   const r = await fetch(ctx.base+":commit", {method:"POST",headers:{authorization:"Bearer "+ctx.token,"content-type":"application/json"},body:JSON.stringify({transaction,writes})});
-  const d = await r.json();
-  if (!r.ok) throw new Error("Firestore commit failed.");
+  const raw = await r.text();
+  let d = {};
+  try { d = raw ? JSON.parse(raw) : {}; } catch {}
+  if (!r.ok) {
+    const status = String(d && d.error && d.error.status || "UNKNOWN").slice(0,80);
+    const message = String(d && d.error && d.error.message || "No API message returned.").replace(/[\\r\\n]+/g," ").slice(0,300);
+    throw new Error("Firestore commit failed: HTTP " + r.status + " (" + status + "): " + message);
+  }
   return d;
 }
 export function jsonResponse(data,status) {
