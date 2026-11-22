@@ -105,7 +105,10 @@ export async function firestoreBatchGet(ctx, paths, transaction) {
   }
   if (!Array.isArray(d)) d = [d];
   const map = new Map();
-  for (const x of d) if (x.found) map.set(x.found.name,{name:x.found.name,updateTime:x.found.updateTime,fields:decodeFields(x.found.fields)});
+  for (const x of d) if (x.found) {
+    const doc = {name:"https://firestore.googleapis.com/v1/" + x.found.name,updateTime:x.found.updateTime,fields:decodeFields(x.found.fields)};
+    map.set(doc.name,doc);
+  }
   return map;
 }
 export async function firestoreCommit(ctx, transaction, writes) {
