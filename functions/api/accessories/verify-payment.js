@@ -156,7 +156,7 @@ export async function onRequestPost({request,env}) {
  } catch(error) {
   console.error("Accessories verify-payment error:",{stage,message:String(error&&error.message||error)});
   const rawMessage=String(error&&error.message||"");
-  const safeDetail=/^Firestore (?:batch read|commit) failed: HTTP [0-9]{3} \([A-Z_]+\): .{1,300}$/.test(rawMessage)?rawMessage.slice(0,420):"";
+  const safeDetail=stage==="firestore_transaction_commit" && rawMessage.startsWith("Firestore commit failed:") ? rawMessage.replace(/[\r\n]+/g," ").slice(0,500) : "";
   return jsonResponse({error:"Unable to verify payment right now. Please do not pay again; contact us if money was deducted.",diagnosticStage:stage,diagnosticDetail:safeDetail||undefined},500);
  }
 }
