@@ -55,7 +55,7 @@ export async function onRequestPost({request,env}) {
   if(!counterPrecheck) {
    const existingOrders=await firestoreListCollection(firebase,"bookedOrders");
    for(const order of existingOrders) {
-    const match=String(order.fields.orderId||"").match(/^DS-A(\d+)$/i);
+    const match=String(order.fields.orderId||"").match(/^DS-A(\\d+)$/i);
     if(match) highestExisting=Math.max(highestExisting,Number(match[1])||1000);
    }
   }
@@ -96,7 +96,7 @@ export async function onRequestPost({request,env}) {
    "Post Office Name: "+String(customer.postOffice||"Not provided"),
    "Pincode: "+String(customer.pincode||"Not provided"),
    "Phone: "+String(customer.phone||"Not provided")
-  ].join("\n");
+  ].join("\\n");
   const savedProducts=items.map(item=>({
    name:item.name,quantity:item.qty,productCode:item.productCode,
    checkoutCode:item.productCode+String(item.qty).padStart(2,"0"),
@@ -153,8 +153,9 @@ export async function onRequestPost({request,env}) {
   return jsonResponse({ok:true,status:"paid",orderId:storeOrderId,message:"Payment verified. Your order is confirmed."});
  } catch(error) {
   console.error("Accessories verify-payment error:",{stage,message:String(error&&error.message||error)});
-  const rawMessage=String(error&&error.message||"");
-  const safeDetail=stage==="firestore_transaction_commit" && rawMessage.startsWith("Firestore commit failed:") ? rawMessage.replace(/[\r\n]+/g," ").slice(0,500) : "";
+  const rawMessage=String(error&&error.message||"Unknown error");
+  // Only expose a bounded Firestore commit error; never expose credentials or request headers.
+  const safeDetail=stage==="firestore_transaction_commit" ? rawMessage.replace(/[\\r\\n]+/g," ").slice(0,500) : "";
   return jsonResponse({error:"Unable to verify payment right now. Please do not pay again; contact us if money was deducted.",diagnosticStage:stage,diagnosticDetail:safeDetail||undefined},500);
  }
 }
