@@ -44,8 +44,11 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
   for(let attempt=1;attempt<=4;attempt++) {
     const record=await firestoreGet(firebase,recordPath);
     if(!record)throw new Error("PAYMENT_RECORD_NOT_FOUND");
-    if(record.fields.paymentStatus==="paid"||record.fields.paymentStatus==="paid_stock_issue")
+    if(record.fields.paymentStatus==="paid"||record.fields.paymentStatus==="paid_stock_issue") {
+      if(String(record.fields.razorpayPaymentId||"")!==paymentId)
+        throw new Error("PAYMENT_ALREADY_PROCESSED_WITH_DIFFERENT_PAYMENT");
       return {status:record.fields.paymentStatus,orderId:record.fields.storeOrderId||""};
+    }
     if(record.fields.paymentStatus!=="pending"&&record.fields.paymentStatus!=="created")
       throw new Error("PAYMENT_RECORD_NOT_PAYABLE");
 
@@ -59,8 +62,11 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     const docs=await firestoreBatchGet(firebase,paths);
     const freshRecord=docs.get(firebase.base+"/"+recordPath);
     if(!freshRecord)throw new Error("PAYMENT_RECORD_NOT_FOUND");
-    if(freshRecord.fields.paymentStatus==="paid"||freshRecord.fields.paymentStatus==="paid_stock_issue")
+    if(freshRecord.fields.paymentStatus==="paid"||freshRecord.fields.paymentStatus==="paid_stock_issue") {
+      if(String(freshRecord.fields.razorpayPaymentId||"")!==paymentId)
+        throw new Error("PAYMENT_ALREADY_PROCESSED_WITH_DIFFERENT_PAYMENT");
       return {status:freshRecord.fields.paymentStatus,orderId:freshRecord.fields.storeOrderId||""};
+    }
     if(freshRecord.fields.paymentStatus!=="pending"&&freshRecord.fields.paymentStatus!=="created")
       throw new Error("PAYMENT_RECORD_NOT_PAYABLE");
 
