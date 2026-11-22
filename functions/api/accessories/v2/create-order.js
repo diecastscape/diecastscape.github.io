@@ -94,3 +94,6 @@ export async function onRequestPost({request,env}) {
     return jsonResponse({error:"Unable to prepare payment. Please try again or contact us."},500);
   }
 }
+export async function onRequestGet() {
+  return jsonResponse({ok:false,error:"Method Not Allowed",allowedMethod:"POST"},405);
+}
