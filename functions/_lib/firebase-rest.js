@@ -78,7 +78,7 @@ export async function firestoreBatchGet(ctx, paths, transaction) {
   try {
     d = JSON.parse(raw);
   } catch {
-    d = raw.trim().split(/\\r?\\n/).filter(Boolean).map(line => JSON.parse(line));
+    d = raw.trim().split(/\r?\n/).filter(Boolean).map(line => JSON.parse(line));
   }
   if (!r.ok) throw new Error("Firestore batch read failed.");
   if (!Array.isArray(d)) d = [d];
