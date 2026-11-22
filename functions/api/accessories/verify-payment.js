@@ -79,6 +79,14 @@ export async function onRequestPost({request,env}) {
   const next=previous+1;
   const storeOrderId="DS-A"+next;
   const now=new Date(), dispatchISO=dispatchThursday(), bookedDate=displayDate(now.toLocaleDateString("en-CA",{timeZone:"Asia/Kolkata"}));
+  const customer=record.fields.customer||{};
+  const customerDetails=[
+   "Name: "+String(customer.name||"Not provided"),
+   "Address: "+String(customer.address||"Not provided"),
+   "Post Office Name: "+String(customer.postOffice||"Not provided"),
+   "Pincode: "+String(customer.pincode||"Not provided"),
+   "Phone: "+String(customer.phone||"Not provided")
+  ].join("\\n");
   const savedProducts=items.map(item=>({
    name:item.name,quantity:item.qty,productCode:item.productCode,
    checkoutCode:item.productCode+String(item.qty).padStart(2,"0"),
@@ -113,6 +121,14 @@ export async function onRequestPost({request,env}) {
    estimatedDispatchDate:dispatchISO,products:savedProducts,
    productTotal:record.fields.productTotal,shipping:record.fields.shipping,orderTotal:record.fields.total,
    totalPiecesDeducted:totalPieces,stockDeductions:deductions,comboStockUpdates:[],
+   name:String(customer.name||""),address:String(customer.address||""),
+   postOffice:String(customer.postOffice||""),postOfficeName:String(customer.postOffice||""),
+   pincode:String(customer.pincode||""),phone:String(customer.phone||""),
+   customerDetails,deliveryDetails:{
+    name:String(customer.name||""),address:String(customer.address||""),
+    postOffice:String(customer.postOffice||""),postOfficeName:String(customer.postOffice||""),
+    pincode:String(customer.pincode||""),phone:String(customer.phone||"")
+   },
    paymentMethod:"Razorpay",paymentStatus:"paid",razorpayPaymentId:paymentId,
    createdAt:{__timestamp:now.toISOString()},updatedAt:{__timestamp:now.toISOString()},
    customer:record.fields.customer
