@@ -1,4 +1,4 @@
-import {getFirebaseContext,firestoreGet,firestoreBegin,firestoreBatchGet,firestoreCommit,firestoreFields,jsonResponse} from "../../_lib/firebase-rest.js";
+import {getFirebaseContext,firestoreGet,firestoreBegin,firestoreBatchGet,firestoreCommit,firestoreFields,firestoreListCollection,jsonResponse} from "../../_lib/firebase-rest.js";
 
 async function hmacHex(secret,message) {
  const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
@@ -42,9 +42,18 @@ export async function onRequestPost({request,env}) {
   if(current.fields.paymentStatus==="paid") return jsonResponse({ok:true,status:"paid",orderId:current.fields.storeOrderId,message:"Payment already verified."});
   if(current.fields.paymentStatus==="paid_stock_issue") return jsonResponse({ok:false,status:"paid_stock_issue",message:"Payment received, but stock needs manual review. Please contact us."},409);
 
+  const counterPath="bookedOrderCounters/accessoryOrderIdSequence";
+  const counterPrecheck=await firestoreGet(firebase,counterPath);
+  let highestExisting=1000;
+  if(!counterPrecheck) {
+   const existingOrders=await firestoreListCollection(firebase,"bookedOrders");
+   for(const order of existingOrders) {
+    const match=String(order.fields.orderId||"").match(/^DS-A(\\d+)$/i);
+    if(match) highestExisting=Math.max(highestExisting,Number(match[1])||1000);
+   }
+  }
   const transaction=await firestoreBegin(firebase);
   const items=current.fields.items||[];
-  const counterPath="bookedOrderCounters/accessoryOrderIdSequence";
   const productPaths=items.map(item=>"accessoriesProducts/"+encodeURIComponent(item.productId));
   const paths=[recordPath,counterPath,...productPaths];
   const docs=await firestoreBatchGet(firebase,paths,transaction);
@@ -75,7 +84,7 @@ export async function onRequestPost({request,env}) {
   }
 
   const counter=docs.get(firebase.base+"/"+counterPath);
-  const previous=counter?Math.max(1000,Number(counter.fields.lastNumber)||1000):1000;
+  const previous=counter?Math.max(1000,Number(counter.fields.lastNumber)||1000):highestExisting;
   const next=previous+1;
   const storeOrderId="DS-A"+next;
   const now=new Date(), istNow=new Date(Date.now()+19800000), dispatchISO=dispatchThursday(), bookedDate=displayDate(istNow.toISOString().slice(0,10));
