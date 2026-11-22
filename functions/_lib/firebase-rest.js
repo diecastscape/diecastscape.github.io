@@ -55,6 +55,24 @@ export async function firestoreGet(ctx, path) {
   if (!r.ok) throw new Error("Firestore read failed.");
   return {name:d.name,updateTime:d.updateTime,fields:decodeFields(d.fields)};
 }
+export async function firestoreListCollection(ctx, collection) {
+  const documents = [];
+  let pageToken = "";
+  do {
+    const query = new URLSearchParams({ pageSize: "1000" });
+    if (pageToken) query.set("pageToken", pageToken);
+    const response = await fetch(ctx.base + "/" + collection + "?" + query.toString(), {
+      headers: { authorization: "Bearer " + ctx.token }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error("Firestore collection listing failed.");
+    for (const doc of data.documents || []) {
+      documents.push({ name: doc.name, fields: decodeFields(doc.fields) });
+    }
+    pageToken = data.nextPageToken || "";
+  } while (pageToken);
+  return documents;
+}
 export async function firestoreCreate(ctx, collection, id, fields) {
   const encoded = Object.fromEntries(Object.entries(fields).map(([k,v]) => [k,encodeValue(v)]));
   const r = await fetch(ctx.base + "/" + collection + "?documentId=" + encodeURIComponent(id), {method:"POST",headers:{authorization:"Bearer "+ctx.token,"content-type":"application/json"},body:JSON.stringify({fields:encoded})});
