@@ -86,7 +86,7 @@ export async function onRequestPost({request,env}) {
    "Post Office Name: "+String(customer.postOffice||"Not provided"),
    "Pincode: "+String(customer.pincode||"Not provided"),
    "Phone: "+String(customer.phone||"Not provided")
-  ].join("\\n");
+  ].join("\n");
   const savedProducts=items.map(item=>({
    name:item.name,quantity:item.qty,productCode:item.productCode,
    checkoutCode:item.productCode+String(item.qty).padStart(2,"0"),
