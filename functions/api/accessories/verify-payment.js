@@ -113,14 +113,15 @@ export async function onRequestPost({request,env}) {
   if(!stockIssue) for(const x of stockPlan) {
    writes.push({update:{name:x.doc.name,fields:firestoreFields({stock:x.stockAfter,stockUpdatedAt:{__timestamp:now.toISOString()}})},updateMask:{fieldPaths:["stock","stockUpdatedAt"]},currentDocument:{updateTime:x.doc.updateTime}});
   }
-  const counterName=firebase.base+"/"+counterPath;
+  const resourceBase=firebase.base.replace("https://firestore.googleapis.com/v1/","");
+  const counterName=resourceBase+"/"+counterPath;
   writes.push({
    update:{name:counterName,fields:firestoreFields({lastNumber:next,updatedAt:{__timestamp:now.toISOString()}})},
    updateMask:{fieldPaths:["lastNumber","updatedAt"]},
    currentDocument:counter?{updateTime:counter.updateTime}:{exists:false}
   });
-  const publicName=firebase.base+"/bookedOrders/"+storeOrderId;
-  const privateName=firebase.base+"/orderCustomers/"+storeOrderId;
+  const publicName=resourceBase+"/bookedOrders/"+storeOrderId;
+  const privateName=resourceBase+"/orderCustomers/"+storeOrderId;
   writes.push({update:{name:publicName,fields:firestoreFields({
    orderId:storeOrderId,bookedDate,confirmedAt:{__timestamp:now.toISOString()},
    design:"Accessories Order",products:publicProducts,shippingDate:displayDate(dispatchISO),
