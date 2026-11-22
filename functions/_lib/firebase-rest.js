@@ -107,7 +107,8 @@ export async function firestoreBatchGet(ctx, paths, transaction) {
   const map = new Map();
   for (const x of d) if (x.found) {
     const doc = {name:x.found.name,updateTime:x.found.updateTime,fields:decodeFields(x.found.fields)};
-    map.set(ctx.base + "/" + doc.name,doc);
+    const resourceBase=ctx.base.replace("https://firestore.googleapis.com/v1/","");
+    map.set(ctx.base + "/" + doc.name.slice(resourceBase.length+1),doc);
   }
   return map;
 }
