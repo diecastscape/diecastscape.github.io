@@ -71,9 +71,19 @@
             if(typeof clearCartDirectly==="function")clearCartDirectly();
           } catch(error) {
             console.error("Accessories payment v2 verification:",error);
+            if(button) {
+              button.disabled=true;
+              button.textContent="Payment verification pending";
+            }
             alert((error.message||"Payment verification is pending.")+
               "\nPlease do not pay again. Contact Diecast.scape with your payment ID.");
-          } finally { resetButton(button); }
+          } finally {
+            if(button && button.textContent==="Payment verification pending") {
+              busy=true;
+            } else {
+              resetButton(button);
+            }
+          }
         }
       });
       checkout.on("payment.failed",event=>{
