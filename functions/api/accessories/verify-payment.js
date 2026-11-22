@@ -74,15 +74,6 @@ export async function onRequestPost({request,env}) {
    }
    stockPlan.push({doc,stockBefore:stock,units,stockAfter:stock-units,item});
   }
-  if(stockIssue) {
-   const writes=[{update:{name:record.name,fields:firestoreFields({
-    status:"paid_stock_issue",paymentStatus:"paid_stock_issue",razorpayPaymentId:paymentId,
-    paymentVerifiedAt:{__timestamp:new Date().toISOString()}
-   })},updateMask:{fieldPaths:["status","paymentStatus","razorpayPaymentId","paymentVerifiedAt"]},currentDocument:{updateTime:record.updateTime}}];
-   await firestoreCommit(firebase,transaction,writes);
-   return jsonResponse({ok:false,status:"paid_stock_issue",message:"Payment received, but stock needs manual review. Please contact Diecast.scape."},409);
-  }
-
   const counter=docs.get(firebase.base+"/"+counterPath);
   const previous=counter?Math.max(1000,Number(counter.fields.lastNumber)||1000):highestExisting;
   const next=previous+1;
@@ -109,7 +100,7 @@ export async function onRequestPost({request,env}) {
   }));
   const totalPieces=deductions.reduce((sum,x)=>sum+x.piecesDeducted,0);
   const writes=[];
-  for(const x of stockPlan) {
+  if(!stockIssue) for(const x of stockPlan) {
    writes.push({update:{name:x.doc.name,fields:firestoreFields({stock:x.stockAfter,stockUpdatedAt:{__timestamp:now.toISOString()}})},updateMask:{fieldPaths:["stock","stockUpdatedAt"]},currentDocument:{updateTime:x.doc.updateTime}});
   }
   const counterName=firebase.base+"/"+counterPath;
@@ -123,13 +114,14 @@ export async function onRequestPost({request,env}) {
   writes.push({update:{name:publicName,fields:firestoreFields({
    orderId:storeOrderId,bookedDate,confirmedAt:{__timestamp:now.toISOString()},
    design:"Accessories Order",products:publicProducts,shippingDate:displayDate(dispatchISO),
-   estimatedDispatchDate:dispatchISO,status:"Ready to Pack",dispatchedDate:"",hidden:false
+   estimatedDispatchDate:dispatchISO,status:stockIssue?"Pending":"Ready to Pack",dispatchedDate:"",hidden:false
   })},currentDocument:{exists:false}});
   writes.push({update:{name:privateName,fields:firestoreFields({
    orderId:storeOrderId,orderType:"Accessories",bookedDate,confirmedAt:{__timestamp:now.toISOString()},
    estimatedDispatchDate:dispatchISO,products:savedProducts,
    productTotal:record.fields.productTotal,shipping:record.fields.shipping,orderTotal:record.fields.total,
-   totalPiecesDeducted:totalPieces,stockDeductions:deductions,comboStockUpdates:[],
+   totalPiecesDeducted:stockIssue?0:totalPieces,stockDeductions:stockIssue?[]:deductions,comboStockUpdates:[],
+   stockReviewRequired:stockIssue,
    name:String(customer.name||""),address:String(customer.address||""),
    postOffice:String(customer.postOffice||""),postOfficeName:String(customer.postOffice||""),
    pincode:String(customer.pincode||""),phone:String(customer.phone||""),
@@ -138,15 +130,16 @@ export async function onRequestPost({request,env}) {
     postOffice:String(customer.postOffice||""),postOfficeName:String(customer.postOffice||""),
     pincode:String(customer.pincode||""),phone:String(customer.phone||"")
    },
-   paymentMethod:"Razorpay",paymentStatus:"paid",razorpayPaymentId:paymentId,
+   paymentMethod:"Razorpay",paymentStatus:stockIssue?"paid_stock_issue":"paid",razorpayPaymentId:paymentId,
    createdAt:{__timestamp:now.toISOString()},updatedAt:{__timestamp:now.toISOString()},
    customer:record.fields.customer
   })},currentDocument:{exists:false}});
   writes.push({update:{name:record.name,fields:firestoreFields({
-   status:"paid",paymentStatus:"paid",razorpayPaymentId:paymentId,
+   status:stockIssue?"paid_stock_issue":"paid",paymentStatus:stockIssue?"paid_stock_issue":"paid",razorpayPaymentId:paymentId,
    paymentVerifiedAt:{__timestamp:now.toISOString()},storeOrderId
   })},updateMask:{fieldPaths:["status","paymentStatus","razorpayPaymentId","paymentVerifiedAt","storeOrderId"]},currentDocument:{updateTime:record.updateTime}});
   await firestoreCommit(firebase,transaction,writes);
+  if(stockIssue) return jsonResponse({ok:false,status:"paid_stock_issue",orderId:storeOrderId,message:"Payment received. Your order has been recorded, but stock needs manual review. We will contact you shortly."},409);
   return jsonResponse({ok:true,status:"paid",orderId:storeOrderId,message:"Payment verified. Your order is confirmed."});
  } catch(error) {
   console.error("Accessories verify-payment error:",error);
