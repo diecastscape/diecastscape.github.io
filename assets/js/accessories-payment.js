@@ -1,13 +1,13 @@
 (function () {
   let busy = false;
-
-  function value(id) {
-    return document.getElementById(id)?.value.trim() || "";
+  function value(id) { return document.getElementById(id)?.value.trim() || ""; }
+  function resetButton(button) {
+    busy=false;
+    if(button) { button.disabled=false; button.textContent="Pay Online"; }
   }
-
   function loadCheckout() {
-    if (window.Razorpay) return Promise.resolve();
-    return new Promise((resolve,reject) => {
+    if(window.Razorpay) return Promise.resolve();
+    return new Promise((resolve,reject)=>{
       const script=document.createElement("script");
       script.src="https://checkout.razorpay.com/v1/checkout.js";
       script.onload=resolve;
@@ -15,90 +15,79 @@
       document.head.appendChild(script);
     });
   }
-
   async function payAccessories() {
-    if(busy) return;
+    if(busy)return;
     const products=typeof getCartProducts==="function"?getCartProducts():[];
-    if(!products.length) { showToast("Your cart is empty."); return; }
-    const total=products.reduce((sum,item)=>sum+(Number(item.price)||0)*(Number(item.qty)||0),0);
-    if(total<199) { showToast("Minimum order value is ₹199."); return; }
-    if(document.getElementById("checkoutWithoutDetails")?.checked) {
-      showToast("Online payment requires delivery details. Use WhatsApp for stock checks without details."); return;
+    if(!products.length){showToast("Your cart is empty.");return;}
+    if(document.getElementById("checkoutWithoutDetails")?.checked){
+      showToast("Online payment requires delivery details. Use WhatsApp if you need a stock check without details.");return;
     }
     const customer={
       name:value("checkoutName"),address:value("checkoutAddress"),
-      postOffice:value("checkoutPostOffice"),pincode:value("checkoutPincode"),phone:value("checkoutPhone")
+      postOffice:value("checkoutPostOffice"),pincode:value("checkoutPincode"),
+      phone:value("checkoutPhone")
     };
-    if(customer.name.length<2) { showToast("Please enter your name."); document.getElementById("checkoutName")?.focus(); return; }
-    if(customer.address.length<5) { showToast("Please enter your complete address."); document.getElementById("checkoutAddress")?.focus(); return; }
-    if(!/^\d{6}$/.test(customer.pincode)) { showToast("Please enter a valid 6-digit pincode."); document.getElementById("checkoutPincode")?.focus(); return; }
-    if(!/^\d{10}$/.test(customer.phone)) { showToast("Please enter a valid 10-digit phone number."); document.getElementById("checkoutPhone")?.focus(); return; }
+    if(customer.name.length<2){showToast("Please enter your name.");document.getElementById("checkoutName")?.focus();return;}
+    if(customer.address.length<5){showToast("Please enter your complete address.");document.getElementById("checkoutAddress")?.focus();return;}
+    if(!/^\d{6}$/.test(customer.pincode)){showToast("Please enter a valid 6-digit pincode.");document.getElementById("checkoutPincode")?.focus();return;}
+    if(!/^\d{10}$/.test(customer.phone)){showToast("Please enter a valid 10-digit phone number.");document.getElementById("checkoutPhone")?.focus();return;}
 
     busy=true;
     const button=document.getElementById("finalOnlinePayBtn");
-    if(button) { button.disabled=true; button.textContent="Preparing payment..."; }
-
+    if(button){button.disabled=true;button.textContent="Preparing secure payment...";}
     try {
-      const response=await fetch("/api/accessories/create-order",{
+      const response=await fetch("/api/accessories/v2/create-order",{
         method:"POST",headers:{"content-type":"application/json"},
         body:JSON.stringify({items:products.map(item=>({id:String(item.id),qty:Number(item.qty)})),customer})
       });
       const order=await response.json();
-      if(!response.ok) throw new Error(order.error||"Unable to prepare payment.");
+      if(!response.ok)throw new Error(order.error||"Unable to prepare payment.");
       await loadCheckout();
-
-      const razorpay=new window.Razorpay({
+      const checkout=new window.Razorpay({
         key:order.keyId,amount:order.amount,currency:order.currency,
-        name:"Diecast.scape",description:"Accessories order",order_id:order.orderId,
-        prefill:{name:customer.name,contact:customer.phone},
-        notes:{paymentRecordId:order.paymentRecordId,category:"accessories"},
+        name:"Diecast.scape",description:"Accessories order",
+        order_id:order.orderId,prefill:{name:customer.name,contact:customer.phone},
+        notes:{paymentRecordId:order.paymentRecordId,category:"accessories",paymentVersion:"2"},
         theme:{color:"#13adbd"},
-        modal:{ondismiss:()=>{
-          busy=false;
-          if(button) { button.disabled=false; button.textContent="Pay Online"; }
-        }},
+        modal:{ondismiss:()=>resetButton(button)},
         handler:async function(paymentResponse) {
-          if(button) button.textContent="Verifying payment...";
+          if(button)button.textContent="Verifying payment...";
           try {
-            const verified=await fetch("/api/accessories/verify-payment",{
+            const verifyResponse=await fetch("/api/accessories/v2/verify-payment",{
               method:"POST",headers:{"content-type":"application/json"},
               body:JSON.stringify({...paymentResponse,paymentRecordId:order.paymentRecordId})
             });
-            const result=await verified.json();
-            if(result.status==="paid_stock_issue"&&result.orderId) {
-              alert("Payment received. Your order needs a stock review, and Diecast.scape will contact you.\nOrder ID: "+result.orderId);
-              if(typeof clearCartDirectly==="function") clearCartDirectly();
-              return;
+            const result=await verifyResponse.json();
+            if(!verifyResponse.ok||!result.ok) {
+              const detail=result.diagnosticDetail?"\nDetails: "+result.diagnosticDetail:"";
+              throw new Error((result.error||"Payment verification is pending.")+detail+
+                "\nPayment ID: "+paymentResponse.razorpay_payment_id);
             }
-            if(!verified.ok||!result.ok) {
-              const diagnostic=result.diagnosticStage?"\nDiagnostic stage: "+result.diagnosticStage:"";
-              const detail=result.diagnosticDetail?"\nDiagnostic detail: "+result.diagnosticDetail:"";
-              throw new Error((result.message||result.error||"Payment verification is pending.")+diagnostic+detail);
+            if(result.status==="paid_stock_issue") {
+              alert("Payment received. Your order is recorded and needs a stock review. We will contact you.\nOrder ID: "+result.orderId);
+            } else {
+              alert("Payment successful! Your Accessories order is confirmed.\nOrder ID: "+result.orderId);
             }
-            alert("Payment successful! Your accessories order is confirmed.\nOrder ID: "+(result.orderId||"Please contact us if you need the order ID."));
-            if(typeof clearCartDirectly==="function") clearCartDirectly();
+            if(typeof clearCartDirectly==="function")clearCartDirectly();
           } catch(error) {
-            console.error("Payment verification error:",error);
-            alert((error.message||"Payment verification is pending.")+"\nPlease do not pay again. Contact Diecast.scape and share this payment ID: "+paymentResponse.razorpay_payment_id);
-          } finally {
-            busy=false;
-            if(button) { button.disabled=false; button.textContent="Pay Online"; }
-          }
+            console.error("Accessories payment v2 verification:",error);
+            alert((error.message||"Payment verification is pending.")+
+              "\nPlease do not pay again. Contact Diecast.scape with your payment ID.");
+          } finally { resetButton(button); }
         }
       });
-      razorpay.on("payment.failed",event=>{
-        console.error("Razorpay payment failed:",event?.error?.code);
+      checkout.on("payment.failed",event=>{
+        console.error("Razorpay payment failed:",event?.error?.code||"unknown");
         showToast("Payment was not completed. You can try again.");
+        resetButton(button);
       });
-      razorpay.open();
+      checkout.open();
     } catch(error) {
-      console.error("Accessories online payment error:",error);
+      console.error("Accessories payment v2 checkout:",error);
       showToast(error.message||"Unable to start payment.");
-      busy=false;
-      if(button) { button.disabled=false; button.textContent="Pay Online"; }
+      resetButton(button);
     }
   }
-
   document.addEventListener("DOMContentLoaded",()=>{
     document.getElementById("finalOnlinePayBtn")?.addEventListener("click",payAccessories);
   });
