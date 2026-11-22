@@ -11,14 +11,15 @@ export async function onRequestGet({request,env}) {
   if(!env.RAZORPAY_KEY_ID||!env.RAZORPAY_KEY_SECRET)
    return jsonResponse({ok:false,error:"Payment gateway configuration is missing."},503);
   const auth="Basic "+btoa(env.RAZORPAY_KEY_ID+":"+env.RAZORPAY_KEY_SECRET);
-  const [or,pr]=await Promise.all([
+  const [or,pr,lr]=await Promise.all([
    fetch("https://api.razorpay.com/v1/orders/"+encodeURIComponent(orderId),{headers:{authorization:auth}}),
-   fetch("https://api.razorpay.com/v1/payments/"+encodeURIComponent(paymentId),{headers:{authorization:auth}})
+   fetch("https://api.razorpay.com/v1/payments/"+encodeURIComponent(paymentId),{headers:{authorization:auth}}),
+   fetch("https://api.razorpay.com/v1/orders/"+encodeURIComponent(orderId)+"/payments",{headers:{authorization:auth}})
   ]);
-  const [gatewayOrder,payment]=await Promise.all([or.json(),pr.json()]);
+  const [gatewayOrder,payment,listedPayments]=await Promise.all([or.json(),pr.json(),lr.json()]);
   const safeError=(body)=>({code:String(body&&body.error&&body.error.code||"UNKNOWN"),field:String(body&&body.error&&body.error.field||""),description:String(body&&body.error&&body.error.description||"No description returned")});
   if(!or.ok||!pr.ok)
-   return jsonResponse({ok:false,error:"Razorpay API lookup diagnostic.",orderLookup:{httpStatus:or.status,ok:or.ok,...(or.ok?{status:String(gatewayOrder.status||"UNKNOWN"),amount:Number(gatewayOrder.amount||0),currency:String(gatewayOrder.currency||"")} : safeError(gatewayOrder))},paymentLookup:{httpStatus:pr.status,ok:pr.ok,...(pr.ok?{status:String(payment.status||"UNKNOWN"),orderId:String(payment.order_id||""),amount:Number(payment.amount||0)} : safeError(payment))}},502);
+   return jsonResponse({ok:false,error:"Razorpay API lookup diagnostic.",orderLookup:{httpStatus:or.status,ok:or.ok,...(or.ok?{status:String(gatewayOrder.status||"UNKNOWN"),amount:Number(gatewayOrder.amount||0),currency:String(gatewayOrder.currency||"")} : safeError(gatewayOrder))},paymentLookup:{httpStatus:pr.status,ok:pr.ok,...(pr.ok?{status:String(payment.status||"UNKNOWN"),orderId:String(payment.order_id||""),amount:Number(payment.amount||0)} : safeError(payment))},orderPaymentsLookup:{httpStatus:lr.status,ok:lr.ok,...(lr.ok?{count:Array.isArray(listedPayments.items)?listedPayments.items.length:0,items:(Array.isArray(listedPayments.items)?listedPayments.items:[]).map(p=>({id:String(p.id||""),status:String(p.status||""),amount:Number(p.amount||0),currency:String(p.currency||""),method:String(p.method||""),orderId:String(p.order_id||"")}))}:safeError(listedPayments))}},502);
   if(gatewayOrder.id!==orderId||Number(gatewayOrder.amount)!==Number(payment.amount)||gatewayOrder.currency!==payment.currency)
    return jsonResponse({ok:false,error:"Razorpay order and payment details do not match.",orderStatus:String(gatewayOrder.status||"UNKNOWN"),orderAmount:Number(gatewayOrder.amount||0),paymentAmount:Number(payment.amount||0),paymentOrderId:String(payment.order_id||"")},409);
   if(payment.status!=="captured")
