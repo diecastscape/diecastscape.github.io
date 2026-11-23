@@ -1,4 +1,4 @@
-import {getFirebaseContext,firestoreGet,firestoreCommit,firestoreFields,jsonResponse} from "../../../_lib/firebase-rest.js";
+import {getFirebaseContext,firestoreGet,firestoreCommit,firestoreFields,jsonResponse} from "../../_lib/firebase-rest.js";
 async function sha256(value){const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");}
 function safeItem(item){
  const isCombo=Boolean(item.isCombo);
