@@ -45,8 +45,8 @@ button?.addEventListener("click", async () => {
     if (!token) throw new Error("Firebase did not return a browser notification token.");
     await saveToken(token, user);
     onMessage(messaging, payload => {
-      const title = payload.notification?.title || "Diecast.scape Admin";
-      const body = payload.notification?.body || "New Accessories order update.";
+      const title = payload.data?.title || payload.notification?.title || "Diecast.scape Admin";
+      const body = payload.data?.body || payload.notification?.body || "New Accessories order update.";
       showStatus(title + " — " + body);
     });
     showStatus("Notifications enabled on this browser.");
