@@ -3,6 +3,7 @@ import {
   firestoreFields,firestoreListCollection,jsonResponse
 } from "../../../_lib/firebase-rest.js";
 import {releaseExpiredAccessoryReservations} from "../../../_lib/accessory-reservations.js";
+import {sendAdminPushNotification} from "../../../_lib/admin-push.js";
 
 async function hmacHex(secret,message) {
   const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),
@@ -59,7 +60,7 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     if(record.fields.paymentStatus==="paid"||record.fields.paymentStatus==="paid_stock_issue") {
       if(String(record.fields.razorpayPaymentId||"")!==paymentId)
         throw new Error("PAYMENT_ALREADY_PROCESSED_WITH_DIFFERENT_PAYMENT");
-      return {status:record.fields.paymentStatus,orderId:record.fields.storeOrderId||""};
+      return {status:record.fields.paymentStatus,orderId:record.fields.storeOrderId||"",created:false,total:Number(record.fields.total)||0};
     }
     if(record.fields.paymentStatus!=="pending"&&record.fields.paymentStatus!=="created")
       throw new Error("PAYMENT_RECORD_NOT_PAYABLE");
@@ -81,7 +82,7 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     if(freshRecord.fields.paymentStatus==="paid"||freshRecord.fields.paymentStatus==="paid_stock_issue") {
       if(String(freshRecord.fields.razorpayPaymentId||"")!==paymentId)
         throw new Error("PAYMENT_ALREADY_PROCESSED_WITH_DIFFERENT_PAYMENT");
-      return {status:freshRecord.fields.paymentStatus,orderId:freshRecord.fields.storeOrderId||""};
+      return {status:freshRecord.fields.paymentStatus,orderId:freshRecord.fields.storeOrderId||"",created:false,total:Number(freshRecord.fields.total)||0};
     }
     if(freshRecord.fields.paymentStatus!=="pending"&&freshRecord.fields.paymentStatus!=="created")
       throw new Error("PAYMENT_RECORD_NOT_PAYABLE");
@@ -248,7 +249,7 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     try {
       // No transaction token: one atomic commit with explicit document preconditions.
       await firestoreCommit(firebase,undefined,writes);
-      return {status:stockIssue?"paid_stock_issue":"paid",orderId};
+      return {status:stockIssue?"paid_stock_issue":"paid",orderId,created:true,total:Number(freshRecord.fields.total)||0};
     } catch(error) {
       const message=String(error?.message||error);
       const retryable=/\b(ABORTED|FAILED_PRECONDITION|ALREADY_EXISTS|409)\b/i.test(message);
@@ -299,6 +300,13 @@ export async function onRequestPost({request,env}) {
     stage="order_commit";
     await releaseExpiredAccessoryReservations(firebase);
     const result=await createPaidOrder(firebase,recordPath,paymentId);
+    if(result.created) {
+      try {
+        await sendAdminPushNotification(env,{orderId:result.orderId,amount:result.total});
+      } catch(pushError) {
+        console.error("Admin push notification failed:",String(pushError?.message||pushError));
+      }
+    }
     if(result.status==="paid_stock_issue")
       return jsonResponse({
         ok:true,status:"paid_stock_issue",orderId:result.orderId,
