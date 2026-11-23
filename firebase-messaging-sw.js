@@ -12,9 +12,9 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
-  const title = payload.notification?.title || "New Accessories Order";
+  const title = payload.data?.title || payload.notification?.title || "New Accessories Order";
   const options = {
-    body: payload.notification?.body || "A new paid Accessories order has been confirmed.",
+    body: payload.data?.body || payload.notification?.body || "A new paid Accessories order has been confirmed.",
     icon: "/favicon/favicon-96x96.png",
     badge: "/favicon/favicon-96x96.png",
     data: { url: payload.data?.url || "/admin/dashboard.html#accessoriesOrders" },
