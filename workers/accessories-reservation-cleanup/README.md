@@ -21,6 +21,10 @@ In the Cloudflare dashboard, open **Workers & Pages** → **diecastscape-accesso
 
 The service account must have permission to read and update the Firestore documents used by the existing checkout flow.
 
+## Cloudflare Git deployment
+
+The Git-connected Worker is configured to build from the `IN-development` branch with this directory as its root.
+
 ## Deploy
 
 From this directory, deploy with Wrangler:
