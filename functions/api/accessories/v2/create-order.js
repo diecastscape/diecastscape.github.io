@@ -8,6 +8,9 @@ function packSize(code) {
 function validCustomer(customer) {
   return customer&&typeof customer.name==="string"&&customer.name.trim().length>=2&&
     typeof customer.address==="string"&&customer.address.trim().length>=5&&
+    typeof customer.city==="string"&&customer.city.trim().length>=2&&
+    typeof customer.state==="string"&&customer.state.trim().length>=2&&
+    typeof customer.postOffice==="string"&&customer.postOffice.trim().length>=2&&
     typeof customer.pincode==="string"&&/^\d{6}$/.test(customer.pincode)&&
     typeof customer.phone==="string"&&/^\d{10}$/.test(customer.phone);
 }
@@ -79,7 +82,8 @@ export async function onRequestPost({request,env}) {
       currency:"INR",productTotal,shipping,total,items:verified,
       customer:{
         name:customer.name.trim(),address:customer.address.trim(),
-        postOffice:String(customer.postOffice||"").trim(),
+        city:customer.city.trim(),state:customer.state.trim(),
+        postOffice:customer.postOffice.trim(),
         pincode:customer.pincode,phone:customer.phone
       },
       createdAt:{__timestamp:new Date().toISOString()}

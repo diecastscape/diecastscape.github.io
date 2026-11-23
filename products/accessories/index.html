@@ -341,8 +341,7 @@ class="search-bar">
         Note:
       </div>
 
-      <p>We dispatch orders every Thursday as per our scheduled dispatch day, after payment is completed.</p>
-  <p>If any product in your order is out of stock after payment, we will either refund the amount for that product or dispatch it once it is back in stock, as you choose.</p>
+      <p>Accessories orders are dispatched according to our weekly schedule: Wednesday and Saturday.</p>
       
 
 </div>
@@ -358,7 +357,7 @@ class="search-bar">
       id="checkoutName"
       placeholder="Enter your full name"
       autocomplete="name"
-    >
+     required>
   </div>
 
   <!-- Address -->
@@ -369,9 +368,21 @@ class="search-bar">
       rows="3"
       placeholder="Enter your complete delivery address"
       autocomplete="street-address"
-    ></textarea>
+     required></textarea>
   </div>
-<!-- Post Office Name -->
+<!-- City -->
+  <div class="checkout-field">
+    <label for="checkoutCity">City</label>
+    <input type="text" id="checkoutCity" placeholder="Enter your city" autocomplete="address-level2" required>
+  </div>
+
+  <!-- State -->
+  <div class="checkout-field">
+    <label for="checkoutState">State</label>
+    <input type="text" id="checkoutState" placeholder="Enter your state" autocomplete="address-level1" required>
+  </div>
+
+  <!-- Post Office Name -->
 <div class="checkout-field">
   <label for="checkoutPostOffice">Post Office Name</label>
   <input
@@ -379,7 +390,7 @@ class="search-bar">
     id="checkoutPostOffice"
     placeholder="Enter your post office name"
     autocomplete="off"
-  >
+   required>
 </div>
   <!-- Pincode -->
   <div class="checkout-field">
@@ -391,7 +402,7 @@ class="search-bar">
       maxlength="6"
       placeholder="Enter 6-digit pincode"
       autocomplete="postal-code"
-    >
+     required>
   </div>
 
   <!-- Phone -->
@@ -404,22 +415,10 @@ class="search-bar">
       maxlength="10"
       placeholder="Enter 10-digit phone number"
       autocomplete="tel"
-    >
+     required>
   </div>
 
 </div>
-
-<!-- CONTINUE WITHOUT PERSONAL DETAILS -->
-<label class="checkout-no-details" for="checkoutWithoutDetails">
-  <input
-    type="checkbox"
-    id="checkoutWithoutDetails"
-  >
-  <span>
-    <strong>Continue without personal details</strong>
-    <small>Just send my cart to check product availability first.</small>
-  </span>
-</label>
 
 <div class="order-popup-action">
   <button
@@ -431,7 +430,7 @@ class="search-bar">
   </button>
 
   <div class="order-whatsapp-note">
-    Order securely through WhatsApp
+    Send cart details through WhatsApp
   </div>
 
   <button

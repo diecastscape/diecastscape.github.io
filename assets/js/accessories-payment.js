@@ -3,7 +3,7 @@
   function value(id) { return document.getElementById(id)?.value.trim() || ""; }
   function resetButton(button) {
     busy=false;
-    if(button) { button.disabled=false; button.textContent="Pay Online"; }
+    if(button) { button.disabled=false; button.textContent="Pay Now"; }
   }
   function loadCheckout() {
     if(window.Razorpay) return Promise.resolve();
@@ -19,16 +19,17 @@
     if(busy)return;
     const products=typeof getCartProducts==="function"?getCartProducts():[];
     if(!products.length){showToast("Your cart is empty.");return;}
-    if(document.getElementById("checkoutWithoutDetails")?.checked){
-      showToast("Online payment requires delivery details. Use WhatsApp if you need a stock check without details.");return;
-    }
     const customer={
       name:value("checkoutName"),address:value("checkoutAddress"),
+      city:value("checkoutCity"),state:value("checkoutState"),
       postOffice:value("checkoutPostOffice"),pincode:value("checkoutPincode"),
       phone:value("checkoutPhone")
     };
     if(customer.name.length<2){showToast("Please enter your name.");document.getElementById("checkoutName")?.focus();return;}
     if(customer.address.length<5){showToast("Please enter your complete address.");document.getElementById("checkoutAddress")?.focus();return;}
+    if(customer.city.length<2){showToast("Please enter your city.");document.getElementById("checkoutCity")?.focus();return;}
+    if(customer.state.length<2){showToast("Please enter your state.");document.getElementById("checkoutState")?.focus();return;}
+    if(customer.postOffice.length<2){showToast("Please enter your post office name.");document.getElementById("checkoutPostOffice")?.focus();return;}
     if(!/^\d{6}$/.test(customer.pincode)){showToast("Please enter a valid 6-digit pincode.");document.getElementById("checkoutPincode")?.focus();return;}
     if(!/^\d{10}$/.test(customer.phone)){showToast("Please enter a valid 10-digit phone number.");document.getElementById("checkoutPhone")?.focus();return;}
 
