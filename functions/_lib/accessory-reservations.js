@@ -1,5 +1,5 @@
 import {
-  firestoreGet,firestoreBatchGet,firestoreCommit,firestoreFields,decodeValue
+  firestoreGet,firestoreBatchGet,firestoreCommit,firestoreFields,decodeValue,firestoreListCollection
 } from "./firebase-rest.js";
 
 export const ACCESSORY_RESERVATION_MS=10*60*1000;
@@ -52,7 +52,7 @@ async function listExpiredSessions(firebase,now) {
 }
 
 function packSize(code) {
-  const match=String(code||"").trim().toUpperCase().match(/(\\d{2})$/);
+  const match=String(code||"").trim().toUpperCase().match(/(\d{2})$/);
   const size=match?Number(match[1]):1;
   return Number.isInteger(size)&&size>0?size:1;
 }
