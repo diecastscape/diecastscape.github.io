@@ -18,8 +18,7 @@ messaging.onBackgroundMessage((payload) => {
     icon: "/favicon/favicon-96x96.png",
     badge: "/favicon/favicon-96x96.png",
     data: { url: payload.data?.url || "/admin/dashboard.html#accessoriesOrders" },
-    tag: payload.data?.orderId || "accessories-order",
-    renotify: true
+    tag: payload.data?.orderId || "accessories-order"
   };
   self.registration.showNotification(title, options);
 });
