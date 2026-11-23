@@ -615,7 +615,10 @@ window.loadAccessoriesBookedOrders = async function () {
         ...orderDoc.data()
       };
 
-      if (isAccessoriesOrder(order)) {
+      // Online-v2 Accessories orders are managed in the new private
+      // Accessories Orders panel. Keep this legacy panel for historical/manual
+      // bookings only, without deleting or rewriting any old records.
+      if (isAccessoriesOrder(order) && order.orderSource !== "online-v2") {
         orders.push(order);
       }
     });

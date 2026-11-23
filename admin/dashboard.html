@@ -140,6 +140,14 @@
 
 
 
+<!-- ACCESSORIES ORDERS CARD -->
+<div class="dash-card">
+  <div class="dash-top">
+    <h3>Accessories Orders</h3>
+    <button onclick="openSection('accessoriesOrders')">View</button>
+  </div>
+</div>
+
 <!-- ==================================================
      MAIN STORE SECTION
 ================================================== -->
@@ -902,6 +910,22 @@
 </div>
 
 <!-- ==================================================
+     NEW ACCESSORIES ORDERS MANAGEMENT
+================================================== -->
+<div id="section-accessoriesOrders" class="section-panel booked-orders-section">
+  <div class="section-top">
+    <h3>Accessories Orders</h3>
+    <div class="btn-row">
+      <button id="accessoriesOrdersRefresh" type="button">Refresh</button>
+    </div>
+  </div>
+  <div class="border-top"></div>
+  <div id="accessoriesOrdersAdminList">
+    <div class="product-list-loading">Open this section to load Accessories Orders.</div>
+  </div>
+</div>
+
+<!-- ==================================================
      BOOKED ORDERS SECTION
 ================================================== -->
 
@@ -1168,6 +1192,7 @@
 
 <script type="module"src=" /assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/dashboard/booked-orders.js"></script>
+<script type="module" src="/assets/js/dashboard/accessories-orders.js"></script>
 <script type="module" src="/assets/js/dashboard/dashboard.js"></script>
 <script type="module" src="/assets/js/dashboard/main-products.js"></script>
 <script type="module" src="/assets/js/dashboard/frame-products.js"></script>

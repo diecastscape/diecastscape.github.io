@@ -318,6 +318,17 @@ if (addWrap) {
 
 
 // ======================================================
+// ACCESSORIES ORDERS SECTION (new private Orders collection)
+// ======================================================
+
+if (type === "accessoriesOrders") {
+  if (typeof window.loadAccessoriesAdminOrders === "function") {
+    window.loadAccessoriesAdminOrders();
+  }
+  return;
+}
+
+// ======================================================
 // BOOKED ORDERS SECTION
 // ======================================================
 

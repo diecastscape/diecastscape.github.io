@@ -82,8 +82,8 @@ export async function onRequestPost({request,env}){
   legacy=legacy||await firestoreGet(firebase,"bookedOrders/"+orderId);
   const legacyStatus=String(legacy?.fields.status||"");
   const stages={"Pending":1,"Next in Work":1,"In Progress":2,"Ready to Pack":2,"Packing":2,"Ready to Dispatch":3,"Dispatched":4};
-  const progressStage=stages[legacyStatus]||Number(fields.progressStage)||1;
-  const progress=progressStage===4?"Dispatched":progressStage===3?"Ready to Dispatch":progressStage===2?"In Packing":String(fields.progress||"Order Confirmed");
+  const progressStage=fields.stockReviewRequired?0:(stages[legacyStatus]||Number(fields.progressStage)||1);
+  const progress=progressStage===0?"Stock Review Required":progressStage===4?"Dispatched":progressStage===3?"Ready to Dispatch":progressStage===2?"In Packing":String(fields.progress||"Order Confirmed");
   const trackingId=legacy?.fields.trackingId||fields.trackingId||"",dispatched=progressStage===4;
   return jsonResponse({ok:true,order:{orderId:String(fields.orderId||orderId),orderType:String(fields.orderType||"Accessories"),bookedAt:fields.bookedAt||null,expectedDispatchDate:String(fields.expectedDispatchDate||""),progress,progressStage,progressHistory:Array.isArray(fields.progressHistory)?fields.progressHistory.slice(-4):[],customer:{name:String(customer.name||"")},items:Array.isArray(fields.items)?fields.items.map(safeItem):[],paymentStatus:String(fields.paymentStatus||""),subtotal:Number(fields.subtotal)||0,shipping:Number(fields.shipping)||0,grandTotal:Number(fields.grandTotal)||0,trackingId:dispatched?String(trackingId):"",dispatchedAt:dispatched?(legacy?.fields.dispatchedDate||fields.dispatchedAt||null):null}});
  }catch(error){console.error("Your Orders lookup failed:",String(error?.message||error));return jsonResponse({ok:false,error:"Unable to look up your order right now. Please try again later."},500);}

@@ -218,7 +218,7 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     });
     writes.push({
       update:{name:resourceBase+"/bookedOrders/"+orderId,fields:firestoreFields({
-        orderId,bookedDate,confirmedAt:{__timestamp:now},
+        orderId,bookedDate,confirmedAt:{__timestamp:now},orderSource:"online-v2",
         design:"Accessories Order",products:publicProducts,
         shippingDate:displayDate(dispatchISO),estimatedDispatchDate:dispatchISO,
         status:"Pending",dispatchedDate:"",hidden:false
