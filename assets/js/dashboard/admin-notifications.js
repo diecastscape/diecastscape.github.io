@@ -92,23 +92,3 @@ testButton?.addEventListener("click", async () => {
     showStatus(error.message || "Could not send test notification.", true);
   } finally { testButton.disabled = false; }
 });
-
-localTestButton?.addEventListener("click", async () => {
-  localTestButton.disabled = true;
-  try {
-    if (Notification.permission !== "granted") throw new Error("Please allow notifications for this website first.");
-    const registration = await navigator.serviceWorker.ready;
-    await registration.showNotification("Diecast.scape — Phone Test", {
-      body: "This is a direct Android browser notification test (no Firebase involved).",
-      icon: "/favicon/favicon-96x96.png",
-      badge: "/favicon/favicon-96x96.png",
-      tag: "diecastscape-local-phone-test"
-    });
-    showStatus("Direct phone notification request accepted. Check the Android notification panel.");
-  } catch (error) {
-    console.error("Direct phone notification test:", error);
-    showStatus(error.message || "Direct phone notification failed.", true);
-  } finally {
-    localTestButton.disabled = false;
-  }
-});
