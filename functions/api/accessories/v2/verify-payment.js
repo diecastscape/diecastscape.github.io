@@ -225,36 +225,6 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
       })},
       currentDocument:{exists:false}
     });
-    const totalPieces=deductions.reduce((sum,row)=>sum+row.piecesDeducted,0);
-    writes.push({
-      update:{name:resourceBase+"/orderCustomers/"+orderId,fields:firestoreFields({
-        orderId,orderType:"Accessories",bookedDate,confirmedAt:{__timestamp:now},
-        estimatedDispatchDate:dispatchISO,products:savedProducts,
-        productTotal:freshRecord.fields.productTotal,shipping:freshRecord.fields.shipping,
-        orderTotal:freshRecord.fields.total,totalPiecesDeducted:stockIssue?0:totalPieces,
-        stockDeductions:stockIssue?[]:deductions,comboStockUpdates:[],
-        stockReviewRequired:stockIssue,
-        name:String(customer.name||""),address:String(customer.address||""),
-        postOffice:String(customer.postOffice||""),postOfficeName:String(customer.postOffice||""),
-        pincode:String(customer.pincode||""),phone:String(customer.phone||""),
-        customerDetails:[
-          "Name: "+String(customer.name||"Not provided"),
-          "Address: "+String(customer.address||"Not provided"),
-          "Post Office Name: "+String(customer.postOffice||"Not provided"),
-          "Pincode: "+String(customer.pincode||"Not provided"),
-          "Phone: "+String(customer.phone||"Not provided")
-        ].join("\n"),
-        deliveryDetails:{
-          name:String(customer.name||""),address:String(customer.address||""),
-          postOffice:String(customer.postOffice||""),postOfficeName:String(customer.postOffice||""),
-          pincode:String(customer.pincode||""),phone:String(customer.phone||"")
-        },
-        paymentMethod:"Razorpay",paymentStatus:stockIssue?"paid_stock_issue":"paid",
-        razorpayPaymentId:paymentId,createdAt:{__timestamp:now},updatedAt:{__timestamp:now},
-        customer
-      })},
-      currentDocument:{exists:false}
-    });
     if(freshSession) {
       writes.push({
         update:{name:freshSession.name,fields:firestoreFields({
