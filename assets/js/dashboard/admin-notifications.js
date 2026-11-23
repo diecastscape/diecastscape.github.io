@@ -5,6 +5,7 @@ import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12
 const VAPID_PUBLIC_KEY = "BOCXTZg8PFcXSCuL4zKJ-SbZ_TrrMI3m8cbWwNRas7K7DluV21sdC7-WH8nwMgy3Rgix-luYtOv_uedUAITgpek";
 const button = document.getElementById("enableAdminNotifications");
 const testButton = document.getElementById("sendAdminTestNotification");
+const localTestButton = document.getElementById("testLocalAdminNotification");
 const status = document.getElementById("adminNotificationStatus");
 let foregroundListenerRegistered = false;
 
@@ -90,4 +91,24 @@ testButton?.addEventListener("click", async () => {
     console.error("Admin test notification:", error);
     showStatus(error.message || "Could not send test notification.", true);
   } finally { testButton.disabled = false; }
+});
+
+localTestButton?.addEventListener("click", async () => {
+  localTestButton.disabled = true;
+  try {
+    if (Notification.permission !== "granted") throw new Error("Please allow notifications for this website first.");
+    const registration = await navigator.serviceWorker.ready;
+    await registration.showNotification("Diecast.scape — Phone Test", {
+      body: "This is a direct Android browser notification test (no Firebase involved).",
+      icon: "/favicon/favicon-96x96.png",
+      badge: "/favicon/favicon-96x96.png",
+      tag: "diecastscape-local-phone-test"
+    });
+    showStatus("Direct phone notification request accepted. Check the Android notification panel.");
+  } catch (error) {
+    console.error("Direct phone notification test:", error);
+    showStatus(error.message || "Direct phone notification failed.", true);
+  } finally {
+    localTestButton.disabled = false;
+  }
 });
