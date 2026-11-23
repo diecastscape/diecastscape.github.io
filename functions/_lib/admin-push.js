@@ -81,8 +81,9 @@ export async function sendAdminTestPushNotification(env) {
   const tokens = (collection.documents || [])
     .filter(doc => doc.fields?.active?.booleanValue === true && doc.fields?.token?.stringValue)
     .map(doc => doc.fields.token.stringValue);
-  if (!tokens.length) return { sent: 0, total: 0 };
+  if (!tokens.length) return { sent: 0, total: 0, failure: "NO_REGISTERED_TOKENS" };
   let sent = 0;
+  let firstFailure = null;
   for (const deviceToken of tokens) {
     const result = await fetch("https://fcm.googleapis.com/v1/projects/diecastscape/messages:send", {
       method: "POST",
@@ -101,8 +102,12 @@ export async function sendAdminTestPushNotification(env) {
     if (result.ok) sent++;
     else {
       const error = await result.json().catch(() => ({}));
-      console.error("FCM test delivery failed:", error.error?.status || result.status);
+      const details = error.error?.details || [];
+      const errorCode = details.find(item => item.errorCode)?.errorCode;
+      const status = String(errorCode || error.error?.status || ("HTTP_" + result.status));
+      if (!firstFailure) firstFailure = status;
+      console.error("FCM test delivery failed:", status, result.status);
     }
   }
-  return { sent, total: tokens.length };
+  return { sent, total: tokens.length, failure: firstFailure };
 }
