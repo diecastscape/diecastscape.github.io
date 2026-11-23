@@ -29,7 +29,7 @@ function renderOrder(order){
    '<div class="your-orders-item-meta">'+escapeHTML(pack)+' · '+money(item.unitPrice)+' each</div><div class="your-orders-item-total">'+money(item.lineTotal)+'</div></div>';
  }).join("");
  const tracking=dispatched&&order.trackingId?'<div class="your-orders-tracking"><span>India Post tracking ID</span><strong>'+escapeHTML(order.trackingId)+'</strong></div>':"";
- resultBox.innerHTML='<article class="your-orders-card"><div class="your-orders-card-head"><div><div class="your-orders-kicker">ACCESSORIES ORDER</div><h2>#'+escapeHTML(order.orderId)+'</h2></div><span class="your-orders-paid">Payment completed</span></div>'+
+ resultBox.innerHTML='<article class="your-orders-card"><div class="your-orders-card-head"><div><div class="your-orders-kicker">ACCESSORIES ORDER</div><h2>#'+escapeHTML(order.orderId)+'</h2></div><span class="your-orders-paid">'+(order.paymentStatus==="paid"||order.paymentStatus==="paid_stock_issue"?"Payment completed":"Order recorded")+'</span></div>'+
  '<div class="your-orders-meta"><div><small>Booked</small><strong>'+dateText(order.bookedAt)+'</strong></div><div><small>Expected dispatch</small><strong>'+dateText(order.expectedDispatchDate)+'</strong></div></div>'+
  progressMarkup(order)+'<div class="your-orders-items"><h3>Order items</h3>'+itemHTML+'</div>'+
  '<div class="your-orders-totals"><div><span>Subtotal</span><strong>'+money(order.subtotal)+'</strong></div><div><span>Shipping</span><strong>'+(Number(order.shipping)===0?"FREE":money(order.shipping))+'</strong></div><div class="your-orders-grand"><span>Grand total</span><strong>'+money(order.grandTotal)+'</strong></div></div>'+

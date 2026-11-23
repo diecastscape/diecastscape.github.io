@@ -1,6 +1,18 @@
 import {getFirebaseContext,firestoreGet,firestoreCommit,firestoreFields,jsonResponse} from "../../../_lib/firebase-rest.js";
 async function sha256(value){const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");}
-function safeItem(item){return {productName:String(item.productName||item.name||"Accessory"),subtitle:String(item.subtitle||""),selectedQuantity:Number(item.selectedQuantity??item.quantity)||0,packQuantity:item.packQuantity===null?null:Number(item.packQuantity)||0,packLabel:String(item.packLabel||""),unitPrice:Number(item.unitPrice)||0,lineTotal:Number(item.lineTotal)||0};}
+function safeItem(item){
+ const isCombo=Boolean(item.isCombo);
+ const pack=item.packQuantity??item.piecesPerSet??null;
+ return {
+  productName:String(item.productName||item.name||"Accessory"),
+  subtitle:String(item.subtitle||""),
+  selectedQuantity:Number(item.selectedQuantity??item.quantity)||0,
+  packQuantity:isCombo||pack===null?null:Number(pack)||0,
+  packLabel:String(item.packLabel||(isCombo?"Combo set":pack?String(pack)+" pieces/set":"")),
+  unitPrice:Number(item.unitPrice)||0,
+  lineTotal:Number(item.lineTotal??item.subtotal)||0
+ };
+}
 async function rateLimit(firebase,orderId,ip){
  const now=Date.now(),keys=[{id:await sha256("order:"+orderId),limit:5,window:900000},{id:await sha256("ip:"+ip),limit:10,window:3600000}];
  for(let retry=0;retry<3;retry++){
@@ -20,9 +32,55 @@ export async function onRequestPost({request,env}){
   const ip=String(request.headers.get("CF-Connecting-IP")||"unknown").slice(0,80),firebase=await getFirebaseContext(env);
   const limit=await rateLimit(firebase,orderId,ip);
   if(!limit.allowed)return jsonResponse({ok:false,error:"Too many attempts. Please try again later.",retryAfter:limit.retryAfter},429);
-  const order=await firestoreGet(firebase,"Orders/"+orderId),customer=order?.fields.customer||{};
-  if(!order||String(customer.phoneNumber||"")!==phone)return jsonResponse({ok:false,error:"We couldn't find an order matching those details. Check your Order ID and phone number."},404);
-  const fields=order.fields,legacy=await firestoreGet(firebase,"bookedOrders/"+orderId),legacyStatus=String(legacy?.fields.status||"");
+  let order=await firestoreGet(firebase,"Orders/"+orderId);
+  let fields=order?.fields||null;
+  let customer=fields?.customer||{};
+  let legacy=null;
+
+  // Preserve tracking access for historical Accessories orders stored in the
+  // original private orderCustomers + public bookedOrders collections.
+  if(!order) {
+    const [oldCustomer,oldPublic]=await Promise.all([
+      firestoreGet(firebase,"orderCustomers/"+orderId),
+      firestoreGet(firebase,"bookedOrders/"+orderId)
+    ]);
+    const oldFields=oldCustomer?.fields||{};
+    const oldPhone=String(oldFields.phone||oldFields.deliveryDetails?.phone||oldFields.customer?.phone||"");
+    if(!oldCustomer||oldPhone!==phone)
+      return jsonResponse({ok:false,error:"We couldn't find an order matching those details. Check your Order ID and phone number."},404);
+    legacy=oldPublic;
+    const oldStatus=String(oldPublic?.fields.status||"Pending");
+    const oldStages={"Pending":1,"Next in Work":1,"In Progress":2,"Ready to Pack":2,"Packing":2,"Ready to Dispatch":3,"Dispatched":4};
+    const oldStage=oldStages[oldStatus]||1;
+    const oldProducts=Array.isArray(oldFields.products)?oldFields.products:
+      Array.isArray(oldPublic?.fields.products)?oldPublic.fields.products:[];
+    const oldSubtotal=Number(oldFields.productTotal)||0;
+    const oldShipping=Number(oldFields.shipping)||0;
+    fields={
+      orderId,orderType:"Accessories",bookedAt:oldFields.confirmedAt||oldFields.createdAt||oldPublic?.fields.bookedDate||null,
+      expectedDispatchDate:String(oldFields.estimatedDispatchDate||oldPublic?.fields.estimatedDispatchDate||oldPublic?.fields.shippingDate||""),
+      progress:oldStage===4?"Dispatched":oldStage===3?"Ready to Dispatch":oldStage===2?"In Packing":"Order Confirmed",
+      progressStage:oldStage,progressHistory:[],
+      customer:{name:String(oldFields.name||oldFields.deliveryDetails?.name||"")},
+      items:oldProducts.map(item=>({
+        ...item,productName:item.productName||item.name,
+        selectedQuantity:item.selectedQuantity??item.quantity,
+        packQuantity:item.isCombo?null:(item.packQuantity??item.piecesPerSet??null),
+        lineTotal:item.lineTotal??item.subtotal
+      })),
+      paymentStatus:String(oldFields.paymentStatus||"recorded"),
+      subtotal:oldSubtotal,shipping:oldShipping,
+      grandTotal:Number(oldFields.orderTotal)||oldSubtotal+oldShipping,
+      trackingId:String(oldPublic?.fields.trackingId||oldFields.trackingId||""),
+      dispatchedAt:oldPublic?.fields.dispatchedDate||oldFields.dispatchedAt||null
+    };
+    customer=fields.customer;
+  } else if(String(customer.phoneNumber||"")!==phone) {
+    return jsonResponse({ok:false,error:"We couldn't find an order matching those details. Check your Order ID and phone number."},404);
+  }
+
+  legacy=legacy||await firestoreGet(firebase,"bookedOrders/"+orderId);
+  const legacyStatus=String(legacy?.fields.status||"");
   const stages={"Pending":1,"Next in Work":1,"In Progress":2,"Ready to Pack":2,"Packing":2,"Ready to Dispatch":3,"Dispatched":4};
   const progressStage=stages[legacyStatus]||Number(fields.progressStage)||1;
   const progress=progressStage===4?"Dispatched":progressStage===3?"Ready to Dispatch":progressStage===2?"In Packing":String(fields.progress||"Order Confirmed");
