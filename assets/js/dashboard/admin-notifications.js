@@ -6,6 +6,7 @@ const VAPID_PUBLIC_KEY = "BOCXTZg8PFcXSCuL4zKJ-SbZ_TrrMI3m8cbWwNRas7K7DluV21sdC7
 const button = document.getElementById("enableAdminNotifications");
 const testButton = document.getElementById("sendAdminTestNotification");
 const status = document.getElementById("adminNotificationStatus");
+let foregroundListenerRegistered = false;
 
 function showStatus(message, isError = false) {
   if (!status) return;
@@ -45,16 +46,26 @@ button?.addEventListener("click", async () => {
     const token = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY, serviceWorkerRegistration: registration });
     if (!token) throw new Error("Firebase did not return a browser notification token.");
     await saveToken(token, user);
-    onMessage(messaging, payload => {
-      const title = payload.data?.title || payload.notification?.title || "Diecast.scape Admin";
-      const body = payload.data?.body || payload.notification?.body || "New Accessories order update.";
-      showStatus(title + " — " + body);
-      registration.showNotification(title, {
-        body, icon: "/favicon/favicon-96x96.png",
-        data: { url: payload.data?.url || "/admin/dashboard.html#accessoriesOrders" },
-        tag: payload.data?.orderId || "accessories-order", renotify: true
-      }).catch(error => console.error("Could not display foreground notification:", error));
-    });
+
+    if (!foregroundListenerRegistered) {
+      onMessage(messaging, payload => {
+        const title = payload.data?.title || payload.notification?.title || "Diecast.scape Admin";
+        const body = payload.data?.body || payload.notification?.body || "New Accessories order update.";
+        registration.showNotification(title, {
+          body,
+          icon: "/favicon/favicon-96x96.png",
+          badge: "/favicon/favicon-96x96.png",
+          data: { url: payload.data?.url || "/admin/dashboard.html#accessoriesOrders" },
+          tag: payload.data?.orderId || "accessories-order"
+        }).then(() => {
+          showStatus("Message received; browser accepted the notification request.");
+        }).catch(error => {
+          console.error("Could not display foreground notification:", error);
+          showStatus("Browser could not display notification: " + (error.message || "unknown error"), true);
+        });
+      });
+      foregroundListenerRegistered = true;
+    }
     showStatus("Notifications enabled on this browser.");
   } catch (error) {
     console.error("Admin push setup:", error);
@@ -74,7 +85,7 @@ testButton?.addEventListener("click", async () => {
     const response = await fetch("/api/admin/test-push", { method: "POST", headers: { authorization: "Bearer " + idToken } });
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.error || "Test notification could not be sent.");
-    showStatus("Test notification sent (" + result.sent + "). Check your browser notifications.");
+    showStatus("Test notification sent (" + result.sent + "). Waiting for browser display.");
   } catch (error) {
     console.error("Admin test notification:", error);
     showStatus(error.message || "Could not send test notification.", true);
