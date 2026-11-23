@@ -5,6 +5,17 @@
     busy=false;
     if(button) { button.disabled=false; button.textContent="Pay Now"; }
   }
+  async function releaseReservation(paymentRecordId) {
+    if(!paymentRecordId)return;
+    try {
+      await fetch("/api/accessories/v2/cancel-order",{
+        method:"POST",headers:{"content-type":"application/json"},
+        body:JSON.stringify({paymentRecordId})
+      });
+    } catch(error) {
+      console.warn("Reservation will expire automatically:",error);
+    }
+  }
   function loadCheckout() {
     if(window.Razorpay) return Promise.resolve();
     return new Promise((resolve,reject)=>{
@@ -44,14 +55,16 @@
       const order=await response.json();
       if(!response.ok)throw new Error(order.error||"Unable to prepare payment.");
       await loadCheckout();
+      let paymentReturned=false;
       const checkout=new window.Razorpay({
         key:order.keyId,amount:order.amount,currency:order.currency,
         name:"Diecast.scape",description:"Accessories order",
         order_id:order.orderId,prefill:{name:customer.name,contact:customer.phone},
         notes:{paymentRecordId:order.paymentRecordId,category:"accessories",paymentVersion:"2"},
         theme:{color:"#13adbd"},
-        modal:{ondismiss:()=>resetButton(button)},
+        modal:{ondismiss:()=>{if(!paymentReturned)releaseReservation(order.paymentRecordId);resetButton(button);}},
         handler:async function(paymentResponse) {
+          paymentReturned=true;
           if(button)button.textContent="Verifying payment...";
           try {
             const verifyResponse=await fetch("/api/accessories/v2/verify-payment",{
@@ -89,8 +102,8 @@
       });
       checkout.on("payment.failed",event=>{
         console.error("Razorpay payment failed:",event?.error?.code||"unknown");
-        showToast("Payment was not completed. You can try again.");
-        resetButton(button);
+        showToast("Payment was not completed. You can retry inside checkout, or close checkout to release the stock hold.");
+        if(button)button.textContent="Payment checkout open";
       });
       checkout.open();
     } catch(error) {

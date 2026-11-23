@@ -2,6 +2,7 @@ import {
   getFirebaseContext,firestoreGet,firestoreBatchGet,firestoreCommit,
   firestoreFields,firestoreListCollection,jsonResponse
 } from "../../../_lib/firebase-rest.js";
+import {releaseExpiredAccessoryReservations} from "../../../_lib/accessory-reservations.js";
 
 async function hmacHex(secret,message) {
   const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),
@@ -57,8 +58,10 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     const highest=counter?1000:await highestOrderNumber(firebase);
     const items=Array.isArray(record.fields.items)?record.fields.items:[];
     if(!items.length)throw new Error("PAYMENT_ITEMS_MISSING");
-    const productPaths=items.map(item=>"accessoriesProducts/"+encodeURIComponent(item.productId));
-    const paths=[recordPath,counterPath,...productPaths];
+    const sessionPath="paymentSessions/"+encodeURIComponent(recordPath.split("/").pop());
+    const reservationRows=Array.isArray(record.fields.stockReservations)?record.fields.stockReservations:[];
+    const productPaths=reservationRows.map(row=>"accessoriesProducts/"+encodeURIComponent(row.productId));
+    const paths=[recordPath,sessionPath,counterPath,...productPaths];
     const docs=await firestoreBatchGet(firebase,paths);
     const freshRecord=docs.get(firebase.base+"/"+recordPath);
     if(!freshRecord)throw new Error("PAYMENT_RECORD_NOT_FOUND");
@@ -70,21 +73,34 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     if(freshRecord.fields.paymentStatus!=="pending"&&freshRecord.fields.paymentStatus!=="created")
       throw new Error("PAYMENT_RECORD_NOT_PAYABLE");
 
+    const freshSession=docs.get(firebase.base+"/"+sessionPath);
     const freshCounter=docs.get(firebase.base+"/"+counterPath);
     const previous=freshCounter?Math.max(1000,Number(freshCounter.fields.lastNumber)||1000):highest;
     const next=previous+1,orderId="DS-A"+next;
     let stockIssue=false;
+    const expiry=Date.parse(freshSession?.fields.expiresAt||"");
+    const reservationValid=Boolean(
+      freshSession&&freshSession.fields.status==="reserved"&&
+      Number.isFinite(expiry)&&expiry>Date.now()&&
+      reservationRows.length>0
+    );
     const stockPlan=[];
-    for(const item of items) {
-      const path="accessoriesProducts/"+encodeURIComponent(item.productId);
-      const product=docs.get(firebase.base+"/"+path);
-      const stock=Number(product?.fields.stock),units=Number(item.qty)*Number(item.packSize);
-      if(!product||product.fields.active!==true||!Number.isInteger(stock)||
-         !Number.isInteger(units)||units<1||stock<units) {
-        stockIssue=true;
-        break;
+    if(!reservationValid)stockIssue=true;
+    if(reservationValid) {
+      for(const reservation of reservationRows) {
+        const path="accessoriesProducts/"+encodeURIComponent(reservation.productId);
+        const product=docs.get(firebase.base+"/"+path);
+        const stock=Number(product?.fields.stock);
+        const reserved=Number(product?.fields.reservedStock||0);
+        const units=Number(reservation.pieces);
+        if(!product||product.fields.active!==true||!Number.isInteger(stock)||
+           !Number.isInteger(reserved)||reserved<units||!Number.isInteger(units)||
+           units<1||stock<units) {
+          stockIssue=true;
+          break;
+        }
+        stockPlan.push({product,reservation,stock,reserved,units});
       }
-      stockPlan.push({product,item,stock,units});
     }
 
     const now=new Date().toISOString(),bookedDate=displayDate(dateIST());
@@ -92,23 +108,44 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     const savedProducts=items.map(item=>({
       name:item.name,quantity:item.qty,productCode:item.productCode,
       checkoutCode:item.productCode+String(item.qty).padStart(2,"0"),
-      isCombo:false,piecesPerSet:item.packSize,
-      piecesDeducted:item.qty*item.packSize,unitPrice:item.unitPrice,lineTotal:item.subtotal
+      isCombo:Boolean(item.isCombo),piecesPerSet:item.packSize,
+      piecesDeducted:item.isCombo?0:item.qty*item.packSize,
+      unitPrice:item.unitPrice,lineTotal:item.subtotal
     }));
     const publicProducts=savedProducts.map(item=>({name:item.name,quantity:item.quantity}));
-    const deductions=stockPlan.map(({product,item,stock,units})=>({
-      productId:item.productId,productCode:item.productCode,
-      productName:item.name,stockBefore:stock,piecesDeducted:units,stockAfter:stock-units
+    const deductions=stockPlan.map(({product,reservation,stock,units})=>({
+      productId:reservation.productId,productCode:reservation.productCode,
+      productName:reservation.productName,stockBefore:stock,piecesDeducted:units,stockAfter:stock-units
     }));
     const writes=[];
     if(!stockIssue) {
       for(const row of stockPlan) {
         writes.push({
           update:{name:row.product.name,fields:firestoreFields({
-            stock:row.stock-row.units,stockUpdatedAt:{__timestamp:now}
+            stock:row.stock-row.units,
+            reservedStock:Math.max(0,row.reserved-row.units),
+            stockUpdatedAt:{__timestamp:now},reservationUpdatedAt:{__timestamp:now}
           })},
-          updateMask:{fieldPaths:["stock","stockUpdatedAt"]},
+          updateMask:{fieldPaths:["stock","reservedStock","stockUpdatedAt","reservationUpdatedAt"]},
           currentDocument:{updateTime:row.product.updateTime}
+        });
+      }
+    } else if(freshSession?.fields.status==="reserved") {
+      // Payment was captured but the reservation cannot be fulfilled.
+      // Release the temporary holds without deducting physical stock.
+      for(const reservation of reservationRows) {
+        const path="accessoriesProducts/"+encodeURIComponent(reservation.productId);
+        const product=docs.get(firebase.base+"/"+path);
+        const reserved=Number(product?.fields.reservedStock||0);
+        const units=Number(reservation.pieces);
+        if(!product||!Number.isInteger(reserved)||reserved<0||!Number.isInteger(units)||units<1)continue;
+        writes.push({
+          update:{name:product.name,fields:firestoreFields({
+            reservedStock:Math.max(0,reserved-units),
+            reservationUpdatedAt:{__timestamp:now}
+          })},
+          updateMask:{fieldPaths:["reservedStock","reservationUpdatedAt"]},
+          currentDocument:{updateTime:product.updateTime}
         });
       }
     }
@@ -159,6 +196,16 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
       })},
       currentDocument:{exists:false}
     });
+    if(freshSession) {
+      writes.push({
+        update:{name:freshSession.name,fields:firestoreFields({
+          status:stockIssue?"paid_stock_issue":"paid",
+          paymentId,completedAt:{__timestamp:now}
+        })},
+        updateMask:{fieldPaths:["status","paymentId","completedAt"]},
+        currentDocument:{updateTime:freshSession.updateTime}
+      });
+    }
     writes.push({
       update:{name:freshRecord.name,fields:firestoreFields({
         status:stockIssue?"paid_stock_issue":"paid",
@@ -221,6 +268,7 @@ export async function onRequestPost({request,env}) {
       return jsonResponse({ok:false,error:"This payment is not an Accessories INR order."},409);
 
     stage="order_commit";
+    await releaseExpiredAccessoryReservations(firebase);
     const result=await createPaidOrder(firebase,recordPath,paymentId);
     if(result.status==="paid_stock_issue")
       return jsonResponse({

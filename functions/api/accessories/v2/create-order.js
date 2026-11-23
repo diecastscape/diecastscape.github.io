@@ -1,20 +1,21 @@
-import {getFirebaseContext,firestoreGet,firestoreCreate,jsonResponse} from "../../../_lib/firebase-rest.js";
+import {
+  getFirebaseContext,firestoreCreate,jsonResponse
+} from "../../../_lib/firebase-rest.js";
+import {
+  reserveAccessoryStock,releaseAccessoryReservation,releaseExpiredAccessoryReservations
+} from "../../../_lib/accessory-reservations.js";
 
-function packSize(code) {
-  const match=String(code||"").trim().toUpperCase().match(/(\d{2})$/);
-  const size=match?Number(match[1]):1;
-  return Number.isInteger(size)&&size>0?size:1;
-}
 function validCustomer(customer) {
   return customer&&typeof customer.name==="string"&&customer.name.trim().length>=2&&
     typeof customer.address==="string"&&customer.address.trim().length>=5&&
     typeof customer.city==="string"&&customer.city.trim().length>=2&&
     typeof customer.state==="string"&&customer.state.trim().length>=2&&
     typeof customer.postOffice==="string"&&customer.postOffice.trim().length>=2&&
-    typeof customer.pincode==="string"&&/^\d{6}$/.test(customer.pincode)&&
-    typeof customer.phone==="string"&&/^\d{10}$/.test(customer.phone);
+    typeof customer.pincode==="string"&&/^\\d{6}$/.test(customer.pincode)&&
+    typeof customer.phone==="string"&&/^\\d{10}$/.test(customer.phone);
 }
 export async function onRequestPost({request,env}) {
+  let firebase=null,recordId="";
   try {
     if(!env.RAZORPAY_KEY_ID||!env.RAZORPAY_KEY_SECRET)
       return jsonResponse({error:"Online payment is temporarily unavailable."},503);
@@ -32,35 +33,26 @@ export async function onRequestPost({request,env}) {
       seen.add(id);normalized.push({id,qty});
     }
 
-    const firebase=await getFirebaseContext(env),verified=[];
-    let productTotal=0;
-    for(const row of normalized) {
-      const product=await firestoreGet(firebase,"accessoriesProducts/"+encodeURIComponent(row.id));
-      if(!product||product.fields.active!==true)
-        return jsonResponse({error:"A product in your cart is no longer available. Refresh and try again."},409);
-      const price=Number(product.fields.price),stock=Number(product.fields.stock);
-      const code=String(product.fields.productCode||"").trim().toUpperCase(),pack=packSize(code);
-      if(code==="#CL00")
-        return jsonResponse({error:"Combo products are currently available through WhatsApp checkout only."},409);
-      if(!Number.isFinite(price)||price<=0||!Number.isInteger(stock)||stock<0||!/^#[A-Z0-9]{4}$/.test(code))
-        return jsonResponse({error:"A product has incomplete pricing or stock information. Please contact us."},409);
-      const available=Math.floor(stock/pack);
-      if(row.qty>available)
-        return jsonResponse({error:String(product.fields.name||"A product")+" has only "+available+" set(s) available."},409);
-      const subtotal=Math.round(price*row.qty*100)/100;
-      productTotal+=subtotal;
-      verified.push({
-        productId:row.id,name:String(product.fields.name||"Accessory"),
-        quantityText:String(product.fields.quantity||""),productCode:code,
-        qty:row.qty,packSize:pack,unitPrice:price,subtotal
-      });
+    firebase=await getFirebaseContext(env);
+    await releaseExpiredAccessoryReservations(firebase);
+    recordId="DSA"+crypto.randomUUID().replace(/-/g,"").slice(0,24).toUpperCase();
+    const reservation=await reserveAccessoryStock(firebase,recordId,normalized,{
+      schemaVersion:2,category:"accessories",paymentStatus:"pending",
+      customer:{
+        name:customer.name.trim(),address:customer.address.trim(),
+        city:customer.city.trim(),state:customer.state.trim(),
+        postOffice:customer.postOffice.trim(),pincode:customer.pincode,phone:customer.phone
+      }
+    });
+    const productTotal=reservation.productTotal;
+    if(productTotal<199) {
+      await releaseAccessoryReservation(firebase,recordId,"cancelled");
+      recordId="";
+      return jsonResponse({error:"Minimum order value is ₹199."},400);
     }
-    productTotal=Math.round(productTotal*100)/100;
-    if(productTotal<199)return jsonResponse({error:"Minimum order value is ₹199."},400);
     const shipping=productTotal>=799?0:55;
     const total=Math.round((productTotal+shipping)*100)/100;
     const amountPaise=Math.round(total*100);
-    const recordId="DSA"+crypto.randomUUID().replace(/-/g,"").slice(0,24).toUpperCase();
 
     const auth="Basic "+btoa(env.RAZORPAY_KEY_ID+":"+env.RAZORPAY_KEY_SECRET);
     const gatewayResponse=await fetch("https://api.razorpay.com/v1/orders",{
@@ -72,6 +64,8 @@ export async function onRequestPost({request,env}) {
     });
     const gatewayOrder=await gatewayResponse.json();
     if(!gatewayResponse.ok||!gatewayOrder.id) {
+      await releaseAccessoryReservation(firebase,recordId,"gateway_failed");
+      recordId="";
       console.error("Accessories payment v2 order creation failed:",gatewayResponse.status);
       return jsonResponse({error:"Unable to start payment right now. Please try again."},502);
     }
@@ -79,22 +73,35 @@ export async function onRequestPost({request,env}) {
     await firestoreCreate(firebase,"onlinePaymentOrders",recordId,{
       schemaVersion:2,category:"accessories",status:"created",paymentStatus:"pending",
       paymentRecordId:recordId,razorpayOrderId:gatewayOrder.id,amountPaise,
-      currency:"INR",productTotal,shipping,total,items:verified,
+      currency:"INR",productTotal,shipping,total,items:reservation.items,
+      stockReservations:reservation.stockReservations,
+      reservationExpiresAt:reservation.expiresAt,
       customer:{
         name:customer.name.trim(),address:customer.address.trim(),
         city:customer.city.trim(),state:customer.state.trim(),
-        postOffice:customer.postOffice.trim(),
-        pincode:customer.pincode,phone:customer.phone
+        postOffice:customer.postOffice.trim(),pincode:customer.pincode,phone:customer.phone
       },
       createdAt:{__timestamp:new Date().toISOString()}
     });
     return jsonResponse({
       keyId:env.RAZORPAY_KEY_ID,orderId:gatewayOrder.id,
       amount:amountPaise,currency:"INR",paymentRecordId:recordId,
-      summary:{productTotal,shipping,total},paymentVersion:2
+      summary:{productTotal,shipping,total},
+      reservationExpiresAt:reservation.expiresAt,paymentVersion:2
     });
   } catch(error) {
-    console.error("Accessories payment v2 create-order failed:",String(error?.message||error));
+    if(firebase&&recordId) {
+      try { await releaseAccessoryReservation(firebase,recordId,"checkout_failed"); }
+      catch(releaseError) { console.error("Accessories reservation release failed:",String(releaseError?.message||releaseError)); }
+    }
+    const message=String(error?.message||error);
+    console.error("Accessories payment v2 create-order failed:",message);
+    if(message.startsWith("INSUFFICIENT_STOCK:"))
+      return jsonResponse({error:message.slice("INSUFFICIENT_STOCK:".length)+" does not have enough stock for this cart. Please update your cart."},409);
+    if(message.startsWith("PRODUCT_UNAVAILABLE:")||message.startsWith("COMBO_COMPONENT_UNAVAILABLE:"))
+      return jsonResponse({error:"A product in your cart is unavailable. Please refresh your cart."},409);
+    if(message.startsWith("DUPLICATE_PRODUCT_CODE:")||message.startsWith("COMBO_RECIPE_INVALID:")||message.startsWith("PRODUCT_DATA_INVALID:"))
+      return jsonResponse({error:"An accessory stock setup needs correction. Please contact Diecast.scape before retrying."},409);
     return jsonResponse({error:"Unable to prepare payment. Please try again or contact us."},500);
   }
 }

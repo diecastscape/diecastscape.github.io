@@ -527,15 +527,20 @@ function calculateStockPlan(order, productMap) {
     }
 
     const currentStock = Number(product.data.stock);
+    const reservedStock = Number(product.data.reservedStock || 0);
     const validStock =
-      Number.isInteger(currentStock) && currentStock >= 0;
+      Number.isInteger(currentStock) && currentStock >= 0 &&
+      Number.isInteger(reservedStock) && reservedStock >= 0;
 
+    const availableStock = validStock
+      ? Math.max(0, currentStock - reservedStock)
+      : NaN;
     const remainingStock = validStock
       ? currentStock - deduction.piecesDeducted
       : NaN;
 
     const enough =
-      validStock && remainingStock >= 0;
+      validStock && availableStock >= deduction.piecesDeducted;
 
     if (!enough) stockOkay = false;
 
@@ -546,6 +551,8 @@ function calculateStockPlan(order, productMap) {
       productCode: deduction.productCode,
       productName: product.data.name || deduction.productCode,
       stockBefore: currentStock,
+      reservedStock,
+      availableStock,
       piecesDeducted: deduction.piecesDeducted,
       stockAfter: remainingStock,
       validStock,
@@ -572,8 +579,11 @@ function calculateStockPlan(order, productMap) {
       }
 
       const stock = Number(product.data.stock);
+      const reserved = Number(product.data.reservedStock || 0);
+      const availableStock = stock - reserved;
 
-      if (!Number.isInteger(stock) || stock < 0) {
+      if (!Number.isInteger(stock) || stock < 0 ||
+          !Number.isInteger(reserved) || reserved < 0) {
         availableBefore = NaN;
         availableAfter = NaN;
         return;
@@ -584,13 +594,13 @@ function calculateStockPlan(order, productMap) {
 
       availableBefore = Math.min(
         availableBefore,
-        Math.floor(stock / component.pieces)
+        Math.floor(Math.max(0, availableStock) / component.pieces)
       );
 
       availableAfter = Math.min(
         availableAfter,
         Math.floor(
-          Math.max(0, stock - componentDeduction) /
+          Math.max(0, availableStock - componentDeduction) /
           component.pieces
         )
       );
@@ -796,6 +806,7 @@ function renderOrderReview(order, productMap, stockPlan) {
 
         <div class="sm-review-grid">
           <span>Current stock <b>${deduction?.stockBefore ?? "Invalid"}</b></span>
+          <span>Available after holds <b>${deduction?.availableStock ?? "Invalid"}</b></span>
           <span>Deduct <b>−${item.piecesRequired} pcs</b></span>
           <span>After order <b>${deduction?.stockAfter ?? "—"} pcs</b></span>
         </div>
@@ -827,6 +838,7 @@ function renderOrderReview(order, productMap, stockPlan) {
 
       <div class="sm-review-grid">
         <span>Current stock <b>${deduction.validStock ? deduction.stockBefore : "Invalid"}</b></span>
+        <span>Available after holds <b>${deduction.validStock ? deduction.availableStock : "Invalid"}</b></span>
         <span>Total deduct <b>−${deduction.piecesDeducted} pcs</b></span>
         <span>After order <b>${deduction.validStock ? Math.max(0, deduction.stockAfter) : "—"} pcs</b></span>
       </div>
