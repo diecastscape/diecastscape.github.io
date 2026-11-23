@@ -11,8 +11,8 @@ function validCustomer(customer) {
     typeof customer.city==="string"&&customer.city.trim().length>=2&&
     typeof customer.state==="string"&&customer.state.trim().length>=2&&
     typeof customer.postOffice==="string"&&customer.postOffice.trim().length>=2&&
-    typeof customer.pincode==="string"&&/^\\d{6}$/.test(customer.pincode)&&
-    typeof customer.phone==="string"&&/^\\d{10}$/.test(customer.phone);
+    typeof customer.pincode==="string"&&/^\d{6}$/.test(customer.pincode)&&
+    typeof customer.phone==="string"&&/^\d{10}$/.test(customer.phone);
 }
 export async function onRequestPost({request,env}) {
   let firebase=null,recordId="";

@@ -1,6 +1,5 @@
 import {
-  firestoreGet,firestoreBatchGet,firestoreCommit,firestoreFields,
-  firestoreListCollection
+  firestoreGet,firestoreBatchGet,firestoreCommit,firestoreFields,decodeValue
 } from "./firebase-rest.js";
 
 export const ACCESSORY_RESERVATION_MS=10*60*1000;
@@ -22,6 +21,35 @@ const resourceBase=ctx=>ctx.base.replace("https://firestore.googleapis.com/v1/",
 const docPath=(ctx,path)=>resourceBase(ctx)+"/"+path;
 const safeReserved=value=>Number.isInteger(Number(value))&&Number(value)>=0?Number(value):0;
 const productIdFromName=name=>String(name||"").split("/").pop();
+
+async function listExpiredSessions(firebase,now) {
+  const expiresAt=new Date(now).toISOString();
+  const query={
+    structuredQuery:{
+      from:[{collectionId:"paymentSessions"}],
+      where:{fieldFilter:{
+        field:{fieldPath:"expiresAt"},
+        op:"LESS_THAN_OR_EQUAL",
+        value:{stringValue:expiresAt}
+      }},
+      orderBy:[{field:{fieldPath:"expiresAt"},direction:"ASCENDING"}],
+      limit:100
+    }
+  };
+  const response=await fetch(firebase.base+":runQuery",{
+    method:"POST",
+    headers:{authorization:"Bearer "+firebase.token,"content-type":"application/json"},
+    body:JSON.stringify(query)
+  });
+  const data=await response.json();
+  if(!response.ok)throw new Error("Expired reservation query failed.");
+  return (Array.isArray(data)?data:[])
+    .filter(row=>row.document)
+    .map(row=>({
+      name:row.document.name,
+      fields:Object.fromEntries(Object.entries(row.document.fields||{}).map(([key,value])=>[key,decodeValue(value)]))
+    }));
+}
 
 function packSize(code) {
   const match=String(code||"").trim().toUpperCase().match(/(\\d{2})$/);
@@ -92,7 +120,7 @@ async function releaseOne(firebase,sessionId,expectedExpiry,terminalStatus) {
 }
 
 export async function releaseExpiredAccessoryReservations(firebase,now=Date.now()) {
-  const sessions=await firestoreListCollection(firebase,"paymentSessions");
+  const sessions=await listExpiredSessions(firebase,now);
   let released=0;
   for(const row of sessions) {
     if(row.fields.status!=="reserved")continue;

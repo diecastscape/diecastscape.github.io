@@ -113,7 +113,7 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
         const reserved=Number(product?.fields.reservedStock||0);
         const units=Number(reservation.pieces);
         if(!product||product.fields.active!==true||!Number.isInteger(stock)||
-           !Number.isInteger(reserved)||reserved<units||!Number.isInteger(units)||
+           !Number.isInteger(reserved)||reserved<units||reserved>stock||!Number.isInteger(units)||
            units<1||stock<units) {
           stockIssue=true;
           break;
