@@ -23,11 +23,22 @@ function displayDate(iso) {
   const [year,month,day]=iso.split("-");
   return day+"/"+month+"/"+year;
 }
-function nextThursday() {
-  const date=new Date(Date.now()+19800000);
-  const days=(4-date.getUTCDay()+7)%7||7;
-  date.setUTCDate(date.getUTCDate()+days);
-  return date.toISOString().slice(0,10);
+function nextDispatchDateIST(nowMs=Date.now()) {
+  const offset=19800000;
+  const istNow=new Date(nowMs+offset);
+  for(let add=1;add<=7;add++) {
+    const candidate=new Date(istNow);
+    candidate.setUTCDate(candidate.getUTCDate()+add);
+    const day=candidate.getUTCDay();
+    if(day!==3&&day!==6)continue;
+    const cutoff=new Date(Date.UTC(
+      candidate.getUTCFullYear(),candidate.getUTCMonth(),
+      candidate.getUTCDate()-1,12,0,0
+    ));
+    if(istNow<=cutoff)
+      return candidate.toISOString().slice(0,10);
+  }
+  throw new Error("DISPATCH_DATE_CALCULATION_FAILED");
 }
 async function highestOrderNumber(firebase) {
   const orders=await firestoreListCollection(firebase,"bookedOrders");
@@ -53,15 +64,17 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     if(record.fields.paymentStatus!=="pending"&&record.fields.paymentStatus!=="created")
       throw new Error("PAYMENT_RECORD_NOT_PAYABLE");
 
-    const counterPath="bookedOrderCounters/accessoryOrderIdSequence";
+    const counterPath="orderCounters/accessories";
+    const legacyCounterPath="bookedOrderCounters/accessoryOrderIdSequence";
     const counter=await firestoreGet(firebase,counterPath);
-    const highest=counter?1000:await highestOrderNumber(firebase);
+    const legacyCounter=await firestoreGet(firebase,legacyCounterPath);
+    const highest=counter||legacyCounter?1000:await highestOrderNumber(firebase);
     const items=Array.isArray(record.fields.items)?record.fields.items:[];
     if(!items.length)throw new Error("PAYMENT_ITEMS_MISSING");
     const sessionPath="paymentSessions/"+encodeURIComponent(recordPath.split("/").pop());
     const reservationRows=Array.isArray(record.fields.stockReservations)?record.fields.stockReservations:[];
     const productPaths=reservationRows.map(row=>"accessoriesProducts/"+encodeURIComponent(row.productId));
-    const paths=[recordPath,sessionPath,counterPath,...productPaths];
+    const paths=[recordPath,sessionPath,counterPath,legacyCounterPath,...productPaths];
     const docs=await firestoreBatchGet(firebase,paths);
     const freshRecord=docs.get(firebase.base+"/"+recordPath);
     if(!freshRecord)throw new Error("PAYMENT_RECORD_NOT_FOUND");
@@ -75,7 +88,13 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
 
     const freshSession=docs.get(firebase.base+"/"+sessionPath);
     const freshCounter=docs.get(firebase.base+"/"+counterPath);
-    const previous=freshCounter?Math.max(1000,Number(freshCounter.fields.lastNumber)||1000):highest;
+    const freshLegacyCounter=docs.get(firebase.base+"/"+legacyCounterPath);
+    const previous=Math.max(
+      1000,
+      Number(freshCounter?.fields.lastNumber)||1000,
+      Number(freshLegacyCounter?.fields.lastNumber)||1000,
+      highest
+    );
     const next=previous+1,orderId="DS-A"+next;
     let stockIssue=false;
     const expiry=Date.parse(freshSession?.fields.expiresAt||"");
@@ -104,9 +123,13 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     }
 
     const now=new Date().toISOString(),bookedDate=displayDate(dateIST());
-    const dispatchISO=nextThursday(),customer=freshRecord.fields.customer||{};
+    const dispatchISO=nextDispatchDateIST(),customer=freshRecord.fields.customer||{};
     const savedProducts=items.map(item=>({
-      name:item.name,quantity:item.qty,productCode:item.productCode,
+      productId:item.productId,productName:item.name,name:item.name,
+      subtitle:item.quantityText||"",selectedQuantity:item.qty,quantity:item.qty,
+      packQuantity:item.isCombo?null:item.packSize,
+      packLabel:item.isCombo?"Combo set":String(item.packSize)+" pieces/set",
+      productCode:item.productCode,
       checkoutCode:item.productCode+String(item.qty).padStart(2,"0"),
       isCombo:Boolean(item.isCombo),piecesPerSet:item.packSize,
       piecesDeducted:item.isCombo?0:item.qty*item.packSize,
@@ -157,12 +180,48 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
       updateMask:{fieldPaths:["lastNumber","updatedAt"]},
       currentDocument:freshCounter?{updateTime:freshCounter.updateTime}:{exists:false}
     });
+    // Keep the legacy counter in sync while old admin/order tools still use it.
+    writes.push({
+      update:{name:resourceBase+"/"+legacyCounterPath,fields:firestoreFields({
+        lastNumber:next,updatedAt:{__timestamp:now}
+      })},
+      updateMask:{fieldPaths:["lastNumber","updatedAt"]},
+      currentDocument:freshLegacyCounter?{updateTime:freshLegacyCounter.updateTime}:{exists:false}
+    });
+    writes.push({
+      update:{name:resourceBase+"/Orders/"+orderId,fields:firestoreFields({
+        orderId,orderType:"Accessories",category:"accessories",
+        bookedAt:{__timestamp:now},bookedDate,
+        expectedDispatchDate:dispatchISO,
+        progress:stockIssue?"Stock Review Required":"Order Confirmed",
+        progressStage:stockIssue?0:1,
+        progressHistory:[{stage:stockIssue?"Stock Review Required":"Order Confirmed",at:{__timestamp:now}}],
+        customer:{
+          name:String(customer.name||""),address:String(customer.address||""),
+          city:String(customer.city||""),state:String(customer.state||""),
+          postOffice:String(customer.postOffice||""),pincode:String(customer.pincode||""),
+          phoneNumber:String(customer.phone||"")
+        },
+        items:savedProducts,
+        paymentStatus:stockIssue?"paid_stock_issue":"paid",
+        paymentMethod:"Razorpay",razorpayOrderId:String(freshRecord.fields.razorpayOrderId||""),
+        razorpayPaymentId:paymentId,
+        subtotal:Number(freshRecord.fields.productTotal||0),
+        shipping:Number(freshRecord.fields.shipping||0),
+        grandTotal:Number(freshRecord.fields.total||0),
+        stockReviewRequired:stockIssue,
+        trackingId:"",dispatchedAt:null,
+        stockDeductions:stockIssue?[]:deductions,
+        createdAt:{__timestamp:now},updatedAt:{__timestamp:now}
+      })},
+      currentDocument:{exists:false}
+    });
     writes.push({
       update:{name:resourceBase+"/bookedOrders/"+orderId,fields:firestoreFields({
         orderId,bookedDate,confirmedAt:{__timestamp:now},
         design:"Accessories Order",products:publicProducts,
         shippingDate:displayDate(dispatchISO),estimatedDispatchDate:dispatchISO,
-        status:stockIssue?"Pending":"Ready to Pack",dispatchedDate:"",hidden:false
+        status:"Pending",dispatchedDate:"",hidden:false
       })},
       currentDocument:{exists:false}
     });

@@ -77,6 +77,17 @@
               throw new Error((result.error||"Payment verification is pending.")+detail+
                 "\nPayment ID: "+paymentResponse.razorpay_payment_id);
             }
+            if(result.orderId) {
+              try {
+                const key="diecastscape_completed_orders";
+                const saved=JSON.parse(localStorage.getItem(key)||"[]");
+                const list=Array.isArray(saved)?saved:[];
+                if(!list.includes(result.orderId))list.unshift(result.orderId);
+                localStorage.setItem(key,JSON.stringify(list.slice(0,20)));
+              } catch(storageError) {
+                console.warn("Could not save this order on this device:",storageError);
+              }
+            }
             if(result.status==="paid_stock_issue") {
               alert("Payment received. Your order is recorded and needs a stock review. We will contact you.\nOrder ID: "+result.orderId);
             } else {

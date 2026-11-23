@@ -15,7 +15,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>booked-orders | Diecast.scape</title>
+<title>Your Orders | Diecast.scape</title>
 
 <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml">
@@ -58,7 +58,7 @@
 <nav class="breadcrumb-wrap">
   <a href="/" class="breadcrumb-link">Home</a>
   <span class="breadcrumb-sep">›</span>
-  <span class="breadcrumb-current">BOOKED ORDERS</span>
+  <span class="breadcrumb-current">YOUR ORDERS</span>
 </nav>
     
 
@@ -75,16 +75,15 @@
     <div class="booked-orders-intro">
 
       <div class="booked-orders-eyebrow">
-        ORDER TRACKING
+        DIECAST.SCAPE · ACCESSORIES
       </div>
 
       <h1 class="booked-orders-title">
-        Track Your Order
+        Your Orders
       </h1>
 
       <p class="booked-orders-subtitle">
-        Enter your Order ID below to check your booking status
-        and estimated shipping schedule.
+        Enter your Accessories Order ID and the 10-digit phone number used at checkout.
       </p>
 
     </div>
@@ -101,8 +100,8 @@
         type="search"
         id="bookedOrderSearch"
         class="booked-search-input"
-        placeholder="Enter Order ID • DS-D1201"
-        aria-label="Enter your Order ID"
+        placeholder="Order ID • DS-A1001"
+        aria-label="Enter your Accessories Order ID"
         autocomplete="off"
         autocapitalize="characters"
         spellcheck="false"
@@ -118,6 +117,11 @@
 
     </form>
 
+    <div class="your-orders-phone-field">
+      <label for="bookedOrderPhone">10-digit phone number</label>
+      <input type="tel" id="bookedOrderPhone" class="booked-search-input" placeholder="Phone number used at checkout" inputmode="numeric" autocomplete="tel" maxlength="10" aria-label="10-digit phone number used at checkout">
+    </div>
+    <div id="yourOrdersDeviceNote" class="your-orders-device-note">No order has been completed on this device yet. You can still search using your Order ID and phone number.</div>
 
     <!-- LOADING -->
 
@@ -156,7 +160,7 @@
       </div>
 
       <div class="booked-empty-text">
-        Please check your Order ID and try again.
+        We couldn't find an order matching those details. Check your Order ID and phone number.
       </div>
 
     </div>
@@ -179,11 +183,12 @@
 
     <div class="booked-orders-note">
 
-      <strong>Shipping estimate:</strong>
+      <strong>Accessories dispatch schedule:</strong>
 
-      The estimated shipping date may change slightly
-      depending on production, order volume, and dispatch
-      conditions.
+      Orders are dispatched on Wednesday and Saturday.
+      The cutoff is 12:00 PM on the previous day. Orders confirmed
+      after the cutoff move to the next available dispatch day.
+      The estimated date may change if production or dispatch is delayed.
 
     </div>
 
@@ -592,8 +597,7 @@
 </div>
 <script type="module" src="/assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/diorama-firebase.js"></script>
-<script type="module" src="/assets/js/booked-orders-firebase.js"
-></script>
+<script type="module" src="/assets/js/your-orders.js"></script>
 <script src="/assets/js/products.js"></script>
 <script src="/assets/js/diorama.js"></script>
 <script src="/assets/js/core.js"></script>
