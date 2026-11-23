@@ -68,3 +68,41 @@ export async function sendAdminPushNotification(env, {orderId, amount}) {
   }
   return {sent,total:tokens.length};
 }
+
+
+export async function sendAdminTestPushNotification(env) {
+  const accessToken = await serviceToken(env);
+  const base = "https://firestore.googleapis.com/v1/projects/diecastscape/databases/(default)/documents";
+  const response = await fetch(base + "/adminPushTokens?pageSize=1000", {
+    headers: { authorization: "Bearer " + accessToken }
+  });
+  const collection = await response.json();
+  if (!response.ok) throw new Error("Could not load admin notification devices.");
+  const tokens = (collection.documents || [])
+    .filter(doc => doc.fields?.active?.booleanValue === true && doc.fields?.token?.stringValue)
+    .map(doc => doc.fields.token.stringValue);
+  if (!tokens.length) return { sent: 0, total: 0 };
+  let sent = 0;
+  for (const deviceToken of tokens) {
+    const result = await fetch("https://fcm.googleapis.com/v1/projects/diecastscape/messages:send", {
+      method: "POST",
+      headers: { authorization: "Bearer " + accessToken, "content-type": "application/json" },
+      body: JSON.stringify({ message: {
+        token: deviceToken,
+        data: {
+          title: "Diecast.scape — Test Notification",
+          body: "Your admin order notifications are working.",
+          orderId: "admin-notification-test",
+          url: "/admin/dashboard.html"
+        },
+        webpush: { headers: { Urgency: "high" } }
+      }})
+    });
+    if (result.ok) sent++;
+    else {
+      const error = await result.json().catch(() => ({}));
+      console.error("FCM test delivery failed:", error.error?.status || result.status);
+    }
+  }
+  return { sent, total: tokens.length };
+}
