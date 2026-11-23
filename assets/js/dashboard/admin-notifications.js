@@ -4,6 +4,7 @@ import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12
 
 const VAPID_PUBLIC_KEY = "BOCXTZg8PFcXSCuL4zKJ-SbZ_TrrMI3m8cbWwNRas7K7DluV21sdC7-WH8nwMgy3Rgix-luYtOv_uedUAITgpek";
 const button = document.getElementById("enableAdminNotifications");
+const testButton = document.getElementById("sendAdminTestNotification");
 const status = document.getElementById("adminNotificationStatus");
 
 function showStatus(message, isError = false) {
@@ -48,6 +49,11 @@ button?.addEventListener("click", async () => {
       const title = payload.data?.title || payload.notification?.title || "Diecast.scape Admin";
       const body = payload.data?.body || payload.notification?.body || "New Accessories order update.";
       showStatus(title + " — " + body);
+      registration.showNotification(title, {
+        body, icon: "/favicon/favicon-96x96.png",
+        data: { url: payload.data?.url || "/admin/dashboard.html#accessoriesOrders" },
+        tag: payload.data?.orderId || "accessories-order", renotify: true
+      }).catch(error => console.error("Could not display foreground notification:", error));
     });
     showStatus("Notifications enabled on this browser.");
   } catch (error) {
@@ -56,4 +62,21 @@ button?.addEventListener("click", async () => {
   } finally {
     button.disabled = false;
   }
+});
+
+testButton?.addEventListener("click", async () => {
+  testButton.disabled = true;
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error("Please log in to the admin dashboard again.");
+    if (!("Notification" in window) || Notification.permission !== "granted") throw new Error("Please enable browser notifications first.");
+    const idToken = await user.getIdToken();
+    const response = await fetch("/api/admin/test-push", { method: "POST", headers: { authorization: "Bearer " + idToken } });
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.error || "Test notification could not be sent.");
+    showStatus("Test notification sent (" + result.sent + "). Check your browser notifications.");
+  } catch (error) {
+    console.error("Admin test notification:", error);
+    showStatus(error.message || "Could not send test notification.", true);
+  } finally { testButton.disabled = false; }
 });
