@@ -3,7 +3,6 @@ import {getFirebaseContext,firestoreListCollection,firestoreGet,firestoreCommit,
 const ADMIN_UID="urSr9gyhwBMKBSmxKC5LRRnKW1P2";
 const FIREBASE_API_KEY="AIzaSyAVhJ8wvmK9dv7ohG5jnGGETWJsEiRFrVs";
 const STAGES=["Order Confirmed","In Packing","Ready to Dispatch","Dispatched"];
-const LEGACY_STATUS=["Pending","In Progress","Ready to Dispatch","Dispatched"];
 
 async function verifyAdmin(request){
  const header=request.headers.get("Authorization")||"";
@@ -57,11 +56,8 @@ export async function onRequestPost({request,env}){
    const base=firebase.base.replace("https://firestore.googleapis.com/v1/","");
    const orderFields={progress,progressStage:stage,updatedAt:{__timestamp:now}};
    if(stage===4){orderFields.trackingId=trackingId;orderFields.dispatchedAt={__timestamp:now};}
-   const legacyFields={status:LEGACY_STATUS[stage-1]};
-   if(stage===4){legacyFields.trackingId=trackingId;legacyFields.dispatchedDate=new Date().toLocaleDateString("en-GB",{timeZone:"Asia/Kolkata"});}
    const writes=[
-    {update:{name:base+"/Orders/"+orderId,fields:firestoreFields(orderFields)},updateMask:{fieldPaths:Object.keys(orderFields)},currentDocument:{updateTime:order.updateTime}},
-    {update:{name:base+"/bookedOrders/"+orderId,fields:firestoreFields(legacyFields)},updateMask:{fieldPaths:Object.keys(legacyFields)}}
+    {update:{name:base+"/Orders/"+orderId,fields:firestoreFields(orderFields)},updateMask:{fieldPaths:Object.keys(orderFields)},currentDocument:{updateTime:order.updateTime}}
    ];
    await firestoreCommit(firebase,undefined,writes);
    return jsonResponse({ok:true,progress,progressStage:stage});

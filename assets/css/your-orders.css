@@ -1206,3 +1206,53 @@
     text-align: center;
   }
 }
+
+
+/* LOCALLY SAVED ORDER IDS */
+.your-orders-saved-list {
+  margin: 0 0 18px;
+  padding: 14px;
+  border: 1px solid #dfe6ee;
+  border-radius: 13px;
+  background: #fff;
+}
+.your-orders-saved-list[hidden] { display: none !important; }
+.your-orders-saved-title {
+  margin-bottom: 9px;
+  color: #263247;
+  font-size: 12px;
+  font-weight: 800;
+}
+.your-orders-saved-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid #edf1f5;
+}
+.your-orders-saved-row strong {
+  color: #102344;
+  font-size: 13px;
+  letter-spacing: .2px;
+}
+.your-orders-saved-row button {
+  min-width: 68px;
+  min-height: 34px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 8px;
+  background: #13adbd;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.your-orders-tracking a {
+  display: inline-block;
+  margin-top: 7px;
+  color: #087f8b;
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: underline;
+}

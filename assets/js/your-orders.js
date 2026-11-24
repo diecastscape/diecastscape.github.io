@@ -28,7 +28,7 @@ function renderOrder(order){
    (item.subtitle?'<div class="your-orders-item-sub">'+escapeHTML(item.subtitle)+'</div>':"")+
    '<div class="your-orders-item-meta">'+escapeHTML(pack)+' · '+money(item.unitPrice)+' each</div><div class="your-orders-item-total">'+money(item.lineTotal)+'</div></div>';
  }).join("");
- const tracking=dispatched&&order.trackingId?'<div class="your-orders-tracking"><span>India Post tracking ID</span><strong>'+escapeHTML(order.trackingId)+'</strong></div>':"";
+ const tracking=dispatched&&order.trackingId?'<div class="your-orders-tracking"><span>India Post tracking ID</span><strong>'+escapeHTML(order.trackingId)+'</strong><a href="https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx" target="_blank" rel="noopener noreferrer">Track with India Post</a></div>':"";
  resultBox.innerHTML='<article class="your-orders-card"><div class="your-orders-card-head"><div><div class="your-orders-kicker">ACCESSORIES ORDER</div><h2>#'+escapeHTML(order.orderId)+'</h2></div><span class="your-orders-paid">'+(order.paymentStatus==="paid"||order.paymentStatus==="paid_stock_issue"?"Payment completed":"Order recorded")+'</span></div>'+
  '<div class="your-orders-meta"><div><small>Booked</small><strong>'+dateText(order.bookedAt)+'</strong></div><div><small>Expected dispatch</small><strong>'+dateText(order.expectedDispatchDate)+'</strong></div></div>'+
  progressMarkup(order)+'<div class="your-orders-items"><h3>Order items</h3>'+itemHTML+'</div>'+
@@ -53,5 +53,23 @@ form?.addEventListener("submit",async event=>{
 });
 phoneInput?.addEventListener("input",()=>{phoneInput.value=phoneInput.value.replace(/\D/g,"").slice(0,10);});
 orderInput?.addEventListener("input",()=>{orderInput.value=orderInput.value.toUpperCase().replace(/\s/g,"");});
-try{const saved=JSON.parse(localStorage.getItem("diecastscape_completed_orders")||"[]");if(Array.isArray(saved)&&saved.length)deviceNote.style.display="none";}catch{}
+function renderSavedOrderIds() {
+ const savedBox=document.getElementById("yourOrdersSavedList");
+ if(!savedBox)return;
+ let saved=[];
+ try{const parsed=JSON.parse(localStorage.getItem("diecastscape_completed_orders")||"[]");if(Array.isArray(parsed))saved=parsed;}catch{}
+ saved=saved.filter(id=>/^DS-A\\d{4,}$/.test(String(id))).slice(0,20);
+ if(!saved.length){savedBox.hidden=true;return;}
+ deviceNote.style.display="none";
+ savedBox.hidden=false;
+ savedBox.innerHTML='<div class="your-orders-saved-title">Your saved order IDs</div>'+saved.map(id=>'<div class="your-orders-saved-row"><strong>'+escapeHTML(id)+'</strong><button type="button" data-order-id="'+escapeHTML(id)+'">View</button></div>').join("");
+}
+document.getElementById("yourOrdersSavedList")?.addEventListener("click",event=>{
+ const button=event.target.closest("button[data-order-id]");
+ if(!button)return;
+ orderInput.value=button.dataset.orderId||"";
+ orderInput.focus();
+ document.getElementById("bookedOrderPhone")?.focus();
+});
+renderSavedOrderIds();
 hideStates();

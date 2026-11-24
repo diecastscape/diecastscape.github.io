@@ -42,7 +42,7 @@ function nextDispatchDateIST(nowMs=Date.now()) {
   throw new Error("DISPATCH_DATE_CALCULATION_FAILED");
 }
 async function highestOrderNumber(firebase) {
-  const orders=await firestoreListCollection(firebase,"bookedOrders");
+  const orders=await firestoreListCollection(firebase,"Orders");
   let highest=1000;
   for(const order of orders) {
     const match=String(order.fields.orderId||"").match(/^DS-A(\d+)$/i);
@@ -136,7 +136,6 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
       piecesDeducted:item.isCombo?0:item.qty*item.packSize,
       unitPrice:item.unitPrice,lineTotal:item.subtotal
     }));
-    const publicProducts=savedProducts.map(item=>({name:item.name,quantity:item.quantity}));
     const deductions=stockPlan.map(({product,reservation,stock,units})=>({
       productId:reservation.productId,productCode:reservation.productCode,
       productName:reservation.productName,stockBefore:stock,piecesDeducted:units,stockAfter:stock-units
@@ -214,15 +213,6 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
         trackingId:"",dispatchedAt:null,
         stockDeductions:stockIssue?[]:deductions,
         createdAt:{__timestamp:now},updatedAt:{__timestamp:now}
-      })},
-      currentDocument:{exists:false}
-    });
-    writes.push({
-      update:{name:resourceBase+"/bookedOrders/"+orderId,fields:firestoreFields({
-        orderId,bookedDate,confirmedAt:{__timestamp:now},orderSource:"online-v2",
-        design:"Accessories Order",products:publicProducts,
-        shippingDate:displayDate(dispatchISO),estimatedDispatchDate:dispatchISO,
-        status:"Pending",dispatchedDate:"",hidden:false
       })},
       currentDocument:{exists:false}
     });
