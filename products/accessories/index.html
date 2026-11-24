@@ -348,6 +348,13 @@ class="search-bar">
 
 <!-- DELIVERY DETAILS -->
 <div class="checkout-fields">
+  <div class="checkout-section-heading">
+    <span>01</span>
+    <div>
+      <strong>Delivery information</strong>
+      <small>Enter the details needed to deliver your order.</small>
+    </div>
+  </div>
 
   <!-- Customer Name -->
   <div class="checkout-field">
@@ -421,29 +428,34 @@ class="search-bar">
 </div>
 
 <div class="order-popup-action">
-  <button
-    type="button"
-    id="finalWhatsAppBtn"
-    class="proceed-order-btn"
-  >
-    Proceed to order
-  </button>
-
-  <div class="order-whatsapp-note">
-    Send cart details through WhatsApp
+  <div class="checkout-section-heading">
+    <span>02</span>
+    <div>
+      <strong>Choose how to order</strong>
+      <small>Select your preferred checkout method.</small>
+    </div>
   </div>
 
   <button
     type="button"
     id="finalOnlinePayBtn"
-    class="proceed-order-btn"
-    style="margin-top:12px"
+    class="proceed-order-btn checkout-online-btn"
   >
     Pay Online
+    <span>Secure payment via Razorpay</span>
   </button>
 
-  <div class="order-whatsapp-note">
-    Secure online payment via Razorpay
+  <button
+    type="button"
+    id="finalWhatsAppBtn"
+    class="proceed-order-btn checkout-whatsapp-btn"
+  >
+    Order via WhatsApp
+    <span>Send your order details directly to us</span>
+  </button>
+
+  <div class="checkout-security-note">
+    Your delivery details will be included with either order method.
   </div>
 </div>
 

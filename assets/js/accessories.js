@@ -1048,6 +1048,45 @@ async function proceedOrderWhatsApp() {
     return;
   }
 
+  // Use the same required delivery details as the online checkout.
+  const customer = {
+    name: document.getElementById("checkoutName")?.value.trim() || "",
+    address: document.getElementById("checkoutAddress")?.value.trim() || "",
+    city: document.getElementById("checkoutCity")?.value.trim() || "",
+    state: document.getElementById("checkoutState")?.value.trim() || "",
+    postOffice: document.getElementById("checkoutPostOffice")?.value.trim() || "",
+    pincode: document.getElementById("checkoutPincode")?.value.trim() || "",
+    phone: document.getElementById("checkoutPhone")?.value.trim() || ""
+  };
+
+  const requiredFields = [
+    ["name", 2, "Please enter your name.", "checkoutName"],
+    ["address", 5, "Please enter your complete address.", "checkoutAddress"],
+    ["city", 2, "Please enter your city.", "checkoutCity"],
+    ["state", 2, "Please enter your state.", "checkoutState"],
+    ["postOffice", 2, "Please enter your post office name.", "checkoutPostOffice"]
+  ];
+
+  for (const [key, minLength, message, fieldId] of requiredFields) {
+    if (customer[key].length < minLength) {
+      showToast(message);
+      document.getElementById(fieldId)?.focus();
+      return;
+    }
+  }
+
+  if (!/^\d{6}$/.test(customer.pincode)) {
+    showToast("Please enter a valid 6-digit pincode.");
+    document.getElementById("checkoutPincode")?.focus();
+    return;
+  }
+
+  if (!/^\d{10}$/.test(customer.phone)) {
+    showToast("Please enter a valid 10-digit phone number.");
+    document.getElementById("checkoutPhone")?.focus();
+    return;
+  }
+
   const shipping = getShipping(total);
   const orderTotal = total + shipping;
   const whatsappTab = window.open("about:blank", "_blank");
@@ -1059,9 +1098,18 @@ async function proceedOrderWhatsApp() {
   const lines = [
     "Hello! I would like to place an order for these accessories.",
     "I prefer to order directly through WhatsApp rather than online payment.",
-    "Please help me with the order.",
+    "Please confirm the order and payment details with me.",
     "",
-    "Accessories:"
+    "CUSTOMER & DELIVERY DETAILS",
+    `Name: ${customer.name}`,
+    `Phone: ${customer.phone}`,
+    `Address: ${customer.address}`,
+    `City: ${customer.city}`,
+    `State: ${customer.state}`,
+    `Post Office: ${customer.postOffice}`,
+    `Pincode: ${customer.pincode}`,
+    "",
+    "ACCESSORIES"
   ];
 
   products.forEach(item => {
