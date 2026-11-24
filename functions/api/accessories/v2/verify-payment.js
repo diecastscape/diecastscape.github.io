@@ -190,7 +190,7 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     });
     writes.push({
       update:{name:resourceBase+"/Orders/"+orderId,fields:firestoreFields({
-        orderId,orderType:"Accessories",category:"accessories",
+        orderId,paymentRecordId:recordPath.split("/").pop(),orderType:"Accessories",category:"accessories",
         bookedAt:{__timestamp:now},bookedDate,
         expectedDispatchDate:dispatchISO,
         progress:stockIssue?"Stock Review Required":"Order Confirmed",

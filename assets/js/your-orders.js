@@ -58,7 +58,7 @@ function renderSavedOrderIds() {
  if(!savedBox)return;
  let saved=[];
  try{const parsed=JSON.parse(localStorage.getItem("diecastscape_completed_orders")||"[]");if(Array.isArray(parsed))saved=parsed;}catch{}
- saved=saved.filter(id=>/^DS-A\\d{4,}$/.test(String(id))).slice(0,20);
+ saved=saved.filter(id=>/^DS-A\d{4,}$/.test(String(id))).slice(0,20);
  if(!saved.length){savedBox.hidden=true;return;}
  deviceNote.style.display="none";
  savedBox.hidden=false;

@@ -332,7 +332,7 @@ if (type === "accessoriesOrders") {
 // BOOKED ORDERS SECTION
 // ======================================================
 
-if (type === "bookedOrders") {
+if (type === "dioramaOrders") {
 
   const bookedList =
     document.getElementById(

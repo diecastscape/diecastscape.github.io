@@ -30,7 +30,8 @@ function renderCard(order){
  '<div class="ao-totals"><span>Subtotal '+money(order.subtotal)+'</span><span>Shipping '+(order.shipping===0?"FREE":money(order.shipping))+'</span></div>'+
  '<details class="ao-private"><summary>See Full Details</summary><div><b>Name:</b> '+esc(customer.name||"—")+'<br><b>Phone:</b> '+esc(customer.phoneNumber||"—")+'<br><b>Address:</b> '+esc(address||"—")+'</div></details>'+
  (dispatched?'<div class="ao-tracking">Tracking ID: <strong>'+esc(order.trackingId||"—")+'</strong></div>':
- '<div class="ao-controls"><label>Order progress<select id="ao-stage-'+esc(order.orderId)+'">'+stages.map((stage,i)=>'<option value="'+(i+1)+'" '+((order.progressStage===0?1:order.progressStage)===i+1?"selected":"")+'>'+stage+'</option>').join("")+'</select></label><label>India Post tracking ID<input id="ao-track-'+esc(order.orderId)+'" value="'+esc(order.trackingId||"")+'" placeholder="Required before dispatch"></label><button type="button" onclick="saveAccessoriesAdminOrder(\''+esc(order.orderId)+'\')">Save Progress</button></div>')+
+ stockReview?'<div class="ao-review-action"><p>Review the required pieces and available stock before accepting. This action deducts stock and cannot be undone.</p><button type="button" onclick="acceptAccessoriesStockReview(\''+esc(order.orderId)+'\')">Accept Order &amp; Deduct Stock</button></div>':
+ '<div class="ao-controls"><label>Order progress<select id="ao-stage-'+esc(order.orderId)+'">'+stages.map((stage,i)=>'<option value="'+(i+1)+'" '+(order.progressStage===i+1?"selected":"")+'>'+stage+'</option>').join("")+'</select></label><label>India Post tracking ID<input id="ao-track-'+esc(order.orderId)+'" value="'+esc(order.trackingId||"")+'" placeholder="Required before dispatch"></label><button type="button" onclick="saveAccessoriesAdminOrder(\''+esc(order.orderId)+'\')">Save Progress</button></div>')+
  '</article>';
 }
 window.loadAccessoriesAdminOrders=async function(){
@@ -58,3 +59,12 @@ refresh?.addEventListener("click",()=>window.loadAccessoriesAdminOrders());
 window.addEventListener("DOMContentLoaded",()=>{
  if(window.location.hash==="#accessoriesOrders")window.loadAccessoriesAdminOrders();
 });
+
+window.acceptAccessoriesStockReview=async function(orderId){
+ if(!/^DS-A\\d{4,}$/.test(orderId))return;
+ if(!confirm("Accept this paid order and deduct the required pieces from current stock? This action cannot be undone."))return;
+ const button=[...document.querySelectorAll("button")].find(node=>node.textContent.includes("Accept Order")&&node.getAttribute("onclick")?.includes(orderId));
+ if(button){button.disabled=true;button.textContent="Accepting…";}
+ try{await request({action:"acceptStockReview",orderId});alert("Order accepted and stock deductions recorded.");await window.loadAccessoriesAdminOrders();}
+ catch(error){alert(error.message||"Could not accept this order.");if(button){button.disabled=false;button.textContent="Accept Order & Deduct Stock";}}
+};

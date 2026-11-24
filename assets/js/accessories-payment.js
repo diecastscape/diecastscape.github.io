@@ -1,5 +1,24 @@
 (function () {
   let busy = false;
+
+  function showPaymentResult(status,orderId){
+    let modal=document.getElementById("accessoriesPaymentResultModal");
+    if(!modal){
+      const style=document.createElement("style");
+      style.textContent=".accessories-result-modal[hidden]{display:none!important}.accessories-result-modal{position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(7,16,31,.72);backdrop-filter:blur(5px)}.accessories-result-card{width:min(100%,390px);padding:27px 23px 22px;border-radius:20px;background:#fff;box-shadow:0 22px 70px rgba(0,0,0,.28);text-align:center}.accessories-result-brand{color:#13adbd;font-size:10px;font-weight:900;letter-spacing:1.6px}.accessories-result-card h2{margin:15px 0 8px;color:#102344;font-size:22px}.accessories-result-card p{color:#637184;font-size:13px;line-height:1.65}.accessories-result-order{margin:20px 0;padding:13px;border:1px solid #dcebef;border-radius:12px;background:#f5fafb}.accessories-result-order span,.accessories-result-order strong{display:block}.accessories-result-order span{color:#7c8998;font-size:9px;font-weight:800;letter-spacing:1.2px}.accessories-result-order strong{margin-top:5px;color:#102344;font-size:19px}.accessories-result-card button{width:100%;min-height:46px;border:0;border-radius:11px;background:#13adbd;color:#fff;font-weight:850}.accessories-result-modal.is-review .accessories-result-card h2{color:#9b6410}.accessories-result-modal.is-review .accessories-result-order{border-color:#f1dfbd;background:#fffaf0}";
+      document.head.appendChild(style);
+      modal=document.createElement("div");modal.id="accessoriesPaymentResultModal";modal.className="accessories-result-modal";
+      modal.innerHTML='<div class="accessories-result-card" role="dialog" aria-modal="true" aria-labelledby="accessoriesPaymentResultTitle"><div class="accessories-result-brand">DIECAST.SCAPE · ORDER UPDATE</div><h2 id="accessoriesPaymentResultTitle"></h2><p id="accessoriesPaymentResultMessage"></p><div class="accessories-result-order"><span>ORDER ID</span><strong id="accessoriesPaymentResultOrderId"></strong></div><button type="button" id="accessoriesPaymentResultClose">Continue</button></div>';
+      document.body.appendChild(modal);
+      modal.addEventListener("click",event=>{if(event.target===modal||event.target.id==="accessoriesPaymentResultClose")modal.hidden=true;});
+    }
+    const review=status==="paid_stock_issue";
+    modal.classList.toggle("is-review",review);
+    modal.querySelector("#accessoriesPaymentResultTitle").textContent=review?"Payment Received — Order Under Review":"Payment Successful — Order Confirmed";
+    modal.querySelector("#accessoriesPaymentResultMessage").textContent=review?"Your payment is safely recorded. We are reviewing stock availability and will contact you about the next step.":"Your Accessories order is confirmed. Thank you for shopping with Diecast.scape.";
+    modal.querySelector("#accessoriesPaymentResultOrderId").textContent=orderId||"—";
+    modal.hidden=false;
+  }
   function value(id) { return document.getElementById(id)?.value.trim() || ""; }
   function resetButton(button) {
     busy=false;
@@ -88,11 +107,7 @@
                 console.warn("Could not save this order on this device:",storageError);
               }
             }
-            if(result.status==="paid_stock_issue") {
-              alert("Payment received. Your order is recorded and needs a stock review. We will contact you.\nOrder ID: "+result.orderId);
-            } else {
-              alert("Payment successful! Your Accessories order is confirmed.\nOrder ID: "+result.orderId);
-            }
+            showPaymentResult(result.status,result.orderId);
             if(typeof clearCartDirectly==="function")clearCartDirectly();
           } catch(error) {
             console.error("Accessories payment v2 verification:",error);
