@@ -61,7 +61,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 });
 
 window.acceptAccessoriesStockReview=async function(orderId){
- if(!/^DS-A\\d{4,}$/.test(orderId))return;
+ if(!/^DS-A\d{4,}$/.test(orderId))return;
  if(!confirm("Accept this paid order and deduct the required pieces from current stock? This action cannot be undone."))return;
  const button=[...document.querySelectorAll("button")].find(node=>node.textContent.includes("Accept Order")&&node.getAttribute("onclick")?.includes(orderId));
  if(button){button.disabled=true;button.textContent="Accepting…";}

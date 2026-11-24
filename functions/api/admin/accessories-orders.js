@@ -48,7 +48,7 @@ export async function onRequestPost({request,env}){
   }
   if(action==="acceptStockReview"){
    const orderId=String(body.orderId||"").trim();
-   if(!/^DS-A\\d{4,}$/.test(orderId))return jsonResponse({ok:false,error:"Invalid Accessories order ID."},400);
+   if(!/^DS-A\d{4,}$/.test(orderId))return jsonResponse({ok:false,error:"Invalid Accessories order ID."},400);
    for(let attempt=1;attempt<=4;attempt++){
     const order=await firestoreGet(firebase,"Orders/"+orderId);
     if(!order)return jsonResponse({ok:false,error:"Order not found."},404);
