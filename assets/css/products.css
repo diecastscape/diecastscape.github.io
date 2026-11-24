@@ -4023,3 +4023,42 @@ body.cart-popup-open {
     padding: 7px 17px 18px;
   }
 }
+
+
+/* CHECKOUT COLOUR AND MATCHED SECTION WIDTHS */
+.cart-popup-checkout {
+  background: #13adbd;
+  box-shadow: 0 6px 16px rgba(19,173,189,.20);
+}
+.cart-popup-checkout:hover {
+  background: #0b9baa;
+  box-shadow: 0 8px 20px rgba(19,173,189,.24);
+}
+.checkout-fields {
+  width: calc(100% - 40px);
+  box-sizing: border-box;
+}
+.checkout-fields .checkout-section-heading {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 13px;
+}
+.order-popup-action {
+  width: 100%;
+  box-sizing: border-box;
+}
+.order-popup-action .checkout-section-heading {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 12px;
+}
+.proceed-order-btn.checkout-online-btn,
+.proceed-order-btn.checkout-whatsapp-btn {
+  width: 100%;
+  box-sizing: border-box;
+}
+@media (max-width: 600px) {
+  .checkout-fields {
+    width: calc(100% - 34px);
+  }
+}
