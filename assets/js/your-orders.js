@@ -34,7 +34,7 @@ function renderOrder(order){
  progressMarkup(order)+'<div class="your-orders-items"><h3>Order items</h3>'+itemHTML+'</div>'+
  '<div class="your-orders-totals"><div><span>Subtotal</span><strong>'+money(order.subtotal)+'</strong></div><div><span>Shipping</span><strong>'+(Number(order.shipping)===0?"FREE":money(order.shipping))+'</strong></div><div class="your-orders-grand"><span>Grand total</span><strong>'+money(order.grandTotal)+'</strong></div></div>'+
  tracking+'<div class="your-orders-footer">Delivery details are kept private. For help with this order, contact Diecast.scape through WhatsApp.</div></article>';
- resultBox.style.display="block";emptyBox.style.display="none";errorBox.style.display="none";
+ loading.style.display="none";resultBox.style.display="block";emptyBox.style.display="none";errorBox.style.display="none";
 }
 form?.addEventListener("submit",async event=>{
  event.preventDefault();if(busy)return;
