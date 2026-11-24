@@ -45,7 +45,7 @@ form?.addEventListener("submit",async event=>{
  try{
   const response=await fetch("/api/accessories/lookup-order",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({orderId,phone})});
   const data=await response.json();
-  if(response.status===429)showEmpty(data.error||"Too many attempts. Please try again later.");
+  if(response.status===429){const wait=Math.max(1,Number(data.retryAfter)||60);const mins=Math.ceil(wait/60);showEmpty((data.error||"Too many attempts.")+" Please try again in "+(mins>1?mins+" minutes":wait+" seconds")+".");}
   else if(!response.ok||!data.ok||!data.order)showEmpty(data.error||"We couldn't find an order matching those details. Check your Order ID and phone number.");
   else renderOrder(data.order);
  }catch(error){console.error("Your Orders lookup:",error);hideStates();errorBox.style.display="block";}
