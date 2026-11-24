@@ -886,3 +886,323 @@
 .your-orders-tracking strong{color:#087f83;font-size:12px;letter-spacing:.4px;overflow-wrap:anywhere}
 .your-orders-footer{margin-top:12px;padding-top:10px;border-top:1px solid #edf0f4;color:#929baa;font-size:9px;line-height:1.5}
 @media(max-width:420px){.your-orders-card{padding:11px}.your-orders-paid{font-size:8px;padding:5px 6px}.your-orders-step-label{font-size:7px}}
+
+
+/* =========================================================
+   YOUR ORDERS — REFINED PAGE + FORM FIELDS
+========================================================= */
+
+.booked-orders-section {
+  padding: 34px 18px 48px;
+  background: #f5f7fa;
+}
+
+.booked-orders-container {
+  max-width: 720px;
+}
+
+.booked-orders-intro {
+  margin-bottom: 22px;
+}
+
+.booked-orders-eyebrow {
+  margin-bottom: 8px;
+  font-size: 11px;
+  letter-spacing: 1.8px;
+}
+
+.booked-orders-title {
+  margin-bottom: 8px;
+  font-size: clamp(27px, 5vw, 34px);
+  line-height: 1.12;
+  letter-spacing: -0.8px;
+}
+
+.booked-orders-subtitle {
+  max-width: 620px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.booked-search {
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.booked-search-input {
+  min-height: 54px;
+  height: 54px;
+  padding: 0 17px;
+  border: 1.5px solid #d7dee8;
+  border-radius: 13px;
+  background: #fff;
+  color: #101a2e;
+  font-size: 16px;
+  font-weight: 550;
+  box-shadow: 0 2px 7px rgba(11, 19, 43, .035);
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.booked-search-input:hover {
+  border-color: #aebbc9;
+}
+
+.booked-search-input:focus {
+  border-color: #13adbd;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(19, 173, 189, .13);
+  background: #fff;
+}
+
+.booked-search-input::placeholder {
+  color: #9aa5b3;
+  font-weight: 400;
+}
+
+.booked-search-btn {
+  min-width: 112px;
+  min-height: 54px;
+  height: 54px;
+  padding: 0 20px;
+  border-radius: 13px;
+  background: #0b132b;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .35px;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+.booked-search-btn:hover:not(:disabled) {
+  background: #142344;
+  box-shadow: 0 5px 14px rgba(11, 19, 43, .16);
+}
+
+.booked-search-btn:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.your-orders-phone-field {
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.your-orders-phone-field label {
+  color: #263247;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.your-orders-phone-field .booked-search-input {
+  width: 100%;
+}
+
+.your-orders-device-note {
+  margin-bottom: 18px;
+  padding: 13px 15px;
+  border: 1px solid #dfe6ee;
+  border-radius: 12px;
+  background: #f9fbfd;
+  color: #687386;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.booked-orders-loading,
+.booked-orders-empty,
+.booked-orders-error {
+  padding: 22px 16px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.booked-orders-list {
+  gap: 12px;
+}
+
+.your-orders-card {
+  padding: 20px;
+  border-color: #e0e6ed;
+  border-radius: 17px;
+  box-shadow: 0 5px 20px rgba(11, 19, 43, .055);
+}
+
+.your-orders-card-head {
+  gap: 12px;
+  padding-bottom: 15px;
+}
+
+.your-orders-kicker {
+  margin-bottom: 5px;
+  font-size: 10px;
+  letter-spacing: 1.35px;
+}
+
+.your-orders-card-head h2 {
+  font-size: 24px;
+  letter-spacing: -.45px;
+}
+
+.your-orders-paid {
+  padding: 8px 11px;
+  border-radius: 9px;
+  font-size: 11px;
+}
+
+.your-orders-meta {
+  gap: 14px;
+  padding: 16px 0;
+}
+
+.your-orders-meta small {
+  font-size: 10px;
+  letter-spacing: .7px;
+}
+
+.your-orders-meta strong {
+  font-size: 14px;
+}
+
+.your-orders-progress {
+  gap: 8px;
+  padding: 18px 0;
+}
+
+.your-orders-step-dot {
+  width: 34px;
+  height: 34px;
+  font-size: 13px;
+}
+
+.your-orders-step-label {
+  font-size: 11px;
+}
+
+.your-orders-items {
+  padding: 17px 0 7px;
+}
+
+.your-orders-items h3 {
+  margin-bottom: 10px;
+  font-size: 17px;
+}
+
+.your-orders-item {
+  padding: 12px 0;
+  font-size: 13px;
+}
+
+.your-orders-item-sub,
+.your-orders-item-meta {
+  font-size: 12px;
+}
+
+.your-orders-item-total {
+  font-size: 14px;
+}
+
+.your-orders-totals {
+  padding-top: 13px;
+}
+
+.your-orders-totals div {
+  padding: 7px 0;
+  font-size: 13px;
+}
+
+.your-orders-totals .your-orders-grand {
+  padding-top: 13px;
+  font-size: 16px;
+}
+
+.your-orders-totals .your-orders-grand strong {
+  font-size: 20px;
+}
+
+.your-orders-footer {
+  margin-top: 16px;
+  padding-top: 13px;
+  font-size: 11px;
+}
+
+.booked-orders-note {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+@media (max-width: 560px) {
+  .booked-orders-section {
+    padding: 28px 14px 38px;
+  }
+
+  .booked-search {
+    gap: 8px;
+  }
+
+  .booked-search-input {
+    min-height: 54px;
+    height: 54px;
+    padding: 0 14px;
+    font-size: 16px;
+  }
+
+  .booked-search-btn {
+    min-width: 104px;
+    min-height: 54px;
+    height: 54px;
+    padding: 0 14px;
+    font-size: 12px;
+  }
+
+  .your-orders-card {
+    padding: 16px;
+  }
+
+  .your-orders-card-head h2 {
+    font-size: 21px;
+  }
+
+  .your-orders-paid {
+    font-size: 10px;
+  }
+
+  .your-orders-step-label {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 360px) {
+  .booked-orders-section {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .booked-search {
+    flex-wrap: wrap;
+  }
+
+  .booked-search-input {
+    flex: 1 1 100%;
+  }
+
+  .booked-search-btn {
+    width: 100%;
+  }
+
+  .your-orders-card {
+    padding: 13px;
+  }
+
+  .your-orders-paid {
+    max-width: 116px;
+    white-space: normal;
+    text-align: center;
+  }
+}
