@@ -15,7 +15,7 @@ function hideStates(){loading.style.display="none";resultBox.style.display="none
 function showEmpty(message){hideStates();emptyBox.querySelector(".booked-empty-title").textContent="Order Not Found";emptyBox.querySelector(".booked-empty-text").textContent=message;emptyBox.style.display="block";}
 function progressMarkup(order){
  const stages=["Order Confirmed","In Packing","Ready to Dispatch","Dispatched"];
- if(order.progress==="Stock Review Required")return '<div class="your-orders-review">Payment received · Your order needs a stock review. We will contact you.</div>';
+ if(order.progress==="Stock Review Required")return '<div class="your-orders-review"><strong>Payment received — your order is not cancelled.</strong><span>We are checking availability for one or more items. We will update this page and contact you as soon as the review is complete. Please do not place the order again.</span></div>';
  const active=Math.max(1,Math.min(4,Number(order.progressStage)||stages.indexOf(order.progress)+1));
  return '<div class="your-orders-progress">'+stages.map((stage,index)=>'<div class="your-orders-step '+(index+1<=active?"is-done":"")+'"><span class="your-orders-step-dot">'+(index+1<=active?"✓":String(index+1))+'</span><span class="your-orders-step-label">'+stage+'</span></div>').join("")+'</div>';
 }
@@ -28,7 +28,7 @@ function renderOrder(order){
    (item.subtitle?'<div class="your-orders-item-sub">'+escapeHTML(item.subtitle)+'</div>':"")+
    '<div class="your-orders-item-meta">'+escapeHTML(pack)+' · '+money(item.unitPrice)+' each</div><div class="your-orders-item-total">'+money(item.lineTotal)+'</div></div>';
  }).join("");
- const tracking=dispatched&&order.trackingId?'<div class="your-orders-tracking"><span>India Post tracking ID</span><strong>'+escapeHTML(order.trackingId)+'</strong><a href="https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx" target="_blank" rel="noopener noreferrer">Track with India Post</a></div>':"";
+ const tracking=dispatched&&order.trackingId?'<div class="your-orders-tracking"><span>India Post tracking ID</span><strong>'+escapeHTML(order.trackingId)+'</strong><a href="https://www.indiapost.gov.in/" target="_blank" rel="noopener noreferrer">Visit India Post website</a></div>':"";
  resultBox.innerHTML='<article class="your-orders-card"><div class="your-orders-card-head"><div><div class="your-orders-kicker">ACCESSORIES ORDER</div><h2>#'+escapeHTML(order.orderId)+'</h2></div><span class="your-orders-paid">'+(order.paymentStatus==="paid"||order.paymentStatus==="paid_stock_issue"?"Payment completed":"Order recorded")+'</span></div>'+
  '<div class="your-orders-meta"><div><small>Booked</small><strong>'+dateText(order.bookedAt)+'</strong></div><div><small>Expected dispatch</small><strong>'+dateText(order.expectedDispatchDate)+'</strong></div></div>'+
  progressMarkup(order)+'<div class="your-orders-items"><h3>Order items</h3>'+itemHTML+'</div>'+
@@ -57,12 +57,16 @@ function renderSavedOrderIds() {
  const savedBox=document.getElementById("yourOrdersSavedList");
  if(!savedBox)return;
  let saved=[];
- try{const parsed=JSON.parse(localStorage.getItem("diecastscape_completed_orders")||"[]");if(Array.isArray(parsed))saved=parsed;}catch{}
- saved=saved.filter(id=>/^DS-A\d{4,}$/.test(String(id))).slice(0,20);
+ try{
+  const parsed=JSON.parse(localStorage.getItem("diecastscape_completed_orders")||"[]");
+  const candidate=Array.isArray(parsed)?parsed[0]:parsed;
+  if(/^DS-A\d{4,}$/.test(String(candidate||"")))saved=[String(candidate)];
+  if(Array.isArray(parsed)&&saved.length)localStorage.setItem("diecastscape_completed_orders",JSON.stringify(saved));
+ }catch{}
  if(!saved.length){savedBox.hidden=true;return;}
  deviceNote.style.display="none";
  savedBox.hidden=false;
- savedBox.innerHTML='<div class="your-orders-saved-title">Your saved order IDs</div>'+saved.map(id=>'<div class="your-orders-saved-row"><strong>'+escapeHTML(id)+'</strong><button type="button" data-order-id="'+escapeHTML(id)+'">View</button></div>').join("");
+ savedBox.innerHTML='<div class="your-orders-saved-title">Latest order on this device</div>'+saved.map(id=>'<div class="your-orders-saved-row"><strong>'+escapeHTML(id)+'</strong><button type="button" data-order-id="'+escapeHTML(id)+'">View</button></div>').join("");
 }
 document.getElementById("yourOrdersSavedList")?.addEventListener("click",event=>{
  const button=event.target.closest("button[data-order-id]");

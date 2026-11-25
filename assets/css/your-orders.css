@@ -1256,3 +1256,24 @@
   font-weight: 750;
   text-decoration: underline;
 }
+
+
+/* Modern, mobile-first order tracking layout */
+.booked-orders-section { padding: 34px 16px 48px; background: linear-gradient(180deg, #f4fbfc 0%, #ffffff 72%); }
+.booked-orders-container { max-width: 620px; padding: 24px; border: 1px solid #e4edf0; border-radius: 22px; background: #ffffff; box-shadow: 0 16px 44px rgba(15, 43, 58, .08); }
+.booked-orders-intro { margin-bottom: 22px; }
+.booked-orders-eyebrow { letter-spacing: 1.7px; }
+.booked-orders-title { font-size: clamp(27px, 6vw, 34px); letter-spacing: -1px; }
+.booked-orders-subtitle { font-size: 12px; line-height: 1.65; }
+.booked-search { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 9px; margin-bottom: 11px; }
+.booked-search-input { height: 46px; border-radius: 12px; background: #fbfdfe; }
+.booked-search-btn { height: 46px; min-width: 92px; border-radius: 12px; }
+.your-orders-phone-field { margin: 0 0 13px; }
+.your-orders-phone-field label { display: block; margin: 0 0 6px; color: #46566a; font-size: 10px; font-weight: 800; }
+.your-orders-device-note,.your-orders-saved-list { margin: 12px 0 17px; padding: 12px 14px; border-radius: 12px; background: #f4f8fa; color: #647487; font-size: 10px; line-height: 1.55; }
+.booked-orders-note { margin-top: 22px; padding: 13px 15px; border: 1px solid #e0eff0; border-radius: 13px; font-size: 10px; line-height: 1.6; }
+.your-orders-review { display: grid; gap: 6px; margin: 16px 0; padding: 15px; border: 1px solid #f0d8a8; border-radius: 13px; background: #fff9ed; color: #77531c; font-size: 12px; line-height: 1.6; }
+.your-orders-review strong { color: #68440d; }
+.footer-contact-link { display: inline-block; transition: transform .2s ease, color .2s ease; }
+.footer-contact-link:hover,.footer-contact-link:focus-visible { color: #13adbd; transform: translateX(5px); }
+@media (max-width: 560px) { .booked-orders-section { padding: 20px 12px 34px; } .booked-orders-container { padding: 19px 15px; border-radius: 18px; } .booked-search { grid-template-columns: minmax(0,1fr) 82px; } }
