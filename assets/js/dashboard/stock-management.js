@@ -9,21 +9,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /*
-  Diecast.scape — Accessories Order Reader + Stock Updater
+  Diecast.scape — Accessories Manual Order Reader + Stock Updater
 
-  Orders:
-    bookedOrders   = public order/progress data
-    orderCustomers = private customer and delivery details
+  Manual orders are created in the secure Orders system.
+  Stock, Accessories counters, duplicate protection and the order
+  are committed atomically by the authenticated admin API.
 
-  Stock:
-    accessoriesProducts
-
-  Normal products:
-    Stock is deducted directly.
-
-  Combo products:
-    Component stock is deducted.
-    Combo stock is recalculated from remaining components.
+  Historical bookedOrders and orderCustomers records remain untouched.
 */
 
 /* =====================================================
@@ -31,14 +23,6 @@ import {
 ===================================================== */
 
 const PRODUCTS_COLLECTION = "accessoriesProducts";
-const ORDERS_COLLECTION = "bookedOrders";
-const CUSTOMERS_COLLECTION = "orderCustomers";
-const COUNTERS_COLLECTION = "bookedOrderCounters";
-const COUNTER_DOCUMENT = "accessoryOrderIdSequence";
-
-const ORDER_PREFIX = "DS-A";
-const FIRST_ORDER_NUMBER = 1000;
-
 
 /* =====================================================
    COMBO RECIPES
@@ -1058,35 +1042,6 @@ function toDisplayDate(date = new Date()) {
    HASH / ORDER NUMBER
 ===================================================== */
 
-async function sha256Hex(text) {
-  const bytes = new TextEncoder().encode(text);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-
-  return [...new Uint8Array(digest)]
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-async function getHighestAccessoryOrderNumber() {
-  const snapshot = await getDocs(
-    collection(db, ORDERS_COLLECTION)
-  );
-
-  let highest = FIRST_ORDER_NUMBER;
-
-  snapshot.forEach(orderDoc => {
-    const orderId = String(orderDoc.data().orderId || "");
-    const match = orderId.match(/^DS-A(\d+)$/);
-
-    if (match) {
-      highest = Math.max(highest, Number(match[1]));
-    }
-  });
-
-  return highest;
-}
-
-
 /* =====================================================
    CONFIRM ORDER AND UPDATE STOCK
 
@@ -1155,7 +1110,7 @@ async function confirmAccessoryStockOrder() {
       "Order ID: "+result.orderId+"\n"+
       "Estimated dispatch: "+dispatchDisplay+"\n\n"+
       "Track your order progress here:\n"+
-      window.location.origin+"/booked-orders/\n\n"+
+      window.location.origin+"/your-orders/\n\n"+
       "Thank you for choosing Diecast.scape!";
 
     const success=$("stockOrderSuccess");
