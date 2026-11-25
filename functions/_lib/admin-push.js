@@ -1,5 +1,6 @@
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
 const SCOPES = "https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/firebase.messaging";
+const ADMIN_UID = "urSr9gyhwBMKBSmxKC5LRRnKW1P2";
 function b64url(value) {
   const bytes = typeof value === "string" ? new TextEncoder().encode(value) : value;
   let binary = "";
@@ -39,7 +40,9 @@ export async function sendAdminPushNotification(env, {orderId, amount}) {
   const collection = await response.json();
   if (!response.ok) throw new Error("Could not load admin notification devices.");
   const tokens = (collection.documents || [])
-    .filter(doc => doc.fields?.active?.booleanValue === true && doc.fields?.token?.stringValue)
+    .filter(doc => doc.fields?.active?.booleanValue === true &&
+      doc.fields?.ownerUid?.stringValue === ADMIN_UID &&
+      doc.fields?.token?.stringValue)
     .map(doc => doc.fields.token.stringValue);
   if (!tokens.length) return {sent:0,total:0};
   const title = "New Accessories Order — " + String(orderId);
@@ -79,7 +82,9 @@ export async function sendAdminTestPushNotification(env) {
   const collection = await response.json();
   if (!response.ok) throw new Error("Could not load admin notification devices.");
   const tokens = (collection.documents || [])
-    .filter(doc => doc.fields?.active?.booleanValue === true && doc.fields?.token?.stringValue)
+    .filter(doc => doc.fields?.active?.booleanValue === true &&
+      doc.fields?.ownerUid?.stringValue === ADMIN_UID &&
+      doc.fields?.token?.stringValue)
     .map(doc => doc.fields.token.stringValue);
   if (!tokens.length) return { sent: 0, total: 0, failure: "NO_REGISTERED_TOKENS" };
   let sent = 0;
