@@ -40,7 +40,12 @@ async function createManualOrder(firebase,body){
  const items=Array.isArray(body.items)?body.items:[];
  if(!items.length||items.length>40)return {status:400,error:"Order items are missing or invalid."};
  const subtotal=Number(body.subtotal),shipping=Number(body.shipping),grandTotal=Number(body.grandTotal);
- if(![subtotal,shipping,grandTotal].every(n=>Number.isFinite(n)&&n>=0)||money2(subtotal+shipping)!==money2(grandTotal))return {status:400,error:"Order totals are invalid."};
+ if(![subtotal,shipping,grandTotal].every(n=>Number.isFinite(n)&&n>=0)||money2(subtotal+shipping)!==money2(grandTotal)||subtotal<199||shipping!==(subtotal>=799?0:55))return {status:400,error:"Order totals or Accessories shipping are invalid."};
+ const target=new Date(dispatch+"T00:00:00Z");
+ if(!Number.isFinite(target.getTime())||target.toISOString().slice(0,10)!==dispatch||![3,6].includes(target.getUTCDay()))return {status:400,error:"Accessories dispatch must be Wednesday or Saturday."};
+ const istNow=new Date(Date.now()+19800000),today=istNow.toISOString().slice(0,10);
+ const cutoff=Date.UTC(target.getUTCFullYear(),target.getUTCMonth(),target.getUTCDate()-1,12)-19800000;
+ if(dispatch<today||Date.now()>cutoff)return {status:400,error:"That dispatch date has passed its booking cutoff. Select the next available Wednesday or Saturday."};
  const grouped=new Map(),itemRows=[];
  let calculated=0;
  for(const item of items){
@@ -100,6 +105,7 @@ async function createManualOrder(firebase,body){
    if(before<requested)return {status:409,error:"Insufficient combo stock for "+comboCode+"."};
    comboUpdates.push({productCode:comboCode,stockBefore:before,stockAfter:after});
   }
+  for(const item of itemRows){const product=freshProducts.get(item.code),livePrice=Number(product?.fields.price);if(!Number.isFinite(livePrice)||money2(livePrice)!==money2(item.unitPrice))return {status:409,error:"Price changed for "+item.code+". Recheck the WhatsApp order before confirming."};}
   const previous=Math.max(1000,Number(docs.get(firebase.base+"/"+counterPath)?.fields.lastNumber)||1000,Number(docs.get(firebase.base+"/"+legacyCounterPath)?.fields.lastNumber)||1000,highest);
   const next=previous+1,orderId="DS-A"+next,now=new Date().toISOString();
   const savedItems=itemRows.map(item=>{
