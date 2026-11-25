@@ -63,8 +63,8 @@ async function createManualOrder(firebase,body){
   itemRows.push({code,qty,setSize,unitPrice,lineTotal,isCombo,name:String(item.name||"").slice(0,160),checkoutCode:String(item.fullCode||"").toUpperCase()});
  }
  if(money2(calculated)!==money2(subtotal))return {status:400,error:"Product total does not match the item lines."};
- const rawCodes=[...rawText.matchAll(/#([A-Z]{2})(\\d{2})(\\d{2})\\b/gi)];
- const rawPrices=[...rawText.matchAll(/₹\\s*([\\d,]+(?:\\.\\d{1,2})?)\\s*[×x]\\s*(\\d+)\\s*=\\s*₹?\\s*([\\d,]+(?:\\.\\d{1,2})?)/gi)];
+ const rawCodes=[...rawText.matchAll(/#([A-Z]{2})(\d{2})(\d{2})\b/gi)];
+ const rawPrices=[...rawText.matchAll(/₹\s*([\d,]+(?:\.\d{1,2})?)\s*[×x]\s*(\d+)\s*=\s*₹?\s*([\d,]+(?:\.\d{1,2})?)/gi)];
  if(rawCodes.length!==itemRows.length||rawPrices.length!==itemRows.length)return {status:400,error:"The pasted WhatsApp message does not match the parsed order lines."};
  for(let i=0;i<itemRows.length;i++){
   const item=itemRows[i],code=rawCodes[i],price=rawPrices[i];
@@ -74,7 +74,7 @@ async function createManualOrder(firebase,body){
     Number(price[2])!==item.qty||money2(Number(price[3].replace(/,/g,"")))!==money2(item.lineTotal))
    return {status:400,error:"The parsed order lines do not match the WhatsApp message. Check the order again."};
  }
- const amountFor=label=>{const match=rawText.match(new RegExp(label+"\\\\s*:\\\\s*₹?\\\\s*([\\\\d,]+(?:\\\\.\\\\d{1,2})?)","i"));return match?Number(match[1].replace(/,/g,"")):NaN;};
+ const amountFor=label=>{const match=rawText.match(new RegExp(label+"\\s*:\\s*₹?\\s*([\\d,]+(?:\\.\\d{1,2})?)","i"));return match?Number(match[1].replace(/,/g,"")):NaN;};
  if(money2(amountFor("Product Total"))!==money2(subtotal)||money2(amountFor("Shipping"))!==money2(shipping)||money2(amountFor("Order Total"))!==money2(grandTotal))
   return {status:400,error:"The WhatsApp order totals do not match the parsed order."};
 
