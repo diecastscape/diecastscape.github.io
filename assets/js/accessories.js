@@ -825,6 +825,29 @@ function closeCartPopup() {
 }
 
 
+function updateExpectedDispatchEstimate() {
+  const target = document.getElementById("expectedDispatchEstimate");
+  if (!target) return;
+  const now = new Date();
+  const candidate = new Date(now);
+  candidate.setHours(0, 0, 0, 0);
+  for (let offset = 0; offset <= 7; offset++) {
+    const day = new Date(candidate);
+    day.setDate(candidate.getDate() + offset);
+    if (day.getDay() !== 3 && day.getDay() !== 6) continue;
+    const cutoff = new Date(day);
+    cutoff.setDate(day.getDate() - 1);
+    cutoff.setHours(12, 0, 0, 0);
+    if (now <= cutoff) {
+      target.textContent = "Expected dispatch: " + day.toLocaleDateString("en-IN", {
+        weekday: "long", day: "numeric", month: "short", year: "numeric"
+      });
+      return;
+    }
+  }
+  target.textContent = "Expected dispatch: Next available Wednesday or Saturday";
+}
+
 /* =========================================
    ENTER CHECKOUT MODE
 ========================================= */
@@ -918,6 +941,8 @@ function checkoutCart() {
     checkoutSection.hidden = false;
   }
 
+
+  updateExpectedDispatchEstimate();
 
   /*
     Re-render products without
@@ -1037,27 +1062,32 @@ function renderCheckoutProducts() {
     
 async function proceedOrderWhatsApp() {
   const products = getCartProducts();
-  if (!products.length) {
-    showToast("Your cart is empty.");
-    return;
-  }
-
+  if (!products.length) { showToast("Your cart is empty."); return; }
   const total = getCartProductTotal();
-  if (total < MIN_CART_VALUE) {
-    showToast(`Minimum order value is ₹${MIN_CART_VALUE}`);
-    return;
+  if (total < MIN_CART_VALUE) { showToast(\`Minimum order value is ₹\${MIN_CART_VALUE}\`); return; }
+  if (!window.accessoryStockReady) { showToast("Please wait while we check the latest stock."); return; }
+
+  const encodedItems = [];
+  for (const item of products) {
+    const qty = Math.floor(Number(item.qty) || 0);
+    const liveProduct = getCurrentAccessoryProduct(item.id);
+    const productCode = String(liveProduct?.productCode || item.productCode || "").trim().toUpperCase();
+    if (!liveProduct || !/^#[A-Z]{2}\d{2}$/.test(productCode)) {
+      showToast("A product code is missing. Refresh the page and try again."); return;
+    }
+    if (!Number.isInteger(qty) || qty < 1 || qty > 99) {
+      showToast("Each product quantity must be between 1 and 99 sets."); return;
+    }
+    const available = getCurrentAvailableSets(item.id);
+    if (qty > available) {
+      showToast(available > 0 ? \`Only \${available} set(s) currently available for \${item.name}.\` : \`\${item.name} is currently out of stock.\`);
+      return;
+    }
+    encodedItems.push({item, qty, productCode});
   }
 
   const shipping = getShipping(total);
   const orderTotal = total + shipping;
-  const whatsappTab = window.open("about:blank", "_blank");
-  if (!whatsappTab) {
-    showToast("Please allow pop-ups to continue to WhatsApp.");
-    return;
-  }
-
-  // WhatsApp orders are collected directly in chat; no checkout delivery
-  // information is required or sent from this form.
   const lines = [
     "Hello! I would like to place an order for these accessories.",
     "I prefer to order directly through WhatsApp rather than online payment.",
@@ -1065,23 +1095,20 @@ async function proceedOrderWhatsApp() {
     "",
     "ACCESSORIES"
   ];
-
-  products.forEach(item => {
-    const qty = Math.floor(Number(item.qty) || 0);
+  encodedItems.forEach(({item, qty, productCode}) => {
     const price = Number(item.price) || 0;
-    if (qty > 0) {
-      lines.push(`• ${item.name} — ${item.quantityText || "Set"} × ${qty}`);
-      lines.push(`  ₹${price} × ${qty} = ₹${price * qty}`);
-    }
+    const fullCode = productCode + String(qty).padStart(2, "0");
+    lines.push(\`• \${item.name}\`);
+    lines.push(\`  \${item.quantityText || "Set"} × \${qty} qty · \${fullCode}\`);
+    lines.push(\`  ₹\${price} × \${qty} = ₹\${price * qty}\`);
   });
-
   lines.push("");
-  lines.push(`Product Total: ₹${total}`);
-  lines.push(`Shipping: ${shipping === 0 ? "FREE" : "₹" + shipping}`);
-  lines.push(`Order Total: ₹${orderTotal}`);
-
-  const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
-  whatsappTab.location.href = whatsappURL;
+  lines.push(\`Product Total: ₹\${total}\`);
+  lines.push(\`Shipping: \${shipping === 0 ? "FREE" : "₹" + shipping}\`);
+  lines.push(\`Order Total: ₹\${orderTotal}\`);
+  const whatsappURL = \`https://wa.me/\${WHATSAPP_NUMBER}?text=\${encodeURIComponent(lines.join("\\n"))}\`;
+  const whatsappTab = window.open(whatsappURL, "_blank", "noopener,noreferrer");
+  if (!whatsappTab) showToast("Please allow pop-ups to continue to WhatsApp.");
 }
 function clearCartDirectly() {
 

@@ -4062,3 +4062,9 @@ body.cart-popup-open {
     width: calc(100% - 34px);
   }
 }
+
+
+/* Align all checkout method buttons consistently. */
+.proceed-order-btn.checkout-cod-btn { margin-top: 10px; }
+.checkout-dispatch-estimate { margin: 0 20px 14px; padding: 11px 13px; border: 1px solid #ccebef; border-radius: 11px; background: #f1fbfc; color: #176d78; font-size: 11px; font-weight: 750; line-height: 1.45; }
+@media (max-width: 600px) { .checkout-dispatch-estimate { margin-left: 17px; margin-right: 17px; } }
