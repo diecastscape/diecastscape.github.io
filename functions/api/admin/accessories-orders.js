@@ -28,14 +28,14 @@ async function sha256(value){
 function validCustomer(c){
  const fields=["name","phoneNumber","address","city","state","postOffice","pincode"];
  for(const key of fields)if(!String(c?.[key]||"").trim())return false;
- return /^\\d{10}$/.test(String(c.phoneNumber).replace(/\\D/g,""))&&/^\\d{6}$/.test(String(c.pincode).trim());
+ return /^\d{10}$/.test(String(c.phoneNumber).replace(/\D/g,""))&&/^\d{6}$/.test(String(c.pincode).trim());
 }
 async function createManualOrder(firebase,body){
  const rawText=String(body.rawText||"").trim(),customer=body.customer||{},dispatch=String(body.expectedDispatchDate||"");
  if(!rawText||rawText.length>20000)return {status:400,error:"Paste a valid WhatsApp order message."};
  if(!validCustomer(customer))return {status:400,error:"Complete all delivery details. Enter a valid 10-digit phone number and 6-digit pincode."};
- if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(dispatch))return {status:400,error:"Select a valid estimated dispatch date."};
- const normalized=rawText.replace(/\\s+/g," ").trim(),fingerprint=await sha256(normalized);
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(dispatch))return {status:400,error:"Select a valid estimated dispatch date."};
+ const normalized=rawText.replace(/\s+/g," ").trim(),fingerprint=await sha256(normalized);
  const markerPath="manualOrderDedupes/"+fingerprint;
  const items=Array.isArray(body.items)?body.items:[];
  if(!items.length||items.length>40)return {status:400,error:"Order items are missing or invalid."};
@@ -50,7 +50,7 @@ async function createManualOrder(firebase,body){
  let calculated=0;
  for(const item of items){
   const code=String(item.productCode||"").toUpperCase(),qty=Number(item.quantity),setSize=Number(item.piecesPerSet),unitPrice=Number(item.unitPrice),lineTotal=Number(item.lineTotal),isCombo=Boolean(COMBO_RECIPES[code]);
-  if(!/^#[A-Z]{2}\\d{2}$/.test(code)||!Number.isInteger(qty)||qty<1||qty>999||!Number.isFinite(unitPrice)||unitPrice<0||money2(unitPrice*qty)!==money2(lineTotal))return {status:400,error:"An order item has invalid quantity or price."};
+  if(!/^#[A-Z]{2}\d{2}$/.test(code)||!Number.isInteger(qty)||qty<1||qty>999||!Number.isFinite(unitPrice)||unitPrice<0||money2(unitPrice*qty)!==money2(lineTotal))return {status:400,error:"An order item has invalid quantity or price."};
   if(isCombo?setSize!==0:(!Number.isInteger(setSize)||setSize<1||setSize>99))return {status:400,error:"An order item has an invalid pack size."};
   if(isCombo){
    for(const [component,pieces] of COMBO_RECIPES[code])grouped.set(component,(grouped.get(component)||0)+pieces*qty);
@@ -73,7 +73,7 @@ async function createManualOrder(firebase,body){
   const counter=await firestoreGet(firebase,counterPath),legacy=await firestoreGet(firebase,legacyCounterPath);
   const highestDocs=counter||legacy?[]:await firestoreListCollection(firebase,"Orders");
   let highest=1000;
-  for(const d of highestDocs){const m=String(d.fields.orderId||"").match(/^DS-A(\\d+)$/);if(m)highest=Math.max(highest,Number(m[1])||1000);}
+  for(const d of highestDocs){const m=String(d.fields.orderId||"").match(/^DS-A(\d+)$/);if(m)highest=Math.max(highest,Number(m[1])||1000);}
   const docs=await firestoreBatchGet(firebase,[markerPath,counterPath,legacyCounterPath,...usedDocs.map(d=>"accessoriesProducts/"+encodeURIComponent(d.name.split("/").pop()))]);
   if(docs.has(firebase.base+"/"+markerPath)){
    const previous=docs.get(firebase.base+"/"+markerPath)?.fields.orderId||"already processed";
@@ -110,10 +110,10 @@ async function createManualOrder(firebase,body){
   const next=previous+1,orderId="DS-A"+next,now=new Date().toISOString();
   const savedItems=itemRows.map(item=>{
    const product=freshProducts.get(item.code),isCombo=item.isCombo;
-   return {productId:product.name.split("/").pop(),productName:String(product.fields.name||item.name||item.code),name:String(product.fields.name||item.name||item.code),subtitle:String(product.fields.subtitle||""),selectedQuantity:item.qty,quantity:item.qty,packQuantity:isCombo?null:item.setSize,packLabel:isCombo?"Combo set":String(product.fields.quantity||("Set of "+item.setSize)),productCode:item.code,checkoutCode:item.checkoutCode,isCombo,piecesPerSet:item.setSize,piecesDeducted:isCombo?0:item.setSize*item.qty,unitPrice:item.unitPrice,lineTotal:item.lineTotal,comboRecipe:isCombo?COMBO_RECIPES[item.code].map(([productCode,pieces])=>({productCode,piecesPerSet:pieces,totalPieces:pieces*item.qty})):[]};
+   return {productId:product.name.split("/").pop(),productName:String(product.fields.name||item.name||item.code),name:String(product.fields.name||item.name||item.code),subtitle:String(product.fields.quantity||""),selectedQuantity:item.qty,quantity:item.qty,packQuantity:isCombo?null:item.setSize,packLabel:isCombo?"Combo set":String(item.setSize)+" pieces/set",productCode:item.code,checkoutCode:item.checkoutCode,isCombo,piecesPerSet:item.setSize,piecesDeducted:isCombo?0:item.setSize*item.qty,unitPrice:item.unitPrice,lineTotal:item.lineTotal,comboRecipe:isCombo?COMBO_RECIPES[item.code].map(([productCode,pieces])=>({productCode,piecesPerSet:pieces,totalPieces:pieces*item.qty})):[]};
   });
   const progressHistory=[{stage:"Order Confirmed",at:{__timestamp:now},note:"Manual Accessories order created by admin"}];
-  const orderFields={orderId,orderType:"Accessories",category:"accessories",orderSource:"admin_manual",bookedAt:{__timestamp:now},bookedDate:now.slice(0,10),expectedDispatchDate:dispatch,progress:"Order Confirmed",progressStage:1,progressHistory,customer:{name:String(customer.name).trim(),address:String(customer.address).trim(),city:String(customer.city).trim(),state:String(customer.state).trim(),postOffice:String(customer.postOffice).trim(),pincode:String(customer.pincode).trim(),phoneNumber:String(customer.phoneNumber).replace(/\\D/g,"")},items:savedItems,subtotal,shipping,grandTotal,paymentMethod:"manual",paymentStatus:"manual",stockReviewRequired:false,trackingId:"",dispatchedAt:null,stockDeductions:deductions.map(d=>({productId:d.doc.name.split("/").pop(),productCode:d.code,productName:String(d.doc.fields.name||d.code),stockBefore:d.stock,piecesDeducted:d.pieces,stockAfter:d.after})),comboStockUpdates:comboUpdates,createdAt:{__timestamp:now},updatedAt:{__timestamp:now}};
+  const orderFields={orderId,orderType:"Accessories",category:"accessories",orderSource:"admin_manual",bookedAt:{__timestamp:now},bookedDate:now.slice(0,10),expectedDispatchDate:dispatch,progress:"Order Confirmed",progressStage:1,progressHistory,customer:{name:String(customer.name).trim(),address:String(customer.address).trim(),city:String(customer.city).trim(),state:String(customer.state).trim(),postOffice:String(customer.postOffice).trim(),pincode:String(customer.pincode).trim(),phoneNumber:String(customer.phoneNumber).replace(/\D/g,"")},items:savedItems,subtotal,shipping,grandTotal,paymentMethod:"manual",paymentStatus:"manual",stockReviewRequired:false,trackingId:"",dispatchedAt:null,stockDeductions:deductions.map(d=>({productId:d.doc.name.split("/").pop(),productCode:d.code,productName:String(d.doc.fields.name||d.code),stockBefore:d.stock,piecesDeducted:d.pieces,stockAfter:d.after})),comboStockUpdates:comboUpdates,createdAt:{__timestamp:now},updatedAt:{__timestamp:now}};
   const base=firebase.base.replace("https://firestore.googleapis.com/v1/","");
   const writes=[];
   for(const d of deductions)writes.push({update:{name:d.doc.name,fields:firestoreFields({stock:d.after,stockUpdatedAt:{__timestamp:now}})},updateMask:{fieldPaths:["stock","stockUpdatedAt"]},currentDocument:{updateTime:d.doc.updateTime}});
