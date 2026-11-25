@@ -20,6 +20,8 @@ export async function onRequestPost({request,env}) {
     if(!await verifyAdmin(request))return jsonResponse({ok:false,error:"Admin authorization required."},401);
     const body=await request.json();
     const token=String(body.token||"").trim();
+    const ownerUid=String(body.ownerUid||"");
+    if(ownerUid!==ADMIN_UID)return jsonResponse({ok:false,error:"Admin device ownership could not be verified."},403);
     if(token.length<100||token.length>4096)return jsonResponse({ok:false,error:"Invalid browser notification token."},400);
     const firebase=await getFirebaseContext(env);
     const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(token));
@@ -27,9 +29,9 @@ export async function onRequestPost({request,env}) {
     const base=firebase.base.replace("https://firestore.googleapis.com/v1/","");
     await firestoreCommit(firebase,undefined,[{
       update:{name:base+"/adminPushTokens/"+id,fields:firestoreFields({
-        token,active:true,updatedAt:{__timestamp:new Date().toISOString()},platform:"web"
+        token,ownerUid,active:true,updatedAt:{__timestamp:new Date().toISOString()},platform:"web"
       })},
-      updateMask:{fieldPaths:["token","active","updatedAt","platform"]}
+      updateMask:{fieldPaths:["token","ownerUid","active","updatedAt","platform"]}
     }]);
     return jsonResponse({ok:true});
   } catch(error) {
