@@ -1,18 +1,55 @@
 import { auth } from "../firebase-init.js";
 import { getMessaging, getToken, onMessage, isSupported } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const VAPID_PUBLIC_KEY = "BOCXTZg8PFcXSCuL4zKJ-SbZ_TrrMI3m8cbWwNRas7K7DluV21sdC7-WH8nwMgy3Rgix-luYtOv_uedUAITgpek";
 const button = document.getElementById("enableAdminNotifications");
 const testButton = document.getElementById("sendAdminTestNotification");
-const localTestButton = document.getElementById("testLocalAdminNotification");
 const status = document.getElementById("adminNotificationStatus");
 let foregroundListenerRegistered = false;
+let messagingInstance = null;
+let serviceWorkerRegistration = null;
 
 function showStatus(message, isError = false) {
   if (!status) return;
   status.textContent = message;
   status.style.color = isError ? "#b42318" : "#16803c";
+}
+function getMessagingInstance() {
+  const app = getApps()[0] || initializeApp({
+    apiKey: "AIzaSyAVhJ8wvmK9dv7ohG5jnGGETWJsEiRFrVs",
+    authDomain: "diecastscape.firebaseapp.com",
+    projectId: "diecastscape",
+    storageBucket: "diecastscape.firebasestorage.app",
+    messagingSenderId: "701890525745",
+    appId: "1:701890525745:web:b0a46856995c7f5eb73310"
+  });
+  messagingInstance = messagingInstance || getMessaging(app);
+  return messagingInstance;
+}
+async function attachForegroundListener(registration) {
+  if (foregroundListenerRegistered || !("Notification" in window) ||
+      Notification.permission !== "granted" || !(await isSupported())) return;
+  const messaging = getMessagingInstance();
+  serviceWorkerRegistration = registration || await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+  onMessage(messaging, payload => {
+    const title = payload.data?.title || payload.notification?.title || "Diecast.scape Admin";
+    const body = payload.data?.body || payload.notification?.body || "New Accessories order update.";
+    serviceWorkerRegistration.showNotification(title, {
+      body,
+      icon: "/favicon/favicon-96x96.png",
+      badge: "/favicon/favicon-96x96.png",
+      data: { url: payload.data?.url || "/admin/dashboard.html#accessoriesOrders" },
+      tag: payload.data?.orderId || "accessories-order"
+    }).then(() => {
+      showStatus("New order notification received.");
+    }).catch(error => {
+      console.error("Could not display foreground notification:", error);
+      showStatus("Browser could not display notification: " + (error.message || "unknown error"), true);
+    });
+  });
+  foregroundListenerRegistered = true;
 }
 async function saveToken(token, user) {
   const idToken = await user.getIdToken();
@@ -24,6 +61,19 @@ async function saveToken(token, user) {
   const result = await response.json();
   if (!response.ok || !result.ok) throw new Error(result.error || "Could not save this browser.");
 }
+
+// Reconnect foreground delivery after a dashboard reload. Permission is never
+// requested automatically; the admin must enable it using the button below.
+onAuthStateChanged(auth, async user => {
+  if (!user || !("Notification" in window) || Notification.permission !== "granted" ||
+      !("serviceWorker" in navigator)) return;
+  try {
+    await attachForegroundListener();
+  } catch (error) {
+    console.warn("Could not reconnect foreground notifications:", error);
+  }
+});
+
 button?.addEventListener("click", async () => {
   button.disabled = true;
   try {
@@ -35,38 +85,12 @@ button?.addEventListener("click", async () => {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") throw new Error("Notifications are blocked. Allow them in your browser settings.");
     const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
-    const app = getApps()[0] || initializeApp({
-      apiKey: "AIzaSyAVhJ8wvmK9dv7ohG5jnGGETWJsEiRFrVs",
-      authDomain: "diecastscape.firebaseapp.com",
-      projectId: "diecastscape",
-      storageBucket: "diecastscape.firebasestorage.app",
-      messagingSenderId: "701890525745",
-      appId: "1:701890525745:web:b0a46856995c7f5eb73310"
-    });
-    const messaging = getMessaging(app);
+    const messaging = getMessagingInstance();
     const token = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY, serviceWorkerRegistration: registration });
     if (!token) throw new Error("Firebase did not return a browser notification token.");
     await saveToken(token, user);
-
-    if (!foregroundListenerRegistered) {
-      onMessage(messaging, payload => {
-        const title = payload.data?.title || payload.notification?.title || "Diecast.scape Admin";
-        const body = payload.data?.body || payload.notification?.body || "New Accessories order update.";
-        registration.showNotification(title, {
-          body,
-          icon: "/favicon/favicon-96x96.png",
-          badge: "/favicon/favicon-96x96.png",
-          data: { url: payload.data?.url || "/admin/dashboard.html#accessoriesOrders" },
-          tag: payload.data?.orderId || "accessories-order"
-        }).then(() => {
-          showStatus("Message received; browser accepted the notification request.");
-        }).catch(error => {
-          console.error("Could not display foreground notification:", error);
-          showStatus("Browser could not display notification: " + (error.message || "unknown error"), true);
-        });
-      });
-      foregroundListenerRegistered = true;
-    }
+    serviceWorkerRegistration = registration;
+    await attachForegroundListener(registration);
     showStatus("Notifications enabled on this browser.");
   } catch (error) {
     console.error("Admin push setup:", error);
