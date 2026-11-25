@@ -725,7 +725,7 @@ async function refreshStockManagement() {
 function readManualCustomer(){
   return {
     name:$("stockCustomerName")?.value.trim()||"",
-    phoneNumber:$("stockCustomerPhone")?.value.replace(/\\D/g,"")||"",
+    phoneNumber:$("stockCustomerPhone")?.value.replace(/\D/g,"")||"",
     address:$("stockCustomerAddress")?.value.trim()||"",
     city:$("stockCustomerCity")?.value.trim()||"",
     state:$("stockCustomerState")?.value.trim()||"",
@@ -737,7 +737,7 @@ function manualCustomerIsValid(){
   const c=readManualCustomer();
   return c.name.length>=2&&c.phoneNumber.length===10&&
     c.address.length>=5&&c.city.length>=2&&c.state.length>=2&&
-    c.postOffice.length>=2&&/^\\d{6}$/.test(c.pincode);
+    c.postOffice.length>=2&&/^\d{6}$/.test(c.pincode);
 }
 
 function renderOrderReview(order, productMap, stockPlan) {
@@ -1112,7 +1112,7 @@ async function confirmAccessoryStockOrder() {
     setMessage($("stockOrderStatus"),"Complete all delivery details. Phone must be 10 digits and pincode must be 6 digits.","error");
     return;
   }
-  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(estimatedDispatchISO)){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(estimatedDispatchISO)){
     setMessage($("stockOrderStatus"),"Select an Estimated Dispatch Date before confirming.","error");
     return;
   }
