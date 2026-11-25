@@ -137,13 +137,13 @@
      BOOKED ORDERS CARD
 ================================================== -->
 
-<div class="dash-card" hidden>
+<div class="dash-card">
 
   <div class="dash-top">
 
     <h3>Diorama Orders</h3>
 
-    <button onclick="openSection('dioramaOrders')">
+    <button type="button" onclick="openSection('dioramaOrders')">
       View
     </button>
 
@@ -939,243 +939,16 @@
 </div>
 
 <!-- ==================================================
-     BOOKED ORDERS SECTION
+     DIORAMA ORDERS SECTION
+     Frontend placeholder for the new system.
 ================================================== -->
-
-<div
-  id="section-dioramaOrders"
-  class="section-panel booked-orders-section"
-  hidden
->
-
+<div id="section-dioramaOrders" class="section-panel">
   <div class="section-top">
-
-    <h3>Booked Orders</h3>
-
-    <div class="btn-row">
-
-      <button onclick="refreshBookedOrders()">
-        Refresh
-      </button>
-
-      <button
-        id="bookedOrdersAddBtn"
-        onclick="toggleBookedOrderForm()"
-      >
-        + Add
-      </button>
-
-    </div>
-
+    <h3>Diorama Orders</h3>
   </div>
-
   <div class="border-top"></div>
-
-  
-    <!-- ==================================================
-       DIORAMA BOOKINGS
-  ================================================== -->
-
-  <h4 class="booked-form-heading">Diorama Bookings</h4>
-
-  <div id="bookedOrdersList">
-
-    <div class="product-list-loading">
-      Loading Diorama bookings...
-    </div>
-
-  </div>
-
-
-  <!-- ADD / EDIT ORDER FORM -->
-
-  <div
-    id="add-bookedOrders"
-    class="add-wrap booked-order-form-wrap"
-  >
-
-    <div id="bookedOrderForm">
-
-      <h4
-        id="bookedOrderEditModeBar"
-        class="edit-mode-bar booked-edit-mode"
-        style="display:none;"
-      >
-        Adding Order
-      </h4>
-
-
-      <h4 class="booked-form-heading">
-        Order Details
-      </h4>
-
-
-      <!-- ORDER ID -->
-
-      <label for="bo-orderId">
-        Order ID
-      </label>
-
-      <input
-        id="bo-orderId"
-        type="text"
-        placeholder="Generating order ID..."
-        readonly
-      >
-
-      <small class="booked-field-note">
-        Automatically generated. This ID cannot be edited.
-      </small>
-
-
-      <!-- BOOKING DATE -->
-
-      <label for="bo-bookedDate">
-        Booking Date
-      </label>
-
-      <input
-        id="bo-bookedDate"
-        type="date"
-        required
-      >
-
-
-      
-<!-- DESIGN SELECTION -->
-<label for="bo-design">Design</label>
-
-<select id="bo-design" required>
-  <option value="">Select design status</option>
-  <option value="Confirmed Design">Confirmed Design</option>
-  <option value="Custom Design">Custom Design</option>
-  <option value="Custom Design Confirmed">Custom Design Confirmed</option>
-  <option value="Accessories and Diorama Order">Accessories and Diorama Order</option>
-</select>
-
-<!-- MULTIPLE PRODUCTS -->
-<label>Products</label>
-
-<div id="bo-productsList" class="bo-products-list"></div>
-
-<button
-  type="button"
-  class="bo-add-product-btn"
-  onclick="addBookedProductRow()"
->
-  + Add Another Product
-</button>
-
-<small class="booked-field-note">
-  Select each product and its quantity. You can add multiple products to one order.
-</small>
-
-      <!-- SHIPPING DATE -->
-
-      <label for="bo-shippingDate">
-        Expected Shipping Date
-      </label>
-
-      <input
-        id="bo-shippingDate"
-        type="date"
-        required
-      >
-
-
-      <!-- STATUS -->
-
-      <label for="bo-status">
-        Order Progress
-      </label>
-
-      <select id="bo-status" required>
-
-        <option value="Pending">Pending</option>
-
-        <option value="Next in Work">
-          Next in Work
-        </option>
-
-        <option value="In Progress">
-          In Progress
-        </option>
-
-        <option value="Ready to Dispatch">
-          Ready to Dispatch
-        </option>
-
-        <option value="Dispatched">
-          Dispatched
-        </option>
-
-      </select>
-
-
-      <!-- DISPATCHED DATE -->
-
-      <label for="bo-dispatchedDate">
-        Dispatched Date
-      </label>
-
-      <input
-        id="bo-dispatchedDate"
-        type="date"
-      >
-
-
-      <!-- FORM MESSAGE -->
-
-      <div
-        id="bo-saveMsg"
-        class="booked-save-message"
-        role="status"
-      ></div>
-
-
-      <!-- LOADER -->
-
-      <div
-        id="bo-saveLoader"
-        class="booked-save-loader"
-      >
-        Saving order...
-      </div>
-
-
-      <!-- FORM BUTTONS -->
-
-      <div class="booked-form-actions">
-
-        <button
-          type="button"
-          id="bo-saveBtn"
-          onclick="saveBookedOrder()"
-        >
-          Book Order &amp; Copy Message
-        </button>
-
-        <button
-          type="button"
-          class="booked-clear-btn"
-          onclick="resetBookedOrderForm()"
-        >
-          Clear Form
-        </button>
-
-        <button
-          type="button"
-          class="booked-cancel-btn"
-          onclick="cancelBookedOrderForm()"
-        >
-          Cancel
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
+  <div id="dioramaOrdersNewRoot"></div>
+</div>
 
 </div>
 
@@ -1188,7 +961,6 @@
   src="/assets/js/dashboard/admin-auth.js"></script>
 
 <script type="module"src="/assets/js/firebase-init.js"></script>
-<!-- Diorama Booked Orders admin script paused; legacy file and records are preserved. -->
 <script type="module" src="/assets/js/dashboard/accessories-orders.js"></script>
 <script type="module" src="/assets/js/dashboard/dashboard.js"></script>
 <script type="module" src="/assets/js/dashboard/main-products.js"></script>
