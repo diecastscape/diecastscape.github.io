@@ -3,6 +3,7 @@ import { getMessaging, getToken, onMessage, isSupported } from "https://www.gsta
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+const ADMIN_UID = "urSr9gyhwBMKBSmxKC5LRRnKW1P2";
 const VAPID_PUBLIC_KEY = "BOCXTZg8PFcXSCuL4zKJ-SbZ_TrrMI3m8cbWwNRas7K7DluV21sdC7-WH8nwMgy3Rgix-luYtOv_uedUAITgpek";
 const button = document.getElementById("enableAdminNotifications");
 const testButton = document.getElementById("sendAdminTestNotification");
@@ -56,7 +57,7 @@ async function saveToken(token, user) {
   const response = await fetch("/api/admin/push-token", {
     method: "POST",
     headers: { "content-type": "application/json", authorization: "Bearer " + idToken },
-    body: JSON.stringify({ token })
+    body: JSON.stringify({ token, ownerUid: user.uid })
   });
   const result = await response.json();
   if (!response.ok || !result.ok) throw new Error(result.error || "Could not save this browser.");
@@ -65,7 +66,7 @@ async function saveToken(token, user) {
 // Reconnect foreground delivery after a dashboard reload. Permission is never
 // requested automatically; the admin must enable it using the button below.
 onAuthStateChanged(auth, async user => {
-  if (!user || !("Notification" in window) || Notification.permission !== "granted" ||
+  if (!user || user.uid !== ADMIN_UID || !("Notification" in window) || Notification.permission !== "granted" ||
       !("serviceWorker" in navigator)) return;
   try {
     await attachForegroundListener();
@@ -78,7 +79,7 @@ button?.addEventListener("click", async () => {
   button.disabled = true;
   try {
     const user = auth.currentUser;
-    if (!user) throw new Error("Please log in to the admin dashboard again.");
+    if (!user || user.uid !== ADMIN_UID) throw new Error("Only the authorized admin account can enable notifications.");
     if (!("Notification" in window) || !("serviceWorker" in navigator) || !(await isSupported())) {
       throw new Error("This browser does not support web push notifications.");
     }
@@ -104,7 +105,7 @@ testButton?.addEventListener("click", async () => {
   testButton.disabled = true;
   try {
     const user = auth.currentUser;
-    if (!user) throw new Error("Please log in to the admin dashboard again.");
+    if (!user || user.uid !== ADMIN_UID) throw new Error("Only the authorized admin account can enable notifications.");
     if (!("Notification" in window) || Notification.permission !== "granted") throw new Error("Please enable browser notifications first.");
     const idToken = await user.getIdToken();
     const response = await fetch("/api/admin/test-push", { method: "POST", headers: { authorization: "Bearer " + idToken } });
