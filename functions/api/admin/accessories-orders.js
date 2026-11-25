@@ -93,7 +93,7 @@ async function createManualOrder(firebase,body){
  const counterPath="orderCounters/accessories",legacyCounterPath="bookedOrderCounters/accessoryOrderIdSequence";
  for(let attempt=1;attempt<=4;attempt++){
   const counter=await firestoreGet(firebase,counterPath),legacy=await firestoreGet(firebase,legacyCounterPath);
-  const highestDocs=counter||legacy?[]:await firestoreListCollection(firebase,"Orders");
+  const highestDocs=await firestoreListCollection(firebase,"Orders");
   let highest=1000;
   for(const d of highestDocs){const m=String(d.fields.orderId||"").match(/^DS-A(\d+)$/);if(m)highest=Math.max(highest,Number(m[1])||1000);}
   const docs=await firestoreBatchGet(firebase,[markerPath,counterPath,legacyCounterPath,...usedDocs.map(d=>"accessoriesProducts/"+encodeURIComponent(d.name.split("/").pop()))]);
