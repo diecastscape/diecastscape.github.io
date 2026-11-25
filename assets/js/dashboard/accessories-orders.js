@@ -16,11 +16,15 @@ function renderCard(order){
  const dispatched=order.progressStage===4;
  const stockReview=order.progressStage===0;
  const customer=order.customer||{};
- const products=order.items.map(item=>{
-  const pieces=item.packQuantity===null?"Combo set":(item.packLabel||((Number(item.packQuantity)||0)+" pieces/set"));
-  const totalPieces=item.packQuantity===null?"—":Number(item.packQuantity||0)*Number(item.selectedQuantity||0);
+ const checklist=Array.isArray(order.packingChecklist)?order.packingChecklist:[];
+ const products=order.items.map((item,index)=>{
+  const isCombo=item.packQuantity===null;
+  const pieces=isCombo?"Combo set":(item.packLabel||((Number(item.packQuantity)||0)+" pieces/set"));
+  const required=isCombo?Number(item.selectedQuantity||0):Number(item.packQuantity||0)*Number(item.selectedQuantity||0);
+  const unit=isCombo?"sets":"pcs",saved=checklist[index]||{},packed=Number(saved.packedQuantity)||0;
   return '<div class="ao-item"><div><strong>'+esc(item.productName)+'</strong>'+(item.subtitle?'<small>'+esc(item.subtitle)+'</small>':"")+
-   '<small>'+esc(pieces)+' × '+esc(item.selectedQuantity)+' sets · '+esc(totalPieces)+' pcs to pack</small></div><div class="ao-item-price">'+money(item.lineTotal)+'</div></div>';
+   '<small>'+esc(pieces)+' × '+esc(item.selectedQuantity)+' sets · '+esc(required)+' '+unit+' to pack</small></div><div class="ao-item-price">'+money(item.lineTotal)+'</div></div>'+
+   (!dispatched&&!stockReview?'<div class="ao-pack-row"><label>'+esc(item.productName)+' — packed '+unit+'<input type="number" min="0" max="'+required+'" step="1" id="ao-pack-'+esc(order.orderId)+'-'+index+'" value="'+packed+'"></label><label class="ao-pack-check"><input type="checkbox" id="ao-pack-done-'+esc(order.orderId)+'-'+index+'" '+(saved.complete===true?"checked":"")+'> Complete</label></div>':(saved.complete===true?'<small class="ao-pack-done-label">Packing complete</small>':""));
  }).join("");
  const address=[customer.address,customer.city,customer.state,customer.postOffice,customer.pincode].filter(Boolean).join(", ");
  return '<article class="ao-card '+(dispatched?"ao-dispatched":"")+'"><div class="ao-head"><div><small>ACCESSORIES ORDER</small><h4>'+esc(order.orderId)+'</h4></div><span class="ao-stage">'+esc(order.progress)+'</span></div>'+
@@ -31,7 +35,7 @@ function renderCard(order){
  '<details class="ao-private"><summary>See Full Details</summary><div><b>Name:</b> '+esc(customer.name||"—")+'<br><b>Phone:</b> '+esc(customer.phoneNumber||"—")+'<br><b>Address:</b> '+esc(address||"—")+'</div></details>'+
  (dispatched?'<div class="ao-tracking">Tracking ID: <strong>'+esc(order.trackingId||"—")+'</strong></div>':
  stockReview?'<div class="ao-review-action"><p>Review the required pieces and available stock before accepting. This action deducts stock and cannot be undone.</p><button type="button" onclick="acceptAccessoriesStockReview(\''+esc(order.orderId)+'\')">Accept Order &amp; Deduct Stock</button></div>':
- '<div class="ao-controls"><label>Order progress<select id="ao-stage-'+esc(order.orderId)+'">'+stages.map((stage,i)=>'<option value="'+(i+1)+'" '+(order.progressStage===i+1?"selected":"")+'>'+stage+'</option>').join("")+'</select></label><label>India Post tracking ID<input id="ao-track-'+esc(order.orderId)+'" value="'+esc(order.trackingId||"")+'" placeholder="Required before dispatch"></label><button type="button" onclick="saveAccessoriesAdminOrder(\''+esc(order.orderId)+'\')">Save Progress</button></div>')+
+ '<div class="ao-packing-actions"><button type="button" onclick="saveAccessoriesPackingChecklist(\''+esc(order.orderId)+'\')">Save Packing Checklist</button></div><div class="ao-controls"><label>Order progress<select id="ao-stage-'+esc(order.orderId)+'">'+stages.map((stage,i)=>'<option value="'+(i+1)+'" '+(order.progressStage===i+1?"selected":"")+'>'+stage+'</option>').join("")+'</select></label><label>India Post tracking ID<input id="ao-track-'+esc(order.orderId)+'" value="'+esc(order.trackingId||"")+'" placeholder="Required before dispatch"></label><button type="button" onclick="saveAccessoriesAdminOrder(\''+esc(order.orderId)+'\')">Save Progress</button></div>')+
  '</article>';
 }
 window.loadAccessoriesAdminOrders=async function(){
@@ -45,6 +49,16 @@ window.loadAccessoriesAdminOrders=async function(){
    (dispatched.length?dispatched.map(renderCard).join(""):'<div class="booked-empty-state">No dispatched Accessories orders yet.</div>');
  }catch(error){console.error(error);root.innerHTML='<div class="booked-error-state">'+esc(error.message)+'</div>';}
  finally{if(refresh)refresh.disabled=false;}
+};
+window.saveAccessoriesPackingChecklist=async function(orderId){
+ if(!/^DS-A\\d{4,}$/.test(orderId))return;
+ const card=[...document.querySelectorAll(".ao-card")].find(node=>node.querySelector(".ao-head h4")?.textContent===orderId);
+ if(!card)return;
+ const rows=[...card.querySelectorAll('[id^="ao-pack-'+CSS.escape(orderId)+'-"]')].filter(node=>!node.id.startsWith("ao-pack-done-")).map((input,index)=>({packedQuantity:Number(input.value),complete:card.querySelector("#ao-pack-done-"+CSS.escape(orderId)+"-"+index)?.checked===true}));
+ const button=[...card.querySelectorAll("button")].find(node=>node.textContent.includes("Save Packing Checklist"));
+ if(button){button.disabled=true;button.textContent="Saving…";}
+ try{await request({action:"savePackingChecklist",orderId,rows});alert("Packing checklist saved.");await window.loadAccessoriesAdminOrders();}
+ catch(error){alert(error.message||"Could not save packing checklist.");if(button){button.disabled=false;button.textContent="Save Packing Checklist";}}
 };
 window.saveAccessoriesAdminOrder=async function(orderId){
  const stage=Number(document.getElementById("ao-stage-"+orderId)?.value);
