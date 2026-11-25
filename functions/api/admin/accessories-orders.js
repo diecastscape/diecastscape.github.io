@@ -26,9 +26,13 @@ async function sha256(value){
  return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,"0")).join("");
 }
 function validCustomer(c){
- const fields=["name","phoneNumber","address","city","state","postOffice","pincode"];
- for(const key of fields)if(!String(c?.[key]||"").trim())return false;
- return /^\d{10}$/.test(String(c.phoneNumber).replace(/\D/g,""))&&/^\d{6}$/.test(String(c.pincode).trim());
+ return typeof c?.name==="string"&&c.name.trim().length>=2&&
+  typeof c.phoneNumber==="string"&&/^\d{10}$/.test(c.phoneNumber.replace(/\D/g,""))&&
+  typeof c.address==="string"&&c.address.trim().length>=5&&
+  typeof c.city==="string"&&c.city.trim().length>=2&&
+  typeof c.state==="string"&&c.state.trim().length>=2&&
+  typeof c.postOffice==="string"&&c.postOffice.trim().length>=2&&
+  typeof c.pincode==="string"&&/^\d{6}$/.test(c.pincode.trim());
 }
 async function createManualOrder(firebase,body){
  const rawText=String(body.rawText||"").trim(),customer=body.customer||{},dispatch=String(body.expectedDispatchDate||"");
@@ -59,6 +63,21 @@ async function createManualOrder(firebase,body){
   itemRows.push({code,qty,setSize,unitPrice,lineTotal,isCombo,name:String(item.name||"").slice(0,160),checkoutCode:String(item.fullCode||"").toUpperCase()});
  }
  if(money2(calculated)!==money2(subtotal))return {status:400,error:"Product total does not match the item lines."};
+ const rawCodes=[...rawText.matchAll(/#([A-Z]{2})(\\d{2})(\\d{2})\\b/gi)];
+ const rawPrices=[...rawText.matchAll(/₹\\s*([\\d,]+(?:\\.\\d{1,2})?)\\s*[×x]\\s*(\\d+)\\s*=\\s*₹?\\s*([\\d,]+(?:\\.\\d{1,2})?)/gi)];
+ if(rawCodes.length!==itemRows.length||rawPrices.length!==itemRows.length)return {status:400,error:"The pasted WhatsApp message does not match the parsed order lines."};
+ for(let i=0;i<itemRows.length;i++){
+  const item=itemRows[i],code=rawCodes[i],price=rawPrices[i];
+  const rawCode="#"+code[1].toUpperCase()+code[2]+code[3];
+  if(rawCode!==item.checkoutCode||Number(code[2])!==item.setSize||Number(code[3])!==item.qty||
+    money2(Number(price[1].replace(/,/g,"")))!==money2(item.unitPrice)||
+    Number(price[2])!==item.qty||money2(Number(price[3].replace(/,/g,"")))!==money2(item.lineTotal))
+   return {status:400,error:"The parsed order lines do not match the WhatsApp message. Check the order again."};
+ }
+ const amountFor=label=>{const match=rawText.match(new RegExp(label+"\\\\s*:\\\\s*₹?\\\\s*([\\\\d,]+(?:\\\\.\\\\d{1,2})?)","i"));return match?Number(match[1].replace(/,/g,"")):NaN;};
+ if(money2(amountFor("Product Total"))!==money2(subtotal)||money2(amountFor("Shipping"))!==money2(shipping)||money2(amountFor("Order Total"))!==money2(grandTotal))
+  return {status:400,error:"The WhatsApp order totals do not match the parsed order."};
+
  const productDocs=await firestoreListCollection(firebase,"accessoriesProducts");
  const byCode=new Map();
  for(const doc of productDocs){
