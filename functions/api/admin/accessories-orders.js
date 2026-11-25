@@ -33,7 +33,7 @@ function safeOrder(doc){
   })):[],
   subtotal:Number(f.subtotal)||0,shipping:Number(f.shipping)||0,grandTotal:Number(f.grandTotal)||0,
   paymentStatus:String(f.paymentStatus||""),razorpayPaymentId:String(f.razorpayPaymentId||""),
-  trackingId:String(f.trackingId||""),dispatchedAt:f.dispatchedAt||null,stockReviewRequired:f.stockReviewRequired===true
+  trackingId:String(f.trackingId||""),dispatchedAt:f.dispatchedAt||null,stockReviewRequired:f.stockReviewRequired===true,packingChecklist:Array.isArray(f.packingChecklist)?f.packingChecklist.map(row=>({packedQuantity:Number(row.packedQuantity)||0,complete:row.complete===true})):[]
  };
 }
 export async function onRequestPost({request,env}){
@@ -90,6 +90,29 @@ export async function onRequestPost({request,env}){
     catch(error){if(!/ABORTED|FAILED_PRECONDITION|ALREADY_EXISTS|409/i.test(String(error?.message||error))||attempt===4)throw error;}
    }
    return jsonResponse({ok:false,error:"Could not safely accept the order. Refresh and try again."},409);
+  }
+  if(action==="savePackingChecklist"){
+   const orderId=String(body.orderId||"").trim(),rows=body.rows;
+   if(!/^DS-A\\d{4,}$/.test(orderId)||!Array.isArray(rows))return jsonResponse({ok:false,error:"Invalid packing checklist."},400);
+   const order=await firestoreGet(firebase,"Orders/"+orderId);
+   if(!order)return jsonResponse({ok:false,error:"Order not found."},404);
+   if(order.fields.stockReviewRequired===true)return jsonResponse({ok:false,error:"Accept the stock review before packing this order."},409);
+   if(Number(order.fields.progressStage)===4||String(order.fields.progress||"")==="Dispatched")return jsonResponse({ok:false,error:"This order has already been dispatched."},409);
+   const items=Array.isArray(order.fields.items)?order.fields.items:[];
+   if(rows.length!==items.length)return jsonResponse({ok:false,error:"Packing checklist does not match the order items. Refresh and try again."},400);
+   const checklist=[];
+   for(let i=0;i<items.length;i++){
+    const item=items[i]||{},row=rows[i]||{};
+    const isCombo=item.packQuantity===null||item.packQuantity===undefined;
+    const required=isCombo?Number(item.selectedQuantity):Number(item.packQuantity)*Number(item.selectedQuantity);
+    const packed=Number(row.packedQuantity);
+    if(!Number.isInteger(required)||required<1||!Number.isInteger(packed)||packed<0||packed>required)return jsonResponse({ok:false,error:"Enter a valid packed quantity for every item. Packed quantity cannot exceed the required amount."},400);
+    if(row.complete===true&&packed!==required)return jsonResponse({ok:false,error:"Mark an item complete only when its packed quantity matches the required amount."},400);
+    checklist.push({packedQuantity:packed,complete:row.complete===true,requiredQuantity:required,unit:isCombo?"sets":"pcs",productName:String(item.productName||"Accessory")});
+   }
+   const now=new Date().toISOString(),base=firebase.base.replace("https://firestore.googleapis.com/v1/","");
+   await firestoreCommit(firebase,undefined,[{update:{name:base+"/Orders/"+orderId,fields:firestoreFields({packingChecklist:checklist,packingChecklistUpdatedAt:{__timestamp:now},updatedAt:{__timestamp:now}})},updateMask:{fieldPaths:["packingChecklist","packingChecklistUpdatedAt","updatedAt"]},currentDocument:{updateTime:order.updateTime}}]);
+   return jsonResponse({ok:true,packingChecklist:checklist});
   }
   if(action==="update"){
    const orderId=String(body.orderId||"").trim(),stage=Number(body.progressStage),trackingId=String(body.trackingId||"").trim();
