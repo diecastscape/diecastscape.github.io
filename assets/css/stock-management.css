@@ -110,6 +110,18 @@
 }
 
 
+/* Mandatory delivery details — manual Accessories orders */
+.sm-customer-fields {
+  margin: 12px 0 18px;
+  padding: 14px;
+  border: 1px solid #dce5ed;
+  border-radius: 11px;
+  background: #f8fafc;
+}
+.sm-customer-fields .sm-label:first-child { margin-top: 0; }
+.sm-customer-fields .sm-textarea { min-height: 82px; background: #fff; }
+.sm-customer-fields .sm-dispatch-date-input { margin-bottom: 2px; }
+
 /* Manual Estimated Dispatch Date — Accessories Order Reader */
 .sm-dispatch-date-field {
   margin-top: 16px;
