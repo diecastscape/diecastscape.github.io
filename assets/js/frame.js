@@ -48,13 +48,12 @@ function getCartItemCount() {
 
 /* =========================================
    FRAME SHIPPING
-   1–2 frames: ₹75
-   3+ frames: FREE
+   Shipping charges apply to all Frames orders.
 ========================================= */
 
 function getShipping(count) {
   if (count <= 0) return 0;
-  return count >= 3 ? 0 : 75;
+  return 75;
 }
 
 
@@ -241,19 +240,8 @@ function updateFrameOfferBar(count) {
 
   if (count <= 0) {
     offerCount.textContent = "Add frames to your cart";
-    offerText.textContent = "Add 3 frames to unlock FREE SHIPPING";
+    offerText.textContent = "Get 20% OFF on 6+ frames";
     progress.style.width = "0%";
-    return;
-  }
-
-  if (count < 3) {
-    const remaining = 3 - count;
-
-    offerCount.textContent = `${count} / 3 Frames`;
-    offerText.textContent =
-      `Add ${remaining} more frame${remaining === 1 ? "" : "s"} to unlock FREE SHIPPING`;
-
-    progress.style.width = `${(count / 3) * 100}%`;
     return;
   }
 
@@ -262,14 +250,14 @@ function updateFrameOfferBar(count) {
 
     offerCount.textContent = `${count} / 6 Frames`;
     offerText.textContent =
-      `Free shipping unlocked! Add ${remaining} more frame${remaining === 1 ? "" : "s"} to get 20% OFF`;
+      `Add ${remaining} more frame${remaining === 1 ? "" : "s"} to get 20% OFF`;
 
     progress.style.width = `${(count / 6) * 100}%`;
     return;
   }
 
   offerCount.textContent = `${count} Frames`;
-  offerText.textContent = "🎉 20% OFF + FREE SHIPPING unlocked";
+  offerText.textContent = "🎉 20% OFF unlocked — shipping charges apply";
   progress.style.width = "100%";
 }
 
@@ -296,8 +284,7 @@ function renderCart() {
   if (popupProductTotal) popupProductTotal.textContent = `₹${productTotal}`;
 
   if (popupShipping) {
-    popupShipping.textContent =
-      count >= 3 ? "FREE" : `₹${shipping}`;
+    popupShipping.textContent = count > 0 ? `₹${shipping}` : "₹0";
   }
 
   if (popupDiscount) {
