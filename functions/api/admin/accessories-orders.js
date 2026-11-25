@@ -15,6 +15,118 @@ async function verifyAdmin(request){
  const data=await response.json();
  return data.users?.some(user=>user.localId===ADMIN_UID)===true;
 }
+
+const COMBO_RECIPES={
+ "#CL00":[["#TR10",8],["#OB06",5],["#DN01",1],["#LJ02",2],["#TC10",10],["#DE02",1],["#FB01",1],["#BR04",3]]
+};
+const money2=n=>Math.round(Number(n)*100);
+async function sha256(value){
+ const bytes=new TextEncoder().encode(value);
+ const digest=await crypto.subtle.digest("SHA-256",bytes);
+ return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+function validCustomer(c){
+ const fields=["name","phoneNumber","address","city","state","postOffice","pincode"];
+ for(const key of fields)if(!String(c?.[key]||"").trim())return false;
+ return /^\\d{10}$/.test(String(c.phoneNumber).replace(/\\D/g,""))&&/^\\d{6}$/.test(String(c.pincode).trim());
+}
+async function createManualOrder(firebase,body){
+ const rawText=String(body.rawText||"").trim(),customer=body.customer||{},dispatch=String(body.expectedDispatchDate||"");
+ if(!rawText||rawText.length>20000)return {status:400,error:"Paste a valid WhatsApp order message."};
+ if(!validCustomer(customer))return {status:400,error:"Complete all delivery details. Enter a valid 10-digit phone number and 6-digit pincode."};
+ if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(dispatch))return {status:400,error:"Select a valid estimated dispatch date."};
+ const normalized=rawText.replace(/\\s+/g," ").trim(),fingerprint=await sha256(normalized);
+ const markerPath="manualOrderDedupes/"+fingerprint;
+ const items=Array.isArray(body.items)?body.items:[];
+ if(!items.length||items.length>40)return {status:400,error:"Order items are missing or invalid."};
+ const subtotal=Number(body.subtotal),shipping=Number(body.shipping),grandTotal=Number(body.grandTotal);
+ if(![subtotal,shipping,grandTotal].every(n=>Number.isFinite(n)&&n>=0)||money2(subtotal+shipping)!==money2(grandTotal))return {status:400,error:"Order totals are invalid."};
+ const grouped=new Map(),itemRows=[];
+ let calculated=0;
+ for(const item of items){
+  const code=String(item.productCode||"").toUpperCase(),qty=Number(item.quantity),setSize=Number(item.piecesPerSet),unitPrice=Number(item.unitPrice),lineTotal=Number(item.lineTotal),isCombo=Boolean(COMBO_RECIPES[code]);
+  if(!/^#[A-Z]{2}\\d{2}$/.test(code)||!Number.isInteger(qty)||qty<1||qty>999||!Number.isFinite(unitPrice)||unitPrice<0||money2(unitPrice*qty)!==money2(lineTotal))return {status:400,error:"An order item has invalid quantity or price."};
+  if(isCombo?setSize!==0:(!Number.isInteger(setSize)||setSize<1||setSize>99))return {status:400,error:"An order item has an invalid pack size."};
+  if(isCombo){
+   for(const [component,pieces] of COMBO_RECIPES[code])grouped.set(component,(grouped.get(component)||0)+pieces*qty);
+  }else grouped.set(code,(grouped.get(code)||0)+setSize*qty);
+  calculated+=lineTotal;
+  itemRows.push({code,qty,setSize,unitPrice,lineTotal,isCombo,name:String(item.name||"").slice(0,160),checkoutCode:String(item.fullCode||"").toUpperCase()});
+ }
+ if(money2(calculated)!==money2(subtotal))return {status:400,error:"Product total does not match the item lines."};
+ const productDocs=await firestoreListCollection(firebase,"accessoriesProducts");
+ const byCode=new Map();
+ for(const doc of productDocs){
+  const code=String(doc.fields.productCode||"").toUpperCase();
+  if(code)byCode.set(code,(byCode.get(code)||[]).concat(doc));
+ }
+ const codes=new Set([...grouped.keys(),...itemRows.map(x=>x.code)]);
+ for(const code of codes)if((byCode.get(code)||[]).length!==1)return {status:409,error:"Product code "+code+" is missing or duplicated. No changes were made."};
+ const usedDocs=[...codes].map(code=>byCode.get(code)[0]);
+ const counterPath="orderCounters/accessories",legacyCounterPath="bookedOrderCounters/accessoryOrderIdSequence";
+ for(let attempt=1;attempt<=4;attempt++){
+  const counter=await firestoreGet(firebase,counterPath),legacy=await firestoreGet(firebase,legacyCounterPath);
+  const highestDocs=counter||legacy?[]:await firestoreListCollection(firebase,"Orders");
+  let highest=1000;
+  for(const d of highestDocs){const m=String(d.fields.orderId||"").match(/^DS-A(\\d+)$/);if(m)highest=Math.max(highest,Number(m[1])||1000);}
+  const docs=await firestoreBatchGet(firebase,[markerPath,counterPath,legacyCounterPath,...usedDocs.map(d=>"accessoriesProducts/"+encodeURIComponent(d.name.split("/").pop()))]);
+  if(docs.has(firebase.base+"/"+markerPath)){
+   const previous=docs.get(firebase.base+"/"+markerPath)?.fields.orderId||"already processed";
+   return {status:409,error:"This exact WhatsApp order was already processed as "+previous+"."};
+  }
+  const freshProducts=new Map();
+  for(const code of codes){
+   const id=byCode.get(code)[0].name.split("/").pop();
+   const fresh=docs.get(firebase.base+"/accessoriesProducts/"+encodeURIComponent(id));
+   if(!fresh||String(fresh.fields.productCode||"").toUpperCase()!==code||fresh.fields.active===false)return {status:409,error:"Product "+code+" changed or is inactive. Refresh stock and try again."};
+   freshProducts.set(code,fresh);
+  }
+  const deductions=[];
+  for(const [code,pieces] of grouped){
+   const p=freshProducts.get(code),stock=Number(p.fields.stock),reserved=Number(p.fields.reservedStock||0);
+   if(!Number.isInteger(stock)||stock<0||!Number.isInteger(reserved)||reserved<0||stock-reserved<pieces)return {status:409,error:"Insufficient or invalid stock for "+code+". No changes were made."};
+   deductions.push({code,doc:p,pieces,stock,after:stock-pieces});
+  }
+  const comboUpdates=[];
+  for(const [comboCode,recipe] of Object.entries(COMBO_RECIPES)){
+   const requested=itemRows.filter(x=>x.code===comboCode).reduce((s,x)=>s+x.qty,0);
+   if(!requested)continue;
+   let before=Infinity,after=Infinity;
+   for(const [code,pieces] of recipe){
+    const p=freshProducts.get(code),stock=Number(p.fields.stock),reserved=Number(p.fields.reservedStock||0),deduct=grouped.get(code)||0;
+    before=Math.min(before,Math.floor((stock-reserved)/pieces));
+    after=Math.min(after,Math.floor((stock-reserved-deduct)/pieces));
+   }
+   if(before<requested)return {status:409,error:"Insufficient combo stock for "+comboCode+"."};
+   comboUpdates.push({productCode:comboCode,stockBefore:before,stockAfter:after});
+  }
+  const previous=Math.max(1000,Number(docs.get(firebase.base+"/"+counterPath)?.fields.lastNumber)||1000,Number(docs.get(firebase.base+"/"+legacyCounterPath)?.fields.lastNumber)||1000,highest);
+  const next=previous+1,orderId="DS-A"+next,now=new Date().toISOString();
+  const savedItems=itemRows.map(item=>{
+   const product=freshProducts.get(item.code),isCombo=item.isCombo;
+   return {productId:product.name.split("/").pop(),productName:String(product.fields.name||item.name||item.code),name:String(product.fields.name||item.name||item.code),subtitle:String(product.fields.subtitle||""),selectedQuantity:item.qty,quantity:item.qty,packQuantity:isCombo?null:item.setSize,packLabel:isCombo?"Combo set":String(product.fields.quantity||("Set of "+item.setSize)),productCode:item.code,checkoutCode:item.checkoutCode,isCombo,piecesPerSet:item.setSize,piecesDeducted:isCombo?0:item.setSize*item.qty,unitPrice:item.unitPrice,lineTotal:item.lineTotal,comboRecipe:isCombo?COMBO_RECIPES[item.code].map(([productCode,pieces])=>({productCode,piecesPerSet:pieces,totalPieces:pieces*item.qty})):[]};
+  });
+  const progressHistory=[{stage:"Order Confirmed",at:{__timestamp:now},note:"Manual Accessories order created by admin"}];
+  const orderFields={orderId,orderType:"Accessories",category:"accessories",orderSource:"admin_manual",bookedAt:{__timestamp:now},bookedDate:now.slice(0,10),expectedDispatchDate:dispatch,progress:"Order Confirmed",progressStage:1,progressHistory,customer:{name:String(customer.name).trim(),address:String(customer.address).trim(),city:String(customer.city).trim(),state:String(customer.state).trim(),postOffice:String(customer.postOffice).trim(),pincode:String(customer.pincode).trim(),phoneNumber:String(customer.phoneNumber).replace(/\\D/g,"")},items:savedItems,subtotal,shipping,grandTotal,paymentMethod:"manual",paymentStatus:"manual",stockReviewRequired:false,trackingId:"",dispatchedAt:null,stockDeductions:deductions.map(d=>({productId:d.doc.name.split("/").pop(),productCode:d.code,productName:String(d.doc.fields.name||d.code),stockBefore:d.stock,piecesDeducted:d.pieces,stockAfter:d.after})),comboStockUpdates:comboUpdates,createdAt:{__timestamp:now},updatedAt:{__timestamp:now}};
+  const base=firebase.base.replace("https://firestore.googleapis.com/v1/","");
+  const writes=[];
+  for(const d of deductions)writes.push({update:{name:d.doc.name,fields:firestoreFields({stock:d.after,stockUpdatedAt:{__timestamp:now}})},updateMask:{fieldPaths:["stock","stockUpdatedAt"]},currentDocument:{updateTime:d.doc.updateTime}});
+  for(const combo of comboUpdates){
+   const p=freshProducts.get(combo.productCode);
+   writes.push({update:{name:p.name,fields:firestoreFields({stock:combo.stockAfter,stockUpdatedAt:{__timestamp:now}})},updateMask:{fieldPaths:["stock","stockUpdatedAt"]},currentDocument:{updateTime:p.updateTime}});
+  }
+  const counterFields={lastNumber:next,updatedAt:{__timestamp:now}};
+  for(const [path,existing] of [[counterPath,docs.get(firebase.base+"/"+counterPath)],[legacyCounterPath,docs.get(firebase.base+"/"+legacyCounterPath)]]){
+   writes.push(existing?{update:{name:existing.name,fields:firestoreFields(counterFields)},updateMask:{fieldPaths:["lastNumber","updatedAt"]},currentDocument:{updateTime:existing.updateTime}}:{update:{name:base+"/"+path,fields:firestoreFields(counterFields)},currentDocument:{exists:false}});
+  }
+  writes.push({update:{name:base+"/Orders/"+orderId,fields:firestoreFields(orderFields)},currentDocument:{exists:false}});
+  writes.push({update:{name:base+"/"+markerPath,fields:firestoreFields({orderId,createdAt:{__timestamp:now}})},currentDocument:{exists:false}});
+  try{await firestoreCommit(firebase,undefined,writes);return {status:200,orderId,stockDeductions:orderFields.stockDeductions,comboStockUpdates:comboUpdates,expectedDispatchDate:dispatch};}
+  catch(error){if(!/ABORTED|FAILED_PRECONDITION|ALREADY_EXISTS|409/i.test(String(error?.message||error))||attempt===4)throw error;}
+ }
+ return {status:409,error:"Could not safely confirm the order. Refresh stock and try again."};
+}
+
 function safeOrder(doc){
  const f=doc.fields||{},customer=f.customer||{};
  return {
@@ -40,6 +152,11 @@ export async function onRequestPost({request,env}){
  try{
   if(!await verifyAdmin(request))return jsonResponse({ok:false,error:"Admin authorization required."},401);
   const body=await request.json(),action=String(body.action||"list"),firebase=await getFirebaseContext(env);
+  if(action==="createManual"){
+   const result=await createManualOrder(firebase,body);
+   if(result.status!==200)return jsonResponse({ok:false,error:result.error},result.status);
+   return jsonResponse({ok:true,...result});
+  }
   if(action==="list"){
    const docs=await firestoreListCollection(firebase,"Orders");
    const orders=docs.filter(doc=>String(doc.fields?.orderType||"").toLowerCase()==="accessories"||String(doc.fields?.orderId||"").startsWith("DS-A")).map(safeOrder);
