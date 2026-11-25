@@ -1298,6 +1298,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
   refreshStockManagement();
   ["stockCustomerName","stockCustomerPhone","stockCustomerAddress","stockCustomerCity","stockCustomerState","stockCustomerPostOffice","stockCustomerPincode"].forEach(id=>$(id)?.addEventListener("input",()=>{
-    if(parsedOrder){const planButton=$("stockConfirmOrderBtn");if(planButton)planButton.disabled=!manualCustomerIsValid()||planButton.title==="Resolve stock issues before confirming.";}
+    if(parsedOrder){const planButton=$("stockConfirmOrderBtn");if(planButton){const stockBlocked=planButton.title==="Resolve stock issues before confirming.";const valid=manualCustomerIsValid();planButton.disabled=!valid||stockBlocked;planButton.title=stockBlocked?"Resolve stock issues before confirming.":(valid?"":"Complete all mandatory delivery details.");}}
   }));
 });
