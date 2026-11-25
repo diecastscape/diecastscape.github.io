@@ -594,6 +594,24 @@
     placeholder="Paste the complete Accessories Order - Diecast.scape message here..."></textarea>
   <small class="sm-help">The final two digits of the checkout code are the set multiplier. The middle two digits are pieces per set. Example: #BR0412 = #BR04 × 12 sets = 48 pieces.</small>
 
+  <h5>Mandatory Delivery Details</h5>
+  <div class="sm-customer-fields">
+    <label class="sm-label" for="stockCustomerName">Full Name</label>
+    <input id="stockCustomerName" class="sm-dispatch-date-input" type="text" minlength="2" maxlength="100" autocomplete="name" required>
+    <label class="sm-label" for="stockCustomerPhone">Phone Number</label>
+    <input id="stockCustomerPhone" class="sm-dispatch-date-input" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel" required>
+    <label class="sm-label" for="stockCustomerAddress">Complete Delivery Address</label>
+    <textarea id="stockCustomerAddress" class="sm-textarea" minlength="5" maxlength="500" autocomplete="street-address" required></textarea>
+    <label class="sm-label" for="stockCustomerCity">City</label>
+    <input id="stockCustomerCity" class="sm-dispatch-date-input" type="text" minlength="2" maxlength="80" autocomplete="address-level2" required>
+    <label class="sm-label" for="stockCustomerState">State</label>
+    <input id="stockCustomerState" class="sm-dispatch-date-input" type="text" minlength="2" maxlength="80" autocomplete="address-level1" required>
+    <label class="sm-label" for="stockCustomerPostOffice">Post Office Name</label>
+    <input id="stockCustomerPostOffice" class="sm-dispatch-date-input" type="text" minlength="2" maxlength="100" required>
+    <label class="sm-label" for="stockCustomerPincode">Pincode</label>
+    <input id="stockCustomerPincode" class="sm-dispatch-date-input" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="postal-code" required>
+  </div>
+
   <button type="button" id="stockCheckOrderBtn" class="sm-primary" onclick="checkAccessoryOrder()">Check Order &amp; Stock</button>
   <div id="stockOrderStatus" class="sm-message" role="status" aria-live="polite"></div>
   <div id="stockOrderReview" aria-live="polite"></div>
