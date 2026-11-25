@@ -5,25 +5,14 @@ import {
   reserveAccessoryStock,releaseAccessoryReservation,releaseExpiredAccessoryReservations
 } from "../../../_lib/accessory-reservations.js";
 
-function validCustomer(customer) {
-  return customer&&typeof customer.name==="string"&&customer.name.trim().length>=2&&
-    typeof customer.address==="string"&&customer.address.trim().length>=5&&
-    typeof customer.city==="string"&&customer.city.trim().length>=2&&
-    typeof customer.state==="string"&&customer.state.trim().length>=2&&
-    typeof customer.postOffice==="string"&&customer.postOffice.trim().length>=2&&
-    typeof customer.pincode==="string"&&/^\d{6}$/.test(customer.pincode)&&
-    typeof customer.phone==="string"&&/^\d{10}$/.test(customer.phone);
-}
 export async function onRequestPost({request,env}) {
   let firebase=null,recordId="";
   try {
     if(!env.RAZORPAY_KEY_ID||!env.RAZORPAY_KEY_SECRET)
       return jsonResponse({error:"Online payment is temporarily unavailable."},503);
-    const body=await request.json(),items=body?.items,customer=body?.customer;
+    const body=await request.json(),items=body?.items;
     if(!Array.isArray(items)||items.length<1||items.length>30)
       return jsonResponse({error:"Your cart is empty or invalid."},400);
-    if(!validCustomer(customer))
-      return jsonResponse({error:"Please enter valid delivery details."},400);
 
     const normalized=[],seen=new Set();
     for(const row of items) {
@@ -37,12 +26,7 @@ export async function onRequestPost({request,env}) {
     await releaseExpiredAccessoryReservations(firebase);
     recordId="DSA"+crypto.randomUUID().replace(/-/g,"").slice(0,24).toUpperCase();
     const reservation=await reserveAccessoryStock(firebase,recordId,normalized,{
-      schemaVersion:2,category:"accessories",paymentStatus:"pending",
-      customer:{
-        name:customer.name.trim(),address:customer.address.trim(),
-        city:customer.city.trim(),state:customer.state.trim(),
-        postOffice:customer.postOffice.trim(),pincode:customer.pincode,phone:customer.phone
-      }
+      schemaVersion:2,category:"accessories",paymentStatus:"pending"
     });
     const productTotal=reservation.productTotal;
     if(productTotal<199) {
@@ -76,11 +60,6 @@ export async function onRequestPost({request,env}) {
       currency:"INR",productTotal,shipping,total,items:reservation.items,
       stockReservations:reservation.stockReservations,
       reservationExpiresAt:reservation.expiresAt,
-      customer:{
-        name:customer.name.trim(),address:customer.address.trim(),
-        city:customer.city.trim(),state:customer.state.trim(),
-        postOffice:customer.postOffice.trim(),pincode:customer.pincode,phone:customer.phone
-      },
       createdAt:{__timestamp:new Date().toISOString()}
     });
     return jsonResponse({

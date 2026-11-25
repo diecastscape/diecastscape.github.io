@@ -13,10 +13,13 @@
       modal.addEventListener("click",event=>{if(event.target===modal||event.target.id==="accessoriesPaymentResultClose")modal.hidden=true;});
     }
     const review=status==="paid_stock_issue";
-    modal.classList.toggle("is-review",review);
-    modal.querySelector("#accessoriesPaymentResultTitle").textContent=review?"Payment Received — Order Under Review":"Payment Successful — Order Confirmed";
-    modal.querySelector("#accessoriesPaymentResultMessage").textContent=review?"Your payment is safely recorded. We are reviewing stock availability and will contact you about the next step.":"Your Accessories order is confirmed. Thank you for shopping with Diecast.scape.";
-    modal.querySelector("#accessoriesPaymentResultOrderId").textContent=orderId||"—";
+    const pending=status==="verification_pending";
+    modal.classList.toggle("is-review",review||pending);
+    modal.querySelector("#accessoriesPaymentResultTitle").textContent=pending?"Payment verification is taking longer":(review?"Payment Received — Order Under Review":"Payment Successful — Order Confirmed");
+    modal.querySelector("#accessoriesPaymentResultMessage").textContent=pending
+      ?"Your payment is safe with us. Verification may take longer. Stock availability may change while we complete the check. We will verify the payment and update your order here. Please do not pay again."
+      :(review?"Your payment is safely recorded. We are reviewing stock availability and will contact you about the next step.":"Your Accessories order is confirmed. Thank you for shopping with Diecast.scape.");
+    modal.querySelector("#accessoriesPaymentResultOrderId").textContent=orderId||"Verification in progress";
     modal.hidden=false;
   }
   function value(id) { return document.getElementById(id)?.value.trim() || ""; }
@@ -88,7 +91,7 @@
           try {
             const verifyResponse=await fetch("/api/accessories/v2/verify-payment",{
               method:"POST",headers:{"content-type":"application/json"},
-              body:JSON.stringify({...paymentResponse,paymentRecordId:order.paymentRecordId})
+              body:JSON.stringify({...paymentResponse,paymentRecordId:order.paymentRecordId,customer})
             });
             const result=await verifyResponse.json();
             if(!verifyResponse.ok||!result.ok) {
@@ -98,11 +101,7 @@
             }
             if(result.orderId) {
               try {
-                const key="diecastscape_completed_orders";
-                const saved=JSON.parse(localStorage.getItem(key)||"[]");
-                const list=Array.isArray(saved)?saved:[];
-                if(!list.includes(result.orderId))list.unshift(result.orderId);
-                localStorage.setItem(key,JSON.stringify(list.slice(0,20)));
+                localStorage.setItem("diecastscape_completed_orders",JSON.stringify([result.orderId]));
               } catch(storageError) {
                 console.warn("Could not save this order on this device:",storageError);
               }
@@ -115,8 +114,7 @@
               button.disabled=true;
               button.textContent="Payment verification pending";
             }
-            alert((error.message||"Payment verification is pending.")+
-              "\nPlease do not pay again. Contact Diecast.scape with your payment ID.");
+            showPaymentResult("verification_pending","");
           } finally {
             if(button && button.textContent==="Payment verification pending") {
               busy=true;

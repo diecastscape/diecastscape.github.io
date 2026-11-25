@@ -50,7 +50,16 @@ async function highestOrderNumber(firebase) {
   }
   return highest;
 }
-async function createPaidOrder(firebase,recordPath,paymentId) {
+function validCustomer(customer) {
+  return customer&&typeof customer.name==="string"&&customer.name.trim().length>=2&&
+    typeof customer.address==="string"&&customer.address.trim().length>=5&&
+    typeof customer.city==="string"&&customer.city.trim().length>=2&&
+    typeof customer.state==="string"&&customer.state.trim().length>=2&&
+    typeof customer.postOffice==="string"&&customer.postOffice.trim().length>=2&&
+    typeof customer.pincode==="string"&&/^\d{6}$/.test(customer.pincode)&&
+    typeof customer.phone==="string"&&/^\d{10}$/.test(customer.phone);
+}
+async function createPaidOrder(firebase,recordPath,paymentId,customer) {
   // Optimistic concurrency: all reads happen outside a transaction. The single
   // Firestore commit is atomic and each changed document has an update-time
   // or exists:false precondition. A conflict causes a fresh read and retry.
@@ -124,7 +133,7 @@ async function createPaidOrder(firebase,recordPath,paymentId) {
     }
 
     const now=new Date().toISOString(),bookedDate=displayDate(dateIST());
-    const dispatchISO=nextDispatchDateIST(),customer=freshRecord.fields.customer||{};
+    const dispatchISO=nextDispatchDateIST();
     const savedProducts=items.map(item=>({
       productId:item.productId,productName:item.name,name:item.name,
       subtitle:item.quantityText||"",selectedQuantity:item.qty,quantity:item.qty,
@@ -258,9 +267,12 @@ export async function onRequestPost({request,env}) {
     const paymentId=String(body?.razorpay_payment_id||"");
     const signature=String(body?.razorpay_signature||"");
     const recordId=String(body?.paymentRecordId||"");
+    const customer=body?.customer;
     if(!/^order_[A-Za-z0-9]+$/.test(orderId)||!/^pay_[A-Za-z0-9]+$/.test(paymentId)||
        !/^DSA[A-F0-9]{24}$/.test(recordId)||!/^[a-f0-9]{64}$/i.test(signature))
       return jsonResponse({ok:false,error:"Payment verification details are invalid."},400);
+    if(!validCustomer(customer))
+      return jsonResponse({ok:false,error:"Please re-enter valid delivery details to complete your paid order."},400);
 
     stage="signature";
     const expected=await hmacHex(env.RAZORPAY_KEY_SECRET,orderId+"|"+paymentId);
@@ -289,7 +301,7 @@ export async function onRequestPost({request,env}) {
 
     stage="order_commit";
     await releaseExpiredAccessoryReservations(firebase);
-    const result=await createPaidOrder(firebase,recordPath,paymentId);
+    const result=await createPaidOrder(firebase,recordPath,paymentId,customer);
     if(result.created) {
       try {
         await sendAdminPushNotification(env,{orderId:result.orderId,amount:result.total});
