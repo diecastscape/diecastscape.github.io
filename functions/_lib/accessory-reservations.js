@@ -2,7 +2,7 @@ import {
   firestoreGet,firestoreBatchGet,firestoreCommit,firestoreFields,decodeValue,firestoreListCollection
 } from "./firebase-rest.js";
 
-export const ACCESSORY_RESERVATION_MS=10*60*1000;
+export const ACCESSORY_RESERVATION_MS=5*60*1000;
 
 export const ACCESSORY_COMBO_RECIPES={
   "#CL00":[
