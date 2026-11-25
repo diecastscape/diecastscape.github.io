@@ -1,4 +1,5 @@
 import {getFirebaseContext,firestoreListCollection,firestoreGet,firestoreBatchGet,firestoreCommit,firestoreFields,jsonResponse} from "../../_lib/firebase-rest.js";
+import {ACCESSORY_COMBO_RECIPES} from "../../_lib/accessory-reservations.js";
 
 const ADMIN_UID="urSr9gyhwBMKBSmxKC5LRRnKW1P2";
 const FIREBASE_API_KEY="AIzaSyAVhJ8wvmK9dv7ohG5jnGGETWJsEiRFrVs";
@@ -16,9 +17,11 @@ async function verifyAdmin(request){
  return data.users?.some(user=>user.localId===ADMIN_UID)===true;
 }
 
-const COMBO_RECIPES={
- "#CL00":[["#TR10",8],["#OB06",5],["#DN01",1],["#LJ02",2],["#TC10",10],["#DE02",1],["#FB01",1],["#BR04",3]]
-};
+const COMBO_RECIPES=Object.fromEntries(
+ Object.entries(ACCESSORY_COMBO_RECIPES).map(([code,recipe])=>[
+  code,recipe.map(row=>[row.productCode,row.pieces])
+ ])
+);
 const money2=n=>Math.round(Number(n)*100);
 async function sha256(value){
  const bytes=new TextEncoder().encode(value);
