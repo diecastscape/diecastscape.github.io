@@ -1107,8 +1107,13 @@ async function proceedOrderWhatsApp() {
   lines.push(\`Shipping: \${shipping === 0 ? "FREE" : "₹" + shipping}\`);
   lines.push(\`Order Total: ₹\${orderTotal}\`);
   const whatsappURL = \`https://wa.me/\${WHATSAPP_NUMBER}?text=\${encodeURIComponent(lines.join("\\n"))}\`;
-  const whatsappTab = window.open(whatsappURL, "_blank", "noopener,noreferrer");
-  if (!whatsappTab) showToast("Please allow pop-ups to continue to WhatsApp.");
+  const whatsappTab = window.open("about:blank", "_blank");
+  if (!whatsappTab) {
+    showToast("Please allow pop-ups to continue to WhatsApp.");
+    return;
+  }
+  whatsappTab.opener = null;
+  whatsappTab.location.href = whatsappURL;
 }
 function clearCartDirectly() {
 
