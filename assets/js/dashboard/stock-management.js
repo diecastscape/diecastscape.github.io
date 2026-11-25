@@ -1,14 +1,11 @@
 
-import { db } from "../firebase-init.js";
+import { db, auth } from "../firebase-init.js";
 
 import {
   collection,
-  doc,
   getDocs,
   query,
-  where,
-  runTransaction,
-  serverTimestamp
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /*
@@ -724,6 +721,25 @@ async function refreshStockManagement() {
    ORDER REVIEW
 ===================================================== */
 
+
+function readManualCustomer(){
+  return {
+    name:$("stockCustomerName")?.value.trim()||"",
+    phoneNumber:$("stockCustomerPhone")?.value.replace(/\\D/g,"")||"",
+    address:$("stockCustomerAddress")?.value.trim()||"",
+    city:$("stockCustomerCity")?.value.trim()||"",
+    state:$("stockCustomerState")?.value.trim()||"",
+    postOffice:$("stockCustomerPostOffice")?.value.trim()||"",
+    pincode:$("stockCustomerPincode")?.value.trim()||""
+  };
+}
+function manualCustomerIsValid(){
+  const c=readManualCustomer();
+  return c.name.length>=2&&c.phoneNumber.length===10&&
+    c.address.length>=5&&c.city.length>=2&&c.state.length>=2&&
+    c.postOffice.length>=2&&/^\\d{6}$/.test(c.pincode);
+}
+
 function renderOrderReview(order, productMap, stockPlan) {
   const review = $("stockOrderReview");
   const confirmButton = $("stockConfirmOrderBtn");
@@ -939,11 +955,11 @@ function renderOrderReview(order, productMap, stockPlan) {
     </p>
   `;
 
-  confirmButton.disabled = !stockPlan.stockOkay;
+  confirmButton.disabled = !stockPlan.stockOkay || !manualCustomerIsValid();
 
-  confirmButton.title = stockPlan.stockOkay
-    ? ""
-    : "Resolve stock issues before confirming.";
+  confirmButton.title = !stockPlan.stockOkay
+    ? "Resolve stock issues before confirming."
+    : (!manualCustomerIsValid() ? "Complete all mandatory delivery details before confirming." : "");
 }
 
 
@@ -1083,499 +1099,111 @@ async function getHighestAccessoryOrderNumber() {
 ===================================================== */
 
 async function confirmAccessoryStockOrder() {
-  const confirmButton = $("stockConfirmOrderBtn");
-  const checkButton = $("stockCheckOrderBtn");
+  const confirmButton=$("stockConfirmOrderBtn");
+  const checkButton=$("stockCheckOrderBtn");
+  if(!confirmButton||confirmButton.disabled||!parsedOrder)return;
 
-  if (!confirmButton || confirmButton.disabled || !parsedOrder) {
+  const order=parsedOrder;
+  const currentText=$("stockOrderMessage")?.value.trim()||"";
+  const estimatedDispatchISO=$("stockEstimatedDispatchDate")?.value||"";
+  const customer=readManualCustomer();
+
+  if(!manualCustomerIsValid()){
+    setMessage($("stockOrderStatus"),"Complete all delivery details. Phone must be 10 digits and pincode must be 6 digits.","error");
+    return;
+  }
+  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(estimatedDispatchISO)){
+    setMessage($("stockOrderStatus"),"Select an Estimated Dispatch Date before confirming.","error");
+    return;
+  }
+  if(currentText!==order.rawText){
+    setMessage($("stockOrderStatus"),"The pasted message changed. Check the order again.","error");
+    confirmButton.disabled=true;
     return;
   }
 
-  const order = parsedOrder;
-  const currentText = $("stockOrderMessage")?.value.trim() || "";
-  const estimatedDispatchISO = $("stockEstimatedDispatchDate")?.value || "";
-
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(estimatedDispatchISO)) {
-    setMessage(
-      $("stockOrderStatus"),
-      "Select an Estimated Dispatch Date before confirming.",
-      "error"
-    );
-    return;
-  }
-
-  if (currentText !== order.rawText) {
-    setMessage(
-      $("stockOrderStatus"),
-      "The pasted message changed. Check the order again.",
-      "error"
-    );
-
-    confirmButton.disabled = true;
-    return;
-  }
-
-  confirmButton.disabled = true;
-
-  if (checkButton) checkButton.disabled = true;
-
-  confirmButton.textContent = "Confirming order…";
-
-  try {
-    const fingerprint = await sha256Hex(
-      order.rawText.replace(/\s+/g, " ").trim()
-    );
-
-    const counterRef = doc(
-      db,
-      COUNTERS_COLLECTION,
-      COUNTER_DOCUMENT
-    );
-
-    const customerRefForId = (orderId) =>
-      doc(db, CUSTOMERS_COLLECTION, orderId);
-
-    const existingOrderRef = doc(
-      db,
-      ORDERS_COLLECTION,
-      `accessory_${fingerprint}`
-    );
-
-    const highestExisting =
-      await getHighestAccessoryOrderNumber();
-
-    /*
-      Resolve every product needed by the order.
-
-      This includes combo component products.
-    */
-
-    const productCodes = getRequiredProductCodes(order);
-    const productRefs = new Map();
-
-    for (const code of productCodes) {
-      const product = await findProductsByCode(code);
-      productRefs.set(code, product.ref);
-    }
-
-    const confirmedAt = new Date();
-    const estimatedDispatchDisplay = toDisplayDate(
-      new Date(`${estimatedDispatchISO}T00:00:00`)
-    );
-
-    const result = await runTransaction(db, async transaction => {
-      /* All reads must happen before writes. */
-
-      const duplicateSnapshot =
-        await transaction.get(existingOrderRef);
-
-      if (duplicateSnapshot.exists()) {
-        throw new Error(
-          `This exact WhatsApp order was already processed as ${duplicateSnapshot.data().orderId}.`
-        );
-      }
-
-      const counterSnapshot =
-        await transaction.get(counterRef);
-
-      const productSnapshots = new Map();
-
-      for (const code of productCodes) {
-        const ref = productRefs.get(code);
-
-        productSnapshots.set(
-          code,
-          await transaction.get(ref)
-        );
-      }
-
-      const previousNumber = counterSnapshot.exists()
-        ? Math.max(
-            FIRST_ORDER_NUMBER,
-            Number(counterSnapshot.data().lastNumber) || FIRST_ORDER_NUMBER
-          )
-        : highestExisting;
-
-      const nextNumber = Math.max(
-        previousNumber,
-        highestExisting,
-        FIRST_ORDER_NUMBER
-      ) + 1;
-
-      const orderId = `${ORDER_PREFIX}${nextNumber}`;
-
-      const customerRef = customerRefForId(orderId);
-
-      const customerSnapshot =
-        await transaction.get(customerRef);
-
-      if (customerSnapshot.exists()) {
-        throw new Error(
-          `Order stock record for ${orderId} already exists. Refresh and try again.`
-        );
-      }
-
-      /*
-        Build fresh product map from transaction snapshots.
-        This is the authoritative live stock data.
-      */
-
-      const liveProductMap = new Map();
-
-      for (const [code, snapshot] of productSnapshots.entries()) {
-        if (!snapshot.exists()) {
-          throw new Error(
-            `Product ${code} was deleted after preview. Run Check Order & Stock again.`
-          );
-        }
-
-        const data = snapshot.data();
-
-        if (
-          String(data.productCode || "").toUpperCase() !== code
-        ) {
-          throw new Error(
-            `Product code changed for ${code}. Run Check Order & Stock again.`
-          );
-        }
-
-        if (data.active === false) {
-          throw new Error(
-            `Product ${code} is now inactive. No changes were made.`
-          );
-        }
-
-        liveProductMap.set(code, {
-          id: snapshot.id,
-          ref: productRefs.get(code),
-          data
-        });
-      }
-
-      /*
-        Recalculate the complete stock plan using live stock.
-      */
-
-      const stockPlan = calculateStockPlan(
-        order,
-        liveProductMap
-      );
-
-      if (!stockPlan.stockOkay) {
-        const insufficient = stockPlan.deductions
-          .filter(item => !item.enough)
-          .map(item =>
-            `${item.productName}: required ${item.piecesDeducted}, available ${item.stockBefore}`
-          );
-
-        const unavailableCombos = stockPlan.comboSummaries
-          .filter(combo =>
-            !combo.validAvailability ||
-            combo.availableBefore < combo.requestedSets
-          )
-          .map(combo =>
-            `${combo.productCode}: requested ${combo.requestedSets} sets, available ${combo.availableBefore}`
-          );
-
-        throw new Error(
-          "Stock changed or is insufficient. No changes were made. " +
-          [...insufficient, ...unavailableCombos].join(" | ") +
-          " Run Check Order & Stock again."
-        );
-      }
-
-      /*
-        Prepare saved order product lines.
-      */
-
-      const savedProducts = order.items.map(item => {
-        const product = liveProductMap.get(item.productCode);
-
-        if (item.isCombo) {
-          return {
-            name: product.data.name || item.name,
-            quantity: item.quantity,
-            productCode: item.productCode,
-            checkoutCode: item.fullCode,
-            isCombo: true,
-            piecesPerSet: 0,
-            piecesDeducted: 0,
-            comboRecipe: COMBO_RECIPES[item.productCode].map(component => ({
-              productCode: component.productCode,
-              piecesPerSet: component.pieces,
-              totalPieces: component.pieces * item.quantity
-            })),
-            unitPrice: item.unitPrice,
-            lineTotal: item.lineTotal
-          };
-        }
-
-        return {
-          name: product.data.name || item.name,
-          quantity: item.quantity,
-          productCode: item.productCode,
-          checkoutCode: item.fullCode,
-          isCombo: false,
-          piecesPerSet: item.piecesPerSet,
-          piecesDeducted: item.piecesRequired,
-          unitPrice: item.unitPrice,
-          lineTotal: item.lineTotal
-        };
-      });
-
-      /*
-        Apply actual component deductions.
-
-        Each product is updated only once, even if it is used
-        by an individual order item and one or more combos.
-      */
-
-      for (const deduction of stockPlan.deductions) {
-        const ref = productRefs.get(deduction.productCode);
-
-        transaction.update(ref, {
-          stock: deduction.stockAfter,
-          stockUpdatedAt: serverTimestamp()
-        });
-      }
-
-      /*
-        Save newly calculated combo stock.
-
-        Do not separately deduct combo stock.
-      */
-
-      const comboStockUpdates = [];
-
-      for (const combo of stockPlan.comboSummaries) {
-        const ref = productRefs.get(combo.productCode);
-
-        transaction.update(ref, {
-          stock: combo.availableAfter,
-          stockUpdatedAt: serverTimestamp()
-        });
-
-        comboStockUpdates.push({
-          productCode: combo.productCode,
-          productName: combo.productName,
-          requestedSets: combo.requestedSets,
-          stockBefore: combo.availableBefore,
-          stockAfter: combo.availableAfter
-        });
-      }
-
-      /* Order counter */
-
-      transaction.set(counterRef, {
-        lastNumber: nextNumber,
-        updatedAt: serverTimestamp()
-      });
-
-      const publicProducts = savedProducts.map(item => ({
-        name: item.name,
-        quantity: item.quantity
-      }));
-
-      /* PUBLIC ORDER: bookedOrders */
-
-      transaction.set(existingOrderRef, {
-        orderId,
-        bookedDate: toDisplayDate(confirmedAt),
-        confirmedAt: serverTimestamp(),
-        design: "Accessories Order",
-        products: publicProducts,
-
-        shippingDate: estimatedDispatchDisplay,
-        estimatedDispatchDate: estimatedDispatchISO,
-
-        status: "Ready to Pack",
-        dispatchedDate: "",
-        hidden: false
-      });
-
-      /* PRIVATE ORDER: orderCustomers */
-
-      transaction.set(customerRef, {
-        orderId,
-        orderType: "Accessories",
-        bookedDate: toDisplayDate(confirmedAt),
-        confirmedAt: serverTimestamp(),
-
-        estimatedDispatchDate: estimatedDispatchISO,
-
-        products: savedProducts,
-
-        productTotal: order.productTotal,
-        shipping: order.shipping,
-        orderTotal: order.orderTotal,
-
-        totalPiecesDeducted: stockPlan.totalPiecesDeducted,
-
-        stockDeductions: stockPlan.deductions.map(item => ({
-          productId: item.productId,
-          productCode: item.productCode,
-          productName: item.productName,
-          stockBefore: item.stockBefore,
-          piecesDeducted: item.piecesDeducted,
-          stockAfter: item.stockAfter
+  confirmButton.disabled=true;
+  if(checkButton)checkButton.disabled=true;
+  confirmButton.textContent="Confirming order…";
+
+  try{
+    const user=auth.currentUser;
+    if(!user)throw new Error("Admin session expired. Sign in again.");
+    const token=await user.getIdToken();
+    const response=await fetch("/api/admin/accessories-orders",{
+      method:"POST",
+      headers:{"content-type":"application/json","authorization":"Bearer "+token},
+      body:JSON.stringify({
+        action:"createManual",
+        rawText:order.rawText,
+        expectedDispatchDate:estimatedDispatchISO,
+        customer,
+        items:order.items.map(item=>({
+          name:item.name,fullCode:item.fullCode,productCode:item.productCode,
+          piecesPerSet:item.piecesPerSet,quantity:item.quantity,
+          unitPrice:item.unitPrice,lineTotal:item.lineTotal
         })),
-
-        comboStockUpdates,
-
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      });
-
-      return {
-        orderId,
-        deductions: stockPlan.deductions,
-        comboStockUpdates
-      };
+        subtotal:order.productTotal,shipping:order.shipping,grandTotal:order.orderTotal
+      })
     });
+    const result=await response.json();
+    if(!response.ok||!result.ok)throw new Error(result.error||"Could not confirm the manual order.");
 
-    /* =================================================
-       SUCCESS MESSAGE
-    ================================================= */
+    const dispatchDisplay=toDisplayDate(new Date(estimatedDispatchISO+"T00:00:00"));
+    const confirmation=
+      "Diecast.scape order confirmed! ✅\n\n"+
+      "Order ID: "+result.orderId+"\n"+
+      "Estimated dispatch: "+dispatchDisplay+"\n\n"+
+      "Track your order progress here:\n"+
+      window.location.origin+"/booked-orders/\n\n"+
+      "Thank you for choosing Diecast.scape!";
 
-    const confirmation =
-      `Diecast.scape order confirmed! ✅\n\n` +
-      `Order ID: ${result.orderId}\n` +
-      `Estimated dispatch: ${estimatedDispatchDisplay}\n\n` +
-      `Track your order progress here:\n` +
-      `${window.location.origin}/booked-orders/\n\n` +
-      `Thank you for choosing Diecast.scape!`;
-
-    const success = $("stockOrderSuccess");
-
-    if (success) {
-      success.style.display = "";
-
-      success.innerHTML = `
+    const success=$("stockOrderSuccess");
+    if(success){
+      success.style.display="";
+      success.innerHTML=`
         <div class="sm-success-card">
           <div class="sm-success-icon">✓</div>
-
-          <h4>Order booked successfully</h4>
-
-          <p>
-            Stock has been updated and the order is saved in Firebase.
-          </p>
-
-          <p>
-            <strong>Estimated dispatch:</strong>
-            ${escapeHTML(estimatedDispatchDisplay)}
-          </p>
-
+          <h4>Manual order booked successfully</h4>
+          <p>Saved in the new Orders system. Stock and the Accessories order counter were updated together.</p>
+          <p><strong>Estimated dispatch:</strong> ${escapeHTML(dispatchDisplay)}</p>
           <small>ORDER ID</small>
-
-          <strong class="sm-generated-id">
-            ${escapeHTML(result.orderId)}
-          </strong>
-
-          <button
-            type="button"
-            id="copyAccessoryOrderIdBtn"
-            class="sm-primary"
-          >
-            Copy order confirmation
-          </button>
-
+          <strong class="sm-generated-id">${escapeHTML(result.orderId)}</strong>
+          <button type="button" id="copyAccessoryOrderIdBtn" class="sm-primary">Copy order confirmation</button>
           <h4>Component Stock Deducted</h4>
-
           <div class="sm-deduction-list">
-            ${result.deductions.map(d => `
-              <div>
-                <span>
-                  ${escapeHTML(d.productName)}
-                  (${escapeHTML(d.productCode)})
-                </span>
-
-                <b>
-                  −${d.piecesDeducted}
-                  · remaining ${d.stockAfter}
-                </b>
-              </div>
+            ${(result.stockDeductions||[]).map(d=>`
+              <div><span>${escapeHTML(d.productName)} (${escapeHTML(d.productCode)})</span><b>−${d.piecesDeducted} · remaining ${d.stockAfter}</b></div>
             `).join("")}
           </div>
-
-          ${result.comboStockUpdates.length ? `
+          ${(result.comboStockUpdates||[]).length?`
             <h4>Updated Combo Availability</h4>
-
             <div class="sm-deduction-list">
-              ${result.comboStockUpdates.map(combo => `
-                <div>
-                  <span>
-                    ${escapeHTML(combo.productName)}
-                    (${escapeHTML(combo.productCode)})
-                  </span>
-
-                  <b>
-                    ${combo.stockBefore} → ${combo.stockAfter} sets
-                  </b>
-                </div>
+              ${result.comboStockUpdates.map(combo=>`
+                <div><span>${escapeHTML(combo.productCode)}</span><b>${combo.stockBefore} → ${combo.stockAfter} sets</b></div>
               `).join("")}
             </div>
-          ` : ""}
-        </div>
-      `;
+          `:""}
+        </div>`;
     }
+    $("copyAccessoryOrderIdBtn")?.addEventListener("click",async()=>{
+      try{await navigator.clipboard.writeText(confirmation);setMessage($("stockOrderStatus"),"Order confirmation copied.","success");}
+      catch{window.prompt("Copy this order confirmation:",confirmation);}
+    });
 
-    $("copyAccessoryOrderIdBtn")?.addEventListener(
-      "click",
-      async () => {
-        try {
-          await navigator.clipboard.writeText(confirmation);
-
-          setMessage(
-            $("stockOrderStatus"),
-            "Order confirmation copied.",
-            "success"
-          );
-        } catch {
-          window.prompt(
-            "Copy this order confirmation:",
-            confirmation
-          );
-        }
-      }
-    );
-
-    setMessage(
-      $("stockOrderStatus"),
-      `Confirmed successfully: ${result.orderId}`,
-      "success"
-    );
-
-    parsedOrder = null;
-
-    $("stockConfirmOrderBtn").disabled = true;
-
+    setMessage($("stockOrderStatus"),"Confirmed successfully: "+result.orderId,"success");
+    parsedOrder=null;
+    confirmButton.disabled=true;
     await refreshStockManagement();
-
-    if (typeof window.loadBookedOrders === "function") {
-      await window.loadBookedOrders();
-    }
-
-  } catch (error) {
-    console.error(
-      "Accessory order confirmation failed:",
-      error
-    );
-
-    setMessage(
-      $("stockOrderStatus"),
-      error.message || "Confirmation failed. No order was confirmed.",
-      "error"
-    );
-
-    parsedOrder = null;
-
-    $("stockConfirmOrderBtn").disabled = true;
-
-  } finally {
-    confirmButton.textContent = "Confirm Order & Update Stock";
-
-    if (checkButton) {
-      checkButton.disabled = false;
-    }
+    if(typeof window.loadAccessoriesAdminOrders==="function")await window.loadAccessoriesAdminOrders();
+  }catch(error){
+    console.error("Manual Accessories order confirmation failed:",error);
+    setMessage($("stockOrderStatus"),error.message||"Confirmation failed. No order was confirmed.","error");
+    confirmButton.disabled=true;
+    parsedOrder=null;
+  }finally{
+    confirmButton.textContent="Confirm Order & Update Stock";
+    if(checkButton)checkButton.disabled=false;
   }
 }
 
@@ -1669,5 +1297,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   refreshStockManagement();
-  
+  ["stockCustomerName","stockCustomerPhone","stockCustomerAddress","stockCustomerCity","stockCustomerState","stockCustomerPostOffice","stockCustomerPincode"].forEach(id=>$(id)?.addEventListener("input",()=>{
+    if(parsedOrder){const planButton=$("stockConfirmOrderBtn");if(planButton)planButton.disabled=!manualCustomerIsValid()||planButton.title==="Resolve stock issues before confirming.";}
+  }));
 });
