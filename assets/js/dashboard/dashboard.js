@@ -328,30 +328,6 @@ if (type === "accessoriesOrders") {
   return;
 }
 
-// ======================================================
-// BOOKED ORDERS SECTION
-// ======================================================
-
-if (type === "dioramaOrders") {
-
-  const bookedList =
-    document.getElementById(
-      "bookedOrdersList"
-    );
-
-  if (bookedList) {
-    bookedList.style.display = "block";
-  }
-
-  if (
-    typeof window.loadBookedOrders === "function"
-  ) {
-    window.loadBookedOrders();
-  }
-
-  return;
-}
-
 let listBox;
 
     if (type === "main") {
