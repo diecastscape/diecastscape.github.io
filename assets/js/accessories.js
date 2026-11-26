@@ -1063,55 +1063,83 @@ function renderCheckoutProducts() {
 async function proceedOrderWhatsApp() {
   const products = getCartProducts();
   if (!products.length) { showToast("Your cart is empty."); return; }
+
   const total = getCartProductTotal();
-  if (total < MIN_CART_VALUE) { showToast(`Minimum order value is ₹${MIN_CART_VALUE}`); return; }
-  if (!window.accessoryStockReady) { showToast("Please wait while we check the latest stock."); return; }
+  if (total < MIN_CART_VALUE) {
+    showToast(`Minimum order value is ₹${MIN_CART_VALUE}`);
+    return;
+  }
+
+  if (!window.accessoryStockReady) {
+    showToast("Please wait while we check the latest stock.");
+    return;
+  }
 
   const encodedItems = [];
+
   for (const item of products) {
     const qty = Math.floor(Number(item.qty) || 0);
     const liveProduct = getCurrentAccessoryProduct(item.id);
-    const productCode = String(liveProduct?.productCode || item.productCode || "").trim().toUpperCase();
+    const productCode = String(
+      liveProduct?.productCode || item.productCode || ""
+    ).trim().toUpperCase();
+
     if (!liveProduct || !/^#[A-Z]{2}\d{2}$/.test(productCode)) {
-      showToast("A product code is missing. Refresh the page and try again."); return;
-    }
-    if (!Number.isInteger(qty) || qty < 1 || qty > 99) {
-      showToast("Each product quantity must be between 1 and 99 sets."); return;
-    }
-    const available = getCurrentAvailableSets(item.id);
-    if (qty > available) {
-      showToast(available > 0 ? `Only ${available} set(s) currently available for ${item.name}.` : `${item.name} is currently out of stock.`);
+      showToast("A product code is missing. Refresh the page and try again.");
       return;
     }
-    encodedItems.push({item, qty, productCode});
+
+    if (!Number.isInteger(qty) || qty < 1 || qty > 99) {
+      showToast("Each product quantity must be between 1 and 99 sets.");
+      return;
+    }
+
+    const available = getCurrentAvailableSets(item.id);
+    if (qty > available) {
+      showToast(
+        available > 0
+          ? `Only ${available} set(s) currently available for ${item.name}.`
+          : `${item.name} is currently out of stock.`
+      );
+      return;
+    }
+
+    encodedItems.push({ item, qty, productCode });
   }
 
   const shipping = getShipping(total);
   const orderTotal = total + shipping;
-  const lines = [
-    "Hello! I would like to place an order for these accessories.",
-    "I prefer to order directly through WhatsApp rather than online payment.",
-    "I will share my delivery details here in chat.",
-    "",
-    "ACCESSORIES"
-  ];
-  encodedItems.forEach(({item, qty, productCode}) => {
+
+  let message =
+    "🔎 *Product Availability Check - Diecast.scape*\\n\\n" +
+    "Hi! Please confirm the current stock availability for these items before I share my delivery details.\\n\\n";
+
+  encodedItems.forEach(({ item, qty, productCode }) => {
     const price = Number(item.price) || 0;
     const fullCode = productCode + String(qty).padStart(2, "0");
-    lines.push(`• ${item.name}`);
-    lines.push(`  ${item.quantityText || "Set"} × ${qty} qty · ${fullCode}`);
-    lines.push(`  ₹${price} × ${qty} = ₹${price * qty}`);
+
+    message += `• ${item.name}\\n`;
+    message += `${item.quantityText || "Set"} × ${qty} qty - ${fullCode}\\n`;
+    message += `₹${price} × ${qty} = ₹${price * qty}\\n\\n`;
   });
-  lines.push("");
-  lines.push(`Product Total: ₹${total}`);
-  lines.push(`Shipping: ${shipping === 0 ? "FREE" : "₹" + shipping}`);
-  lines.push(`Order Total: ₹${orderTotal}`);
-  const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\\n"))}`;
+
+  message +=
+    "━━━━━━━━━━━━━━\\n" +
+    `Product Total : ₹${total}\\n` +
+    `Shipping : ${shipping === 0 ? "FREE" : "₹" + shipping}\\n` +
+    "━━━━━━━━━━━━━━\\n" +
+    `*Order Total : ₹${orderTotal}*\\n\\n` +
+    "*Request:* Please confirm which products are available. I will share my delivery details after stock confirmation.";
+
+  const whatsappURL =
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
   const whatsappTab = window.open("about:blank", "_blank");
   if (!whatsappTab) {
     showToast("Please allow pop-ups to continue to WhatsApp.");
     return;
   }
+
   whatsappTab.opener = null;
   whatsappTab.location.href = whatsappURL;
 }
