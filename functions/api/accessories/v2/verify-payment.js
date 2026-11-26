@@ -86,17 +86,28 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
     const reservedCodes=new Set(reservationRows.map(row=>String(row.productCode||"").toUpperCase()));
     const affectedComboCodes=Object.entries(ACCESSORY_COMBO_RECIPES).filter(([,recipe])=>recipe.some(component=>reservedCodes.has(component.productCode))).map(([comboCode])=>comboCode);
     const listedProducts=await firestoreListCollection(firebase,"accessoriesProducts");
-    const comboDocsByCode=new Map();
+    const comboDocsByCode=new Map(),componentDocsByCode=new Map();
     for(const product of listedProducts) {
       const code=String(product.fields.productCode||"").toUpperCase();
       if(affectedComboCodes.includes(code)) {
         const matches=comboDocsByCode.get(code)||[];matches.push(product);comboDocsByCode.set(code,matches);
       }
+      if(affectedComboCodes.some(comboCode=>ACCESSORY_COMBO_RECIPES[comboCode].some(component=>component.productCode===code))) {
+        const matches=componentDocsByCode.get(code)||[];matches.push(product);componentDocsByCode.set(code,matches);
+      }
     }
     for(const code of affectedComboCodes)if((comboDocsByCode.get(code)||[]).length!==1)throw new Error("COMBO_PRODUCT_MISSING_OR_DUPLICATED:"+code);
+    for(const comboCode of affectedComboCodes)for(const component of ACCESSORY_COMBO_RECIPES[comboCode]) {
+      if((componentDocsByCode.get(component.productCode)||[]).length!==1)
+        throw new Error("COMBO_COMPONENT_MISSING_OR_DUPLICATED:"+component.productCode);
+    }
     const productPaths=reservationRows.map(row=>"accessoriesProducts/"+encodeURIComponent(row.productId));
     const comboPaths=affectedComboCodes.map(code=>"accessoriesProducts/"+encodeURIComponent(comboDocsByCode.get(code)[0].name.split("/").pop()));
-    const paths=[recordPath,sessionPath,counterPath,legacyCounterPath,...productPaths,...comboPaths];
+    const componentPaths=[...new Set(affectedComboCodes.flatMap(comboCode=>ACCESSORY_COMBO_RECIPES[comboCode].map(component=>{
+      const product=componentDocsByCode.get(component.productCode)[0];
+      return "accessoriesProducts/"+encodeURIComponent(product.name.split("/").pop());
+    })))];
+    const paths=[recordPath,sessionPath,counterPath,legacyCounterPath,...productPaths,...comboPaths,...componentPaths];
     const docs=await firestoreBatchGet(firebase,paths);
     const freshRecord=docs.get(firebase.base+"/"+recordPath);
     if(!freshRecord)throw new Error("PAYMENT_RECORD_NOT_FOUND");
@@ -155,8 +166,8 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
       for(const comboCode of affectedComboCodes) {
         let availableAfter=Infinity;
         for(const component of ACCESSORY_COMBO_RECIPES[comboCode]) {
-          const reservation=reservationRows.find(row=>String(row.productCode||"").toUpperCase()===component.productCode);
-          const componentPath="accessoriesProducts/"+encodeURIComponent(reservation.productId);
+          const listedComponent=componentDocsByCode.get(component.productCode)[0];
+          const componentPath="accessoriesProducts/"+encodeURIComponent(listedComponent.name.split("/").pop());
           const product=docs.get(firebase.base+"/"+componentPath);
           const stock=Number(product?.fields.stock),reserved=Number(product?.fields.reservedStock||0);
           const deducted=deductionsByCode.get(component.productCode)||0,released=releasedByCode.get(component.productCode)||0;
