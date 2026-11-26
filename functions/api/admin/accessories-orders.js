@@ -190,6 +190,25 @@ export async function onRequestPost({request,env}){
    if(result.status!==200)return jsonResponse({ok:false,error:result.error},result.status);
    return jsonResponse({ok:true,...result});
   }
+  if(action==="listPendingPayments"){
+   const docs=await firestoreListCollection(firebase,"paymentVerificationIssues");
+   const issues=docs.map(doc=>{
+    const f=doc.fields||{},customer=f.customer||{};
+    return {
+     id:doc.name.split("/").pop(),name:String(customer.name||""),
+     phone:String(customer.phone||""),address:String(customer.address||""),
+     city:String(customer.city||""),state:String(customer.state||""),
+     postOffice:String(customer.postOffice||""),pincode:String(customer.pincode||""),
+     paymentId:String(f.paymentId||""),razorpayOrderId:String(f.razorpayOrderId||""),
+     paymentRecordId:String(f.paymentRecordId||""),amount:Number(f.amount)||0,
+     paymentStatus:String(f.paymentStatus||"unknown"),diagnosticStage:String(f.diagnosticStage||""),
+     diagnosticDetail:String(f.diagnosticDetail||""),reportedAt:String(f.reportedAt||""),
+     issueStatus:String(f.issueStatus||"open"),storeOrderId:String(f.storeOrderId||"")
+    };
+   }).filter(issue=>issue.issueStatus!=="resolved");
+   issues.sort((a,b)=>String(b.reportedAt).localeCompare(String(a.reportedAt)));
+   return jsonResponse({ok:true,issues});
+  }
   if(action==="list"){
    const docs=await firestoreListCollection(firebase,"Orders");
    const orders=docs.filter(doc=>String(doc.fields?.orderType||"").toLowerCase()==="accessories"||String(doc.fields?.orderId||"").startsWith("DS-A")).map(safeOrder);

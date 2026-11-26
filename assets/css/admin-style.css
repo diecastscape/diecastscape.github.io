@@ -1430,3 +1430,16 @@ h5 {
 .ao-tracking strong{display:block;margin-top:4px;color:#087f83;font-size:12px;overflow-wrap:anywhere}
 .ao-dispatched-heading{margin-top:28px;padding-top:18px;border-top:1px solid #e5eaf0}
 .ao-review{margin-top:10px;padding:10px;border:1px solid #f0d9a8;border-radius:8px;background:#fff8e9;color:#8b5a08;font-size:10px;line-height:1.5}
+/* =====================================================
+   PENDING PAYMENT REPORTS
+===================================================== */
+.pending-payment-card{margin:12px 0;padding:14px;border:1px solid #ead9b8;border-radius:12px;background:#fffdf8;color:#172033}
+.pending-payment-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-bottom:10px;border-bottom:1px solid #f0e7d8}
+.pending-payment-head small{font-size:9px;font-weight:850;letter-spacing:1px;color:#98650e}
+.pending-payment-head h4{margin:5px 0 0;font-size:15px}
+.pending-payment-head strong{white-space:nowrap;font-size:15px}
+.pending-payment-facts{display:flex;flex-wrap:wrap;gap:8px 14px;margin:11px 0;color:#586579;font-size:11px}
+.pending-payment-facts a{color:#087f83;font-weight:800}
+.pending-payment-details{padding:10px;border-radius:8px;background:#f5f7f9;font-size:10px;line-height:1.8;overflow-wrap:anywhere}
+.pending-payment-error{margin-top:10px;padding:10px;border-radius:8px;background:#fff4e5;color:#80540b;font-size:10px;line-height:1.6;overflow-wrap:anywhere}
+.pending-payment-warning{font-size:11px;font-weight:700;color:#9b6410}

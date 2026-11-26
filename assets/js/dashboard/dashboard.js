@@ -327,6 +327,12 @@ if (type === "accessoriesOrders") {
   }
   return;
 }
+if (type === "pendingPayments") {
+  if (typeof window.loadPendingPaymentsAdmin === "function") {
+    window.loadPendingPaymentsAdmin();
+  }
+  return;
+}
 
 let listBox;
 

@@ -138,5 +138,6 @@
   }
   document.addEventListener("DOMContentLoaded",()=>{
     document.getElementById("finalOnlinePayBtn")?.addEventListener("click",payAccessories);
+    retryPendingIssues();
   });
 })();

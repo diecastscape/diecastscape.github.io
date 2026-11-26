@@ -68,3 +68,26 @@ window.acceptAccessoriesStockReview=async function(orderId){
  try{await request({action:"acceptStockReview",orderId});alert("Order accepted and stock deductions recorded.");await window.loadAccessoriesAdminOrders();}
  catch(error){alert(error.message||"Could not accept this order.");if(button){button.disabled=false;button.textContent="Accept Order & Deduct Stock";}}
 };
+
+const pendingRoot=document.getElementById("pendingPaymentsAdminList");
+const pendingRefresh=document.getElementById("pendingPaymentsRefresh");
+window.loadPendingPaymentsAdmin=async function(){
+ if(!pendingRoot)return;
+ pendingRoot.innerHTML='<div class="product-list-loading">Loading pending payment reports…</div>';
+ if(pendingRefresh)pendingRefresh.disabled=true;
+ try{
+  const data=await request({action:"listPendingPayments"});
+  const escLocal=value=>esc(value);
+  pendingRoot.innerHTML=data.issues.length?data.issues.map(issue=>{
+   const address=[issue.address,issue.city,issue.state,issue.postOffice,issue.pincode].filter(Boolean).join(", ");
+   return '<article class="pending-payment-card"><div class="pending-payment-head"><div><small>PAYMENT VERIFICATION PENDING</small><h4>'+escLocal(issue.name||"Customer details unavailable")+'</h4></div><strong>₹'+Number(issue.amount||0).toFixed(2)+'</strong></div>'+
+    '<div class="pending-payment-facts"><span>Phone: <a href="tel:'+escLocal(issue.phone)+'">'+escLocal(issue.phone||"—")+'</a></span><span>Reported: '+date(issue.reportedAt)+'</span><span>Payment: '+escLocal(issue.paymentStatus)+'</span></div>'+
+    '<div class="pending-payment-details"><b>Payment ID:</b> '+escLocal(issue.paymentId||"—")+'<br><b>Razorpay Order:</b> '+escLocal(issue.razorpayOrderId||"—")+'<br><b>Payment Record:</b> '+escLocal(issue.paymentRecordId||"—")+'<br><b>Address:</b> '+escLocal(address||"—")+'</div>'+
+    '<div class="pending-payment-error"><b>Verification issue:</b> '+escLocal(issue.diagnosticStage||"unknown")+' — '+escLocal(issue.diagnosticDetail||"No error details supplied")+'</div>'+
+    (issue.storeOrderId?'<p>Order created: '+escLocal(issue.storeOrderId)+'</p>':'<p class="pending-payment-warning">No Accessories order ID was generated. Check Razorpay before contacting the customer or attempting recovery.</p>')+
+    '</article>';
+  }).join(""):'<div class="booked-empty-state">No pending payment reports.</div>';
+ }catch(error){console.error(error);pendingRoot.innerHTML='<div class="booked-error-state">'+esc(error.message)+'</div>';}
+ finally{if(pendingRefresh)pendingRefresh.disabled=false;}
+};
+pendingRefresh?.addEventListener("click",()=>window.loadPendingPaymentsAdmin());
