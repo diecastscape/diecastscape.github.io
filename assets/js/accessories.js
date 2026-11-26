@@ -1061,6 +1061,8 @@ function renderCheckoutProducts() {
 
     
 async function proceedOrderWhatsApp() {
+  const consent=document.getElementById("checkoutPolicyConsent");
+  if(!consent?.checked){showToast("Please accept all three policies before continuing.");consent?.focus();return;}
   const products = getCartProducts();
 
   if (products.length === 0) {
