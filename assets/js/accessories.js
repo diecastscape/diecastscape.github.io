@@ -1064,7 +1064,7 @@ async function proceedOrderWhatsApp() {
   const products = getCartProducts();
   if (!products.length) { showToast("Your cart is empty."); return; }
   const total = getCartProductTotal();
-  if (total < MIN_CART_VALUE) { showToast(\`Minimum order value is ₹\${MIN_CART_VALUE}\`); return; }
+  if (total < MIN_CART_VALUE) { showToast(`Minimum order value is ₹${MIN_CART_VALUE}`); return; }
   if (!window.accessoryStockReady) { showToast("Please wait while we check the latest stock."); return; }
 
   const encodedItems = [];
@@ -1080,7 +1080,7 @@ async function proceedOrderWhatsApp() {
     }
     const available = getCurrentAvailableSets(item.id);
     if (qty > available) {
-      showToast(available > 0 ? \`Only \${available} set(s) currently available for \${item.name}.\` : \`\${item.name} is currently out of stock.\`);
+      showToast(available > 0 ? `Only ${available} set(s) currently available for ${item.name}.` : `${item.name} is currently out of stock.`);
       return;
     }
     encodedItems.push({item, qty, productCode});
@@ -1098,15 +1098,15 @@ async function proceedOrderWhatsApp() {
   encodedItems.forEach(({item, qty, productCode}) => {
     const price = Number(item.price) || 0;
     const fullCode = productCode + String(qty).padStart(2, "0");
-    lines.push(\`• \${item.name}\`);
-    lines.push(\`  \${item.quantityText || "Set"} × \${qty} qty · \${fullCode}\`);
-    lines.push(\`  ₹\${price} × \${qty} = ₹\${price * qty}\`);
+    lines.push(`• ${item.name}`);
+    lines.push(`  ${item.quantityText || "Set"} × ${qty} qty · ${fullCode}`);
+    lines.push(`  ₹${price} × ${qty} = ₹${price * qty}`);
   });
   lines.push("");
-  lines.push(\`Product Total: ₹\${total}\`);
-  lines.push(\`Shipping: \${shipping === 0 ? "FREE" : "₹" + shipping}\`);
-  lines.push(\`Order Total: ₹\${orderTotal}\`);
-  const whatsappURL = \`https://wa.me/\${WHATSAPP_NUMBER}?text=\${encodeURIComponent(lines.join("\\n"))}\`;
+  lines.push(`Product Total: ₹${total}`);
+  lines.push(`Shipping: ${shipping === 0 ? "FREE" : "₹" + shipping}`);
+  lines.push(`Order Total: ₹${orderTotal}`);
+  const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\\n"))}`;
   const whatsappTab = window.open("about:blank", "_blank");
   if (!whatsappTab) {
     showToast("Please allow pop-ups to continue to WhatsApp.");
