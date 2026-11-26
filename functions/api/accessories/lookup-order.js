@@ -68,7 +68,7 @@ export async function onRequestPost({request,env}){
         packQuantity:item.isCombo?null:(item.packQuantity??item.piecesPerSet??null),
         lineTotal:item.lineTotal??item.subtotal
       })),
-      paymentStatus:String(oldFields.paymentStatus||"recorded"),
+      paymentStatus:String(oldFields.paymentStatus||"recorded"),paymentMode:"PREPAID",codCharge:0,advancePaid:Number(oldFields.orderTotal)||oldSubtotal+oldShipping,remainingAmount:0,
       subtotal:oldSubtotal,shipping:oldShipping,
       grandTotal:Number(oldFields.orderTotal)||oldSubtotal+oldShipping,
       trackingId:String(oldPublic?.fields.trackingId||oldFields.trackingId||""),
@@ -85,7 +85,7 @@ export async function onRequestPost({request,env}){
   const progressStage=fields.stockReviewRequired?0:(stages[legacyStatus]||Number(fields.progressStage)||1);
   const progress=progressStage===0?"Stock Review Required":progressStage===4?"Dispatched":progressStage===3?"Ready to Dispatch":progressStage===2?"In Packing":String(fields.progress||"Order Confirmed");
   const trackingId=legacy?.fields.trackingId||fields.trackingId||"",dispatched=progressStage===4;
-  return jsonResponse({ok:true,order:{orderId:String(fields.orderId||orderId),orderType:String(fields.orderType||"Accessories"),bookedAt:fields.bookedAt||null,expectedDispatchDate:String(fields.expectedDispatchDate||""),progress,progressStage,progressHistory:Array.isArray(fields.progressHistory)?fields.progressHistory.slice(-4):[],customer:{name:String(customer.name||"")},items:Array.isArray(fields.items)?fields.items.map(safeItem):[],paymentStatus:String(fields.paymentStatus||""),subtotal:Number(fields.subtotal)||0,shipping:Number(fields.shipping)||0,grandTotal:Number(fields.grandTotal)||0,trackingId:dispatched?String(trackingId):"",dispatchedAt:dispatched?(legacy?.fields.dispatchedDate||fields.dispatchedAt||null):null}});
+  return jsonResponse({ok:true,order:{orderId:String(fields.orderId||orderId),orderType:String(fields.orderType||"Accessories"),bookedAt:fields.bookedAt||null,expectedDispatchDate:String(fields.expectedDispatchDate||""),progress,progressStage,progressHistory:Array.isArray(fields.progressHistory)?fields.progressHistory.slice(-4):[],customer:{name:String(customer.name||"")},items:Array.isArray(fields.items)?fields.items.map(safeItem):[],paymentStatus:String(fields.paymentStatus||""),paymentMode:String(fields.paymentMode||"PREPAID"),subtotal:Number(fields.subtotal)||0,shipping:Number(fields.shipping)||0,codCharge:Number(fields.codCharge)||0,grandTotal:Number(fields.grandTotal)||0,advancePaid:Number(fields.advancePaid)||0,remainingAmount:Number(fields.remainingAmount)||0,trackingId:dispatched?String(trackingId):"",dispatchedAt:dispatched?(legacy?.fields.dispatchedDate||fields.dispatchedAt||null):null}});
  }catch(error){console.error("Your Orders lookup failed:",String(error?.message||error));return jsonResponse({ok:false,error:"Unable to look up your order right now. Please try again later."},500);}
 }
 export async function onRequestGet(){return jsonResponse({ok:false,error:"Method Not Allowed",allowedMethod:"POST"},405);}
