@@ -23,9 +23,9 @@
     modal.hidden=false;
   }
   function value(id) { return document.getElementById(id)?.value.trim() || ""; }
-  function resetButton(button) {
+  function resetButton(button, originalText="Pay Now") {
     busy=false;
-    if(button) { button.disabled=false; button.textContent="Pay Now"; }
+    if(button) { button.disabled=false; button.textContent=originalText; }
   }
   async function releaseReservation(paymentRecordId) {
     if(!paymentRecordId)return;
@@ -99,7 +99,8 @@
     if(!/^\d{10}$/.test(customer.phone)){showToast("Please enter a valid 10-digit phone number.");document.getElementById("checkoutPhone")?.focus();return;}
 
     busy=true;
-    const button=document.getElementById("finalOnlinePayBtn");
+    const button=document.getElementById(paymentMode==="COD"?"codContinueBtn":"finalOnlinePayBtn");
+    const originalButtonText=button?.textContent.trim()||(paymentMode==="COD"?"Continue · Pay ₹99":"Pay Now");
     if(button){button.disabled=true;button.textContent="Preparing secure payment...";}
     try {
       const response=await fetch("/api/accessories/v2/create-order",{
@@ -116,7 +117,7 @@
         order_id:order.orderId,prefill:{name:customer.name,contact:customer.phone},
         notes:{paymentRecordId:order.paymentRecordId,category:"accessories",paymentMode,paymentVersion:"2"},
         theme:{color:"#13adbd"},
-        modal:{ondismiss:()=>{if(!paymentReturned)releaseReservation(order.paymentRecordId);resetButton(button);}},
+        modal:{ondismiss:()=>{if(!paymentReturned)releaseReservation(order.paymentRecordId);resetButton(button,originalButtonText);}},
         handler:async function(paymentResponse) {
           paymentReturned=true;
           if(button)button.textContent="Verifying payment...";
