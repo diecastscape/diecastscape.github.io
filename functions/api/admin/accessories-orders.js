@@ -87,7 +87,10 @@ async function createManualOrder(firebase,body){
   const code=String(doc.fields.productCode||"").toUpperCase();
   if(code)byCode.set(code,(byCode.get(code)||[]).concat(doc));
  }
- const codes=new Set([...grouped.keys(),...itemRows.map(x=>x.code)]);
+ const affectedComboCodes=Object.entries(COMBO_RECIPES)
+  .filter(([,recipe])=>recipe.some(([component])=>grouped.has(component)))
+  .map(([comboCode])=>comboCode);
+ const codes=new Set([...grouped.keys(),...itemRows.map(x=>x.code),...affectedComboCodes]);
  for(const code of codes)if((byCode.get(code)||[]).length!==1)return {status:409,error:"Product code "+code+" is missing or duplicated. No changes were made."};
  const usedDocs=[...codes].map(code=>byCode.get(code)[0]);
  const counterPath="orderCounters/accessories",legacyCounterPath="bookedOrderCounters/accessoryOrderIdSequence";
@@ -117,7 +120,7 @@ async function createManualOrder(firebase,body){
   const comboUpdates=[];
   for(const [comboCode,recipe] of Object.entries(COMBO_RECIPES)){
    const requested=itemRows.filter(x=>x.code===comboCode).reduce((s,x)=>s+x.qty,0);
-   if(!requested)continue;
+   if(!affectedComboCodes.includes(comboCode)&&!requested)continue;
    let before=Infinity,after=Infinity;
    for(const [code,pieces] of recipe){
     const p=freshProducts.get(code),stock=Number(p.fields.stock),reserved=Number(p.fields.reservedStock||0),deduct=grouped.get(code)||0;

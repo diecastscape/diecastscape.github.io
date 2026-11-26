@@ -2,7 +2,7 @@ import {
   getFirebaseContext,firestoreGet,firestoreBatchGet,firestoreCommit,
   firestoreFields,firestoreListCollection,jsonResponse
 } from "../../../_lib/firebase-rest.js";
-import {releaseExpiredAccessoryReservations} from "../../../_lib/accessory-reservations.js";
+import {releaseExpiredAccessoryReservations,ACCESSORY_COMBO_RECIPES} from "../../../_lib/accessory-reservations.js";
 import {sendAdminPushNotification} from "../../../_lib/admin-push.js";
 
 async function hmacHex(secret,message) {
@@ -83,8 +83,20 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
     if(!items.length)throw new Error("PAYMENT_ITEMS_MISSING");
     const sessionPath="paymentSessions/"+encodeURIComponent(recordPath.split("/").pop());
     const reservationRows=Array.isArray(record.fields.stockReservations)?record.fields.stockReservations:[];
+    const reservedCodes=new Set(reservationRows.map(row=>String(row.productCode||"").toUpperCase()));
+    const affectedComboCodes=Object.entries(ACCESSORY_COMBO_RECIPES).filter(([,recipe])=>recipe.some(component=>reservedCodes.has(component.productCode))).map(([comboCode])=>comboCode);
+    const listedProducts=await firestoreListCollection(firebase,"accessoriesProducts");
+    const comboDocsByCode=new Map();
+    for(const product of listedProducts) {
+      const code=String(product.fields.productCode||"").toUpperCase();
+      if(affectedComboCodes.includes(code)) {
+        const matches=comboDocsByCode.get(code)||[];matches.push(product);comboDocsByCode.set(code,matches);
+      }
+    }
+    for(const code of affectedComboCodes)if((comboDocsByCode.get(code)||[]).length!==1)throw new Error("COMBO_PRODUCT_MISSING_OR_DUPLICATED:"+code);
     const productPaths=reservationRows.map(row=>"accessoriesProducts/"+encodeURIComponent(row.productId));
-    const paths=[recordPath,sessionPath,counterPath,legacyCounterPath,...productPaths];
+    const comboPaths=affectedComboCodes.map(code=>"accessoriesProducts/"+encodeURIComponent(comboDocsByCode.get(code)[0].name.split("/").pop()));
+    const paths=[recordPath,sessionPath,counterPath,legacyCounterPath,...productPaths,...comboPaths];
     const docs=await firestoreBatchGet(firebase,paths);
     const freshRecord=docs.get(firebase.base+"/"+recordPath);
     if(!freshRecord)throw new Error("PAYMENT_RECORD_NOT_FOUND");
@@ -132,6 +144,30 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
       }
     }
 
+    const comboStockUpdates=[];
+    if(!stockIssue&&stockPlan.length===reservationRows.length) {
+      const deductionsByCode=new Map(),releasedByCode=new Map();
+      for(const row of stockPlan) {
+        const code=String(row.reservation.productCode||"").toUpperCase();
+        deductionsByCode.set(code,(deductionsByCode.get(code)||0)+row.units);
+        releasedByCode.set(code,(releasedByCode.get(code)||0)+row.units);
+      }
+      for(const comboCode of affectedComboCodes) {
+        let availableAfter=Infinity;
+        for(const component of ACCESSORY_COMBO_RECIPES[comboCode]) {
+          const reservation=reservationRows.find(row=>String(row.productCode||"").toUpperCase()===component.productCode);
+          const componentPath="accessoriesProducts/"+encodeURIComponent(reservation.productId);
+          const product=docs.get(firebase.base+"/"+componentPath);
+          const stock=Number(product?.fields.stock),reserved=Number(product?.fields.reservedStock||0);
+          const deducted=deductionsByCode.get(component.productCode)||0,released=releasedByCode.get(component.productCode)||0;
+          if(!product||!Number.isInteger(stock)||stock<deducted||!Number.isInteger(reserved)||reserved<released)throw new Error("COMBO_STOCK_INVALID:"+component.productCode);
+          availableAfter=Math.min(availableAfter,Math.floor(Math.max(0,(stock-deducted)-(reserved-released))/component.pieces));
+        }
+        if(!Number.isInteger(availableAfter))throw new Error("COMBO_AVAILABILITY_INVALID:"+comboCode);
+        const comboDoc=docs.get(firebase.base+"/accessoriesProducts/"+encodeURIComponent(comboDocsByCode.get(comboCode)[0].name.split("/").pop()));
+        comboStockUpdates.push({product:comboDoc,productCode:comboCode,stockAfter:availableAfter});
+      }
+    }
     const now=new Date().toISOString(),bookedDate=displayDate(dateIST());
     const dispatchISO=nextDispatchDateIST();
     const savedProducts=items.map(item=>({
@@ -181,6 +217,10 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
         });
       }
     }
+    if(!stockIssue)for(const combo of comboStockUpdates)writes.push({
+      update:{name:combo.product.name,fields:firestoreFields({stock:combo.stockAfter,stockUpdatedAt:{__timestamp:now}})},
+      updateMask:{fieldPaths:["stock","stockUpdatedAt"]},currentDocument:{updateTime:combo.product.updateTime}
+    });
     const resourceBase=firebase.base.replace("https://firestore.googleapis.com/v1/","");
     writes.push({
       update:{name:resourceBase+"/"+counterPath,fields:firestoreFields({
@@ -221,6 +261,7 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
         stockReviewRequired:stockIssue,
         trackingId:"",dispatchedAt:null,
         stockDeductions:stockIssue?[]:deductions,
+        comboStockUpdates:stockIssue?[]:comboStockUpdates.map(row=>({productCode:row.productCode,stockAfter:row.stockAfter})),
         createdAt:{__timestamp:now},updatedAt:{__timestamp:now}
       })},
       currentDocument:{exists:false}

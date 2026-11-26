@@ -17,6 +17,32 @@ export const ACCESSORY_COMBO_RECIPES={
   ]
 };
 
+
+/** Recalculate cached combo stock after component inventory changes. */
+export function calculateAccessoryComboStockUpdates(productByCode,deductionsByCode=new Map(),releasedReservationsByCode=new Map()) {
+  const affected=Object.entries(ACCESSORY_COMBO_RECIPES).filter(([,recipe])=>recipe.some(component=>deductionsByCode.has(component.productCode)));
+  const updates=[];
+  for(const [comboCode,recipe] of affected) {
+    const comboProduct=productByCode.get(comboCode);
+    if(!comboProduct)throw new Error("COMBO_PRODUCT_MISSING:"+comboCode);
+    let availableBefore=Infinity,availableAfter=Infinity;
+    for(const component of recipe) {
+      const product=productByCode.get(component.productCode);
+      if(!product)throw new Error("COMBO_COMPONENT_MISSING:"+component.productCode);
+      const stock=Number(product.fields.stock),reserved=safeReserved(product.fields.reservedStock);
+      const deducted=Number(deductionsByCode.get(component.productCode)||0);
+      const released=Number(releasedReservationsByCode.get(component.productCode)||0);
+      if(!Number.isInteger(stock)||stock<0||!Number.isInteger(deducted)||deducted<0||!Number.isInteger(released)||released<0||released>reserved||deducted>stock)
+        throw new Error("COMBO_STOCK_INVALID:"+component.productCode);
+      availableBefore=Math.min(availableBefore,Math.floor(Math.max(0,stock-reserved)/component.pieces));
+      availableAfter=Math.min(availableAfter,Math.floor(Math.max(0,(stock-deducted)-(reserved-released))/component.pieces));
+    }
+    if(!Number.isInteger(availableBefore)||!Number.isInteger(availableAfter))throw new Error("COMBO_AVAILABILITY_INVALID:"+comboCode);
+    updates.push({productCode:comboCode,product:comboProduct,stockBefore:availableBefore,stockAfter:availableAfter});
+  }
+  return updates;
+}
+
 const resourceBase=ctx=>ctx.base.replace("https://firestore.googleapis.com/v1/","");
 const docPath=(ctx,path)=>resourceBase(ctx)+"/"+path;
 const safeReserved=value=>Number.isInteger(Number(value))&&Number(value)>=0?Number(value):0;
