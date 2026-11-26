@@ -1060,7 +1060,7 @@ function renderCheckoutProducts() {
 ========================================= */
 
     
-async async function proceedOrderWhatsApp() {
+async function proceedOrderWhatsApp() {
   const products = getCartProducts();
 
   if (products.length === 0) {
