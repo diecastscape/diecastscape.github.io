@@ -264,11 +264,17 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
         },
         items:savedProducts,
         paymentStatus:stockIssue?"paid_stock_issue":"paid",
-        paymentMethod:"Razorpay",razorpayOrderId:String(freshRecord.fields.razorpayOrderId||""),
+        paymentMode:String(freshRecord.fields.paymentMode||"PREPAID"),
+        paymentMethod:freshRecord.fields.paymentMode==="COD"?"COD":"Razorpay",
+        razorpayOrderId:String(freshRecord.fields.razorpayOrderId||""),
         razorpayPaymentId:paymentId,
         subtotal:Number(freshRecord.fields.productTotal||0),
         shipping:Number(freshRecord.fields.shipping||0),
+        codCharge:Number(freshRecord.fields.codCharge||0),
         grandTotal:Number(freshRecord.fields.total||0),
+        advancePaid:Number(freshRecord.fields.advancePaid||freshRecord.fields.total||0),
+        remainingAmount:Number(freshRecord.fields.remainingAmount||0),
+        deliveryPaymentStatus:freshRecord.fields.paymentMode==="COD"?"pending":"not_applicable",
         stockReviewRequired:stockIssue,
         trackingId:"",dispatchedAt:null,
         stockDeductions:stockIssue?[]:deductions,
@@ -347,7 +353,14 @@ export async function onRequestPost({request,env}) {
     if(!record||record.fields.razorpayOrderId!==orderId)
       return jsonResponse({ok:false,error:"The payment order could not be matched."},404);
     if(Number(payment.amount)!==Number(record.fields.amountPaise))
-      return jsonResponse({ok:false,error:"The captured amount does not match the order total."},409);
+      return jsonResponse({ok:false,error:"The captured amount does not match the required payment amount."},409);
+    if(record.fields.paymentMode==="COD"&&(
+      Number(record.fields.advancePaid)!==99||
+      Number(record.fields.codCharge)!==20||
+      Number(record.fields.remainingAmount)!==Math.max(0,Number(record.fields.total)-99)||
+      Number(record.fields.productTotal)<399
+    ))
+      return jsonResponse({ok:false,error:"The COD payment breakdown could not be verified."},409);
     if(payment.currency!=="INR"||record.fields.category!=="accessories")
       return jsonResponse({ok:false,error:"This payment is not an Accessories INR order."},409);
 
