@@ -108,7 +108,9 @@ async function createManualOrder(firebase,body){
   for(const code of codes){
    const id=byCode.get(code)[0].name.split("/").pop();
    const fresh=docs.get(firebase.base+"/accessoriesProducts/"+encodeURIComponent(id));
-   if(!fresh||String(fresh.fields.productCode||"").toUpperCase()!==code||fresh.fields.active!==true)return {status:409,error:"Product "+code+" changed or is inactive. Refresh stock and try again."};
+   const orderedCombo=itemRows.some(item=>item.code===code);
+   const mustBeActive=!affectedComboCodes.includes(code)||orderedCombo;
+   if(!fresh||String(fresh.fields.productCode||"").toUpperCase()!==code||(mustBeActive&&fresh.fields.active!==true))return {status:409,error:"Product "+code+" changed or is inactive. Refresh stock and try again."};
    freshProducts.set(code,fresh);
   }
   const deductions=[];
