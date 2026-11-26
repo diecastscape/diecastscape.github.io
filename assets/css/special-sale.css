@@ -1,0 +1,818 @@
+/* =========================
+   PREMIUM HERO
+========================= */
+
+.premium-hero{
+    padding:40px 18px 25px;
+    text-align:center;
+}
+
+.premium-tag{
+    display:inline-block;
+    background:#111;
+    color:#fff;
+    padding:7px 14px;
+    border-radius:50px;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:18px;
+}
+
+html.dark .premium-tag{
+    background:#fff;
+    color:#111;
+}
+
+.premium-hero h1{
+    font-size:34px;
+    line-height:1.15;
+    margin:0;
+    font-weight:800;
+}
+
+.hero-description{
+    max-width:650px;
+    margin:18px auto 0;
+    font-size:16px;
+    line-height:1.7;
+    color:#666;
+}
+
+html.dark .hero-description{
+    color:#bdbdbd;
+}
+
+
+/* =========================
+PRODUCT SECTION
+========================= */
+
+.premium-product{
+
+    padding:18px;
+
+}
+
+
+.product-gallery{
+
+    margin-bottom:28px;
+
+}
+
+
+.product-gallery .slider{
+
+    display:flex;
+
+    gap:14px;
+
+    overflow-x:auto;
+
+    scroll-snap-type:x mandatory;
+
+    scrollbar-width:none;
+
+}
+
+
+.product-gallery .slider::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+
+.product-gallery .img-box{
+
+    flex:0 0 100%;
+
+    scroll-snap-align:center;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    background:#f5f5f5;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+
+}
+
+
+html.dark .product-gallery .img-box{
+
+    background:#1c1c1c;
+
+}
+
+
+.product-gallery img{
+
+    width:100%;
+
+    display:block;
+
+}
+
+
+/* =========================
+INFO CARD
+========================= */
+
+.product-info{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    padding:22px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+
+html.dark .product-info{
+
+    background:#1b1b1b;
+
+}
+
+
+.product-info h2{
+
+    font-size:28px;
+
+    margin:14px 0 10px;
+
+}
+
+
+.rating{
+
+    color:#f7b500;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+
+}
+
+
+.price{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin:15px 0;
+
+}
+
+
+.price .old{
+
+    text-decoration:line-through;
+
+    color:#999;
+
+    font-size:20px;
+
+}
+
+
+.price .new{
+
+    font-size:38px;
+
+    color:#00b050;
+
+    font-weight:800;
+
+}
+
+
+.discount{
+
+    display:inline-block;
+
+    background:#e9fff0;
+
+    color:#00a73d;
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+
+}
+
+
+.shipping-text{
+
+    margin-bottom:25px;
+
+    font-size:15px;
+
+    color:#666;
+
+}
+
+html.dark .shipping-text{
+
+    color:#c8c8c8;
+
+}
+
+
+/* =========================
+BUTTONS
+========================= */
+
+.buy-btn,
+.customize-btn{
+
+    display:block;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    padding:16px;
+
+    border-radius:14px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    transition:.25s;
+
+}
+
+
+.buy-btn{
+
+    background:#25D366;
+
+    color:#fff;
+
+    margin-bottom:12px;
+
+}
+
+
+.buy-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+
+.customize-btn{
+
+    border:2px solid #25D366;
+
+    color:#25D366;
+
+}
+
+
+.customize-btn:hover{
+
+    background:#25D366;
+
+    color:#fff;
+
+}
+
+
+/* =========================
+OFFER BADGE
+========================= */
+
+.offer-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    background:#ff4d4d;
+
+    color:#fff;
+
+    padding:8px 16px;
+
+    border-radius:50px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+
+/* =========================
+MOBILE
+========================= */
+
+@media(min-width:900px){
+
+.premium-product{
+
+display:grid;
+
+grid-template-columns:1.2fr 1fr;
+
+gap:40px;
+
+align-items:start;
+
+}
+
+.product-gallery{
+
+margin:0;
+
+}
+
+}
+/* =========================
+SECTION TITLE
+========================= */
+
+.section-title{
+
+text-align:center;
+
+font-size:30px;
+
+font-weight:800;
+
+margin:60px 0 30px;
+
+}
+
+
+/* =========================
+FEATURES
+========================= */
+
+.premium-features{
+
+padding:18px;
+
+}
+
+.feature-grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:18px;
+
+}
+
+.feature-card{
+
+background:#fff;
+
+padding:22px;
+
+border-radius:20px;
+
+text-align:center;
+
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+html.dark .feature-card{
+
+background:#1b1b1b;
+
+}
+
+.feature-icon{
+
+font-size:42px;
+
+margin-bottom:12px;
+
+}
+
+.feature-card h3{
+
+margin:10px 0;
+
+}
+
+.feature-card p{
+
+font-size:14px;
+
+line-height:1.6;
+
+color:#666;
+
+}
+
+html.dark .feature-card p{
+
+color:#bdbdbd;
+
+}
+
+
+/* =========================
+SPECIFICATIONS
+========================= */
+
+.specifications{
+
+padding:18px;
+
+}
+
+.spec-table{
+
+background:#fff;
+
+border-radius:20px;
+
+overflow:hidden;
+
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+html.dark .spec-table{
+
+background:#1b1b1b;
+
+}
+
+.spec-row{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:18px 20px;
+
+border-bottom:1px solid rgba(0,0,0,.08);
+
+}
+
+.spec-row:last-child{
+
+border-bottom:none;
+
+}
+
+.spec-row span{
+
+color:#666;
+
+}
+
+html.dark .spec-row span{
+
+color:#bdbdbd;
+
+}
+
+
+/* =========================
+BOX CONTENT
+========================= */
+
+.box-content{
+
+padding:18px 18px 60px;
+
+}
+
+.box-grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:16px;
+
+}
+
+.box-item{
+
+background:#fff;
+
+padding:20px;
+
+border-radius:18px;
+
+font-weight:600;
+
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+html.dark .box-item{
+
+background:#1b1b1b;
+
+}
+
+@media(min-width:900px){
+
+.feature-grid{
+
+grid-template-columns:repeat(4,1fr);
+
+}
+
+.box-grid{
+
+grid-template-columns:repeat(4,1fr);
+
+}
+
+}
+/*=========================
+COLLECTOR BANNER
+=========================*/
+
+.collector-banner{
+
+margin:70px 18px;
+
+border-radius:28px;
+
+padding:50px 28px;
+
+background:linear-gradient(135deg,#111,#2d2d2d);
+
+color:#fff;
+
+text-align:center;
+
+}
+
+.collector-tag{
+
+display:inline-block;
+
+background:#ffffff22;
+
+padding:8px 18px;
+
+border-radius:50px;
+
+font-size:13px;
+
+letter-spacing:1px;
+
+margin-bottom:20px;
+
+}
+
+.collector-banner h2{
+
+font-size:34px;
+
+margin-bottom:18px;
+
+}
+
+.collector-banner p{
+
+line-height:1.8;
+
+max-width:700px;
+
+margin:auto;
+
+opacity:.85;
+
+}
+
+.collector-btn{
+
+display:inline-block;
+
+margin-top:28px;
+
+padding:16px 32px;
+
+background:#25D366;
+
+color:#fff;
+
+text-decoration:none;
+
+border-radius:14px;
+
+font-weight:700;
+
+}
+
+
+
+/*=========================
+SHOWCASE
+=========================*/
+
+.showcase-section{
+
+padding:18px;
+
+}
+
+.showcase-grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:14px;
+
+}
+
+.showcase-grid img{
+
+width:100%;
+
+border-radius:18px;
+
+cursor:pointer;
+
+box-shadow:0 10px 30px rgba(0,0,0,.12);
+
+}
+
+
+
+/*=========================
+FAQ
+=========================*/
+
+.faq-section{
+
+padding:18px 18px 120px;
+
+}
+
+.faq-item{
+
+background:#fff;
+
+border-radius:18px;
+
+margin-bottom:14px;
+
+overflow:hidden;
+
+box-shadow:0 8px 24px rgba(0,0,0,.08);
+
+}
+
+html.dark .faq-item{
+
+background:#1b1b1b;
+
+}
+
+.faq-question{
+
+width:100%;
+
+padding:20px;
+
+background:none;
+
+border:none;
+
+display:flex;
+
+justify-content:space-between;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+.faq-answer{
+
+display:none;
+
+padding:0 20px 20px;
+
+line-height:1.7;
+
+color:#666;
+
+}
+
+html.dark .faq-answer{
+
+color:#bdbdbd;
+
+}
+
+.faq-item.active .faq-answer{
+
+display:block;
+
+}
+
+
+
+/*=========================
+STICKY BUY
+=========================*/
+
+.sticky-buy{
+
+position:fixed;
+
+bottom:0;
+
+left:0;
+
+right:0;
+
+padding:14px 18px;
+
+background:#fff;
+
+box-shadow:0 -10px 30px rgba(0,0,0,.12);
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+z-index:999;
+
+}
+
+html.dark .sticky-buy{
+
+background:#181818;
+
+}
+
+.sticky-price{
+
+font-size:30px;
+
+font-weight:800;
+
+color:#00b050;
+
+}
+
+.sticky-save{
+
+font-size:13px;
+
+color:#888;
+
+}
+
+.sticky-btn{
+
+background:#25D366;
+
+padding:15px 28px;
+
+border-radius:14px;
+
+text-decoration:none;
+
+color:#fff;
+
+font-weight:700;
+
+}
+
+@media(min-width:900px){
+
+.showcase-grid{
+
+grid-template-columns:repeat(4,1fr);
+
+}
+
+}

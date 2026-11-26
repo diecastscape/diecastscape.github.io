@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3X5F6D7CST"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3X5F6D7CST');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Diecast Car Display Frames | DIECAST.SCAPE</title>
+<meta name="description" content="Explore automotive display frames for your diecast collection. Give your favourite miniature cars a clean, personalized wall display with Diecast.scape.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://diecastscape.in/products/frames/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DIECAST.SCAPE">
+<meta property="og:title" content="Diecast Car Display Frames | DIECAST.SCAPE">
+<meta property="og:description" content="Explore automotive display frames for your diecast collection. Give your favourite miniature cars a clean, personalized wall display with Diecast.scape.">
+<meta property="og:url" content="https://diecastscape.in/products/frames/">
+<meta property="og:image" content="https://diecastscape.in/images/frames-display.webp">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Diecast Car Display Frames | DIECAST.SCAPE">
+<meta name="twitter:description" content="Explore automotive display frames for your diecast collection. Give your favourite miniature cars a clean, personalized wall display with Diecast.scape.">
+<meta name="twitter:image" content="https://diecastscape.in/images/frames-display.webp">
+
+<link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon/favicon-96x96.png" sizes="96x96" type="image/png">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<link rel="manifest" href="/favicon/site.webmanifest">
+
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/products.css">
+<link rel="stylesheet" href="/assets/css/page-footer.css">
+</head>
+
+<body>
+
+<header class="home-header">
+  <div class="home-header-inner">
+
+    <div class="home-brand">
+      <div class="home-brand-name">
+        Diecast<span>.scape</span>
+      </div>
+
+      <div class="home-brand-tagline">
+        BUILT IN SCALE. CRAFTED WITH SOUL.
+      </div>
+    </div>
+
+    <div class="home-actions">
+      <button class="home-menu-btn" onclick="openMenu()" aria-label="Menu">
+        ☰
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<div class="running-offer-bar">
+
+    <div class="running-offer-track">
+
+        <div class="running-offer-content">
+            <span>🚚 SHIPPING CHARGES APPLY</span>
+            <span>🔥LIMITED TIME OFFER</span>
+            <span>💥 GET 20% OFF ON 6+ FRAMES</span>
+            <span>🛒BUY NOW AT OFFER</span>
+        </div>
+
+        <div class="running-offer-content" aria-hidden="true">
+            <span>🚚 SHIPPING CHARGES APPLY</span>
+            <span>🔥LIMITED TIME OFFER</span>
+            <span>💥 GET 20% OFF ON 6+ FRAMES</span>
+            <span>🛒BUY NOW AT OFFER</span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<nav class="breadcrumb-wrap">
+  <a href="/" class="breadcrumb-link">Home</a>
+  <span class="breadcrumb-sep">›</span>
+  <span class="breadcrumb-current">Frames</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+
+    <div class="hero-small-title">
+      AUTOMOTIVE WALL FRAMES
+    </div>
+
+    <h1>
+      BRING YOUR<br>
+      <span>PASSION TO YOUR WALL.</span>
+    </h1>
+
+    <p>
+      Elevate your space with premium automotive wall frames featuring iconic
+      cars, motorsport legends, and custom artwork. Perfect for garages,
+      gaming setups, offices, bedrooms, and collector spaces, each frame is
+      designed to bring your passion for cars to life. Explore our collection
+      or create a custom frame featuring your favorite vehicle.
+    </p>
+
+  </div>
+</section>
+<div class="coming-soon">
+  New frames.<span>Adding soon</span>
+</div>
+
+<input
+type="search"
+id="searchInput"
+placeholder="Search..."
+oninput="searchProducts()"
+class="search-bar">
+    
+<div id="sale-main">
+<div id="productsLoader">
+  
+  <div class="loader-grid">
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+  </div>
+</div>
+</div>
+
+
+<!-- =========================
+     BOTTOM CART BAR
+========================= -->
+
+<div id="cartBox" class="cart-box">
+  <div class="cart-footer">
+
+    <div class="offer-title">🔥 Add More, Save More</div>
+
+    <div class="offer-progress">
+      <div class="offer-progress-fill" id="offerProgressFill"></div>
+    </div>
+
+    <div class="offer-count" id="offerCount">
+      Add frames to your cart
+    </div>
+
+    <div class="offer-text" id="offerText">
+      Get 20% OFF on 6+ frames
+    </div>
+
+    <div class="footer-bottom">
+      <div class="grand-total">
+        <strong id="grandTotal">₹0</strong>
+      </div>
+
+      <button type="button" id="checkoutBtn" class="checkout-btn">
+        View Cart
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- =========================
+     CART POPUP
+========================= -->
+
+<div id="cartPopup" class="cart-popup-overlay" aria-hidden="true">
+  <div class="cart-popup" role="dialog" aria-modal="true"
+       aria-labelledby="cartPopupTitle">
+
+    <div class="cart-popup-box">
+
+      <div class="cart-popup-header">
+        <div>
+          <div class="cart-popup-label">DIECAST.SCAPE</div>
+          <h2 id="cartPopupTitle" class="cart-popup-title">Your Cart</h2>
+        </div>
+
+        <button type="button" id="cartPopupClose"
+                class="cart-popup-close" aria-label="Close cart">
+          ×
+        </button>
+      </div>
+
+      <div id="cartPopupContent">
+
+        <div id="cartPopupItems" class="cart-popup-items"></div>
+
+        <div class="cart-popup-summary">
+
+          <div class="cart-popup-summary-row">
+            <span>Product Total</span>
+            <strong id="cartPopupProductTotal">₹0</strong>
+          </div>
+
+          <div class="cart-popup-summary-row">
+            <span>Shipping</span>
+            <strong id="cartPopupShipping">₹0</strong>
+          </div>
+
+          <div class="cart-popup-summary-row">
+            <span>Discount</span>
+            <strong id="cartPopupDiscount">₹0</strong>
+          </div>
+
+          <div class="cart-popup-divider"></div>
+
+          <div class="cart-popup-summary-row cart-popup-total-row">
+            <span>Order Total</span>
+            <strong id="cartPopupGrandTotal">₹0</strong>
+          </div>
+
+        </div>
+
+        <!-- NORMAL CART ACTIONS -->
+        <div id="cartNormalActions" class="cart-popup-actions">
+
+          <button type="button" id="clearCartBtn" class="cart-popup-clear">
+            Clear Cart
+          </button>
+
+          <button type="button" id="cartPopupCheckoutBtn"
+                  class="cart-popup-checkout">
+            Checkout
+          </button>
+
+        </div>
+
+        <!-- CHECKOUT SECTION -->
+        <div id="cartCheckoutSection" class="cart-checkout-section" hidden>
+
+          <div class="order-policy">
+            <div class="order-policy-title">Note:</div>
+            <p>We dispatch orders every Thursday after payment is completed.</p>
+            <p>If any product in your order is out of stock after payment, we will either refund the amount for that product or dispatch it once it is back in stock, as you choose.</p>
+          </div>
+
+          <div class="checkout-fields">
+
+            <div class="checkout-field">
+              <label for="checkoutAddress">Address</label>
+              <textarea id="checkoutAddress" rows="3"
+                placeholder="Enter your complete delivery address"
+                autocomplete="street-address"></textarea>
+            </div>
+
+            <div class="checkout-field">
+              <label for="checkoutPincode">Pincode</label>
+              <input type="text" id="checkoutPincode" inputmode="numeric"
+                maxlength="6" placeholder="Enter 6-digit pincode"
+                autocomplete="postal-code">
+            </div>
+
+            <div class="checkout-field">
+              <label for="checkoutPhone">Phone Number</label>
+              <input type="tel" id="checkoutPhone" inputmode="numeric"
+                maxlength="10" placeholder="Enter 10-digit phone number"
+                autocomplete="tel">
+            </div>
+
+          </div>
+
+          <div class="order-popup-action">
+            <button type="button" id="finalWhatsAppBtn"
+                    class="proceed-order-btn">
+              Proceed to order
+            </button>
+
+            <div class="order-whatsapp-note">
+              Order securely through WhatsApp
+            </div>
+          </div>
+
+        </div>
+
+        <!-- EMPTY CART -->
+        <div id="cartPopupEmpty" class="cart-popup-empty" hidden>
+          <div class="cart-popup-empty-icon">🛒</div>
+          <h3>Your cart is empty</h3>
+          <p>Add some frames to continue.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART BACKDROP -->
+<div id="cartOverlay" class="cart-popup-backdrop"></div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+<footer class="footer">
+
+
+
+  <div class="footer-title">
+    <span></span>
+    <h3>Know more</h3>
+    <span></span>
+  </div>
+
+  <div class="footer-links">
+
+    <a href="/policy's/about/">› About Us</a>
+    <a href="/policy's/return/">› Return & Cancellation</a>
+    <a href="/policy's/privacy/">› Privacy Policy</a>
+    <a href="/policy's/terms/">› Terms of Service</a>
+    <a href="/policy's/shipping/">› Shipping Policy</a>
+    <a href="/policy's/faq/">› FAQ</a>
+
+      <a href="/contact/">› Contact Us</a>
+  </div>
+
+  <div class="footer-line"></div>
+
+  <div class="footer-info">
+
+    <div class="footer-left">
+
+      <div class="home-brand-name">
+        Diecast<span>.scape</span>
+      </div>
+
+      <p>
+        This is a small independent business.<br>
+        Policies and information are subject to change without prior notice.
+      </p>
+
+      <p class="copyright">
+        © 2026 Diecast.scape — Custom handcrafted products & sales.<br>
+        All brand names belong to their respective owners.
+      </p>
+
+    </div>
+
+    <div class="footer-right">
+
+      <a href="https://instagram.com/diecast.scape" target="_blank" class="footer-btn footer-instagram">
+        Instagram
+      </a>
+
+      <a href="https://wa.me/918792744018" target="_blank" class="footer-btn footer-whatsapp">
+        WhatsApp
+      </a>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+<div id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img">
+</div>
+
+
+<div class="menu-overlay" onclick="closeMenu()"></div>
+
+<div id="cartOverlay" class="cart-overlay"></div>
+
+
+<!-- Slide Menu -->
+<nav class="side-menu" id="sideMenu">
+
+  <div class="menu-header">
+
+    <div>
+      <div class="menu-label">
+        DIECAST.SCAPE
+      </div>
+
+      <div class="menu-title">
+        Menu
+      </div>
+    </div>
+
+    <button class="menu-close" onclick="closeMenu()" aria-label="Close menu">
+      ×
+    </button>
+
+  </div>
+
+  <div class="menu-divider"></div>
+
+  <div class="menu-links">
+
+    <a href="/products/diorama/">
+      <span>Dioramas</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/accessories/">
+      <span>Accessories</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/frames/">
+      <span>Frames</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/your-orders/">
+      <span>Your Orders</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+  </div>
+
+  <div class="menu-divider"></div>
+
+  <div class="menu-secondary">
+
+    <a href="/policy's/about/">About Us</a>
+    <a href="/policy's/faq/">FAQ</a>
+    <a href="/policy's/shipping/">Shipping Policy</a>
+    <a href="/policy's/return/">Return & Cancellation</a>
+    <a href="/policy's/privacy/">Privacy Policy</a>
+    <a href="/policy's/terms/">Terms of Service</a>
+
+      <a href="/contact/">Contact Us</a>
+  </div>
+
+  <div class="menu-bottom">
+
+    <div class="menu-bottom-brand">
+      Diecast<span>.scape</span>
+    </div>
+
+    <div class="menu-bottom-text">
+      BUILT IN SCALE. CRAFTED WITH SOUL.
+    </div>
+
+  </div>
+
+</nav>
+
+
+<script type="module" src="/assets/js/firebase-init.js"></script>
+<script type="module" src="/assets/js/frame-firebase.js"></script>
+<script src="/assets/js/products.js"></script>
+<script src="/assets/js/frame.js"></script>
+<script src="/assets/js/core.js"></script>
+
+</body>
+</html>

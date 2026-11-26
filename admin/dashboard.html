@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard — Diecast.scape</title>
+<link rel="manifest" href="/admin/admin.webmanifest">
+<meta name="theme-color" content="#13adbd">
+<link rel="stylesheet" href="/assets/css/admin-style.css">
+<link rel="stylesheet" href="/assets/css/stock-management.css">
+
+</head>
+
+
+<body class="auth-loading">
+
+
+<div class="header">
+
+  <b>Diecast.scape Admin</b>
+
+  <button
+    onclick="adminLogout()"
+    id="logoutBtn"
+  >
+    Logout
+  </button>
+
+</div>
+
+
+<div
+  id="logoutLoader"
+  class="loader-bar"
+></div>
+
+
+
+<div class="container">
+
+
+<h2 class="dash-title">
+  Dashboard
+</h2>
+
+<div class="dash-card">
+  <div class="dash-top">
+    <div>
+      <h3>Order Notifications</h3>
+      <p id="adminNotificationStatus">Enable alerts for new paid Accessories orders on this browser.</p>
+    </div>
+    <div class="btn-row">
+      <button type="button" id="enableAdminNotifications">Enable Notifications</button>
+      <button type="button" id="sendAdminTestNotification">Send Test Notification</button>
+        </div>
+  </div>
+</div>
+
+
+
+<!-- ==================================================
+     MAIN STORE CARD
+================================================== -->
+
+<div class="dash-card">
+
+  <div class="dash-top">
+
+    <h3>
+      Main Store
+    </h3>
+
+    <button
+      onclick="openSection('main')"
+    >
+      View
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     ACCESSORIES CARD
+================================================== -->
+
+<div class="dash-card">
+
+  <div class="dash-top">
+
+    <h3>
+      Accessories
+    </h3>
+
+    <button
+      onclick="openSection('accessories')"
+    >
+      View
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     FRAMES CARD
+================================================== -->
+
+<div class="dash-card">
+
+  <div class="dash-top">
+
+    <h3>
+      Frames
+    </h3>
+
+    <button
+      onclick="openSection('frames')"
+    >
+      View
+    </button>
+
+  </div>
+
+</div>
+<!-- ==================================================
+     BOOKED ORDERS CARD
+================================================== -->
+
+<div class="dash-card">
+
+  <div class="dash-top">
+
+    <h3>Diorama Orders</h3>
+
+    <button type="button" onclick="openSection('dioramaOrders')">
+      View
+    </button>
+
+  </div>
+
+</div>
+
+
+
+<!-- ACCESSORIES ORDERS CARD -->
+<div class="dash-card">
+  <div class="dash-top">
+    <h3>Accessories Orders</h3>
+    <button onclick="openSection('accessoriesOrders')">View</button>
+  </div>
+</div>
+
+<!-- ==================================================
+     MAIN STORE SECTION
+================================================== -->
+
+<div
+  id="section-main"
+  class="section-panel"
+>
+
+
+  <div class="section-top">
+
+    <h3>
+      Main Store
+    </h3>
+
+    <div class="btn-row">
+
+      <button
+        onclick="toggleList('main')"
+      >
+        Refresh
+      </button>
+
+      <button
+        onclick="toggleAdd('main')"
+        id="mainAddBtn"
+      >
+        + Add
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="border-top"></div>
+
+
+  <div id="mainProducts"></div>
+
+
+
+  <!-- MAIN ADD FORM -->
+
+  <div
+    id="add-main"
+    class="add-wrap"
+  >
+
+    <div id="mainAddForm">
+
+
+      <h4
+        id="mainEditModeBar"
+        class="edit-mode-bar"
+        style="display:none;"
+      >
+        Adding Product
+      </h4>
+
+
+
+      <h5>
+        Name
+      </h5>
+
+      <input
+        id="p-name"
+        placeholder="Product title"
+      >
+
+
+
+      <h5>
+        Subtitle
+      </h5>
+
+      <input
+        id="p-subtitle"
+        placeholder="Example: Premium 1:64 Display Diorama"
+      >
+
+
+
+      <h5>
+        Price
+      </h5>
+
+      <div class="price-row">
+
+        <input
+          id="p-old"
+          placeholder="Retail price"
+        >
+
+        <input
+          id="p-new"
+          placeholder="Discounted price"
+        >
+
+      </div>
+
+
+
+      <h5>
+        Details (description)
+      </h5>
+
+      <textarea
+        id="p-details"
+      ></textarea>
+
+
+
+      <h5>
+        Shipping
+      </h5>
+
+      <input
+        id="p-shippingPrice"
+    placeholder="Enter shipping price"
+      >
+
+
+
+      <!-- QUICK SPECIFICATIONS -->
+
+      <h5>
+        Quick Specifications
+      </h5>
+
+
+      <div class="spec-input-grid">
+
+
+        <div class="spec-input">
+
+          <label>
+            Dimensions
+          </label>
+
+          <input
+            id="p-dimensions"
+            placeholder="Example: 40 × 30 × 30 cm"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Floor Type
+          </label>
+
+          <input
+            id="p-flore"
+            placeholder="Example: 2 Floor"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Perfect Scale Model For
+          </label>
+
+          <input
+            id="p-suitableScale"
+            placeholder="Example: 1:64"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Capacity
+          </label>
+
+          <input
+            id="p-capacity"
+            placeholder="Example: Up to 23+ Cars"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Accessories
+          </label>
+
+          <input
+            id="p-accessories"
+            placeholder="Example: Included"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Rotating
+          </label>
+
+          <input
+            id="p-rotating"
+            placeholder="Example: Rotating Display"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Lighting
+          </label>
+
+          <input
+            id="p-lighting"
+            placeholder="Example: Warm Gold Light"
+          >
+
+        </div>
+
+
+
+<div class="spec-input">
+  <label>
+    power
+  </label>
+
+  <input
+    id="p-lightingAdapter"
+    placeholder="Example: 12V Adapter Included"
+  >
+</div>
+
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Cover
+          </label>
+
+          <input
+            id="p-cover"
+            placeholder="Example: Clear Acrylic Cover"
+          >
+
+        </div>
+
+
+
+        <div class="spec-input">
+
+          <label>
+            Build
+          </label>
+
+          <input
+            id="p-build"
+            placeholder="Example: Disassembled Set"
+          >
+
+        </div>
+
+
+      </div>
+
+
+<h5>
+  Offer Ribbon
+</h5>
+
+<div class="spec-input-grid">
+
+  <div class="spec-input">
+    <label>
+      offerClime
+    </label>
+
+    <input
+      id="p-offerClime"
+      placeholder="Example: Limited Time Offer"
+    >
+  </div>
+
+
+  <div class="spec-input">
+    <label>
+      offerText
+    </label>
+
+    <input
+      id="p-offerText"
+      placeholder="Example: FREE Accessories"
+    >
+  </div>
+
+</div>
+      <h5>
+        Image path
+      </h5>
+
+
+      <div id="imagesList"></div>
+
+
+      <button
+        onclick="addImageField()"
+        class="primary-btn"
+      >
+        + Add Image
+      </button>
+
+
+      <button
+        onclick="saveProduct()"
+        class="primary-btn"
+        id="saveBtn"
+      >
+        Save Product
+      </button>
+
+
+      <button
+        onclick="cancelEdit('main')"
+        class="primary-btn secondary-btn"
+      >
+        Cancel
+      </button>
+
+
+      <div
+        id="saveLoader"
+        class="loader"
+      ></div>
+
+
+      <p
+        class="center-msg"
+        id="saveMsg"
+      ></p>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     ACCESSORIES SECTION
+================================================== -->
+
+<div
+  id="section-accessories"
+  class="section-panel"
+>
+
+  <div class="section-top">
+
+    <h3>
+      Accessories
+    </h3>
+
+    <div class="btn-row">
+
+  <button onclick="toggleList('accessories')">
+    Refresh
+  </button>
+
+  <button
+    type="button"
+    id="accessoriesVisibilityBtn"
+    onclick="toggleAllAccessoriesVisibility()"
+  >
+    Hide All
+  </button>
+
+  <button
+    onclick="toggleAdd('accessories')"
+    id="accessoriesAddBtn"
+  >
+    + Add
+  </button>
+
+</div>
+
+  </div>
+
+
+  <div class="border-top"></div>
+
+
+<div class="stock-management-card">
+  <div class="stock-management-head">
+    <div>
+      <h4>Accessories Order Reader</h4>
+      <p>Paste a WhatsApp order, enter required delivery details, verify live stock, then confirm to save in Orders and deduct stock.</p>
+    </div>
+    <button type="button" class="sm-refresh" onclick="refreshStockManagement()">Refresh Stock</button>
+  </div>
+
+  <h5>Current Available Stock</h5>
+  <div id="stockInventoryList" class="sm-inventory-list">
+    <div class="sm-empty">Loading current stock…</div>
+  </div>
+
+  <label class="sm-label" for="stockOrderMessage">Customer WhatsApp order message</label>
+  <textarea id="stockOrderMessage" class="sm-textarea"
+    placeholder="Paste the complete Accessories Order - Diecast.scape message here..."></textarea>
+  <small class="sm-help">The final two digits of the checkout code are the set multiplier. The middle two digits are pieces per set. Example: #BR0412 = #BR04 × 12 sets = 48 pieces.</small>
+
+  <h5>Mandatory Delivery Details</h5>
+  <div class="sm-customer-fields">
+    <label class="sm-label" for="stockCustomerName">Full Name</label>
+    <input id="stockCustomerName" class="sm-dispatch-date-input" type="text" minlength="2" maxlength="100" autocomplete="name" required>
+    <label class="sm-label" for="stockCustomerPhone">Phone Number</label>
+    <input id="stockCustomerPhone" class="sm-dispatch-date-input" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel" required>
+    <label class="sm-label" for="stockCustomerAddress">Complete Delivery Address</label>
+    <textarea id="stockCustomerAddress" class="sm-textarea" minlength="5" maxlength="500" autocomplete="street-address" required></textarea>
+    <label class="sm-label" for="stockCustomerCity">City</label>
+    <input id="stockCustomerCity" class="sm-dispatch-date-input" type="text" minlength="2" maxlength="80" autocomplete="address-level2" required>
+    <label class="sm-label" for="stockCustomerState">State</label>
+    <input id="stockCustomerState" class="sm-dispatch-date-input" type="text" minlength="2" maxlength="80" autocomplete="address-level1" required>
+    <label class="sm-label" for="stockCustomerPostOffice">Post Office Name</label>
+    <input id="stockCustomerPostOffice" class="sm-dispatch-date-input" type="text" minlength="2" maxlength="100" required>
+    <label class="sm-label" for="stockCustomerPincode">Pincode</label>
+    <input id="stockCustomerPincode" class="sm-dispatch-date-input" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="postal-code" required>
+  </div>
+
+  <button type="button" id="stockCheckOrderBtn" class="sm-primary" onclick="checkAccessoryOrder()">Check Order &amp; Stock</button>
+  <div id="stockOrderStatus" class="sm-message" role="status" aria-live="polite"></div>
+  <div id="stockOrderReview" aria-live="polite"></div>
+  <button type="button" id="stockConfirmOrderBtn" class="sm-confirm" onclick="confirmAccessoryStockOrder()" disabled>Confirm Order &amp; Update Stock</button>
+  <div id="stockOrderSuccess" aria-live="polite"></div>
+</div>
+
+
+  <!-- ACCESSORIES PRODUCT LIST -->
+
+  <div id="accessoriesProducts"></div>
+
+
+  <!-- ==================================================
+       ACCESSORY ADD / EDIT FORM
+  ================================================== -->
+
+  <div
+    id="add-accessories"
+    class="add-wrap"
+  >
+
+    <div id="accessoriesAddForm">
+
+
+      <!-- EDIT MODE -->
+
+      <h4
+        id="accessoriesEditModeBar"
+        class="edit-mode-bar"
+        style="display:none;"
+      >
+        Adding Product
+      </h4>
+
+
+      <!-- NAME -->
+
+      <h5>
+        Product Name
+      </h5>
+
+      <input
+        id="a-name"
+        type="text"
+        placeholder="Example: Traffic Cones"
+      >
+
+<!-- PRODUCT CODE -->
+<h5>Product Code</h5>
+<input
+  id="a-productCode"
+  type="text"
+  placeholder="Example: #TR05"
+  maxlength="5"
+  required
+>
+
+<!-- STOCK -->
+<h5>Available Stock (individual pieces)</h5>
+<input
+  id="a-stock"
+  type="number"
+  min="0"
+  step="1"
+  inputmode="numeric"
+  placeholder="Example: 100"
+  required
+>
+
+      <!-- QUANTITY / PACK -->
+
+      <h5>
+        Quantity / Pack
+      </h5>
+
+      <input
+        id="a-quantity"
+        type="text"
+        placeholder="Example: Set of 5"
+      >
+
+
+      <!-- SUBTITLE -->
+
+      <h5>
+        Subtitle
+      </h5>
+
+      <input
+        id="a-subtitle"
+        type="text"
+        placeholder="Example: 3D Printed | Miniature"
+      >
+
+
+      <!-- PRICE -->
+
+      <h5>
+        Price
+      </h5>
+
+      <input
+        id="a-price"
+        type="number"
+        inputmode="numeric"
+        placeholder="Example: 99"
+      >
+
+
+      <!-- IMAGES -->
+
+      <h5>
+        Image Paths
+      </h5>
+
+      <div id="a-imagesList"></div>
+
+
+      <button
+        type="button"
+        onclick="addAccessoryImageField()"
+        class="primary-btn"
+      >
+        + Add Image
+      </button>
+
+
+      <!-- SAVE -->
+
+      <button
+        type="button"
+        onclick="saveAccessoryProduct()"
+        class="primary-btn"
+        id="a-saveBtn"
+      >
+        Save Product
+      </button>
+
+
+      <!-- CANCEL -->
+
+      <button
+        type="button"
+        onclick="cancelEdit('accessories')"
+        class="primary-btn secondary-btn"
+      >
+        Cancel
+      </button>
+
+
+      <!-- LOADER -->
+
+      <div
+        id="a-saveLoader"
+        class="loader"
+      ></div>
+
+
+      <!-- MESSAGE -->
+
+      <p
+        class="center-msg"
+        id="a-saveMsg"
+      ></p>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     FRAMES SECTION
+================================================== -->
+
+<div
+  id="section-frames"
+  class="section-panel"
+>
+
+
+  <div class="section-top">
+
+    <h3>
+      Frames
+    </h3>
+
+    <div class="btn-row">
+
+      <button
+        onclick="toggleList('frames')"
+      >
+        Refresh
+      </button>
+
+
+      <button
+        onclick="toggleAdd('frames')"
+        id="framesAddBtn"
+      >
+        + Add
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="border-top"></div>
+
+
+
+  <!-- FRAME PRODUCTS -->
+
+  <div id="frameProducts"></div>
+
+
+
+  <!-- FRAME ADD FORM -->
+
+  <div
+    id="add-frames"
+    class="add-wrap"
+  >
+
+    <div id="framesAddForm">
+
+
+      <h4
+        id="framesEditModeBar"
+        class="edit-mode-bar"
+        style="display:none;"
+      >
+        Adding Frame
+      </h4>
+
+
+
+      <h5>
+        Frame Name
+      </h5>
+
+      <input
+        id="f-name"
+        placeholder="Frame name"
+      >
+
+
+
+      <h5>
+        Price
+      </h5>
+
+      <input
+        id="f-price"
+        placeholder="Price"
+      >
+
+
+
+      <h5>
+        Shipping
+      </h5>
+
+      <input
+        id="f-shipping"
+        placeholder="shipping charges"
+      >
+
+
+
+      <h5>
+        Image Paths
+      </h5>
+
+      <div id="f-imagesList"></div>
+
+
+
+      <button
+        onclick="addFrameImageField()"
+        class="primary-btn"
+      >
+        + Add Image
+      </button>
+
+
+
+      <button
+        onclick="saveFrameProduct()"
+        class="primary-btn"
+        id="f-saveBtn"
+      >
+        Save Frame
+      </button>
+
+
+
+      <button
+        onclick="cancelEdit('frames')"
+        class="primary-btn secondary-btn"
+      >
+        Cancel
+      </button>
+
+
+
+      <div
+        id="f-saveLoader"
+        class="loader"
+      ></div>
+
+
+
+      <p
+        id="f-saveMsg"
+        class="center-msg"
+      ></p>
+
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     NEW ACCESSORIES ORDERS MANAGEMENT
+================================================== -->
+<div id="section-accessoriesOrders" class="section-panel booked-orders-section">
+  <div class="section-top">
+    <h3>Accessories Orders</h3>
+    <div class="btn-row">
+      <button id="accessoriesOrdersRefresh" type="button">Refresh</button>
+    </div>
+  </div>
+  <div class="border-top"></div>
+  <div id="accessoriesOrdersAdminList">
+    <div class="product-list-loading">Open this section to load Accessories Orders.</div>
+  </div>
+</div>
+
+<!-- ==================================================
+     DIORAMA ORDERS SECTION
+     Frontend placeholder for the new system.
+================================================== -->
+<div id="section-dioramaOrders" class="section-panel">
+  <div class="section-top">
+    <h3>Diorama Orders</h3>
+  </div>
+  <div class="border-top"></div>
+  <div id="dioramaOrdersNewRoot"></div>
+</div>
+
+</div>
+
+</div>
+
+
+
+<script
+  type="module"
+  src="/assets/js/dashboard/admin-auth.js"></script>
+
+<script type="module"src="/assets/js/firebase-init.js"></script>
+<script type="module" src="/assets/js/dashboard/accessories-orders.js"></script>
+<script type="module" src="/assets/js/dashboard/dashboard.js"></script>
+<script type="module" src="/assets/js/dashboard/main-products.js"></script>
+<script type="module" src="/assets/js/dashboard/frame-products.js"></script>
+<script type="module" src="/assets/js/dashboard/accessories.js"></script>
+<script type="module" src="/assets/js/dashboard/stock-management.js"></script>
+<script type="module" src="/assets/js/dashboard/diorama-field-suggestions.js"></script>
+<script type="module" src="/assets/js/dashboard/admin-notifications.js"></script>
+
+</body>
+</html>
