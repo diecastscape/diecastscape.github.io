@@ -32,7 +32,11 @@ function renderOrder(order){
  resultBox.innerHTML='<article class="your-orders-card"><div class="your-orders-card-head"><div><div class="your-orders-kicker">ACCESSORIES ORDER</div><h2>#'+escapeHTML(order.orderId)+'</h2></div><span class="your-orders-paid">'+(order.paymentStatus==="paid"||order.paymentStatus==="paid_stock_issue"?"Payment completed":"Order recorded")+'</span></div>'+
  '<div class="your-orders-meta"><div><small>Booked</small><strong>'+dateText(order.bookedAt)+'</strong></div><div><small>Expected dispatch</small><strong>'+dateText(order.expectedDispatchDate)+'</strong></div></div>'+
  progressMarkup(order)+'<div class="your-orders-items"><h3>Order items</h3>'+itemHTML+'</div>'+
- '<div class="your-orders-totals"><div><span>Subtotal</span><strong>'+money(order.subtotal)+'</strong></div><div><span>Shipping</span><strong>'+(Number(order.shipping)===0?"FREE":money(order.shipping))+'</strong></div><div class="your-orders-grand"><span>Grand total</span><strong>'+money(order.grandTotal)+'</strong></div></div>'+
+ '<div class="your-orders-totals"><div><span>Product subtotal</span><strong>'+money(order.subtotal)+'</strong></div><div><span>Shipping</span><strong>'+(Number(order.shipping)===0?"FREE":money(order.shipping))+'</strong></div>'+
+ (order.paymentMode==="COD"?'<div><span>COD charge</span><strong>'+money(order.codCharge)+'</strong></div>':"")+
+ '<div class="your-orders-grand"><span>'+(order.paymentMode==="COD"?"Total order value":"Grand total")+'</span><strong>'+money(order.grandTotal)+'</strong></div>'+
+ (order.paymentMode==="COD"?'<div><span>Advance paid</span><strong>'+money(order.advancePaid)+'</strong></div><div class="your-orders-grand"><span>Remaining payable at delivery</span><strong>'+money(order.remainingAmount)+'</strong></div>':"")+
+ '</div>'+
  tracking+'<div class="your-orders-footer">Delivery details are kept private. For help with this order, contact Diecast.scape through WhatsApp.</div></article>';
  loading.style.display="none";resultBox.style.display="block";emptyBox.style.display="none";errorBox.style.display="none";
 }
