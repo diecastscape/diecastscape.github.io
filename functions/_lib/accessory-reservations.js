@@ -209,9 +209,18 @@ export async function reserveAccessoryStock(firebase,sessionId,cartRows,sessionF
         currentDocument:{updateTime:product.updateTime}
       });
     }
+    const verifiedProductTotal=Math.round(productTotal*100)/100;
+    const shipping=verifiedProductTotal>=799?0:(verifiedProductTotal>0?55:0);
+    const paymentMode=String(sessionFields.paymentMode||"PREPAID").toUpperCase();
+    const codCharge=paymentMode==="COD"?20:0;
+    const total=Math.round((verifiedProductTotal+shipping+codCharge)*100)/100;
+    const advancePaid=paymentMode==="COD"?99:total;
+    const remainingAmount=paymentMode==="COD"?Math.max(0,total-advancePaid):0;
     const session={
       ...sessionFields,status:"reserved",createdAt:{__timestamp:new Date(now).toISOString()},
-      expiresAt,stockReservations:reservationRows
+      expiresAt,stockReservations:reservationRows,
+      productTotal:verifiedProductTotal,shipping,codCharge,total,
+      advancePaid,remainingAmount,amountPaise:Math.round(advancePaid*100)
     };
     writes.push({
       update:{name:docPath(firebase,sessionPath),fields:firestoreFields(session)},
