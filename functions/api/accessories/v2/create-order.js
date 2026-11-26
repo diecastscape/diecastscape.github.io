@@ -1,5 +1,5 @@
 import {
-  getFirebaseContext,firestoreCreate,jsonResponse
+  getFirebaseContext,firestoreCreate,firestoreGet,firestoreFields,firestoreCommit,jsonResponse
 } from "../../../_lib/firebase-rest.js";
 import {
   reserveAccessoryStock,releaseAccessoryReservation,releaseExpiredAccessoryReservations
@@ -77,6 +77,18 @@ export async function onRequestPost({request,env}) {
       console.error("Accessories payment v2 order creation failed:",gatewayResponse.status);
       return jsonResponse({error:"Unable to start payment right now. Please try again."},502);
     }
+
+    const sessionPath="paymentSessions/"+encodeURIComponent(recordId);
+    const paymentSession=await firestoreGet(firebase,sessionPath);
+    if(!paymentSession)throw new Error("PAYMENT_SESSION_NOT_FOUND");
+    await firestoreCommit(firebase,undefined,[{
+      update:{name:paymentSession.name,fields:firestoreFields({
+        razorpayOrderId:gatewayOrder.id,paymentAmountPaise:amountPaise,
+        currency:"INR",paymentStatus:"pending"
+      })},
+      updateMask:{fieldPaths:["razorpayOrderId","paymentAmountPaise","currency","paymentStatus"]},
+      currentDocument:{updateTime:paymentSession.updateTime}
+    }]);
 
     await firestoreCreate(firebase,"onlinePaymentOrders",recordId,{
       schemaVersion:2,category:"accessories",status:"created",paymentStatus:"pending",
