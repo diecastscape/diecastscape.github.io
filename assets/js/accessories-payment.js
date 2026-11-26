@@ -38,6 +38,34 @@
       console.warn("Reservation will expire automatically:",error);
     }
   }
+  const PENDING_ISSUE_KEY="diecastscape_pending_payment_issues";
+  function readPendingIssues(){
+    try{return JSON.parse(localStorage.getItem(PENDING_ISSUE_KEY)||"[]").filter(Boolean);}
+    catch{return [];}
+  }
+  function savePendingIssueLocally(issue){
+    try{
+      const rows=readPendingIssues().filter(row=>row.paymentRecordId!==issue.paymentRecordId);
+      rows.push(issue);
+      localStorage.setItem(PENDING_ISSUE_KEY,JSON.stringify(rows.slice(-5)));
+    }catch(error){console.warn("Could not save pending payment backup on this device:",error);}
+  }
+  async function submitPendingIssue(issue){
+    const response=await fetch("/api/accessories/v2/report-pending-payment",{
+      method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(issue)
+    });
+    const result=await response.json();
+    if(!response.ok||!result.ok)throw new Error(result.error||"Pending payment report could not be saved.");
+    const remaining=readPendingIssues().filter(row=>row.paymentRecordId!==issue.paymentRecordId);
+    try{localStorage.setItem(PENDING_ISSUE_KEY,JSON.stringify(remaining));}catch{}
+    return result;
+  }
+  async function retryPendingIssues(){
+    for(const issue of readPendingIssues()){
+      try{await submitPendingIssue(issue);}
+      catch(error){console.warn("Pending payment report will retry later:",error);break;}
+    }
+  }
   function loadCheckout() {
     if(window.Razorpay) return Promise.resolve();
     return new Promise((resolve,reject)=>{
@@ -114,6 +142,15 @@
               button.disabled=true;
               button.textContent="Payment verification pending";
             }
+            const pendingIssue={
+              ...paymentResponse,paymentRecordId:order.paymentRecordId,customer,
+              diagnosticStage:"client_verification",
+              diagnosticDetail:String(error?.message||"Payment verification did not complete.").slice(0,500),
+              reportedAt:new Date().toISOString()
+            };
+            savePendingIssueLocally(pendingIssue);
+            try{await submitPendingIssue(pendingIssue);}
+            catch(reportError){console.warn("Pending payment details saved on this browser; server report will retry:",reportError);}
             showPaymentResult("verification_pending","");
           } finally {
             if(button && button.textContent==="Payment verification pending") {

@@ -36,8 +36,9 @@ export async function onRequestPost({request,env}){
   const auth="Basic "+btoa(env.RAZORPAY_KEY_ID+":"+env.RAZORPAY_KEY_SECRET);
   const gatewayResponse=await fetch("https://api.razorpay.com/v1/payments/"+encodeURIComponent(paymentId),{headers:{authorization:auth}});
   const payment=await gatewayResponse.json();
-  if(!gatewayResponse.ok||payment.order_id!==orderId||payment.status!=="captured")
-    return jsonResponse({ok:false,error:"Razorpay has not confirmed this payment as captured."},409);
+  if(!gatewayResponse.ok||payment.order_id!==orderId||
+     !["captured","authorized","failed","created","refunded"].includes(String(payment.status||"")))
+    return jsonResponse({ok:false,error:"Razorpay could not confirm the payment status."},409);
   const firebase=await getFirebaseContext(env);
   const paymentRecord=await firestoreGet(firebase,"onlinePaymentOrders/"+recordId);
   if(!paymentRecord||paymentRecord.fields.razorpayOrderId!==orderId||
@@ -49,7 +50,7 @@ export async function onRequestPost({request,env}){
   const existing=await firestoreGet(firebase,path);
   const fields={
     paymentRecordId:recordId,razorpayOrderId:orderId,paymentId,
-    amount:Number(payment.amount)/100,currency:"INR",paymentStatus:"captured",
+    amount:Number(payment.amount)/100,currency:"INR",paymentStatus:String(payment.status),
     customer:{name:customer.name.trim(),phone:customer.phone,address:customer.address.trim(),
       city:customer.city.trim(),state:customer.state.trim(),postOffice:customer.postOffice.trim(),pincode:customer.pincode},
     diagnosticStage:String(body.diagnosticStage||"client_verification").slice(0,80),
@@ -67,7 +68,7 @@ export async function onRequestPost({request,env}){
     currentDocument:{exists:false}
   }];
   await firestoreCommit(firebase,undefined,writes);
-  return jsonResponse({ok:true,saved:true,paymentStatus:"captured"});
+  return jsonResponse({ok:true,saved:true,paymentStatus:String(payment.status)});
  }catch(error){
   console.error("Pending payment report failed:",String(error?.message||error));
   return jsonResponse({ok:false,error:"Could not save the pending payment report yet."},500);
