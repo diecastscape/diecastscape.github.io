@@ -161,7 +161,7 @@
             if(button && button.textContent==="Payment verification pending") {
               busy=true;
             } else {
-              resetButton(button);
+              resetButton(button,originalButtonText);
             }
           }
         }
@@ -175,7 +175,7 @@
     } catch(error) {
       console.error("Accessories payment v2 checkout:",error);
       showToast(error.message||"Unable to start payment.");
-      resetButton(button);
+      resetButton(button,originalButtonText);
     }
   }
   document.addEventListener("DOMContentLoaded",()=>{
