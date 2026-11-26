@@ -1443,3 +1443,13 @@ h5 {
 .pending-payment-details{padding:10px;border-radius:8px;background:#f5f7f9;font-size:10px;line-height:1.8;overflow-wrap:anywhere}
 .pending-payment-error{margin-top:10px;padding:10px;border-radius:8px;background:#fff4e5;color:#80540b;font-size:10px;line-height:1.6;overflow-wrap:anywhere}
 .pending-payment-warning{font-size:11px;font-weight:700;color:#9b6410}
+
+
+/* COD payment breakdown in Accessories admin orders */
+.ao-cod-payment{margin:10px 0;padding:11px;border:1px solid #b8e8eb;border-radius:9px;background:#f0fafa;color:#172033;font-size:11px}
+.ao-cod-title{margin-bottom:8px;color:#087f83;font-size:10px;font-weight:850;letter-spacing:.7px}
+.ao-cod-payment>div:not(.ao-cod-title){display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #dcebed}
+.ao-cod-payment strong{white-space:nowrap}
+.ao-cod-payment .ao-cod-total{margin-top:3px;font-weight:800}
+.ao-cod-payment .ao-cod-balance{margin-top:3px;color:#087f83;font-weight:850;border-bottom:0}
+.ao-cod-payment small{display:block;margin-top:7px;color:#586579;overflow-wrap:anywhere}
