@@ -668,6 +668,10 @@ body.menu-open .menu-secondary a:nth-child(6) {
   animation-delay: 0.48s;
 }
 
+body.menu-open .menu-secondary a:nth-child(7) {
+  animation-delay: 0.52s;
+}
+
 @keyframes menuItemIn {
   from {
     opacity: 0;
