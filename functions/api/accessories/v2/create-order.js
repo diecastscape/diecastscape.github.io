@@ -22,8 +22,8 @@ export async function onRequestPost({request,env}) {
       typeof customer.city==="string"&&customer.city.trim().length>=2&&
       typeof customer.state==="string"&&customer.state.trim().length>=2&&
       typeof customer.postOffice==="string"&&customer.postOffice.trim().length>=2&&
-      typeof customer.pincode==="string"&&/^\\d{6}$/.test(customer.pincode)&&
-      typeof customer.phone==="string"&&/^\\d{10}$/.test(customer.phone);
+      typeof customer.pincode==="string"&&/^\d{6}$/.test(customer.pincode)&&
+      typeof customer.phone==="string"&&/^\d{10}$/.test(customer.phone);
     if(!validCustomer)
       return jsonResponse({error:"Please enter all required delivery details."},400);
     if(!Array.isArray(items)||items.length<1||items.length>30)
