@@ -369,7 +369,7 @@ class="search-bar">
     <span aria-hidden="true">✓</span>
     <div>
       <strong>Delivery information</strong>
-      <small>Required for Pay Online. For WhatsApp orders, share delivery details directly in chat.</small>
+      <small>Required for Pay Online and Cash on Delivery. WhatsApp orders can share delivery details directly in chat.</small>
     </div>
   </div>
 
@@ -453,17 +453,33 @@ class="search-bar">
     </div>
   </div>
 
+  <label class="checkout-policy-consent" for="checkoutPolicyConsent">
+    <input type="checkbox" id="checkoutPolicyConsent">
+    <span>I agree to the <a href="/policy's/terms/">Terms of Service</a>, <a href="/policy's/shipping/">Shipping Policy</a>, and <a href="/policy's/privacy/">Privacy Policy</a>.</span>
+  </label>
+
   <button
     type="button"
     id="finalCodBtn"
     class="proceed-order-btn checkout-cod-btn"
-    disabled
-    aria-disabled="true"
-    style="background:#eef1f5;color:#8993a3;border:1px solid #dce2e9;cursor:not-allowed;opacity:1;"
+    aria-expanded="false"
+    aria-controls="codCheckoutPanel"
   >
     Cash on Delivery
-    <span>Currently unavailable</span>
+    <span class="cod-availability-tag">Available on orders ₹399+</span>
   </button>
+
+  <div id="codCheckoutPanel" class="cod-checkout-panel" hidden>
+    <div class="cod-checkout-heading">Cash on Delivery summary</div>
+    <div class="cod-summary-row"><span>Product total</span><strong id="codProductTotal">₹0</strong></div>
+    <div class="cod-summary-row"><span>Shipping</span><strong id="codShipping">₹0</strong></div>
+    <div class="cod-summary-row"><span>COD charge</span><strong>₹20</strong></div>
+    <div class="cod-summary-row cod-summary-total"><span>Total order value</span><strong id="codOrderTotal">₹0</strong></div>
+    <div class="cod-summary-row"><span>Pay now (advance)</span><strong>₹99</strong></div>
+    <div class="cod-summary-row"><span>Pay at delivery</span><strong id="codRemaining">₹0</strong></div>
+    <p class="cod-summary-note">Your delivery details are required. Pay ₹99 securely to confirm this COD order. The remaining amount is payable to the courier at delivery.</p>
+    <button type="button" id="codContinueBtn" class="proceed-order-btn checkout-online-btn">Continue · Pay ₹99</button>
+  </div>
 
   <button
     type="button"
