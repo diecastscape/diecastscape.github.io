@@ -177,7 +177,10 @@ function safeOrder(doc){
    unitPrice:Number(item.unitPrice)||0,lineTotal:Number(item.lineTotal)||0
   })):[],
   subtotal:Number(f.subtotal)||0,shipping:Number(f.shipping)||0,grandTotal:Number(f.grandTotal)||0,
-  paymentStatus:String(f.paymentStatus||""),razorpayPaymentId:String(f.razorpayPaymentId||""),
+  paymentMode:String(f.paymentMode||"PREPAID"),codCharge:Number(f.codCharge)||0,
+  advancePaid:Number(f.advancePaid)||0,remainingAmount:Number(f.remainingAmount)||0,
+  paymentStatus:String(f.paymentStatus||""),deliveryPaymentStatus:String(f.deliveryPaymentStatus||""),
+  razorpayPaymentId:String(f.razorpayPaymentId||""),
   trackingId:String(f.trackingId||""),dispatchedAt:f.dispatchedAt||null,stockReviewRequired:f.stockReviewRequired===true
  };
 }
