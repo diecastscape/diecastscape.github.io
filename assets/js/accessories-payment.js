@@ -76,8 +76,12 @@
       document.head.appendChild(script);
     });
   }
-  async function payAccessories() {
+  async function payAccessories(paymentMode="PREPAID") {
     if(busy)return;
+    const consent=document.getElementById("checkoutPolicyConsent");
+    if(!consent?.checked){showToast("Please accept all three policies before continuing.");consent?.focus();return;}
+    const productSubtotal=typeof getCartProductTotal==="function"?getCartProductTotal():0;
+    if(paymentMode==="COD"&&productSubtotal<399){showToast("Cash on Delivery is available on product totals of ₹399 or more.");return;}
     const products=typeof getCartProducts==="function"?getCartProducts():[];
     if(!products.length){showToast("Your cart is empty.");return;}
     const customer={
@@ -100,7 +104,7 @@
     try {
       const response=await fetch("/api/accessories/v2/create-order",{
         method:"POST",headers:{"content-type":"application/json"},
-        body:JSON.stringify({items:products.map(item=>({id:String(item.id),qty:Number(item.qty)})),customer})
+        body:JSON.stringify({items:products.map(item=>({id:String(item.id),qty:Number(item.qty)})),customer,paymentMode,policiesAccepted:true})
       });
       const order=await response.json();
       if(!response.ok)throw new Error(order.error||"Unable to prepare payment.");
@@ -108,9 +112,9 @@
       let paymentReturned=false;
       const checkout=new window.Razorpay({
         key:order.keyId,amount:order.amount,currency:order.currency,
-        name:"Diecast.scape",description:"Accessories order",
+        name:"Diecast.scape",description:paymentMode==="COD"?"Accessories COD advance payment":"Accessories order",
         order_id:order.orderId,prefill:{name:customer.name,contact:customer.phone},
-        notes:{paymentRecordId:order.paymentRecordId,category:"accessories",paymentVersion:"2"},
+        notes:{paymentRecordId:order.paymentRecordId,category:"accessories",paymentMode,paymentVersion:"2"},
         theme:{color:"#13adbd"},
         modal:{ondismiss:()=>{if(!paymentReturned)releaseReservation(order.paymentRecordId);resetButton(button);}},
         handler:async function(paymentResponse) {
@@ -174,7 +178,26 @@
     }
   }
   document.addEventListener("DOMContentLoaded",()=>{
-    document.getElementById("finalOnlinePayBtn")?.addEventListener("click",payAccessories);
+    document.getElementById("finalOnlinePayBtn")?.addEventListener("click",()=>payAccessories("PREPAID"));
+    const codButton=document.getElementById("finalCodBtn");
+    const codPanel=document.getElementById("codCheckoutPanel");
+    codButton?.addEventListener("click",()=>{
+      const consent=document.getElementById("checkoutPolicyConsent");
+      if(!consent?.checked){showToast("Please accept all three policies before continuing.");consent?.focus();return;}
+      const subtotal=typeof getCartProductTotal==="function"?getCartProductTotal():0;
+      if(subtotal<399){showToast("Cash on Delivery is available on product totals of ₹399 or more.");return;}
+      const shipping=typeof getShipping==="function"?getShipping(subtotal):0;
+      const total=subtotal+shipping+20;
+      document.getElementById("codProductTotal").textContent="₹"+subtotal;
+      document.getElementById("codShipping").textContent=shipping===0?"FREE":"₹"+shipping;
+      document.getElementById("codOrderTotal").textContent="₹"+total;
+      document.getElementById("codRemaining").textContent="₹"+(total-99);
+      const opening=codPanel.hidden;
+      codPanel.hidden=!opening;
+      codButton.setAttribute("aria-expanded",String(opening));
+      if(opening)codPanel.scrollIntoView({behavior:"smooth",block:"nearest"});
+    });
+    document.getElementById("codContinueBtn")?.addEventListener("click",()=>payAccessories("COD"));
     retryPendingIssues();
   });
 })();
