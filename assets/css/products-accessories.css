@@ -537,3 +537,8 @@
 .cod-summary-total{margin-top:5px;padding-top:10px;border-top:1px solid #dce5ed;color:#142944;font-weight:850}
 .cod-summary-note{margin:10px 0 12px;color:#657489;font-size:11px;line-height:1.55}
 @keyframes codPanelIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
+
+.cod-terms-note{margin:12px 0 14px;padding:12px 13px;border:1px solid #ead9b8;border-radius:11px;background:#fffaf0;color:#594629;font-size:11px;line-height:1.6}
+.cod-terms-note strong{display:block;margin-bottom:5px;color:#493718;font-size:12px;font-weight:850}
+.cod-terms-note ul{margin:0;padding-left:17px}
+.cod-terms-note li+li{margin-top:4px}
