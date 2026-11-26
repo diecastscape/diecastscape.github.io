@@ -196,6 +196,7 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
       productId:reservation.productId,productCode:reservation.productCode,
       productName:reservation.productName,stockBefore:stock,piecesDeducted:units,stockAfter:stock-units
     }));
+    const storedCustomer=record.fields.customer||customer;
     const writes=[];
     if(!stockIssue) {
       for(const row of stockPlan) {
@@ -257,11 +258,13 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
         progressStage:stockIssue?0:1,
         progressHistory:[{stage:stockIssue?"Stock Review Required":"Order Confirmed",at:{__timestamp:now}}],
         customer:{
-          name:String(customer.name||""),address:String(customer.address||""),
-          city:String(customer.city||""),state:String(customer.state||""),
-          postOffice:String(customer.postOffice||""),pincode:String(customer.pincode||""),
-          phoneNumber:String(customer.phone||"")
+          name:String(storedCustomer.name||""),address:String(storedCustomer.address||""),
+          city:String(storedCustomer.city||""),state:String(storedCustomer.state||""),
+          postOffice:String(storedCustomer.postOffice||""),pincode:String(storedCustomer.pincode||""),
+          phoneNumber:String(storedCustomer.phone||"")
         },
+        policiesAccepted:Boolean(freshRecord.fields.policiesAccepted),
+        acceptedPolicies:["Terms of Service","Shipping Policy","Privacy Policy"],
         items:savedProducts,
         paymentStatus:stockIssue?"paid_stock_issue":"paid",
         paymentMode:String(freshRecord.fields.paymentMode||"PREPAID"),
