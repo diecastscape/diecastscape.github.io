@@ -11,6 +11,21 @@ export async function onRequestPost({request,env}) {
     if(!env.RAZORPAY_KEY_ID||!env.RAZORPAY_KEY_SECRET)
       return jsonResponse({error:"Online payment is temporarily unavailable."},503);
     const body=await request.json(),items=body?.items;
+    const paymentMode=String(body?.paymentMode||"PREPAID").toUpperCase();
+    const customer=body?.customer;
+    if(!["PREPAID","COD"].includes(paymentMode))
+      return jsonResponse({error:"Invalid payment option."},400);
+    if(body?.policiesAccepted!==true)
+      return jsonResponse({error:"Please accept the Terms of Service, Shipping Policy, and Privacy Policy."},400);
+    const validCustomer=customer&&typeof customer.name==="string"&&customer.name.trim().length>=2&&
+      typeof customer.address==="string"&&customer.address.trim().length>=5&&
+      typeof customer.city==="string"&&customer.city.trim().length>=2&&
+      typeof customer.state==="string"&&customer.state.trim().length>=2&&
+      typeof customer.postOffice==="string"&&customer.postOffice.trim().length>=2&&
+      typeof customer.pincode==="string"&&/^\\d{6}$/.test(customer.pincode)&&
+      typeof customer.phone==="string"&&/^\\d{10}$/.test(customer.phone);
+    if(!validCustomer)
+      return jsonResponse({error:"Please enter all required delivery details."},400);
     if(!Array.isArray(items)||items.length<1||items.length>30)
       return jsonResponse({error:"Your cart is empty or invalid."},400);
 
@@ -26,24 +41,33 @@ export async function onRequestPost({request,env}) {
     await releaseExpiredAccessoryReservations(firebase);
     recordId="DSA"+crypto.randomUUID().replace(/-/g,"").slice(0,24).toUpperCase();
     const reservation=await reserveAccessoryStock(firebase,recordId,normalized,{
-      schemaVersion:2,category:"accessories",paymentStatus:"pending"
+      schemaVersion:2,category:"accessories",paymentStatus:"pending",
+      paymentMode,customer,policiesAccepted:true
     });
     const productTotal=reservation.productTotal;
+    if(paymentMode==="COD"&&productTotal<399) {
+      await releaseAccessoryReservation(firebase,recordId,"cancelled");
+      recordId="";
+      return jsonResponse({error:"Cash on Delivery is available on product totals of ₹399 or more."},400);
+    }
     if(productTotal<199) {
       await releaseAccessoryReservation(firebase,recordId,"cancelled");
       recordId="";
       return jsonResponse({error:"Minimum order value is ₹199."},400);
     }
     const shipping=productTotal>=799?0:55;
-    const total=Math.round((productTotal+shipping)*100)/100;
-    const amountPaise=Math.round(total*100);
+    const codCharge=paymentMode==="COD"?20:0;
+    const total=Math.round((productTotal+shipping+codCharge)*100)/100;
+    const advancePaid=paymentMode==="COD"?99:total;
+    const remainingAmount=paymentMode==="COD"?Math.max(0,total-advancePaid):0;
+    const amountPaise=Math.round(advancePaid*100);
 
     const auth="Basic "+btoa(env.RAZORPAY_KEY_ID+":"+env.RAZORPAY_KEY_SECRET);
     const gatewayResponse=await fetch("https://api.razorpay.com/v1/orders",{
       method:"POST",headers:{authorization:auth,"content-type":"application/json"},
       body:JSON.stringify({
         amount:amountPaise,currency:"INR",receipt:recordId,
-        notes:{paymentRecordId:recordId,store:"diecast.scape",category:"accessories",paymentVersion:"2"}
+        notes:{paymentRecordId:recordId,store:"diecast.scape",category:"accessories",paymentMode,paymentVersion:"2"}
       })
     });
     const gatewayOrder=await gatewayResponse.json();
@@ -57,7 +81,9 @@ export async function onRequestPost({request,env}) {
     await firestoreCreate(firebase,"onlinePaymentOrders",recordId,{
       schemaVersion:2,category:"accessories",status:"created",paymentStatus:"pending",
       paymentRecordId:recordId,razorpayOrderId:gatewayOrder.id,amountPaise,
-      currency:"INR",productTotal,shipping,total,items:reservation.items,
+      currency:"INR",paymentMode,customer,policiesAccepted:true,
+      productTotal,shipping,codCharge,total,advancePaid,remainingAmount,
+      paymentAmount:advancePaid,items:reservation.items,
       stockReservations:reservation.stockReservations,
       reservationExpiresAt:reservation.expiresAt,
       createdAt:{__timestamp:new Date().toISOString()}
@@ -65,7 +91,7 @@ export async function onRequestPost({request,env}) {
     return jsonResponse({
       keyId:env.RAZORPAY_KEY_ID,orderId:gatewayOrder.id,
       amount:amountPaise,currency:"INR",paymentRecordId:recordId,
-      summary:{productTotal,shipping,total},
+      summary:{productTotal,shipping,codCharge,total,advancePaid,remainingAmount,paymentMode},
       reservationExpiresAt:reservation.expiresAt,paymentVersion:2
     });
   } catch(error) {
