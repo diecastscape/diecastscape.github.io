@@ -768,6 +768,7 @@ function openCartPopup() {
 
 
   renderCart();
+  updateExpectedDispatchEstimate();
 
 }
 
@@ -828,20 +829,28 @@ function closeCartPopup() {
 function updateExpectedDispatchEstimate() {
   const target = document.getElementById("expectedDispatchEstimate");
   if (!target) return;
-  const now = new Date();
-  const candidate = new Date(now);
-  candidate.setHours(0, 0, 0, 0);
-  for (let offset = 0; offset <= 7; offset++) {
-    const day = new Date(candidate);
-    day.setDate(candidate.getDate() + offset);
-    if (day.getDay() !== 3 && day.getDay() !== 6) continue;
-    const cutoff = new Date(day);
-    cutoff.setDate(day.getDate() - 1);
-    cutoff.setHours(12, 0, 0, 0);
-    if (now <= cutoff) {
-      target.textContent = "Expected dispatch: " + day.toLocaleDateString("en-IN", {
+
+  // Match the server's Accessories dispatch calculation in India Standard Time.
+  const istNow = new Date(Date.now() + 19800000);
+  for (let offset = 1; offset <= 7; offset++) {
+    const candidate = new Date(istNow);
+    candidate.setUTCDate(candidate.getUTCDate() + offset);
+    const weekday = candidate.getUTCDay();
+    if (weekday !== 3 && weekday !== 6) continue;
+
+    const cutoff = Date.UTC(
+      candidate.getUTCFullYear(),
+      candidate.getUTCMonth(),
+      candidate.getUTCDate() - 1,
+      12, 0, 0, 0
+    );
+    if (istNow.getTime() <= cutoff) {
+      const iso = candidate.toISOString().slice(0, 10);
+      const displayDate = new Date(iso + "T00:00:00Z").toLocaleDateString("en-IN", {
+        timeZone: "Asia/Kolkata",
         weekday: "long", day: "numeric", month: "short", year: "numeric"
       });
+      target.textContent = "Expected dispatch: " + displayDate;
       return;
     }
   }
