@@ -863,118 +863,20 @@ function updateExpectedDispatchEstimate() {
 ========================================= */
 
 function checkoutCart() {
+  const products = getCartProducts();
+  const total = getCartProductTotal();
 
-  const products =
-    getCartProducts();
-
-  const total =
-    getCartProductTotal();
-
-
-  if (products.length === 0) {
-
-    showToast("Your cart is empty");
-
+  if (!products.length) {
+    showToast("Your cart is empty.");
     return;
   }
-
-
-  /*
-    Minimum order validation.
-  */
 
   if (total < MIN_CART_VALUE) {
-
-    showToast(
-      `Minimum order value is ₹${MIN_CART_VALUE}`
-    );
-
+    showToast(`Minimum order value is ₹${MIN_CART_VALUE}`);
     return;
   }
 
-
-  const popup =
-    document.getElementById(
-      "cartPopup"
-    );
-
-  const title =
-    document.getElementById(
-      "cartPopupTitle"
-    );
-
-  const normalActions =
-    document.getElementById(
-      "cartNormalActions"
-    );
-
-  const checkoutSection =
-    document.getElementById(
-      "cartCheckoutSection"
-    );
-
-
-  if (!popup) return;
-
-
-  /*
-    SAME POPUP.
-    No second popup is created.
-  */
-
-  popup.dataset.checkoutMode =
-    "true";
-
-
-  if (title) {
-    title.textContent =
-      "Checkout";
-  }
-
-
-  /*
-    Hide Remove/Clear/Checkout
-    normal cart actions.
-  */
-
-  if (normalActions) {
-    normalActions.style.display =
-      "none";
-  }
-
-
-  /*
-    Show final checkout section.
-  */
-
-  if (checkoutSection) {
-    checkoutSection.hidden = false;
-  }
-
-
-  updateExpectedDispatchEstimate();
-
-  /*
-    Re-render products without
-    creating a new popup.
-  */
-
-  renderCheckoutProducts();
-
-
-  /*
-    Scroll popup to top.
-  */
-
-  const popupBox =
-    popup.querySelector(
-      ".cart-popup-box"
-    );
-
-  if (popupBox) {
-    popupBox.scrollTop = 0;
-  }
-
+  window.location.href = "/checkout/";
 }
 
 
