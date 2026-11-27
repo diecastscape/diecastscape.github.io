@@ -14,6 +14,17 @@ import {
 
 let currentOrderProduct = null;
 
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[character]);
+}
+
+function safeImageName(value) {
+  const name = String(value ?? "");
+  return /^[A-Za-z0-9_-]+$/.test(name) ? name : "";
+}
+
 
 /* =====================================================
    BUILD PRODUCT HTML
@@ -41,7 +52,7 @@ function buildProductHTML(p) {
       String(p.offerClime).trim() !== ""
         ? `
           <div class="product-offer-ribbon1">
-            <span>${p.offerClime}</span>
+            <span>${escapeHTML(p.offerClime)}</span>
           </div>
         `
         : ""
@@ -52,7 +63,7 @@ function buildProductHTML(p) {
       String(p.offerText).trim() !== ""
         ? `
           <div class="product-offer-ribbon">
-            <span>${p.offerText}</span>
+            <span>${escapeHTML(p.offerText)}</span>
           </div>
         `
         : ""
@@ -70,8 +81,8 @@ function buildProductHTML(p) {
       <div class="img-loader"></div>
 
       <img
-        src="/images/products/${im.full}.webp"
-        alt="${p.name || ""}"
+        src="/images/products/${safeImageName(im.full)}.webp"
+        alt="${escapeHTML(p.name || "")}"
         loading="lazy"
         decoding="async"
         onload="this.previousElementSibling.remove()"
@@ -93,14 +104,14 @@ function buildProductHTML(p) {
     ${offerRibbon}
 
     <div class="diorama-title">
-      ${p.name || ""}
+      ${escapeHTML(p.name || "")}
     </div>
 
     ${
       p.subtitle
         ? `
           <div class="diorama-subtitle">
-            ${p.subtitle}
+            ${escapeHTML(p.subtitle)}
           </div>
         `
         : ""
@@ -152,7 +163,7 @@ function buildProductHTML(p) {
             ? `
               <div class="qs-item">
                 <div class="qs-name">Dimensions</div>
-                <div class="qs-value">${p.dimensions}</div>
+                <div class="qs-value">${escapeHTML(p.dimensions)}</div>
               </div>
             `
             : ""
@@ -164,7 +175,7 @@ function buildProductHTML(p) {
             ? `
               <div class="qs-item">
                 <div class="qs-name">Floor Type</div>
-                <div class="qs-value">${p.flore}</div>
+                <div class="qs-value">${escapeHTML(p.flore)}</div>
               </div>
             `
             : ""
@@ -176,7 +187,7 @@ function buildProductHTML(p) {
             ? `
               <div class="qs-item">
                 <div class="qs-name">Perfect Scale Model For</div>
-                <div class="qs-value">${p.suitableScale}</div>
+                <div class="qs-value">${escapeHTML(p.suitableScale)}</div>
               </div>
             `
             : ""
@@ -188,7 +199,7 @@ function buildProductHTML(p) {
             ? `
               <div class="qs-item">
                 <div class="qs-name">Capacity</div>
-                <div class="qs-value">${p.capacity}</div>
+                <div class="qs-value">${escapeHTML(p.capacity)}</div>
               </div>
             `
             : ""
@@ -214,7 +225,7 @@ function buildProductHTML(p) {
                   ? `
                     <div class="qs-feature">
                       <span class="qs-dot"></span>
-                      ${p.accessories}
+                      ${escapeHTML(p.accessories)}
                     </div>
                   `
                   : ""
@@ -226,7 +237,7 @@ function buildProductHTML(p) {
                   ? `
                     <div class="qs-feature">
                       <span class="qs-dot"></span>
-                      ${p.rotating}
+                      ${escapeHTML(p.rotating)}
                     </div>
                   `
                   : ""
@@ -238,7 +249,7 @@ function buildProductHTML(p) {
                   ? `
                     <div class="qs-feature">
                       <span class="qs-dot"></span>
-                      ${p.cover}
+                      ${escapeHTML(p.cover)}
                     </div>
                   `
                   : ""
@@ -250,7 +261,7 @@ function buildProductHTML(p) {
                   ? `
                     <div class="qs-feature">
                       <span class="qs-dot"></span>
-                      ${p.lighting}
+                      ${escapeHTML(p.lighting)}
                     </div>
                   `
                   : ""
@@ -262,7 +273,7 @@ function buildProductHTML(p) {
                   ? `
                     <div class="qs-feature">
                       <span class="qs-dot"></span>
-                      ${p.build}
+                      ${escapeHTML(p.build)}
                     </div>
                   `
                   : ""
@@ -274,7 +285,7 @@ function buildProductHTML(p) {
                   ? `
                     <div class="qs-feature">
                       <span class="qs-dot"></span>
-                      ${p.lightingAdapter}
+                      ${escapeHTML(p.lightingAdapter)}
                     </div>
                   `
                   : ""
@@ -368,7 +379,7 @@ function buildProductHTML(p) {
         <a
           class="customize-link"
           href="javascript:void(0)"
-          onclick='openCustomizePopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
+          onclick="openCustomizePopup(JSON.parse(this.dataset.product))" data-product="${escapeHTML(JSON.stringify(p))}"
         >
           Customize
         </a>
@@ -379,7 +390,7 @@ function buildProductHTML(p) {
       <a
         class="buy-btn"
         type="button"
-        onclick='openOrderPopup(${JSON.stringify(p).replace(/'/g, "&#39;")})'
+        onclick="openOrderPopup(JSON.parse(this.dataset.product))" data-product="${escapeHTML(JSON.stringify(p))}"
       >
         Order on WhatsApp
       </a>
