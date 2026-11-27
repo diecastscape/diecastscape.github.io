@@ -347,7 +347,7 @@ export async function onRequestPost({request,env}) {
       return jsonResponse({ok:false,error:"The captured amount does not match the required payment amount."},409);
     if(record.fields.paymentMode==="COD"&&(
       Number(record.fields.advancePaid)!==99||
-      Number(record.fields.codCharge)!==20||
+      ![20,25].includes(Number(record.fields.codCharge))||
       Number(record.fields.remainingAmount)!==Math.max(0,Number(record.fields.total)-99)||
       Number(record.fields.productTotal)<399
     ))
