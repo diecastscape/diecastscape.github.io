@@ -239,6 +239,7 @@
       card.addEventListener("click",()=>{
         selectedCheckoutOption=card.dataset.checkoutOption||"";
         updateCheckoutOptionDetails();
+        document.getElementById("checkoutOptionDetails")?.scrollIntoView({behavior:"smooth",block:"nearest"});
       });
     });
     document.getElementById("checkoutContinueBtn")?.addEventListener("click",()=>{
