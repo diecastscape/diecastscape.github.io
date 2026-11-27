@@ -998,7 +998,7 @@ async function proceedOrderWhatsApp() {
 
   try {
     whatsappTab.document.write(
-      "<!doctype html><title>Opening WhatsApp...</title><p style='font-family:Arial,sans-serif;padding:24px'>Preparing your availability request. Please wait...</p>"
+      "<!doctype html><title>Opening WhatsApp...</title><p style='font-family:Arial,sans-serif;padding:24px'>Preparing your order message. Please wait...</p>"
     );
   } catch (error) {
     // Continue to navigate the tab even if its temporary page cannot be written.
@@ -1063,8 +1063,8 @@ async function proceedOrderWhatsApp() {
   const orderTotal = total + shipping;
 
   // Build each line explicitly so WhatsApp receives real line breaks.
-  let message = "🔎 *Product Availability Check - Diecast.scape*\n\n";
-  message += "Hi! Please confirm the current stock availability for these items before I share my delivery details.\n\n";
+  let message = "🛒 *Accessories Order - Diecast.scape*\n\n";
+  message += "Hi! I'd like to place an order directly through WhatsApp. Please help me proceed with the order below.\n\n";
 
   orderItems.forEach(item => {
     message += `• ${item.name}\n`;
@@ -1077,7 +1077,7 @@ async function proceedOrderWhatsApp() {
   message += `Shipping : ${shipping === 0 ? "FREE" : "₹" + shipping}\n`;
   message += "━━━━━━━━━━━━━━\n";
   message += `*Order Total : ₹${orderTotal}*\n\n`;
-  message += "*Request:* Please confirm which products are available. I will share my delivery details after stock confirmation.";
+  message += "*Order Request:* I'd like to place this order directly through WhatsApp. Please let me know the next steps to confirm my delivery details and complete the order.";
 
   const whatsappURL =
     `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
