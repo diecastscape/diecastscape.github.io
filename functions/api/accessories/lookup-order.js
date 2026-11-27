@@ -1,4 +1,15 @@
 import {getFirebaseContext,firestoreGet,firestoreCommit,firestoreFields,jsonResponse} from "../../_lib/firebase-rest.js";
+function normalizePhone(value){
+ let digits=String(value??"")
+  .replace(/[٠-٩]/g,ch=>String(ch.charCodeAt(0)-0x0660))
+  .replace(/[۰-۹]/g,ch=>String(ch.charCodeAt(0)-0x06F0))
+  .replace(/[०-९]/g,ch=>String(ch.charCodeAt(0)-0x0966))
+  .replace(/[０-９]/g,ch=>String(ch.charCodeAt(0)-0xFF10))
+  .replace(/\D/g,"");
+ if(digits.length===12&&digits.startsWith("91"))digits=digits.slice(2);
+ if(digits.length===11&&digits.startsWith("0"))digits=digits.slice(1);
+ return digits;
+}
 async function sha256(value){const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");}
 function safeItem(item){
  const isCombo=Boolean(item.isCombo);
@@ -27,7 +38,7 @@ async function rateLimit(firebase,orderId,ip){
 }
 export async function onRequestPost({request,env}){
  try{
-  const body=await request.json(),orderId=String(body?.orderId||"").trim().toUpperCase(),phone=String(body?.phone||"").replace(/\D/g,"");
+  const body=await request.json(),orderId=String(body?.orderId||"").trim().toUpperCase(),phone=normalizePhone(body?.phone);
   if(!/^DS-A\d{4,}$/.test(orderId)||!/^\d{10}$/.test(phone))return jsonResponse({ok:false,error:"Enter a valid Accessories order ID and 10-digit phone number."},400);
   const ip=String(request.headers.get("CF-Connecting-IP")||"unknown").slice(0,80),firebase=await getFirebaseContext(env);
   const limit=await rateLimit(firebase,orderId,ip);
@@ -45,7 +56,7 @@ export async function onRequestPost({request,env}){
       firestoreGet(firebase,"bookedOrders/"+orderId)
     ]);
     const oldFields=oldCustomer?.fields||{};
-    const oldPhone=String(oldFields.phone||oldFields.deliveryDetails?.phone||oldFields.customer?.phone||"");
+    const oldPhone=normalizePhone(oldFields.phone||oldFields.deliveryDetails?.phone||oldFields.customer?.phone||"");
     if(!oldCustomer||oldPhone!==phone)
       return jsonResponse({ok:false,error:"We couldn't find an order matching those details. Check your Order ID and phone number."},404);
     legacy=oldPublic;
@@ -75,7 +86,7 @@ export async function onRequestPost({request,env}){
       dispatchedAt:oldPublic?.fields.dispatchedDate||oldFields.dispatchedAt||null
     };
     customer=fields.customer;
-  } else if(String(customer.phoneNumber||"")!==phone) {
+  } else if(normalizePhone(customer.phoneNumber)!==phone) {
     return jsonResponse({ok:false,error:"We couldn't find an order matching those details. Check your Order ID and phone number."},404);
   }
 
