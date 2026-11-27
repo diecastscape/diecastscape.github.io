@@ -69,8 +69,15 @@
         <div class="cod-summary-row"><span>Shipping</span><strong>${shipping===0?"FREE":money(shipping)}</strong></div>
         <div class="cod-summary-row cod-summary-total"><span>Total amount to pay</span><strong>${money(orderTotal)}</strong></div>
         <p class="cod-summary-note">You will be redirected to Razorpay's secure payment checkout. Your payment is protected, and your order will be confirmed after successful payment verification.</p>`;
+    } else if(selectedCheckoutOption==="WHATSAPP") {
+      details.innerHTML=`
+        <div class="checkout-option-heading">Order directly via WhatsApp</div>
+        <div class="cod-summary-row"><span>Product total</span><strong>${money(subtotal)}</strong></div>
+        <div class="cod-summary-row"><span>Shipping</span><strong>${shipping===0?"FREE":money(shipping)}</strong></div>
+        <div class="cod-summary-row cod-summary-total"><span>Order total</span><strong>${money(orderTotal)}</strong></div>
+        <p class="cod-summary-note">Continue to WhatsApp to send a product availability request. You can confirm delivery details after stock availability is checked.</p>`;
     } else {
-      details.innerHTML='<p class="checkout-option-placeholder">Choose one of the two options above to see your order details.</p>';
+      details.innerHTML='<p class="checkout-option-placeholder">Choose one of the three options above to see your order details.</p>';
     }
   }
   function resetButton(button, originalText="Pay Now") {
@@ -246,6 +253,7 @@
       if(!consent?.checked){showToast("Please accept all three policies before continuing.");consent?.focus();return;}
       if(selectedCheckoutOption==="COD")payAccessories("COD");
       else if(selectedCheckoutOption==="PREPAID")payAccessories("PREPAID");
+      else if(selectedCheckoutOption==="WHATSAPP")proceedOrderWhatsApp();
     });
     updateCheckoutOptionDetails();
     retryPendingIssues();
