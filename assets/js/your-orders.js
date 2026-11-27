@@ -42,7 +42,7 @@ function renderOrder(order){
 }
 form?.addEventListener("submit",async event=>{
  event.preventDefault();if(busy)return;
- const orderId=orderInput.value.trim().toUpperCase(),phone=phoneInput.value.replace(/\D/g,"");
+ const orderId=orderInput.value.trim().toUpperCase(),phone=normalizePhone(phoneInput.value);\n phoneInput.value=phone;
  if(!/^DS-A\d{4,}$/.test(orderId)){showEmpty("Enter a valid Accessories Order ID, for example DS-A1001.");return;}
  if(!/^\d{10}$/.test(phone)){showEmpty("Enter the same 10-digit phone number used at checkout.");return;}
  busy=true;hideStates();loading.style.display="block";searchBtn.disabled=true;searchBtn.textContent="SEARCHING";
@@ -55,7 +55,18 @@ form?.addEventListener("submit",async event=>{
  }catch(error){console.error("Your Orders lookup:",error);hideStates();errorBox.style.display="block";}
  finally{busy=false;searchBtn.disabled=false;searchBtn.textContent="SEARCH";}
 });
-phoneInput?.addEventListener("input",()=>{phoneInput.value=phoneInput.value.replace(/\D/g,"").slice(0,10);});
+function normalizePhone(value){
+ let digits=String(value??"")
+  .replace(/[٠-٩]/g,ch=>String(ch.charCodeAt(0)-0x0660))
+  .replace(/[۰-۹]/g,ch=>String(ch.charCodeAt(0)-0x06F0))
+  .replace(/[०-९]/g,ch=>String(ch.charCodeAt(0)-0x0966))
+  .replace(/[０-９]/g,ch=>String(ch.charCodeAt(0)-0xFF10))
+  .replace(/\D/g,"");
+ if(digits.length===12&&digits.startsWith("91"))digits=digits.slice(2);
+ if(digits.length===11&&digits.startsWith("0"))digits=digits.slice(1);
+ return digits;
+}
+phoneInput?.addEventListener("change",()=>{phoneInput.value=normalizePhone(phoneInput.value);});
 orderInput?.addEventListener("input",()=>{orderInput.value=orderInput.value.toUpperCase().replace(/\s/g,"");});
 function renderSavedOrderIds() {
  const savedBox=document.getElementById("yourOrdersSavedList");
@@ -63,14 +74,14 @@ function renderSavedOrderIds() {
  let saved=[];
  try{
   const parsed=JSON.parse(localStorage.getItem("diecastscape_completed_orders")||"[]");
-  const candidate=Array.isArray(parsed)?parsed[0]:parsed;
-  if(/^DS-A\d{4,}$/.test(String(candidate||"")))saved=[String(candidate)];
-  if(Array.isArray(parsed)&&saved.length)localStorage.setItem("diecastscape_completed_orders",JSON.stringify(saved));
+  const candidates=Array.isArray(parsed)?parsed:[parsed];
+  saved=[...new Set(candidates.map(id=>String(id||"").trim().toUpperCase()).filter(id=>/^DS-A\d{4,}$/.test(id)))].slice(-50).reverse();
+  if(saved.length)localStorage.setItem("diecastscape_completed_orders",JSON.stringify(saved.slice().reverse()));
  }catch{}
  if(!saved.length){savedBox.hidden=true;return;}
  deviceNote.style.display="none";
  savedBox.hidden=false;
- savedBox.innerHTML='<div class="your-orders-saved-title">Latest order on this device</div>'+saved.map(id=>'<div class="your-orders-saved-row"><strong>'+escapeHTML(id)+'</strong><button type="button" data-order-id="'+escapeHTML(id)+'">View</button></div>').join("");
+ savedBox.innerHTML='<div class="your-orders-saved-title">Orders saved on this device</div>'+saved.map(id=>'<div class="your-orders-saved-row"><strong>'+escapeHTML(id)+'</strong><button type="button" data-order-id="'+escapeHTML(id)+'">View</button></div>').join("");
 }
 document.getElementById("yourOrdersSavedList")?.addEventListener("click",event=>{
  const button=event.target.closest("button[data-order-id]");
