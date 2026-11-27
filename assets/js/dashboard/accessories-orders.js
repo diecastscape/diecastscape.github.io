@@ -41,11 +41,11 @@ window.loadAccessoriesAdminOrders=async function(){
  try{
   const data=await request({action:"list"}),active=data.orders.filter(o=>o.progressStage!==4),dispatched=data.orders.filter(o=>o.progressStage===4);
   root.innerHTML='<h4 class="booked-form-heading">Active Orders ('+active.length+')</h4>'+
-   root.querySelectorAll('[data-ao-accept]').forEach(button=>button.addEventListener('click',()=>window.acceptAccessoriesStockReview(button.dataset.aoAccept)));
-   root.querySelectorAll('[data-ao-save]').forEach(button=>button.addEventListener('click',()=>window.saveAccessoriesAdminOrder(button.dataset.aoSave)));
    (active.length?active.map(renderCard).join(""):'<div class="booked-empty-state">No active Accessories orders.</div>')+
    '<h4 class="booked-form-heading ao-dispatched-heading">Dispatched Orders ('+dispatched.length+')</h4>'+
    (dispatched.length?dispatched.map(renderCard).join(""):'<div class="booked-empty-state">No dispatched Accessories orders yet.</div>');
+   root.querySelectorAll('[data-ao-accept]').forEach(button=>button.addEventListener('click',()=>window.acceptAccessoriesStockReview(button.dataset.aoAccept)));
+   root.querySelectorAll('[data-ao-save]').forEach(button=>button.addEventListener('click',()=>window.saveAccessoriesAdminOrder(button.dataset.aoSave)));
  }catch(error){console.error(error);root.innerHTML='<div class="booked-error-state">'+esc(error.message)+'</div>';}
  finally{if(refresh)refresh.disabled=false;}
 };
