@@ -42,7 +42,8 @@ function renderOrder(order){
 }
 form?.addEventListener("submit",async event=>{
  event.preventDefault();if(busy)return;
- const orderId=orderInput.value.trim().toUpperCase(),phone=normalizePhone(phoneInput.value);\n phoneInput.value=phone;
+ const orderId=orderInput.value.trim().toUpperCase(),phone=normalizePhone(phoneInput.value);
+ phoneInput.value=phone;
  if(!/^DS-A\d{4,}$/.test(orderId)){showEmpty("Enter a valid Accessories Order ID, for example DS-A1001.");return;}
  if(!/^\d{10}$/.test(phone)){showEmpty("Enter the same 10-digit phone number used at checkout.");return;}
  busy=true;hideStates();loading.style.display="block";searchBtn.disabled=true;searchBtn.textContent="SEARCHING";
