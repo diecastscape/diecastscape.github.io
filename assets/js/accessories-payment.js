@@ -53,6 +53,7 @@
         <div class="cod-summary-row"><span>Pay now (advance)</span><strong>₹99</strong></div>
         <div class="cod-summary-row"><span>Pay at delivery</span><strong>${money(codTotal-99)}</strong></div>
         <p class="cod-summary-note">Pay ₹99 securely to confirm this COD order. The remaining amount is payable to the courier at delivery. COD is available on product totals of ₹399 or more.</p>
+        <div class="cod-reason-note" role="note"><strong>Why Partial COD?</strong><p>We introduced a small advance to help reduce fake or unaccepted COD orders and confirm genuine orders. For the smoothest checkout, choose <b>Pay Now</b>.</p></div>
         <div class="cod-terms-note" role="note" aria-label="Cash on Delivery terms">
           <strong>Important – Cash on Delivery</strong>
           <ul>
@@ -68,15 +69,8 @@
         <div class="cod-summary-row"><span>Shipping</span><strong>${shipping===0?"FREE":money(shipping)}</strong></div>
         <div class="cod-summary-row cod-summary-total"><span>Total amount to pay</span><strong>${money(orderTotal)}</strong></div>
         <p class="cod-summary-note">You will be redirected to Razorpay's secure payment checkout. Your payment is protected, and your order will be confirmed after successful payment verification.</p>`;
-    } else if(selectedCheckoutOption==="WHATSAPP") {
-      details.innerHTML=`
-        <div class="checkout-option-heading">Place your order through WhatsApp</div>
-        <div class="cod-summary-row"><span>Product total</span><strong>${money(subtotal)}</strong></div>
-        <div class="cod-summary-row"><span>Shipping</span><strong>${shipping===0?"FREE":money(shipping)}</strong></div>
-        <div class="cod-summary-row cod-summary-total"><span>Order total</span><strong>${money(orderTotal)}</strong></div>
-        <p class="cod-summary-note">Tap Continue and you will be redirected to WhatsApp to place your order directly with Diecast.scape.</p>`;
     } else {
-      details.innerHTML='<p class="checkout-option-placeholder">Choose one of the three options above to see your order details.</p>';
+      details.innerHTML='<p class="checkout-option-placeholder">Choose one of the two options above to see your order details.</p>';
     }
   }
   function resetButton(button, originalText="Pay Now") {
@@ -252,10 +246,6 @@
       if(!consent?.checked){showToast("Please accept all three policies before continuing.");consent?.focus();return;}
       if(selectedCheckoutOption==="COD")payAccessories("COD");
       else if(selectedCheckoutOption==="PREPAID")payAccessories("PREPAID");
-      else if(selectedCheckoutOption==="WHATSAPP") {
-        if(typeof proceedOrderWhatsApp==="function")proceedOrderWhatsApp();
-        else showToast("WhatsApp ordering is temporarily unavailable. Please try again.");
-      }
     });
     updateCheckoutOptionDetails();
     retryPendingIssues();
