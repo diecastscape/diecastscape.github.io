@@ -190,7 +190,10 @@
             }
             if(result.orderId) {
               try {
-                localStorage.setItem("diecastscape_completed_orders",JSON.stringify([result.orderId]));
+                const previous=JSON.parse(localStorage.getItem("diecastscape_completed_orders")||"[]");
+                const saved=Array.isArray(previous)?previous:[previous];
+                const all=[...saved.filter(id=>/^DS-A\d{4,}$/.test(String(id||""))),result.orderId];
+                localStorage.setItem("diecastscape_completed_orders",JSON.stringify([...new Set(all)].slice(-50)));
               } catch(storageError) {
                 console.warn("Could not save this order on this device:",storageError);
               }
