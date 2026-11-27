@@ -31,7 +31,7 @@ async function serviceToken(env) {
   if (!response.ok || !data.access_token) throw new Error("Firebase push authentication failed.");
   return data.access_token;
 }
-export async function sendAdminPushNotification(env, {orderId, amount}) {
+export async function sendAdminPushNotification(env, {orderId, amount, paymentMode, advancePaid, remainingAmount}) {
   const token = await serviceToken(env);
   const base = "https://firestore.googleapis.com/v1/projects/diecastscape/databases/(default)/documents";
   const response = await fetch(base + "/adminPushTokens?pageSize=1000", {
@@ -45,8 +45,16 @@ export async function sendAdminPushNotification(env, {orderId, amount}) {
       doc.fields?.token?.stringValue)
     .map(doc => doc.fields.token.stringValue);
   if (!tokens.length) return {sent:0,total:0};
-  const title = "New Accessories Order — " + String(orderId);
-  const body = "Payment received: ₹" + Number(amount || 0).toLocaleString("en-IN");
+  const mode = String(paymentMode || "PREPAID").toUpperCase();
+  const totalText = "₹" + Number(amount || 0).toLocaleString("en-IN") + "/-";
+  const title = mode === "COD"
+    ? "New COD Accessories Order — " + String(orderId)
+    : "New Accessories Order — " + String(orderId);
+  const body = mode === "COD"
+    ? "New COD order received of Accessories " + totalText +
+      " | ₹" + Number(advancePaid || 0).toLocaleString("en-IN") + " advance received" +
+      " | ₹" + Number(remainingAmount || 0).toLocaleString("en-IN") + " remaining at delivery"
+    : "New order received of Accessories " + totalText;
   let sent = 0;
   for (const deviceToken of tokens) {
     const result = await fetch("https://fcm.googleapis.com/v1/projects/diecastscape/messages:send", {
