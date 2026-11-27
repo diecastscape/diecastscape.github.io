@@ -703,3 +703,7 @@
  .checkout-form-grid{grid-template-columns:1fr}
  .checkout-form-grid .checkout-field-full{grid-column:auto}
 }
+
+/* Keep the compact checkout fields aligned with the clean form grid. */
+.checkout-form-grid .checkout-field input,
+.checkout-form-grid .checkout-field textarea{width:100%;margin:0;box-sizing:border-box}
