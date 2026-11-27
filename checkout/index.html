@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | DIECAST.SCAPE</title>
+<meta name="description" content="Complete your Diecast.scape accessories order securely.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://diecastscape.in/checkout/">
+<link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/products.css">
+<link rel="stylesheet" href="/assets/css/products-accessories.css">
+<link rel="stylesheet" href="/assets/css/page-footer.css">
+</head>
+<body>
+<header class="home-header">
+  <div class="home-header-inner">
+    <div class="home-brand">
+      <div class="home-brand-name">Diecast<span>.scape</span></div>
+      <div class="home-brand-tagline">BUILT IN SCALE. CRAFTED WITH SOUL.</div>
+    </div>
+    <div class="home-actions">
+      <a href="/products/accessories/" class="home-menu-btn" aria-label="Back to Accessories" style="text-decoration:none">‹</a>
+    </div>
+  </div>
+</header>
+<nav class="breadcrumb-wrap">
+  <a href="/" class="breadcrumb-link">Home</a>
+  <span class="breadcrumb-sep">›</span>
+  <a href="/products/accessories/" class="breadcrumb-link">Accessories</a>
+  <span class="breadcrumb-sep">›</span>
+  <span class="breadcrumb-current">Checkout</span>
+</nav>
+<main class="checkout-page-main">
+  <a class="checkout-page-back-link" href="/products/accessories/">← Back to Accessories</a>
+  <section id="checkoutPageContent" class="checkout-page-content" hidden>
+    <div class="checkout-page-card">
+      <div class="checkout-page-heading">
+        <div class="checkout-page-eyebrow">DIECAST.SCAPE · SECURE CHECKOUT</div>
+        <h1>Complete Your Order</h1>
+        <p>Review your accessories, enter delivery details and choose how you would like to pay.</p>
+      </div>
+      <div id="cartPopupItems" class="cart-popup-items"></div>
+      <div class="cart-popup-summary">
+        <div class="cart-popup-summary-row"><span>Product Total</span><strong id="cartPopupProductTotal">₹0</strong></div>
+        <div class="cart-popup-summary-row"><span>Shipping</span><strong id="cartPopupShipping">₹0</strong></div>
+        <div class="cart-popup-divider"></div>
+        <div class="cart-popup-summary-row cart-popup-total-row"><span>Order Total</span><strong id="cartPopupGrandTotal">₹0</strong></div>
+        <div id="expectedDispatchEstimate" class="cart-popup-dispatch-note" role="status" aria-live="polite">Expected dispatch: Calculating…</div>
+      </div>
+      <div class="order-policy">
+        <div class="order-policy-title">Dispatch information</div>
+        <p>Accessories orders are dispatched according to our weekly schedule: Wednesday and Saturday.</p>
+      </div>
+      <div class="checkout-fields">
+        <div class="checkout-section-heading"><span aria-hidden="true">✓</span><div><strong>Delivery information</strong><small>Required for Pay Online and Cash on Delivery. WhatsApp orders can share delivery details directly in chat.</small></div></div>
+        <div class="checkout-field"><label for="checkoutName">Name</label><input type="text" id="checkoutName" placeholder="Enter your full name" autocomplete="name" required></div>
+        <div class="checkout-field"><label for="checkoutAddress">Address</label><textarea id="checkoutAddress" rows="3" placeholder="Enter your complete delivery address" autocomplete="street-address" required></textarea></div>
+        <div class="checkout-field"><label for="checkoutCity">City</label><input type="text" id="checkoutCity" placeholder="Enter your city" autocomplete="address-level2" required></div>
+        <div class="checkout-field"><label for="checkoutState">State</label><input type="text" id="checkoutState" placeholder="Enter your state" autocomplete="address-level1" required></div>
+        <div class="checkout-field"><label for="checkoutPostOffice">Post Office Name</label><input type="text" id="checkoutPostOffice" placeholder="Enter your post office name" autocomplete="off" required></div>
+        <div class="checkout-field"><label for="checkoutPincode">Pincode</label><input type="text" id="checkoutPincode" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit pincode" autocomplete="postal-code" required></div>
+        <div class="checkout-field"><label for="checkoutPhone">Phone Number</label><input type="tel" id="checkoutPhone" inputmode="numeric" maxlength="10" placeholder="Enter 10-digit phone number" autocomplete="tel" required></div>
+      </div>
+      <div class="order-popup-action">
+        <div class="checkout-section-heading"><span aria-hidden="true">✓</span><div><strong>Choose your preference</strong><small>Select one option. Its details will appear below.</small></div></div>
+        <div class="checkout-option-cards" role="group" aria-label="Choose checkout option">
+          <button type="button" class="checkout-option-card" data-checkout-option="COD" aria-pressed="false"><strong>Partial COD</strong><span>₹99 advance · Remaining at delivery</span></button>
+          <button type="button" class="checkout-option-card" data-checkout-option="PREPAID" aria-pressed="false"><strong>Pay Now</strong><span>Secure online payment via Razorpay</span></button>
+          <button type="button" class="checkout-option-card" data-checkout-option="WHATSAPP" aria-pressed="false"><strong>Order Directly via WhatsApp</strong><span>Continue to WhatsApp to place your order</span></button>
+        </div>
+        <div id="checkoutOptionDetails" class="checkout-option-details" aria-live="polite"><p class="checkout-option-placeholder">Choose one of the three options above to see your order details.</p></div>
+        <label class="checkout-policy-consent" for="checkoutPolicyConsent"><input type="checkbox" id="checkoutPolicyConsent"><span>I understand and agree to the <a href="/policy's/terms/">Terms of Service</a>, <a href="/policy's/shipping/">Shipping Policy</a>, and <a href="/policy's/privacy/">Privacy Policy</a>.</span></label>
+        <button type="button" id="checkoutContinueBtn" class="proceed-order-btn checkout-continue-btn" disabled>Continue</button>
+        <p class="checkout-trust-footnote">Your delivery details are used to fulfil your order. WhatsApp orders can share delivery details directly in chat.</p>
+      </div>
+    </div>
+  </section>
+  <section id="checkoutPageEmpty" class="checkout-page-empty" hidden>
+    <h1>Your cart is empty</h1>
+    <p>Add accessories to your cart before continuing to checkout.</p>
+    <a class="checkout-page-back" href="/products/accessories/">Explore Accessories</a>
+  </section>
+</main>
+<div id="toast" class="toast"></div>
+<footer class="footer">
+
+  <div class="footer-title">
+    <span></span>
+    <h3>Know more</h3>
+    <span></span>
+  </div>
+
+  <div class="footer-links">
+
+    <a href="/policy's/about/">› About Us</a>
+    <a href="/policy's/return/">› Return & Cancellation</a>
+    <a href="/policy's/privacy/">› Privacy Policy</a>
+    <a href="/policy's/terms/">› Terms of Service</a>
+    <a href="/policy's/shipping/">› Shipping Policy</a>
+    <a href="/policy's/faq/">› FAQ</a>
+
+      <a class="footer-contact-link" href="/contact/">› Contact Us</a>
+  </div>
+
+  <div class="footer-line"></div>
+
+  <div class="footer-info">
+
+    <div class="footer-left">
+
+      <div class="home-brand-name">
+        Diecast<span>.scape</span>
+      </div>
+
+      <p>
+        This is a small independent business.<br>
+        Policies and information are subject to change without prior notice.
+      </p>
+
+      <p class="copyright">
+        © 2026 Diecast.scape — Custom handcrafted products & sales.<br>
+        All brand names belong to their respective owners.
+      </p>
+
+    </div>
+
+    <div class="footer-right">
+
+      <a href="https://instagram.com/diecast.scape" target="_blank" class="footer-btn footer-instagram">
+        Instagram
+      </a>
+
+      <a href="https://wa.me/918792744018" target="_blank" class="footer-btn footer-whatsapp">
+        WhatsApp
+      </a>
+
+    </div>
+
+  </div>
+
+</footer>
+<div class="menu-overlay" onclick="closeMenu()"></div>
+
+<nav class="side-menu" id="sideMenu">
+
+  <div class="menu-header">
+
+    <div>
+      <div class="menu-label">
+        DIECAST.SCAPE
+      </div>
+
+      <div class="menu-title">
+        Menu
+      </div>
+    </div>
+
+    <button class="menu-close" onclick="closeMenu()" aria-label="Close menu">
+      ×
+    </button>
+
+  </div>
+
+  <div class="menu-divider"></div>
+
+  <div class="menu-links">
+
+    <a href="/products/diorama/">
+      <span>Dioramas</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/accessories/">
+      <span>Accessories</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/products/frames/">
+      <span>Frames</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+    <a href="/your-orders/">
+      <span>Your Orders</span>
+      <span class="menu-arrow">→</span>
+    </a>
+
+  </div>
+
+  <div class="menu-divider"></div>
+
+  <div class="menu-secondary">
+
+    <a href="/policy's/about/">About Us</a>
+    <a href="/policy's/faq/">FAQ</a>
+    <a href="/policy's/shipping/">Shipping Policy</a>
+    <a href="/policy's/return/">Return & Cancellation</a>
+    <a href="/policy's/privacy/">Privacy Policy</a>
+    <a href="/policy's/terms/">Terms of Service</a>
+
+      <a href="/contact/">Contact Us</a>
+  </div>
+
+  <div class="menu-bottom">
+
+    <div class="menu-bottom-brand">
+      Diecast<span>.scape</span>
+    </div>
+
+    <div class="menu-bottom-text">
+      BUILT IN SCALE. CRAFTED WITH SOUL.
+    </div>
+
+  </div>
+
+</nav>
+<script type="module" src="/assets/js/firebase-init.js"></script>
+<script type="module" src="/assets/js/accessories-firebase.js"></script>
+<script src="/assets/js/accessories.js"></script>
+<script src="/assets/js/accessories-payment.js"></script>
+<script src="/assets/js/core.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const products = typeof getCartProducts === "function" ? getCartProducts() : [];
+  const content = document.getElementById("checkoutPageContent");
+  const empty = document.getElementById("checkoutPageEmpty");
+  if (!products.length) {
+    empty.hidden = false;
+    content.hidden = true;
+    return;
+  }
+  content.hidden = false;
+  empty.hidden = true;
+  if (typeof updateExpectedDispatchEstimate === "function") updateExpectedDispatchEstimate();
+});
+</script>
+</body>
+</html>
