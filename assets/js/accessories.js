@@ -10,7 +10,7 @@ const CART_VERSION = "2";
 const CART_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 const FREE_SHIPPING_LIMIT = 799;
 const SHIPPING_CHARGE = 55;
-const MIN_CART_VALUE = 199;
+const MIN_CART_VALUE = 249;
 
 const WHATSAPP_NUMBER = "918792744018";
 // One-time migration: clear carts saved by the old system.
