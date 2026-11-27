@@ -542,3 +542,61 @@
 .cod-terms-note strong{display:block;margin-bottom:5px;color:#493718;font-size:12px;font-weight:850}
 .cod-terms-note ul{margin:0;padding-left:17px}
 .cod-terms-note li+li{margin-top:4px}
+
+
+/* Three-way accessories checkout selector */
+.checkout-option-cards{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:9px;
+  margin:0 0 12px;
+}
+.checkout-option-card{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:5px;
+  width:100%;
+  min-height:62px;
+  padding:12px 14px;
+  border:1px solid #dce5ed;
+  border-radius:12px;
+  background:#fff;
+  color:#172b47;
+  text-align:left;
+  cursor:pointer;
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.checkout-option-card strong{font-size:13px;font-weight:850}
+.checkout-option-card span{color:#68788d;font-size:11px;line-height:1.4}
+.checkout-option-card.is-selected{
+  border:2px solid #13adbd;
+  padding:11px 13px;
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(19,173,189,.10);
+}
+.checkout-option-card:focus-visible{outline:2px solid #13adbd;outline-offset:2px}
+.checkout-option-details{
+  margin:0 0 13px;
+  padding:14px;
+  border:1px solid #d8e4eb;
+  border-radius:14px;
+  background:#f8fbfd;
+}
+.checkout-option-heading{margin-bottom:9px;color:#102344;font-size:14px;font-weight:900}
+.checkout-option-placeholder{margin:0;color:#758397;font-size:12px;line-height:1.55;text-align:center}
+.checkout-option-details .cod-summary-row{padding:7px 0}
+.checkout-option-details .cod-summary-note{margin-bottom:0}
+.checkout-continue-btn{margin-top:2px}
+.checkout-continue-btn:disabled{
+  background:#aeb9c5;
+  box-shadow:none;
+  cursor:not-allowed;
+  opacity:.75;
+}
+.checkout-continue-btn:not(:disabled){background:#13adbd}
+.checkout-continue-btn:not(:disabled):hover{background:#0c9eae}
+@media (min-width:520px){
+  .checkout-option-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .checkout-option-card{min-height:92px;justify-content:center}
+}
