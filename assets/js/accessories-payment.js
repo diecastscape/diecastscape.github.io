@@ -1,5 +1,6 @@
 (function () {
   let busy = false;
+  let selectedCheckoutOption = "";
 
   function showPaymentResult(status,orderId){
     let modal=document.getElementById("accessoriesPaymentResultModal");
@@ -23,6 +24,61 @@
     modal.hidden=false;
   }
   function value(id) { return document.getElementById(id)?.value.trim() || ""; }
+
+  function updateCheckoutOptionDetails() {
+    const details=document.getElementById("checkoutOptionDetails");
+    const continueButton=document.getElementById("checkoutContinueBtn");
+    if(!details||!continueButton)return;
+
+    document.querySelectorAll("[data-checkout-option]").forEach(card=>{
+      const active=card.dataset.checkoutOption===selectedCheckoutOption;
+      card.classList.toggle("is-selected",active);
+      card.setAttribute("aria-pressed",String(active));
+    });
+
+    continueButton.disabled=!selectedCheckoutOption;
+    const subtotal=typeof getCartProductTotal==="function"?getCartProductTotal():0;
+    const shipping=typeof getShipping==="function"?getShipping(subtotal):0;
+    const orderTotal=subtotal+shipping;
+    const money=value=>"₹"+Number(value||0).toLocaleString("en-IN");
+
+    if(selectedCheckoutOption==="COD") {
+      const codTotal=orderTotal+20;
+      details.innerHTML=`
+        <div class="checkout-option-heading">Partial COD payment summary</div>
+        <div class="cod-summary-row"><span>Product total</span><strong>${money(subtotal)}</strong></div>
+        <div class="cod-summary-row"><span>Shipping</span><strong>${shipping===0?"FREE":money(shipping)}</strong></div>
+        <div class="cod-summary-row"><span>COD charge</span><strong>₹20</strong></div>
+        <div class="cod-summary-row cod-summary-total"><span>Total order value</span><strong>${money(codTotal)}</strong></div>
+        <div class="cod-summary-row"><span>Pay now (advance)</span><strong>₹99</strong></div>
+        <div class="cod-summary-row"><span>Pay at delivery</span><strong>${money(codTotal-99)}</strong></div>
+        <p class="cod-summary-note">Pay ₹99 securely to confirm this COD order. The remaining amount is payable to the courier at delivery. COD is available on product totals of ₹399 or more.</p>
+        <div class="cod-terms-note" role="note" aria-label="Cash on Delivery terms">
+          <strong>Important – Cash on Delivery</strong>
+          <ul>
+            <li>The ₹99 advance payment is non-refundable if you refuse or do not accept the parcel at delivery.</li>
+            <li>Order cancellation is allowed only before dispatch.</li>
+            <li>Once the order has been dispatched, cancellation is not available.</li>
+          </ul>
+        </div>`;
+    } else if(selectedCheckoutOption==="PREPAID") {
+      details.innerHTML=`
+        <div class="checkout-option-heading">Secure online payment</div>
+        <div class="cod-summary-row"><span>Product total</span><strong>${money(subtotal)}</strong></div>
+        <div class="cod-summary-row"><span>Shipping</span><strong>${shipping===0?"FREE":money(shipping)}</strong></div>
+        <div class="cod-summary-row cod-summary-total"><span>Total amount to pay</span><strong>${money(orderTotal)}</strong></div>
+        <p class="cod-summary-note">You will be redirected to Razorpay's secure payment checkout. Your payment is protected, and your order will be confirmed after successful payment verification.</p>`;
+    } else if(selectedCheckoutOption==="WHATSAPP") {
+      details.innerHTML=`
+        <div class="checkout-option-heading">Place your order through WhatsApp</div>
+        <div class="cod-summary-row"><span>Product total</span><strong>${money(subtotal)}</strong></div>
+        <div class="cod-summary-row"><span>Shipping</span><strong>${shipping===0?"FREE":money(shipping)}</strong></div>
+        <div class="cod-summary-row cod-summary-total"><span>Order total</span><strong>${money(orderTotal)}</strong></div>
+        <p class="cod-summary-note">Tap Continue and you will be redirected to WhatsApp to place your order directly with Diecast.scape.</p>`;
+    } else {
+      details.innerHTML='<p class="checkout-option-placeholder">Choose one of the three options above to see your order details.</p>';
+    }
+  }
   function resetButton(button, originalText="Pay Now") {
     busy=false;
     if(button) { button.disabled=false; button.textContent=originalText; }
@@ -99,8 +155,8 @@
     if(!/^\d{10}$/.test(customer.phone)){showToast("Please enter a valid 10-digit phone number.");document.getElementById("checkoutPhone")?.focus();return;}
 
     busy=true;
-    const button=document.getElementById(paymentMode==="COD"?"codContinueBtn":"finalOnlinePayBtn");
-    const originalButtonText=button?.textContent.trim()||(paymentMode==="COD"?"Continue · Pay ₹99":"Pay Now");
+    const button=document.getElementById("checkoutContinueBtn");
+    const originalButtonText=button?.textContent.trim()||"Continue";
     if(button){button.disabled=true;button.textContent="Preparing secure payment...";}
     try {
       const response=await fetch("/api/accessories/v2/create-order",{
@@ -179,26 +235,24 @@
     }
   }
   document.addEventListener("DOMContentLoaded",()=>{
-    document.getElementById("finalOnlinePayBtn")?.addEventListener("click",()=>payAccessories("PREPAID"));
-    const codButton=document.getElementById("finalCodBtn");
-    const codPanel=document.getElementById("codCheckoutPanel");
-    codButton?.addEventListener("click",()=>{
+    document.querySelectorAll("[data-checkout-option]").forEach(card=>{
+      card.addEventListener("click",()=>{
+        selectedCheckoutOption=card.dataset.checkoutOption||"";
+        updateCheckoutOptionDetails();
+      });
+    });
+    document.getElementById("checkoutContinueBtn")?.addEventListener("click",()=>{
+      if(!selectedCheckoutOption){showToast("Please choose a checkout option.");return;}
       const consent=document.getElementById("checkoutPolicyConsent");
       if(!consent?.checked){showToast("Please accept all three policies before continuing.");consent?.focus();return;}
-      const subtotal=typeof getCartProductTotal==="function"?getCartProductTotal():0;
-      if(subtotal<399){showToast("Cash on Delivery is available on product totals of ₹399 or more.");return;}
-      const shipping=typeof getShipping==="function"?getShipping(subtotal):0;
-      const total=subtotal+shipping+20;
-      document.getElementById("codProductTotal").textContent="₹"+subtotal;
-      document.getElementById("codShipping").textContent=shipping===0?"FREE":"₹"+shipping;
-      document.getElementById("codOrderTotal").textContent="₹"+total;
-      document.getElementById("codRemaining").textContent="₹"+(total-99);
-      const opening=codPanel.hidden;
-      codPanel.hidden=!opening;
-      codButton.setAttribute("aria-expanded",String(opening));
-      if(opening)codPanel.scrollIntoView({behavior:"smooth",block:"nearest"});
+      if(selectedCheckoutOption==="COD")payAccessories("COD");
+      else if(selectedCheckoutOption==="PREPAID")payAccessories("PREPAID");
+      else if(selectedCheckoutOption==="WHATSAPP") {
+        if(typeof proceedOrderWhatsApp==="function")proceedOrderWhatsApp();
+        else showToast("WhatsApp ordering is temporarily unavailable. Please try again.");
+      }
     });
-    document.getElementById("codContinueBtn")?.addEventListener("click",()=>payAccessories("COD"));
+    updateCheckoutOptionDetails();
     retryPendingIssues();
   });
 })();
