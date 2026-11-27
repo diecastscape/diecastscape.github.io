@@ -769,6 +769,7 @@ function openCartPopup() {
 
   renderCart();
   updateExpectedDispatchEstimate();
+  updateExpectedDispatchEstimate();
 
 }
 
