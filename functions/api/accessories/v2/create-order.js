@@ -50,13 +50,13 @@ export async function onRequestPost({request,env}) {
       recordId="";
       return jsonResponse({error:"Cash on Delivery is available on product totals of ₹399 or more."},400);
     }
-    if(productTotal<199) {
+    if(productTotal<249) {
       await releaseAccessoryReservation(firebase,recordId,"cancelled");
       recordId="";
-      return jsonResponse({error:"Minimum order value is ₹199."},400);
+      return jsonResponse({error:"Minimum order value is ₹249."},400);
     }
     const shipping=productTotal>=799?0:55;
-    const codCharge=paymentMode==="COD"?20:0;
+    const codCharge=paymentMode==="COD"?25:0;
     const total=Math.round((productTotal+shipping+codCharge)*100)/100;
     const advancePaid=paymentMode==="COD"?99:total;
     const remainingAmount=paymentMode==="COD"?Math.max(0,total-advancePaid):0;
