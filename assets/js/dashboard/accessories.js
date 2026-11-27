@@ -38,14 +38,12 @@ window.addAccessoryImageField =
       document.createElement("div");
 
 
-    div.innerHTML = `
-      <input
-        class="a-img"
-        type="text"
-        placeholder="Image filename"
-        value="${value}"
-      >
-    `;
+    const input = document.createElement("input");
+    input.className = "a-img";
+    input.type = "text";
+    input.placeholder = "Image filename";
+    input.value = String(value ?? "");
+    div.appendChild(input);
 
 
     list.appendChild(div);
