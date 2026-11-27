@@ -75,10 +75,8 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
       throw new Error("PAYMENT_RECORD_NOT_PAYABLE");
 
     const counterPath="orderCounters/accessories";
-    const legacyCounterPath="bookedOrderCounters/accessoryOrderIdSequence";
     const counter=await firestoreGet(firebase,counterPath);
-    const legacyCounter=await firestoreGet(firebase,legacyCounterPath);
-    const highest=counter||legacyCounter?1000:await highestOrderNumber(firebase);
+    const highest=counter?1000:await highestOrderNumber(firebase);
     const items=Array.isArray(record.fields.items)?record.fields.items:[];
     if(!items.length)throw new Error("PAYMENT_ITEMS_MISSING");
     const sessionPath="paymentSessions/"+encodeURIComponent(recordPath.split("/").pop());
@@ -107,7 +105,7 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
       const product=componentDocsByCode.get(component.productCode)[0];
       return "accessoriesProducts/"+encodeURIComponent(product.name.split("/").pop());
     })))];
-    const paths=[recordPath,sessionPath,counterPath,legacyCounterPath,...productPaths,...comboPaths,...componentPaths];
+    const paths=[recordPath,sessionPath,counterPath,...productPaths,...comboPaths,...componentPaths];
     const docs=await firestoreBatchGet(firebase,paths);
     const freshRecord=docs.get(firebase.base+"/"+recordPath);
     if(!freshRecord)throw new Error("PAYMENT_RECORD_NOT_FOUND");
@@ -121,11 +119,9 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
 
     const freshSession=docs.get(firebase.base+"/"+sessionPath);
     const freshCounter=docs.get(firebase.base+"/"+counterPath);
-    const freshLegacyCounter=docs.get(firebase.base+"/"+legacyCounterPath);
     const previous=Math.max(
       1000,
       Number(freshCounter?.fields.lastNumber)||1000,
-      Number(freshLegacyCounter?.fields.lastNumber)||1000,
       highest
     );
     const next=previous+1,orderId="DS-A"+next;
@@ -240,14 +236,6 @@ async function createPaidOrder(firebase,recordPath,paymentId,customer) {
       })},
       updateMask:{fieldPaths:["lastNumber","updatedAt"]},
       currentDocument:freshCounter?{updateTime:freshCounter.updateTime}:{exists:false}
-    });
-    // Keep the legacy counter in sync while old admin/order tools still use it.
-    writes.push({
-      update:{name:resourceBase+"/"+legacyCounterPath,fields:firestoreFields({
-        lastNumber:next,updatedAt:{__timestamp:now}
-      })},
-      updateMask:{fieldPaths:["lastNumber","updatedAt"]},
-      currentDocument:freshLegacyCounter?{updateTime:freshLegacyCounter.updateTime}:{exists:false}
     });
     writes.push({
       update:{name:resourceBase+"/Orders/"+orderId,fields:firestoreFields({
