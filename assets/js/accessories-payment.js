@@ -43,12 +43,12 @@
     const money=value=>"₹"+Number(value||0).toLocaleString("en-IN");
 
     if(selectedCheckoutOption==="COD") {
-      const codTotal=orderTotal+20;
+      const codTotal=orderTotal+25;
       details.innerHTML=`
         <div class="checkout-option-heading">Partial COD payment summary</div>
         <div class="cod-summary-row"><span>Product total</span><strong>${money(subtotal)}</strong></div>
         <div class="cod-summary-row"><span>Shipping</span><strong>${shipping===0?"FREE":money(shipping)}</strong></div>
-        <div class="cod-summary-row"><span>COD charge</span><strong>₹20</strong></div>
+        <div class="cod-summary-row"><span>COD charge</span><strong>₹25</strong></div>
         <div class="cod-summary-row cod-summary-total"><span>Total order value</span><strong>${money(codTotal)}</strong></div>
         <div class="cod-summary-row"><span>Pay now (advance)</span><strong>₹99</strong></div>
         <div class="cod-summary-row"><span>Pay at delivery</span><strong>${money(codTotal-99)}</strong></div>
@@ -137,6 +137,7 @@
     const consent=document.getElementById("checkoutPolicyConsent");
     if(!consent?.checked){showToast("Please accept all three policies before continuing.");consent?.focus();return;}
     const productSubtotal=typeof getCartProductTotal==="function"?getCartProductTotal():0;
+    if(productSubtotal<249){showToast("Minimum checkout product total is ₹249.");return;}
     if(paymentMode==="COD"&&productSubtotal<399){showToast("Cash on Delivery is available on product totals of ₹399 or more.");return;}
     const products=typeof getCartProducts==="function"?getCartProducts():[];
     if(!products.length){showToast("Your cart is empty.");return;}
