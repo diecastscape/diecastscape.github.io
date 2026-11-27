@@ -51,7 +51,7 @@ window.saveAccessoriesAdminOrder=async function(orderId){
  const stage=Number(document.getElementById("ao-stage-"+orderId)?.value);
  const trackingId=document.getElementById("ao-track-"+orderId)?.value.trim()||"";
  if(stage===4&&!trackingId){alert("Enter the India Post tracking ID before marking this order Dispatched.");return;}
- const button=document.querySelector('[onclick="saveAccessoriesAdminOrder(\''+CSS.escape(orderId)+'\')"]');
+ const button=[...document.querySelectorAll("button")].find(node=>node.textContent.includes("Save Progress")&&node.getAttribute("onclick")?.includes(orderId));
  if(button){button.disabled=true;button.textContent="Saving…";}
  try{await request({action:"update",orderId,progressStage:stage,trackingId});alert("Order progress updated.");await window.loadAccessoriesAdminOrders();}
  catch(error){alert(error.message);if(button){button.disabled=false;button.textContent="Save Progress";}}
