@@ -719,3 +719,19 @@
   .checkout-page-main .checkout-option-card[data-checkout-option="PREPAID"]{padding-right:94px}
   .checkout-page-main .checkout-recommended-tag{font-size:7px;padding:4px 5px;right:6px}
 }
+
+
+/* Checkout refinements: align option content and keep labels anchored to their cards */
+@media (min-width:520px){.checkout-option-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.checkout-page-main .checkout-option-card{align-items:center;overflow:visible;}
+.checkout-page-main .checkout-option-symbol{align-self:center;flex:0 0 32px;width:32px;height:32px;margin:0;}
+.checkout-page-main .checkout-option-copy{min-width:0;flex:1;align-items:flex-start;text-align:left;}
+.checkout-page-main .checkout-option-check{align-self:center;flex:0 0 18px;margin-left:auto;}
+.checkout-page-main .checkout-option-card[data-checkout-option="PREPAID"]{padding-right:12px;}
+.checkout-page-main .checkout-option-card[data-checkout-option="PREPAID"].is-selected{padding-right:11px;}
+.checkout-page-main .checkout-recommended-tag{top:-8px;left:54px;right:auto;z-index:999;}
+.checkout-page-main .checkout-cod-charge-tag{position:absolute;top:-8px;right:10px;z-index:5;padding:4px 7px;border:1px solid #cdebe6;border-radius:5px;background:#e8f7f4;color:#087e69;font-size:8px;font-weight:900;line-height:1;white-space:nowrap;}
+.cod-reason-note{margin:12px 0;padding:12px 13px;border:1px solid #cfe8ec;border-radius:11px;background:#f0fafb;color:#40596b;font-size:11px;line-height:1.6;}
+.cod-reason-note strong{display:block;margin-bottom:5px;color:#102344;font-size:12px;font-weight:900;}
+.cod-reason-note p{margin:0;}
+@media(max-width:380px){.checkout-page-main .checkout-recommended-tag{left:48px;}.checkout-page-main .checkout-cod-charge-tag{right:7px;font-size:7px;}}
