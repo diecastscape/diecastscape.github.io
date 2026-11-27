@@ -31,8 +31,8 @@ function renderCard(order){
  (String(order.paymentMode||"PREPAID").toUpperCase()==="COD"?'<section class="ao-cod-payment"><div class="ao-cod-title">COD PAYMENT BREAKDOWN</div><div><span>Product subtotal</span><strong>'+money(order.subtotal)+'</strong></div><div><span>Shipping</span><strong>'+money(order.shipping)+'</strong></div><div><span>COD charge</span><strong>'+money(order.codCharge)+'</strong></div><div class="ao-cod-total"><span>Total order value</span><strong>'+money(order.grandTotal)+'</strong></div><div><span>Advance received</span><strong>'+money(order.advancePaid)+'</strong></div><div class="ao-cod-balance"><span>Remaining to collect at delivery</span><strong>'+money(order.remainingAmount)+'</strong></div><small>Advance payment status: '+esc(order.paymentStatus||"—")+'</small><small>Razorpay payment ID: '+esc(order.razorpayPaymentId||"—")+'</small></section>':"")+'
  '<details class="ao-private"><summary>See Full Details</summary><div><b>Name:</b> '+esc(customer.name||"—")+'<br><b>Phone:</b> '+esc(customer.phoneNumber||"—")+'<br><b>Address:</b> '+esc(address||"—")+'</div></details>'+
  (dispatched?'<div class="ao-tracking">Tracking ID: <strong>'+esc(order.trackingId||"—")+'</strong></div>':
- stockReview?'<div class="ao-review-action"><p>Review the required pieces and available stock before accepting. This action deducts stock and cannot be undone.</p><button type="button" onclick="acceptAccessoriesStockReview(\''+esc(order.orderId)+'\')">Accept Order &amp; Deduct Stock</button></div>':
- '<div class="ao-controls"><label>Order progress<select id="ao-stage-'+esc(order.orderId)+'">'+stages.map((stage,i)=>'<option value="'+(i+1)+'" '+(order.progressStage===i+1?"selected":"")+'>'+stage+'</option>').join("")+'</select></label><label>India Post tracking ID<input id="ao-track-'+esc(order.orderId)+'" value="'+esc(order.trackingId||"")+'" placeholder="Required before dispatch"></label><button type="button" onclick="saveAccessoriesAdminOrder(\''+esc(order.orderId)+'\')">Save Progress</button></div>')+
+ stockReview?'<div class="ao-review-action"><p>Review the required pieces and available stock before accepting. This action deducts stock and cannot be undone.</p><button type="button" data-ao-accept="'+esc(order.orderId)+'">Accept Order &amp; Deduct Stock</button></div>':
+ '<div class="ao-controls"><label>Order progress<select id="ao-stage-'+esc(order.orderId)+'">'+stages.map((stage,i)=>'<option value="'+(i+1)+'" '+(order.progressStage===i+1?"selected":"")+'>'+stage+'</option>').join("")+'</select></label><label>India Post tracking ID<input id="ao-track-'+esc(order.orderId)+'" value="'+esc(order.trackingId||"")+'" placeholder="Required before dispatch"></label><button type="button" data-ao-save="'+esc(order.orderId)+'">Save Progress</button></div>')+
  '</article>';
 }
 window.loadAccessoriesAdminOrders=async function(){
@@ -41,6 +41,8 @@ window.loadAccessoriesAdminOrders=async function(){
  try{
   const data=await request({action:"list"}),active=data.orders.filter(o=>o.progressStage!==4),dispatched=data.orders.filter(o=>o.progressStage===4);
   root.innerHTML='<h4 class="booked-form-heading">Active Orders ('+active.length+')</h4>'+
+   root.querySelectorAll('[data-ao-accept]').forEach(button=>button.addEventListener('click',()=>window.acceptAccessoriesStockReview(button.dataset.aoAccept)));
+   root.querySelectorAll('[data-ao-save]').forEach(button=>button.addEventListener('click',()=>window.saveAccessoriesAdminOrder(button.dataset.aoSave)));
    (active.length?active.map(renderCard).join(""):'<div class="booked-empty-state">No active Accessories orders.</div>')+
    '<h4 class="booked-form-heading ao-dispatched-heading">Dispatched Orders ('+dispatched.length+')</h4>'+
    (dispatched.length?dispatched.map(renderCard).join(""):'<div class="booked-empty-state">No dispatched Accessories orders yet.</div>');
