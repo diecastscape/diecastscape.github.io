@@ -93,13 +93,13 @@ async function createManualOrder(firebase,body){
  const codes=new Set([...grouped.keys(),...itemRows.map(x=>x.code),...affectedComboCodes]);
  for(const code of codes)if((byCode.get(code)||[]).length!==1)return {status:409,error:"Product code "+code+" is missing or duplicated. No changes were made."};
  const usedDocs=[...codes].map(code=>byCode.get(code)[0]);
- const counterPath="orderCounters/accessories",legacyCounterPath="bookedOrderCounters/accessoryOrderIdSequence";
+ const counterPath="orderCounters/accessories";
  for(let attempt=1;attempt<=4;attempt++){
-  const counter=await firestoreGet(firebase,counterPath),legacy=await firestoreGet(firebase,legacyCounterPath);
+  const counter=await firestoreGet(firebase,counterPath);
   const highestDocs=await firestoreListCollection(firebase,"Orders");
   let highest=1000;
   for(const d of highestDocs){const m=String(d.fields.orderId||"").match(/^DS-A(\d+)$/);if(m)highest=Math.max(highest,Number(m[1])||1000);}
-  const docs=await firestoreBatchGet(firebase,[markerPath,counterPath,legacyCounterPath,...usedDocs.map(d=>"accessoriesProducts/"+encodeURIComponent(d.name.split("/").pop()))]);
+  const docs=await firestoreBatchGet(firebase,[markerPath,counterPath,...usedDocs.map(d=>"accessoriesProducts/"+encodeURIComponent(d.name.split("/").pop()))]);
   if(docs.has(firebase.base+"/"+markerPath)){
    const previous=docs.get(firebase.base+"/"+markerPath)?.fields.orderId||"already processed";
    return {status:409,error:"This exact WhatsApp order was already processed as "+previous+"."};
@@ -133,7 +133,7 @@ async function createManualOrder(firebase,body){
    comboUpdates.push({productCode:comboCode,stockBefore:before,stockAfter:after});
   }
   for(const item of itemRows){const product=freshProducts.get(item.code),livePrice=Number(product?.fields.price);if(!Number.isFinite(livePrice)||money2(livePrice)!==money2(item.unitPrice))return {status:409,error:"Price changed for "+item.code+". Recheck the WhatsApp order before confirming."};}
-  const previous=Math.max(1000,Number(docs.get(firebase.base+"/"+counterPath)?.fields.lastNumber)||1000,Number(docs.get(firebase.base+"/"+legacyCounterPath)?.fields.lastNumber)||1000,highest);
+  const previous=Math.max(1000,Number(docs.get(firebase.base+"/"+counterPath)?.fields.lastNumber)||1000,highest);
   const next=previous+1,orderId="DS-A"+next,now=new Date().toISOString();
   const savedItems=itemRows.map(item=>{
    const product=freshProducts.get(item.code),isCombo=item.isCombo;
@@ -149,9 +149,10 @@ async function createManualOrder(firebase,body){
    writes.push({update:{name:p.name,fields:firestoreFields({stock:combo.stockAfter,stockUpdatedAt:{__timestamp:now}})},updateMask:{fieldPaths:["stock","stockUpdatedAt"]},currentDocument:{updateTime:p.updateTime}});
   }
   const counterFields={lastNumber:next,updatedAt:{__timestamp:now}};
-  for(const [path,existing] of [[counterPath,docs.get(firebase.base+"/"+counterPath)],[legacyCounterPath,docs.get(firebase.base+"/"+legacyCounterPath)]]){
-   writes.push(existing?{update:{name:existing.name,fields:firestoreFields(counterFields)},updateMask:{fieldPaths:["lastNumber","updatedAt"]},currentDocument:{updateTime:existing.updateTime}}:{update:{name:base+"/"+path,fields:firestoreFields(counterFields)},currentDocument:{exists:false}});
-  }
+  const existingCounter=docs.get(firebase.base+"/"+counterPath);
+  writes.push(existingCounter
+   ?{update:{name:existingCounter.name,fields:firestoreFields(counterFields)},updateMask:{fieldPaths:["lastNumber","updatedAt"]},currentDocument:{updateTime:existingCounter.updateTime}}
+   :{update:{name:base+"/"+counterPath,fields:firestoreFields(counterFields)},currentDocument:{exists:false}});
   writes.push({update:{name:base+"/Orders/"+orderId,fields:firestoreFields(orderFields)},currentDocument:{exists:false}});
   writes.push({update:{name:base+"/"+markerPath,fields:firestoreFields({orderId,createdAt:{__timestamp:now}})},currentDocument:{exists:false}});
   try{await firestoreCommit(firebase,undefined,writes);return {status:200,orderId,stockDeductions:orderFields.stockDeductions,comboStockUpdates:comboUpdates,expectedDispatchDate:dispatch};}
