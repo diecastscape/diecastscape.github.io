@@ -448,64 +448,36 @@ class="search-bar">
   <div class="checkout-section-heading">
     <span aria-hidden="true">✓</span>
     <div>
-      <strong>Choose how to order</strong>
-      <small>Select your preferred checkout method.</small>
+      <strong>Choose your preference</strong>
+      <small>Select one option. Its details will appear below.</small>
     </div>
+  </div>
+
+  <div class="checkout-option-cards" role="group" aria-label="Choose checkout option">
+    <button type="button" class="checkout-option-card" data-checkout-option="COD" aria-pressed="false">
+      <strong>Partial COD</strong>
+      <span>₹99 advance · Remaining at delivery</span>
+    </button>
+    <button type="button" class="checkout-option-card" data-checkout-option="PREPAID" aria-pressed="false">
+      <strong>Pay Now</strong>
+      <span>Secure online payment via Razorpay</span>
+    </button>
+    <button type="button" class="checkout-option-card" data-checkout-option="WHATSAPP" aria-pressed="false">
+      <strong>Order Directly via WhatsApp</strong>
+      <span>Continue to WhatsApp to place your order</span>
+    </button>
+  </div>
+
+  <div id="checkoutOptionDetails" class="checkout-option-details" aria-live="polite">
+    <p class="checkout-option-placeholder">Choose one of the three options above to see your order details.</p>
   </div>
 
   <label class="checkout-policy-consent" for="checkoutPolicyConsent">
     <input type="checkbox" id="checkoutPolicyConsent">
-    <span>I agree to the <a href="/policy's/terms/">Terms of Service</a>, <a href="/policy's/shipping/">Shipping Policy</a>, and <a href="/policy's/privacy/">Privacy Policy</a>.</span>
+    <span>I understand and agree to the <a href="/policy's/terms/">Terms of Service</a>, <a href="/policy's/shipping/">Shipping Policy</a>, and <a href="/policy's/privacy/">Privacy Policy</a>.</span>
   </label>
 
-  <button
-    type="button"
-    id="finalCodBtn"
-    class="proceed-order-btn checkout-cod-btn"
-    aria-expanded="false"
-    aria-controls="codCheckoutPanel"
-  >
-    Cash on Delivery
-    <span class="cod-availability-tag">Available on orders ₹399+</span>
-  </button>
-
-  <div id="codCheckoutPanel" class="cod-checkout-panel" hidden>
-    <div class="cod-checkout-heading">Cash on Delivery summary</div>
-    <div class="cod-summary-row"><span>Product total</span><strong id="codProductTotal">₹0</strong></div>
-    <div class="cod-summary-row"><span>Shipping</span><strong id="codShipping">₹0</strong></div>
-    <div class="cod-summary-row"><span>COD charge</span><strong>₹20</strong></div>
-    <div class="cod-summary-row cod-summary-total"><span>Total order value</span><strong id="codOrderTotal">₹0</strong></div>
-    <div class="cod-summary-row"><span>Pay now (advance)</span><strong>₹99</strong></div>
-    <div class="cod-summary-row"><span>Pay at delivery</span><strong id="codRemaining">₹0</strong></div>
-    <p class="cod-summary-note">Your delivery details are required. Pay ₹99 securely to confirm this COD order. The remaining amount is payable to the courier at delivery.</p>
-    <div class="cod-terms-note" role="note" aria-label="Cash on Delivery terms">
-      <strong>Important – Cash on Delivery</strong>
-      <ul>
-        <li>The ₹99 advance payment is non-refundable if you refuse or do not accept the parcel at delivery.</li>
-        <li>Order cancellation is allowed only before dispatch.</li>
-        <li>Once the order has been dispatched, cancellation is not available.</li>
-      </ul>
-    </div>
-    <button type="button" id="codContinueBtn" class="proceed-order-btn checkout-online-btn">Continue · Pay ₹99</button>
-  </div>
-
-  <button
-    type="button"
-    id="finalOnlinePayBtn"
-    class="proceed-order-btn checkout-online-btn"
-  >
-    Pay Online
-    <span>Secure payment via Razorpay</span>
-  </button>
-
-  <button
-    type="button"
-    id="finalWhatsAppBtn"
-    class="proceed-order-btn checkout-whatsapp-btn"
-  >
-    Order via WhatsApp
-    <span>Send your order details directly to us</span>
-  </button>
+  <button type="button" id="checkoutContinueBtn" class="proceed-order-btn checkout-continue-btn" disabled>Continue</button>
 
   <p class="checkout-trust-footnote">Your delivery details are used to fulfil your order. WhatsApp orders can share delivery details directly in chat.</p>
 </div>
