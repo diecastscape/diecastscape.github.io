@@ -22,7 +22,7 @@
       <div class="home-brand-tagline">BUILT IN SCALE. CRAFTED WITH SOUL.</div>
     </div>
     <div class="home-actions">
-      <a href="/products/accessories/" class="home-menu-btn" aria-label="Back to Accessories" style="text-decoration:none">‹</a>
+      <button class="home-menu-btn" type="button" onclick="openMenu()" aria-label="Open menu">☰</button>
     </div>
   </div>
 </header>
@@ -34,7 +34,6 @@
   <span class="breadcrumb-current">Checkout</span>
 </nav>
 <main class="checkout-page-main">
-  <a class="checkout-page-back-link" href="/products/accessories/">← Back to Accessories</a>
   <section id="checkoutPageContent" class="checkout-page-content" hidden>
     <div class="checkout-page-card">
       <div class="checkout-page-heading">
@@ -50,31 +49,30 @@
         <div class="cart-popup-summary-row cart-popup-total-row"><span>Order Total</span><strong id="cartPopupGrandTotal">₹0</strong></div>
         <div id="expectedDispatchEstimate" class="cart-popup-dispatch-note" role="status" aria-live="polite">Expected dispatch: Calculating…</div>
       </div>
-      <div class="order-policy">
-        <div class="order-policy-title">Dispatch information</div>
-        <p>Accessories orders are dispatched according to our weekly schedule: Wednesday and Saturday.</p>
-      </div>
+      
       <div class="checkout-fields">
-        <div class="checkout-section-heading"><span aria-hidden="true">✓</span><div><strong>Delivery information</strong><small>Required for Pay Online and Cash on Delivery. WhatsApp orders can share delivery details directly in chat.</small></div></div>
-        <div class="checkout-field"><label for="checkoutName">Name</label><input type="text" id="checkoutName" placeholder="Enter your full name" autocomplete="name" required></div>
-        <div class="checkout-field"><label for="checkoutAddress">Address</label><textarea id="checkoutAddress" rows="3" placeholder="Enter your complete delivery address" autocomplete="street-address" required></textarea></div>
-        <div class="checkout-field"><label for="checkoutCity">City</label><input type="text" id="checkoutCity" placeholder="Enter your city" autocomplete="address-level2" required></div>
-        <div class="checkout-field"><label for="checkoutState">State</label><input type="text" id="checkoutState" placeholder="Enter your state" autocomplete="address-level1" required></div>
-        <div class="checkout-field"><label for="checkoutPostOffice">Post Office Name</label><input type="text" id="checkoutPostOffice" placeholder="Enter your post office name" autocomplete="off" required></div>
-        <div class="checkout-field"><label for="checkoutPincode">Pincode</label><input type="text" id="checkoutPincode" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit pincode" autocomplete="postal-code" required></div>
-        <div class="checkout-field"><label for="checkoutPhone">Phone Number</label><input type="tel" id="checkoutPhone" inputmode="numeric" maxlength="10" placeholder="Enter 10-digit phone number" autocomplete="tel" required></div>
+        <div class="checkout-section-heading checkout-section-heading-clean"><span class="checkout-section-icon" aria-hidden="true">▤</span><div><strong>Delivery Details</strong><small>Where should we send your order?</small></div></div>
+        <div class="checkout-form-grid">
+          <div class="checkout-field"><label for="checkoutName">Name <span>*</span></label><input type="text" id="checkoutName" placeholder="Full name" autocomplete="name" required></div>
+          <div class="checkout-field"><label for="checkoutPhone">Phone Number <span>*</span></label><input type="tel" id="checkoutPhone" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel" required></div>
+          <div class="checkout-field checkout-field-full"><label for="checkoutAddress">Address <span>*</span></label><textarea id="checkoutAddress" rows="2" placeholder="House number, street and area" autocomplete="street-address" required></textarea></div>
+          <div class="checkout-field"><label for="checkoutCity">City <span>*</span></label><input type="text" id="checkoutCity" placeholder="Enter city" autocomplete="address-level2" required></div>
+          <div class="checkout-field"><label for="checkoutState">State <span>*</span></label><input type="text" id="checkoutState" placeholder="Enter state" autocomplete="address-level1" required></div>
+          <div class="checkout-field"><label for="checkoutPostOffice">Post Office Name <span>*</span></label><input type="text" id="checkoutPostOffice" placeholder="Post office name" autocomplete="off" required></div>
+          <div class="checkout-field"><label for="checkoutPincode">Pincode <span>*</span></label><input type="text" id="checkoutPincode" inputmode="numeric" maxlength="6" placeholder="6-digit pincode" autocomplete="postal-code" required></div>
+        </div>
       </div>
       <div class="order-popup-action">
-        <div class="checkout-section-heading"><span aria-hidden="true">✓</span><div><strong>Choose your preference</strong><small>Select one option. Its details will appear below.</small></div></div>
+        <div class="checkout-section-heading checkout-section-heading-clean"><span class="checkout-section-icon" aria-hidden="true">▣</span><div><strong>Payment Option</strong><small>Choose how you would like to complete your order.</small></div></div>
         <div class="checkout-option-cards" role="group" aria-label="Choose checkout option">
-          <button type="button" class="checkout-option-card" data-checkout-option="COD" aria-pressed="false"><strong>Partial COD</strong><span>₹99 advance · Remaining at delivery</span></button>
-          <button type="button" class="checkout-option-card" data-checkout-option="PREPAID" aria-pressed="false"><strong>Pay Now</strong><span>Secure online payment via Razorpay</span></button>
-          <button type="button" class="checkout-option-card" data-checkout-option="WHATSAPP" aria-pressed="false"><strong>Order Directly via WhatsApp</strong><span>Continue to WhatsApp to place your order</span></button>
+          <button type="button" class="checkout-option-card" data-checkout-option="COD" aria-pressed="false"><span class="checkout-option-symbol checkout-cod-symbol">₹</span><span class="checkout-option-copy"><strong>Partial COD</strong><small>₹99 advance · Remaining at delivery</small></span><span class="checkout-option-check" aria-hidden="true"></span></button>
+          <button type="button" class="checkout-option-card" data-checkout-option="PREPAID" aria-pressed="false"><span class="checkout-option-symbol checkout-pay-symbol">↗</span><span class="checkout-option-copy"><strong>Pay Now</strong><small>Secure online payment via Razorpay</small></span><span class="checkout-option-check" aria-hidden="true"></span></button>
+          <button type="button" class="checkout-option-card" data-checkout-option="WHATSAPP" aria-pressed="false"><span class="checkout-option-symbol checkout-wa-symbol">◉</span><span class="checkout-option-copy"><strong>Order Directly via WhatsApp</strong><small>Continue to WhatsApp to place your order</small></span><span class="checkout-option-check" aria-hidden="true"></span></button>
         </div>
         <div id="checkoutOptionDetails" class="checkout-option-details" aria-live="polite"><p class="checkout-option-placeholder">Choose one of the three options above to see your order details.</p></div>
         <label class="checkout-policy-consent" for="checkoutPolicyConsent"><input type="checkbox" id="checkoutPolicyConsent"><span>I understand and agree to the <a href="/policy's/terms/">Terms of Service</a>, <a href="/policy's/shipping/">Shipping Policy</a>, and <a href="/policy's/privacy/">Privacy Policy</a>.</span></label>
         <button type="button" id="checkoutContinueBtn" class="proceed-order-btn checkout-continue-btn" disabled>Continue</button>
-        <p class="checkout-trust-footnote">Your delivery details are used to fulfil your order. WhatsApp orders can share delivery details directly in chat.</p>
+        <p class="checkout-trust-footnote"><span aria-hidden="true">▣</span> Secure checkout · Your details are used only to process your order.</p>
       </div>
     </div>
   </section>
