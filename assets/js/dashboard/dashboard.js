@@ -243,6 +243,29 @@ window.openSection =
 
       });
 
+    // These data-only sections must open before product-form reset logic.
+    if (type === "accessoriesOrders" || type === "pendingPayments") {
+      const target = document.getElementById("section-" + type);
+      if (!target) return;
+      target.style.display = "block";
+
+      const loaderName = type === "accessoriesOrders"
+        ? "loadAccessoriesAdminOrders"
+        : "loadPendingPaymentsAdmin";
+      const loader = window[loaderName];
+      if (typeof loader === "function") {
+        loader();
+      } else {
+        const listId = type === "accessoriesOrders"
+          ? "accessoriesOrdersAdminList"
+          : "pendingPaymentsAdminList";
+        const list = document.getElementById(listId);
+        if (list) {
+          list.innerHTML = '<div class="booked-error-state">The order loader did not initialize. Refresh this admin page and try again.</div>';
+        }
+      }
+      return;
+    }
 
     const mainBtn =
       document.getElementById(
@@ -316,23 +339,6 @@ if (addWrap) {
   addWrap.style.display = "none";
 }
 
-
-// ======================================================
-// ACCESSORIES ORDERS SECTION (new private Orders collection)
-// ======================================================
-
-if (type === "accessoriesOrders") {
-  if (typeof window.loadAccessoriesAdminOrders === "function") {
-    window.loadAccessoriesAdminOrders();
-  }
-  return;
-}
-if (type === "pendingPayments") {
-  if (typeof window.loadPendingPaymentsAdmin === "function") {
-    window.loadPendingPaymentsAdmin();
-  }
-  return;
-}
 
 let listBox;
 
