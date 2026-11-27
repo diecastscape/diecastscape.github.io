@@ -380,7 +380,7 @@ export async function onRequestPost({request,env}) {
     return jsonResponse({
       ok:false,status:"verification_pending",
       error:"We received your verification request but could not finish recording the order. Please do not pay again.",
-      diagnosticStage:stage,diagnosticDetail:detail
+      referenceId:crypto.randomUUID()
     },500);
   }
 }
