@@ -2300,3 +2300,23 @@ body {
 
   .trust-delivery-card a { margin-top: 10px; font-size: 11px; }
 }
+
+
+/* Homepage hero spacing: clear the fixed header and keep even screen gutters. */
+.home-hero {
+  margin: 92px auto 42px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (max-width: 700px) {
+  .home-hero {
+    margin: 80px auto 25px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .hero-slider {
+    border-radius: 18px;
+  }
+}
