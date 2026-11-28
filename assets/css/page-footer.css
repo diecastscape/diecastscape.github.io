@@ -625,3 +625,64 @@
     max-width: none;
   }
 }
+
+
+/* =====================================================
+   DIECAST.SCAPE FOOTER — BRAND COLOR REFINEMENT
+   Design methodology adapted from Unslop by Damir Sokolovsky
+   https://github.com/heydamir/unslop — CC BY 4.0
+   Solid ink surface, light-blue brand accent, no hue gradients.
+===================================================== */
+.footer {
+  color: #EEF3F6;
+  background: #102344;
+  border-top: 1px solid rgba(91, 192, 190, .28);
+}
+.footer::before {
+  height: 2px;
+  background: #5BC0BE;
+  opacity: 1;
+}
+.footer-title span { background: #5BC0BE; }
+.footer-title h3 { color: #B7E6E5; }
+.footer-links a {
+  color: #D5E0E8;
+  background: rgba(255,255,255,.045);
+  border-color: rgba(230,240,248,.13);
+}
+.footer-links a:hover {
+  color: #102344;
+  background: #5BC0BE;
+  border-color: #5BC0BE;
+}
+.footer-line { background: rgba(230,240,248,.16); }
+.footer-left .home-brand-name { color: #F5F8FA; }
+.footer-left .home-brand-name span { color: #8FDAD7; }
+.footer-left p { color: #C0CDD8; }
+.footer-left .copyright { color: #9EAFBF; }
+.footer-btn {
+  color: #EEF3F6;
+  border-color: rgba(230,240,248,.22);
+  background: rgba(255,255,255,.06);
+  box-shadow: none;
+}
+.footer-instagram,
+.footer-whatsapp {
+  background: rgba(255,255,255,.06);
+  color: #EEF3F6;
+  box-shadow: none;
+}
+.footer-whatsapp {
+  border-color: rgba(91,192,190,.55);
+  color: #B7E6E5;
+}
+.footer-features {
+  border-top-color: rgba(230,240,248,.16);
+  border-bottom-color: rgba(230,240,248,.16);
+}
+.feature-item {
+  color: #C0CDD8;
+  border-right-color: rgba(230,240,248,.14);
+}
+.feature-text { color: #C0CDD8; }
+.icon2 { background-color: #8FDAD7; }
