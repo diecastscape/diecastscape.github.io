@@ -26,29 +26,19 @@
   <link rel="stylesheet" href="/assets/css/page-footer.css">
 </head>
 
-<body>
+<body class="policy-page">
 
 <header class="home-header">
   <div class="home-header-inner">
-
-
-<div class="home-brand">
-  <div class="home-brand-name">
-    Diecast<span>.scape</span>
-  </div>
-
-  <div class="home-brand-tagline">
-    BUILT IN SCALE. CRAFTED WITH SOUL.
-  </div>
-</div>
-
-<div class="home-actions">
-  <button class="home-menu-btn" onclick="openMenu()" aria-label="Menu">
-    ☰
-  </button>
-</div>
-
-
+    <a class="home-brand" href="/" aria-label="Diecast.scape home">
+      <div class="home-brand-name">Diecast<span>.scape</span></div>
+      <div class="home-brand-tagline">BUILT IN SCALE. CRAFTED WITH SOUL.</div>
+    </a>
+    <div class="home-actions">
+      <button class="home-menu-btn" type="button" onclick="openMenu()" aria-label="Open menu" aria-controls="sideMenu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -330,86 +320,32 @@ Custom handcrafted products & sales
 
 <!-- Slide Menu -->
 
-<nav class="side-menu" id="sideMenu">
-
+<nav class="side-menu" id="sideMenu" aria-label="Main navigation" aria-hidden="true">
   <div class="menu-header">
-
-
-<div>
-  <div class="menu-label">
-    DIECAST.SCAPE
+    <div><div class="menu-label">DIECAST.SCAPE</div><div class="menu-title">Menu</div></div>
+    <button class="menu-close" type="button" onclick="closeMenu()" aria-label="Close menu">×</button>
   </div>
-
-  <div class="menu-title">
-    Menu
-  </div>
-</div>
-
-<button class="menu-close" onclick="closeMenu()" aria-label="Close menu">
-  ×
-</button>
-
-
-  </div>
-
   <div class="menu-divider"></div>
-
   <div class="menu-links">
-
-
-<a href="/products/diorama/">
-  <span>Dioramas</span>
-  <span class="menu-arrow">→</span>
-</a>
-
-<a href="/products/accessories/">
-  <span>Accessories</span>
-  <span class="menu-arrow">→</span>
-</a>
-
-<a href="/products/frames/">
-  <span>Frames</span>
-  <span class="menu-arrow">→</span>
-</a>
-
-    <a href="/your-orders/">
-      <span>Your Orders</span>
-      <span class="menu-arrow">→</span>
-    </a>
-
-
+    <a href="/products/diorama/"><span>Dioramas</span><span class="menu-arrow">→</span></a>
+    <a href="/products/accessories/"><span>Accessories</span><span class="menu-arrow">→</span></a>
+    <a href="/products/frames/"><span>Frames</span><span class="menu-arrow">→</span></a>
+    <a href="/your-orders/"><span>Your Orders</span><span class="menu-arrow">→</span></a>
   </div>
-
   <div class="menu-divider"></div>
-
   <div class="menu-secondary">
-
-
-<a href="/policy's/about/">About Us</a>
-<a href="/policy's/faq/">FAQ</a>
-<a href="/policy's/shipping/">Shipping Policy</a>
-<a href="/policy's/return/">Return & Cancellation</a>
-<a href="/policy's/privacy/">Privacy Policy</a>
-<a href="/policy's/terms/">Terms of Service</a>
-
-
-      <a href="/contact/">Contact Us</a>
+    <a href="/policy's/about/">About Us</a>
+    <a href="/policy's/faq/">FAQ</a>
+    <a href="/policy's/shipping/">Shipping Policy</a>
+    <a href="/policy's/return/">Return &amp; Cancellation</a>
+    <a href="/policy's/privacy/">Privacy Policy</a>
+    <a href="/policy's/terms/">Terms of Service</a>
+    <a href="/contact/">Contact Us</a>
   </div>
-
   <div class="menu-bottom">
-
-
-<div class="menu-bottom-brand">
-  Diecast<span>.scape</span>
-</div>
-
-<div class="menu-bottom-text">
-  BUILT IN SCALE. CRAFTED WITH SOUL.
-</div>
-
-
+    <div class="menu-bottom-brand">Diecast<span>.scape</span></div>
+    <div class="menu-bottom-text">BUILT IN SCALE. CRAFTED WITH SOUL.</div>
   </div>
-
 </nav>
 
 <script src="/assets/js/core.js"></script>
