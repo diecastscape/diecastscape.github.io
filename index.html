@@ -52,8 +52,8 @@
     </div>
 
     <div class="home-actions">
-      <button class="home-menu-btn" onclick="openMenu()" aria-label="Menu">
-        ☰
+      <button class="home-menu-btn" onclick="openMenu()" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
       </button>
     </div>
   </div>
@@ -145,11 +145,11 @@
 
   </div>
 
-  <button class="hero-arrow hero-prev" onclick="changeHero(-1)">
+  <button class="hero-arrow hero-prev" onclick="changeHero(-1)" aria-label="Previous slide">
     ‹
   </button>
 
-  <button class="hero-arrow hero-next" onclick="changeHero(1)">
+  <button class="hero-arrow hero-next" onclick="changeHero(1)" aria-label="Next slide">
     ›
   </button>
 
@@ -173,8 +173,8 @@
       </h2>
     </div>
 
-    <a  class="view-all">
-      View All →
+    <a href="/products/diorama/" class="view-all">
+      Explore all <span aria-hidden="true">↗</span>
     </a>
   </div>
 <div class="category-grid">
