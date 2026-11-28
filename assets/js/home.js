@@ -31,7 +31,6 @@ function startHeroAutoplay() {
   if (document.hidden || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   heroTimer = window.setInterval(() => showHero(currentHero + 1), HERO_INTERVAL);
 }
-window.changeHero = direction => { showHero(currentHero + direction); startHeroAutoplay(); };
 window.goHero = index => { showHero(index); startHeroAutoplay(); };
 
 document.addEventListener("DOMContentLoaded", () => {
