@@ -1949,3 +1949,63 @@ body {
     width: auto;
   }
 }
+
+
+/* =====================================================
+   DIECAST.SCAPE BRAND COLOR REFINEMENT
+   Design methodology adapted from Unslop by Damir Sokolovsky
+   https://github.com/heydamir/unslop — CC BY 4.0
+   Keep the existing editorial layout; use the original
+   light-blue brand accent with quiet ink neutrals.
+===================================================== */
+:root {
+  --ds-accent: #5BC0BE;
+  --ds-accent-ink: #287F80;
+  --ds-accent-soft: #EAF7F7;
+  --ds-ink: #17232B;
+  --ds-muted: #687777;
+}
+
+.home-brand-name span { color: var(--ds-accent-ink); }
+.home-menu-btn:hover {
+  background: var(--ds-accent-soft);
+  border-color: var(--ds-accent);
+}
+.hero-small-title,
+.custom-home-content .section-label { color: #8FDAD7; }
+.hero-content h1 span,
+.custom-home-content h2 span { color: #8FDAD7; }
+.hero-btn,
+.custom-home-btn {
+  background: var(--ds-accent);
+  color: #102344;
+  box-shadow: none;
+}
+.hero-btn:hover,
+.custom-home-btn:hover {
+  background: #79CFCD;
+  box-shadow: none;
+}
+.hero-dot.active { background: var(--ds-accent); }
+.section-label,
+.section-heading h2 span,
+.why-heading h2 span { color: var(--ds-accent-ink); }
+.view-all { color: var(--ds-accent-ink); }
+.category-card:hover {
+  border-color: rgba(40, 127, 128, .34);
+  box-shadow: 0 12px 28px rgba(16, 35, 68, .07);
+}
+.category-arrow {
+  border-color: rgba(40, 127, 128, .24);
+  color: var(--ds-accent-ink);
+}
+.category-card:hover .category-arrow {
+  background: var(--ds-accent);
+  color: #102344;
+}
+.popular-cart-btn {
+  border-color: var(--ds-accent);
+  color: var(--ds-accent-ink);
+}
+.why-icon { background: var(--ds-accent-soft); }
+.why-icon .icon { background-color: var(--ds-accent-ink); }
