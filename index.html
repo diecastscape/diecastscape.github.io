@@ -35,129 +35,70 @@
 <link rel="manifest" href="/favicon/site.webmanifest">
   <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="stylesheet" href="/assets/css/home.css">
+  <link rel="stylesheet" href="/assets/css/showroom.css">
   <link rel="stylesheet" href="/assets/css/page-footer.css">
 </head>
 
 <body>
 
+
 <header class="home-header">
   <div class="home-header-inner">
+    <button class="home-menu-btn" onclick="openMenu()" aria-label="Open menu"></button>
+    <div class="showroom-nav-divider"></div>
     <div class="home-brand">
-      <div class="home-brand-name">
-        Diecast<span>.scape</span>
-      </div>
-      <div class="home-brand-tagline">
-        BUILT IN SCALE. CRAFTED WITH SOUL.
-      </div>
+      <div class="home-brand-name">Diecast<span>.scape</span></div>
+      <div class="home-brand-tagline">BUILT IN SCALE. CRAFTED WITH SOUL.</div>
     </div>
-
     <div class="home-actions">
-      <button class="home-menu-btn" onclick="openMenu()" aria-label="Menu">
-        ☰
-      </button>
+      <a class="showroom-nav-icon" href="/products/accessories/" aria-label="Search products">
+        <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.2 4.2"/></svg>
+      </a>
+      <a class="showroom-nav-icon" href="/login/" aria-label="Account">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.8 20c.8-3.5 3.2-5.2 7.2-5.2s6.4 1.7 7.2 5.2"/></svg>
+      </a>
+      <a class="showroom-nav-icon" href="/checkout/" aria-label="Shopping bag">
+        <svg viewBox="0 0 24 24"><path d="M5 8h14l1 12H4L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+      </a>
     </div>
   </div>
 </header>
 
 <main>
 
-<section class="home-hero">
-  <div class="hero-slider" id="heroSlider">
 
-    <article class="hero-slide active">
-      <img src="/images/miniature-display.webp" alt="Miniature diecast display">
-
-      <div class="hero-content">
-        <div class="hero-small-title">
-          1:64 SCALE DIORAMAS
-        </div>
-
-        <h1>
-          SMALL CARS.<br>
-          <span>BIG STORIES.</span>
-        </h1>
-
-        <p>
-          Handmade dioramas, display setups,
-          photo frames & more —
-          all crafted for true diecast enthusiasts.
-        </p>
-
-        <a href="/products/diorama/" class="hero-btn">
-          EXPLORE PRODUCTS
-          <span>→</span>
-        </a>
-      </div>
-    </article>
-
-    <article class="hero-slide">
-      <img src="/images/frames-display.webp" alt="Diecast photo frame">
-
-      <div class="hero-content">
-        <div class="hero-small-title">
-          DISPLAY YOUR FAVORITE CAR
-        </div>
-
-        <h1>
-          YOUR CAR.<br>
-          <span>YOUR STORY.</span>
-        </h1>
-
-        <p>
-          Turn your favorite diecast
-          into a premium wall display.
-        </p>
-
-        <a href="/products/frames/" class="hero-btn">
-          EXPLORE FRAMES
-          <span>→</span>
-        </a>
-      </div>
-    </article>
-
-    <article class="hero-slide">
-      <img src="/images/custom-available.webp" alt="Custom miniature display">
-
-      <div class="hero-content">
-        <div class="hero-small-title">
-          CUSTOM ORDERS
-        </div>
-
-        <h1>
-          YOUR VISION.<br>
-          <span>OUR CRAFT.</span>
-        </h1>
-
-        <p>
-          Have something special in mind?
-          Let's build it around your car.
-        </p>
-
-        <a
-          href="https://wa.me/918792744018?text=Hi%20Diecast.scape,%20I%20want%20a%20customized%20miniature%20display."
-          target="_blank"
-          class="hero-btn">
-          REQUEST CUSTOM DESIGN
-          <span>→</span>
-        </a>
-      </div>
-    </article>
-
+<section class="showroom-hero" aria-label="Diecast showroom">
+  <div class="showroom-stage">
+    <div class="showroom-kicker">THE DIECAST.SCAPE SHOWROOM</div>
+    <h1 class="showroom-title">Small scale.<br><em>Big presence.</em></h1>
+    <p class="showroom-subtitle">Explore the collection, one miniature at a time.</p>
+    <div class="showroom-floor"></div>
+    <div class="showroom-track"></div>
+    <div class="showroom-lineup" id="showroomLineup" aria-label="Nine featured miniature cars"></div>
+    <div class="showroom-controls">
+      <button class="showroom-control" id="showroomPrev" type="button" aria-label="Previous car">‹</button>
+      <button class="showroom-control showroom-play" id="showroomPlay" type="button" aria-label="Pause carousel">Ⅱ</button>
+      <button class="showroom-control" id="showroomNext" type="button" aria-label="Next car">›</button>
+      <div class="showroom-progress" id="showroomProgress" aria-label="Choose a car"></div>
+      <span class="showroom-look-count" id="showroomLookCount">LOOK 01 / 09</span>
+    </div>
+    <a class="showroom-try" href="/products/diorama/">Explore dioramas <span aria-hidden="true">→</span></a>
   </div>
-
-  <button class="hero-arrow hero-prev" onclick="changeHero(-1)">
-    ‹
-  </button>
-
-  <button class="hero-arrow hero-next" onclick="changeHero(1)">
-    ›
-  </button>
-
-  <div class="hero-dots">
-    <button class="hero-dot active" onclick="goHero(0)"></button>
-    <button class="hero-dot" onclick="goHero(1)"></button>
-    <button class="hero-dot" onclick="goHero(2)"></button>
-  </div>
+  <aside class="showroom-panel">
+    <div class="showroom-panel-heading">
+      <h2>In this <span>setup</span></h2>
+      <span class="showroom-panel-count">ACCESSORIES</span>
+    </div>
+    <div class="showroom-product-list" id="showroomProducts">
+      <div class="showroom-products-state">Loading miniature accessories…</div>
+    </div>
+    <div class="showroom-bundle">
+      <h3 class="showroom-bundle-title">Complete your display</h3>
+      <p class="showroom-bundle-copy">Find the small details that bring your 1:64 collection to life.</p>
+      <a class="showroom-bundle-button" href="/products/accessories/">SHOP ACCESSORIES <span aria-hidden="true">→</span></a>
+      <p class="showroom-panel-note">Handcrafted details for 1:64 scale collectors.</p>
+    </div>
+  </aside>
 </section>
 
 <section class="home-section categories-section">
@@ -517,6 +458,7 @@
 <script src="/assets/js/core.js"></script>
 <script type="module" src="/assets/js/firebase-init.js"></script>
 <script type="module" src="/assets/js/home.js"></script>
+<script type="module" src="/assets/js/showroom.js"></script>
 
 </body>
 </html>
