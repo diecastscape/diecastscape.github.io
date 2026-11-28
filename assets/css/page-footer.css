@@ -870,3 +870,43 @@ body:not(.home-page) { padding-top: 72px; }
 @media (max-width: 700px) {
   body:not(.home-page) { padding-top: 64px; }
 }
+
+
+/* Final responsive alignment: keep the menu trigger and drawer inside viewport. */
+.home-header-inner { min-width: 0; }
+.home-brand { min-width: 0; }
+.home-actions { width: auto; min-width: 44px; flex: 0 0 auto; }
+.home-header .home-menu-btn {
+  position: relative;
+  inset: auto;
+  display: inline-flex;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  margin: 0;
+  padding: 0;
+  transform: none;
+}
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: min(340px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+  transform: translate3d(110%, 0, 0);
+}
+body.menu-open .side-menu { transform: translate3d(0, 0, 0); }
+@media (max-width: 700px) {
+  .home-header-inner { padding-left: 13px; padding-right: 13px; }
+  .home-actions { gap: 0; }
+  .home-header .home-menu-btn {
+    flex-basis: 42px;
+    width: 42px;
+    min-width: 42px;
+    max-width: 42px;
+  }
+  .side-menu { width: min(315px, calc(100vw - 16px)); max-width: calc(100vw - 16px); }
+}
