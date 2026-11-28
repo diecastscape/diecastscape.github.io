@@ -145,118 +145,6 @@
 }
 
 /* =====================================================
-   SOCIAL BUTTONS
-===================================================== */
-.footer-right {
-  width: 175px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-/* Common button */
-.footer-btn {
-  width: 100%;
-  min-height: 40px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 22px;
-  font-size: 12px;
-  font-weight: 700;
-  text-decoration: none;
-  color: #ffffff;
-  transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
-}
-
-.footer-btn:hover {
-  transform: translateY(-2px);
-}
-
-.footer-btn:active {
-  transform: scale(.97);
-}
-
-/* =====================================================
-   INSTAGRAM
-===================================================== */
-.footer-instagram {
-  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
-  box-shadow: 0 6px 16px rgba(221,42,123,.18);
-}
-
-/* =====================================================
-   WHATSAPP
-===================================================== */
-.footer-whatsapp {
-  background: linear-gradient(135deg, #25d366, #128c7e);
-  box-shadow: 0 6px 16px rgba(37,211,102,.18);
-}
-
-/* =====================================================
-   OPTIONAL FEATURE ROW
-   Works if .footer-features exists
-===================================================== */
-.footer-features {
-  max-width: 1200px !important;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  margin-top: 32px;
-  padding: 15px 0;
-  border-top: 1px solid #dce5ef;
-  border-bottom: 1px solid #dce5ef;
-}
-
-.feature-item {
-  min-height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 5px 10px;
-  box-sizing: border-box;
-  color: #667892;
-  border-right: 1px solid #dce5ef;
-  font-size: 10px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.feature-item:last-child {
-  border-right: none;
-}
-
-.feature-text {
-  color: #667892;
-}
-
-/* =====================================================
-   ICON MASK
-===================================================== */
-.icon2 {
-  width: 19px;
-  height: 19px;
-  margin-top: 0;
-  background-color: #102344;
-  -webkit-mask: var(--svg) center / contain no-repeat;
-  mask: var(--svg) center / contain no-repeat;
-  flex-shrink: 0;
-}
-
-/* =====================================================
-   OLD FOOTER1 SUPPORT
-===================================================== */
-.footer1 {
-  margin-top: 40px;
-  padding: 18px 16px 0;
-  margin-bottom: 138px;
-  border-top: 1px solid #dce5ef;
-  font-family: Arial, sans-serif;
-}
-
-/* =====================================================
    MOBILE FOOTER
 ===================================================== */
 @media (max-width: 700px) {
@@ -324,37 +212,6 @@
     font-size: 8px;
     line-height: 1.5;
   }
-
-  /* BUTTONS */
-  .footer-right {
-    width: 105px;
-    gap: 8px;
-  }
-
-  .footer-btn {
-    min-height: 34px;
-    border-radius: 20px;
-    font-size: 9px;
-  }
-
-  /* FEATURES */
-  .footer-features {
-    grid-template-columns: repeat(4, 1fr);
-    margin-top: 25px;
-    padding: 10px 0;
-  }
-
-  .feature-item {
-    min-height: 35px;
-    padding: 3px 2px;
-    gap: 3px;
-    font-size: 7px;
-  }
-
-  .icon2 {
-    width: 15px;
-    height: 15px;
-  }
 }
 
 /* =====================================================
@@ -363,10 +220,6 @@
 @media (max-width: 380px) {
   .footer-info {
     gap: 12px;
-  }
-
-  .footer-right {
-    width: 95px;
   }
 
   .footer-left .home-brand-name {
@@ -379,11 +232,6 @@
 
   .footer-left .copyright {
     font-size: 7px;
-  }
-
-  .footer-btn {
-    min-height: 32px;
-    font-size: 8px;
   }
 
   .footer-links a {
@@ -499,48 +347,6 @@
   font-size: 10px;
 }
 
-.footer-right {
-  width: 190px;
-  flex-direction: row;
-  gap: 9px;
-}
-
-.footer-btn {
-  min-height: 42px;
-  border: 1px solid rgba(225, 242, 233, .2);
-  border-radius: 8px;
-  font-size: 11px;
-}
-
-.footer-instagram {
-  background: rgba(255,255,255,.07);
-  box-shadow: none;
-}
-
-.footer-whatsapp {
-  background: #9ed6c7;
-  color: #16342d;
-  box-shadow: none;
-}
-
-.footer-features {
-  border-top-color: rgba(216, 237, 226, .16);
-  border-bottom-color: rgba(216, 237, 226, .16);
-}
-
-.feature-item {
-  color: #b1c4bb;
-  border-right-color: rgba(216, 237, 226, .14);
-}
-
-.feature-text {
-  color: #b1c4bb;
-}
-
-.icon2 {
-  background-color: #9ed6c7;
-}
-
 @media (max-width: 700px) {
   .footer {
     margin-top: 38px;
@@ -588,41 +394,12 @@
   .footer-left .copyright {
     font-size: 9px;
   }
-
-  .footer-right {
-    width: 100%;
-    max-width: 280px;
-    flex-direction: row;
-  }
-
-  .footer-btn {
-    flex: 1;
-    min-height: 39px;
-    font-size: 10px;
-  }
-
-  .footer-features {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0;
-  }
-
-  .feature-item:nth-child(2) {
-    border-right: 0;
-  }
-
-  .feature-item:nth-child(-n+2) {
-    border-bottom: 1px solid rgba(216, 237, 226, .14);
-  }
 }
 
 @media (max-width: 380px) {
   .footer-links a {
     font-size: 9px;
     padding: 0 8px;
-  }
-
-  .footer-right {
-    max-width: none;
   }
 }
 
@@ -660,32 +437,6 @@
 .footer-left .home-brand-name span { color: #8FDAD7; }
 .footer-left p { color: #C0CDD8; }
 .footer-left .copyright { color: #9EAFBF; }
-.footer-btn {
-  color: #EEF3F6;
-  border-color: rgba(230,240,248,.22);
-  background: rgba(255,255,255,.06);
-  box-shadow: none;
-}
-.footer-instagram,
-.footer-whatsapp {
-  background: rgba(255,255,255,.06);
-  color: #EEF3F6;
-  box-shadow: none;
-}
-.footer-whatsapp {
-  border-color: rgba(91,192,190,.55);
-  color: #B7E6E5;
-}
-.footer-features {
-  border-top-color: rgba(230,240,248,.16);
-  border-bottom-color: rgba(230,240,248,.16);
-}
-.feature-item {
-  color: #C0CDD8;
-  border-right-color: rgba(230,240,248,.14);
-}
-.feature-text { color: #C0CDD8; }
-.icon2 { background-color: #8FDAD7; }
 
 
 /* =====================================================
@@ -959,3 +710,7 @@ body.menu-open .side-menu { transform: translate3d(0, 0, 0); }
     margin-top: auto;
   }
 }
+
+
+/* Footer contains no social action column; keep the brand block full width. */
+.footer-info { display: block; }
