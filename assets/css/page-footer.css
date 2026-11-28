@@ -390,3 +390,238 @@
     font-size: 9px;
   }
 }
+
+
+/* =====================================================
+   DIECAST.SCAPE — DARK PREMIUM FOOTER
+===================================================== */
+
+.footer {
+  position: relative;
+  margin-top: 54px;
+  padding: 52px 28px 28px;
+  overflow: hidden;
+  color: #e9f1ed;
+  background:
+    radial-gradient(ellipse at 85% 0%, rgba(73, 142, 125, .22), transparent 38%),
+    #172523;
+  border-top: 1px solid rgba(175, 220, 205, .18);
+  font-family: inherit;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #91cfc0 25%, #3e8777 70%, transparent);
+  opacity: .8;
+}
+
+.footer > * {
+  position: relative;
+  max-width: 1180px;
+}
+
+.footer-title {
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.footer-title span {
+  width: 28px;
+  background: #8ccbb9;
+}
+
+.footer-title h3 {
+  color: #a9d8ca;
+  font-size: 10px;
+  letter-spacing: 2.8px;
+}
+
+.footer-links {
+  max-width: 760px !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin: 0 0 34px;
+}
+
+.footer-links a {
+  min-height: 42px;
+  padding: 0 13px;
+  color: #d0ddd7;
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(209, 231, 220, .13);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.footer-links a:hover {
+  color: #172523;
+  background: #a5d8ce;
+  border-color: #a5d8ce;
+  transform: translateY(-2px);
+}
+
+.footer-line {
+  max-width: 1180px !important;
+  margin-bottom: 27px;
+  background: rgba(216, 237, 226, .16);
+}
+
+.footer-info {
+  align-items: flex-end;
+  gap: 30px;
+}
+
+.footer-left .home-brand-name {
+  color: #f3f7f4;
+  font-size: 25px;
+  letter-spacing: -.8px;
+}
+
+.footer-left .home-brand-name span {
+  color: #91d0bf;
+}
+
+.footer-left p {
+  color: #a9bcb4;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.footer-left .copyright {
+  color: #81968d;
+  font-size: 10px;
+}
+
+.footer-right {
+  width: 190px;
+  flex-direction: row;
+  gap: 9px;
+}
+
+.footer-btn {
+  min-height: 42px;
+  border: 1px solid rgba(225, 242, 233, .2);
+  border-radius: 8px;
+  font-size: 11px;
+}
+
+.footer-instagram {
+  background: rgba(255,255,255,.07);
+  box-shadow: none;
+}
+
+.footer-whatsapp {
+  background: #9ed6c7;
+  color: #16342d;
+  box-shadow: none;
+}
+
+.footer-features {
+  border-top-color: rgba(216, 237, 226, .16);
+  border-bottom-color: rgba(216, 237, 226, .16);
+}
+
+.feature-item {
+  color: #b1c4bb;
+  border-right-color: rgba(216, 237, 226, .14);
+}
+
+.feature-text {
+  color: #b1c4bb;
+}
+
+.icon2 {
+  background-color: #9ed6c7;
+}
+
+@media (max-width: 700px) {
+  .footer {
+    margin-top: 38px;
+    padding: 37px 17px 24px;
+  }
+
+  .footer-title {
+    justify-content: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .footer-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 23px;
+  }
+
+  .footer-links a {
+    min-height: 39px;
+    padding: 0 10px;
+    font-size: 10px;
+    border-radius: 7px;
+  }
+
+  .footer-line {
+    margin-bottom: 21px;
+  }
+
+  .footer-info {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .footer-left .home-brand-name {
+    font-size: 22px;
+  }
+
+  .footer-left p {
+    max-width: 340px;
+    font-size: 10px;
+  }
+
+  .footer-left .copyright {
+    font-size: 9px;
+  }
+
+  .footer-right {
+    width: 100%;
+    max-width: 280px;
+    flex-direction: row;
+  }
+
+  .footer-btn {
+    flex: 1;
+    min-height: 39px;
+    font-size: 10px;
+  }
+
+  .footer-features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .feature-item:nth-child(2) {
+    border-right: 0;
+  }
+
+  .feature-item:nth-child(-n+2) {
+    border-bottom: 1px solid rgba(216, 237, 226, .14);
+  }
+}
+
+@media (max-width: 380px) {
+  .footer-links a {
+    font-size: 9px;
+    padding: 0 8px;
+  }
+
+  .footer-right {
+    max-width: none;
+  }
+}
