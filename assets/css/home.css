@@ -106,30 +106,6 @@
   font-size: 21px;
 }
 
-.hero-arrow {
-  position: absolute;
-  z-index: 5;
-  top: 50%;
-  transform: translateY(-50%);
-
-  border: none;
-  background: transparent;
-
-  color: white;
-  font-size: 38px;
-  cursor: pointer;
-
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-
-.hero-prev {
-  left: 35px;
-}
-
-.hero-next {
-  right: 35px;
-}
-
 .hero-dots {
   position: absolute;
   z-index: 5;
@@ -241,29 +217,6 @@
 
 .category-card:hover .category-image img {
   transform: scale(1.04);
-}
-
-.category-icon {
-  width: 42px;
-  height: 42px;
-
-  margin: 14px auto 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.category-icon .icon {
-  width: 30px;
-  height: 30px;
-
-  background-color: #102344;
-
-  -webkit-mask: var(--svg) center / contain no-repeat;
-  mask: var(--svg) center / contain no-repeat;
-
-  flex-shrink: 0;
 }
 
 .category-card h3 {
@@ -400,50 +353,6 @@
 
 
 /* =====================================================
-   TRUST
-===================================================== */
-
-.trust-section {
-  max-width: 1150px;
-
-  margin: 0 auto 35px;
-  padding: 20px;
-
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-
-  background: #edf7fc;
-  border-radius: 20px;
-}
-
-.trust-item {
-  min-height: 75px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  text-align: center;
-
-  border-right: 1px solid #cadde9;
-
-  color: #344967;
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.trust-item:last-child {
-  border-right: none;
-}
-
-.trust-icon {
-  font-size: 27px;
-  margin-bottom: 6px;
-}
-
-
-/* =====================================================
    CUSTOM SECTION
 ===================================================== */
 
@@ -537,15 +446,6 @@
 
 
 /* =====================================================
-   MOBILE BOTTOM NAV
-===================================================== */
-
-.mobile-bottom-nav {
-  display: none;
-}
-
-
-/* =====================================================
    MOBILE
 ===================================================== */
 
@@ -597,18 +497,6 @@
     font-size: 10px;
   }
 
-  .hero-arrow {
-    font-size: 30px;
-  }
-
-  .hero-prev {
-    left: 15px;
-  }
-
-  .hero-next {
-    right: 15px;
-  }
-
 
   /* SECTION */
 
@@ -643,17 +531,6 @@
 
   .category-card {
     border-radius: 12px;
-  }
-
-  .category-icon {
-    width: 34px;
-    height: 34px;
-    margin-top: 8px;
-  }
-
-  .category-icon .icon {
-    width: 23px;
-    height: 23px;
   }
 
   .category-card h3 {
@@ -700,27 +577,6 @@
   }
 
 
-  /* TRUST */
-
-  .trust-section {
-    margin: 5px 14px 30px;
-    padding: 13px 4px;
-
-    grid-template-columns: repeat(4, 1fr);
-
-    border-radius: 17px;
-  }
-
-  .trust-item {
-    font-size: 8px;
-    padding: 0 3px;
-  }
-
-  .trust-icon {
-    font-size: 21px;
-  }
-
-
   /* CUSTOM */
 
   .custom-home-section {
@@ -748,31 +604,6 @@
   .custom-home-btn {
     font-size: 10px;
     padding: 9px 12px;
-  }
-
-
-  /* BOTTOM NAV */
-
-  .mobile-bottom-nav {
-    position: fixed;
-
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    height: 62px;
-    z-index: 950;
-
-    /*
-      Removed backdrop-filter: blur(14px)
-      to avoid continuous blur rendering.
-    */
-    background: rgba(255, 255, 255, 0.96);
-
-    border-top: 1px solid #dce5ef;
   }
 
   .mobile-nav-item {
@@ -1187,22 +1018,6 @@ body {
   font-size: 19px;
 }
 
-.hero-arrow {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255,255,255,.45);
-  border-radius: 50%;
-  background: rgba(12, 24, 28, .28);
-  color: #fff;
-  font-size: 30px;
-  text-shadow: none;
-}
-
-.hero-prev { left: 22px; }
-.hero-next { right: 22px; }
-
 .hero-dots {
   bottom: 24px;
   gap: 7px;
@@ -1544,16 +1359,6 @@ body {
     font-size: 11px;
   }
 
-  .hero-arrow {
-    top: 54%;
-    width: 35px;
-    height: 35px;
-    font-size: 25px;
-  }
-
-  .hero-prev { left: 10px; }
-  .hero-next { right: 10px; }
-
   .hero-dots {
     bottom: 27px;
     left: 22px;
@@ -1784,12 +1589,6 @@ body {
   box-shadow: 0 12px 26px rgba(0,0,0,.2);
 }
 
-.hero-arrow {
-  z-index: 4;
-  backdrop-filter: blur(8px);
-  transition: background .2s ease, transform .2s ease, border-color .2s ease;
-}
-
 .hero-arrow:hover {
   background: rgba(165, 216, 206, .22);
   border-color: #a5d8ce;
@@ -1899,10 +1698,6 @@ body {
 
   .hero-content h1 {
     max-width: 360px;
-  }
-
-  .hero-arrow {
-    backdrop-filter: blur(7px);
   }
 
   .categories-section {
