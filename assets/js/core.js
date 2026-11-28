@@ -3,20 +3,27 @@
 ===================================================== */
 
 function openMenu() {
-
   document.body.classList.add("menu-open");
-
   document.body.style.overflow = "hidden";
 
+  const menu = document.getElementById("sideMenu");
+  if (menu) menu.setAttribute("aria-hidden", "false");
+
+  document.querySelectorAll(".home-menu-btn").forEach(function (button) {
+    button.setAttribute("aria-expanded", "true");
+  });
 }
 
-
 function closeMenu() {
-
   document.body.classList.remove("menu-open");
-
   document.body.style.overflow = "";
 
+  const menu = document.getElementById("sideMenu");
+  if (menu) menu.setAttribute("aria-hidden", "true");
+
+  document.querySelectorAll(".home-menu-btn").forEach(function (button) {
+    button.setAttribute("aria-expanded", "false");
+  });
 }
 
 
