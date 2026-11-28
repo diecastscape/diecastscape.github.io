@@ -40,7 +40,11 @@ function render(){
   const distance=Math.abs(offset);
   const scale=[1.04,.82,.67,.55,.45][distance];
   const opacity=[1,1,.92,.68,.34][distance];
+  const step=window.matchMedia("(max-width: 700px)").matches?75:Math.min(154,Math.max(92,window.innerWidth*.12));
   node.style.setProperty("--shift",offset);
+  node.style.setProperty("--x",(offset*step)+"px");
+  node.style.setProperty("--y",(distance*(window.matchMedia("(max-width: 700px)").matches?5:7))+"px");
+  node.style.setProperty("--rotation",(offset*-12)+"deg");
   node.style.setProperty("--scale",scale);
   node.style.setProperty("--opacity",opacity);
   node.style.setProperty("--z",10-distance);
@@ -93,6 +97,7 @@ stage.addEventListener("mousemove",event=>{
  render();
 });
 stage.addEventListener("mouseleave",()=>{parallaxX=0;render();});
+window.addEventListener("resize",render);
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stopTimer();else startTimer();});
 
 async function loadSetupProducts(){
