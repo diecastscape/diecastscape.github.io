@@ -2064,3 +2064,239 @@ body {
 @media (prefers-reduced-motion:reduce) {
  .hero-slide,.hero-slide > img,.hero-dot,.menu-links a,.menu-secondary a { transition:none !important; animation:none !important; }
 }
+
+
+/* =====================================================
+   HOMEPAGE HEADER + TRUST / DELIVERY
+   Visual-only changes; navigation and order functionality
+   remain untouched.
+===================================================== */
+
+/* Full-width fixed header */
+.home-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  width: 100%;
+  max-width: none;
+  height: 72px;
+  margin: 0;
+  transform: none;
+  border: 0;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  border-radius: 0;
+  background: rgba(16,35,68,.97);
+  box-shadow: 0 5px 22px rgba(8,22,42,.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.home-header-inner {
+  width: min(1280px, 100%);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.home-header .home-brand-name {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -.8px;
+}
+
+.home-header .home-brand-name span {
+  color: var(--ds-blue);
+}
+
+.home-header .home-brand-tagline {
+  color: rgba(255,255,255,.68);
+  font-size: 8px;
+  letter-spacing: 1.7px;
+}
+
+.home-header .home-menu-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(91,192,190,.42);
+  background: rgba(91,192,190,.10);
+  color: #fff;
+}
+
+.home-header .home-menu-btn:hover {
+  border-color: var(--ds-blue);
+  background: var(--ds-blue);
+  color: var(--ds-navy);
+}
+
+/* The hero begins behind the fixed bar; its image remains full bleed. */
+.home-hero { margin-top: 0; }
+
+/* Trust and delivery section */
+.trust-delivery-section {
+  padding: 76px 28px 82px;
+  background: #eef5f6;
+}
+
+.trust-delivery-inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.trust-delivery-heading {
+  max-width: 650px;
+  margin: 0 auto 34px;
+  text-align: center;
+}
+
+.trust-delivery-heading .section-label {
+  margin-bottom: 11px;
+}
+
+.trust-delivery-heading h2 {
+  margin: 0 0 12px;
+  color: #102344;
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.12;
+  letter-spacing: -1.3px;
+}
+
+.trust-delivery-heading h2 span { color: #287F80; }
+
+.trust-delivery-heading p {
+  margin: 0;
+  color: #637581;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.trust-delivery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.trust-delivery-card {
+  min-width: 0;
+  padding: 25px 22px 23px;
+  border: 1px solid rgba(16,35,68,.08);
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(16,35,68,.045);
+}
+
+.trust-delivery-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 18px;
+  place-items: center;
+  border-radius: 13px;
+  background: #eaf7f7;
+  color: #287F80;
+}
+
+.trust-delivery-icon svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trust-delivery-card h3 {
+  margin: 0 0 8px;
+  color: #102344;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.trust-delivery-card p {
+  margin: 0;
+  color: #687777;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.trust-delivery-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 13px;
+  color: #287F80;
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.trust-delivery-card a:hover { color: #102344; }
+
+@media (max-width: 900px) {
+  .trust-delivery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .home-header {
+    height: 64px;
+  }
+
+  .home-header-inner {
+    padding: 0 17px;
+  }
+
+  .home-header .home-brand-name {
+    font-size: 20px;
+  }
+
+  .home-header .home-brand-tagline {
+    font-size: 7px;
+    letter-spacing: 1.25px;
+  }
+
+  .home-header .home-menu-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .trust-delivery-section {
+    padding: 55px 17px 60px;
+  }
+
+  .trust-delivery-heading {
+    margin-bottom: 25px;
+    text-align: left;
+  }
+
+  .trust-delivery-heading h2 {
+    font-size: 30px;
+    letter-spacing: -.9px;
+  }
+
+  .trust-delivery-heading p { font-size: 13px; }
+
+  .trust-delivery-grid { gap: 11px; }
+
+  .trust-delivery-card {
+    padding: 17px 14px 16px;
+    border-radius: 12px;
+  }
+
+  .trust-delivery-icon {
+    width: 39px;
+    height: 39px;
+    margin-bottom: 13px;
+    border-radius: 11px;
+  }
+
+  .trust-delivery-icon svg { width: 20px; height: 20px; }
+
+  .trust-delivery-card h3 { font-size: 13px; }
+
+  .trust-delivery-card p { font-size: 11px; line-height: 1.5; }
+
+  .trust-delivery-card a { margin-top: 10px; font-size: 11px; }
+}
